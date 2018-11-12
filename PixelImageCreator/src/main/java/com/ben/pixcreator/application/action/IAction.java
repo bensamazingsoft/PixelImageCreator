@@ -1,5 +1,5 @@
 
-package com.ben.pixcreator.action;
+package com.ben.pixcreator.application.action;
 
 public interface IAction
 {

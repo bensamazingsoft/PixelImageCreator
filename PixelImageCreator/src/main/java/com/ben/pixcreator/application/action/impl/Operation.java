@@ -1,8 +1,8 @@
-package com.ben.pixcreator.action.impl;
+package com.ben.pixcreator.application.action.impl;
 
 import java.util.ArrayList;
 
-import com.ben.pixcreator.action.IAction;
+import com.ben.pixcreator.application.action.IAction;
 
 public class Operation implements IAction {
 

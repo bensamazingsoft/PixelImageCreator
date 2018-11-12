@@ -1,9 +1,9 @@
 
-package com.ben.pixcreator.action.impl;
+package com.ben.pixcreator.application.action.impl;
 
-import com.ben.pixcreator.action.IAction;
-import com.ben.pixcreator.image.coords.Coord;
-import com.ben.pixcreator.image.layer.impl.PixLayer;
+import com.ben.pixcreator.application.action.IAction;
+import com.ben.pixcreator.application.image.coords.Coord;
+import com.ben.pixcreator.application.image.layer.impl.PixLayer;
 
 import javafx.scene.paint.Color;
 

@@ -1,5 +1,5 @@
 
-package com.ben.pixcreator.action.factory;
+package com.ben.pixcreator.application.action.factory;
 
 public class ActionFactory
 {

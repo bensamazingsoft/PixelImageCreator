@@ -1,18 +1,20 @@
 
-package com.ben.pixcreator.singletons.executor;
+package com.ben.pixcreator.application.executor;
 
 import java.util.LinkedList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ben.pixcreator.action.IAction;
-import com.ben.pixcreator.action.impl.Operation;
+import com.ben.pixcreator.application.action.IAction;
+import com.ben.pixcreator.application.action.impl.Operation;
 import com.ben.pixcreator.singletons.ASingleton;
 
-public class Executor extends ASingleton<Executor>
+public class Executor 
 {
 
+	private  Executor instance;
+	
       private static final Logger logger = LoggerFactory.getLogger(Executor.class);
 
       private Operation		  currOperation;
@@ -126,5 +128,21 @@ public class Executor extends ASingleton<Executor>
       {
 
 	    this.history = history;
+ 
+      
       }
+      
+      public Executor getInstance(){
+    	  
+    	  
+    	  if (instance == null){
+    		  instance = new Executor();
+    	  }
+    	  
+    	  return instance;
+    	  
+    	  
+      }
+      
+      
 }
