@@ -1,5 +1,5 @@
 
-package com.ben.pixcreator.action.singletons;
+package com.ben.pixcreator.singletons;
 
 import java.lang.reflect.InvocationTargetException;
 

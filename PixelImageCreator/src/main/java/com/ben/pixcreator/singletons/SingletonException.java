@@ -1,4 +1,4 @@
-package com.ben.pixcreator.action.singletons;
+package com.ben.pixcreator.singletons;
 
 public class SingletonException extends Exception {
 

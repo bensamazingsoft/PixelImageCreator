@@ -1,21 +1,12 @@
+
 package com.ben.pixcreator.action.factory;
 
-import java.awt.Event;
+public class ActionFactory
+{
 
-import com.ben.pixcreator.action.IAction;
+      public ActionFactory()
+      {
 
-public class ActionFactory {
+      }
 
-	
-	
-	
-	
-	public ActionFactory(){
-		
-	}
-	
-	
-
-	
-	
 }

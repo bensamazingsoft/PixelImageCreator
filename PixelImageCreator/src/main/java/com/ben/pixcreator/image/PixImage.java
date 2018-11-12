@@ -5,12 +5,12 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ben.pixcreator.image.coords.Coord;
 import com.ben.pixcreator.image.layer.ILayer;
 import com.ben.pixcreator.image.layer.impl.PicLayer;
 import com.ben.pixcreator.image.layer.impl.PixLayer;
 
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 
 public class PixImage
 {
@@ -20,15 +20,14 @@ public class PixImage
 
       private String	       name;
       private LocalDate	       dateCre;
-      private double	       basePicSizeFactor;
+
       private int	       xSize, ySize;
       private int	       xGridResolution, yGridResolution;
 
       private ILayer	       ghost, select;
       private PicLayer	       basePic;
       private List<ILayer>     gridLayers;
-
-      private Coord	       basePicPos;
+      private boolean	       showGrid;
 
 
       public PixImage()
@@ -39,9 +38,9 @@ public class PixImage
 	    ghost = new PixLayer();
 	    select = new PixLayer();
 	    gridLayers = new ArrayList<ILayer>();
-	    basePicPos = new Coord();
+
 	    xSize = ySize = DEFAULTSIZE;
-	    basePicSizeFactor = 1d;
+
 	    xGridResolution = yGridResolution = DEFAULTGRIDRESOLUTION;
 
       }
@@ -77,7 +76,50 @@ public class PixImage
       public void draw(Canvas canvas)
       {
 
-	    // TODO implement this shit
+	    if (basePic != null)
+	    {
+		  basePic.show(canvas, xGridResolution, yGridResolution);
+	    }
+
+	    for (int i = 0; i < gridLayers.size(); i++)
+	    {
+		  gridLayers.get(i).show(canvas, xGridResolution, yGridResolution);
+	    }
+
+	    select.show(canvas, xGridResolution, yGridResolution);
+
+	    ghost.show(canvas, xGridResolution, yGridResolution);
+
+	    if (showGrid)
+	    {
+		  showGrid(canvas);
+	    }
+
+      }
+
+
+      // show layer grid in canvas if option is toggled on
+      private void showGrid(Canvas canvas)
+      {
+
+	    GraphicsContext graphics = canvas.getGraphicsContext2D();
+
+	    double xCanvasSize = canvas.getWidth();
+	    int xCellSize = (int) xCanvasSize / xGridResolution;
+	    double yCanvasSize = canvas.getHeight();
+	    int yCellSize = (int) yCanvasSize / yGridResolution;
+
+	    graphics.setStroke(PixAppContext.getGridColor());
+
+	    for (int x = xCellSize; x < xCanvasSize; x += xCellSize)
+	    {
+		  graphics.strokeLine(x, yCellSize, x, yCanvasSize);
+
+	    }
+	    for (int y = yCellSize; y < yCanvasSize; y += yCellSize)
+	    {
+		  graphics.strokeLine(xCellSize, y, xCanvasSize, y);
+	    }
 
       }
 
@@ -87,148 +129,6 @@ public class PixImage
       {
 
 	    return "PixImage [name=" + name + ", dateCre=" + dateCre + ", xSize=" + xSize + ", ySize=" + ySize + "]";
-      }
-
-
-      @Override
-      public int hashCode()
-      {
-
-	    final int prime = 31;
-	    int result = 1;
-	    result = prime * result + ((basePic == null) ? 0 : basePic.hashCode());
-	    result = prime * result + ((basePicPos == null) ? 0 : basePicPos.hashCode());
-	    long temp;
-	    temp = Double.doubleToLongBits(basePicSizeFactor);
-	    result = prime * result + (int) (temp ^ (temp >>> 32));
-	    result = prime * result + ((dateCre == null) ? 0 : dateCre.hashCode());
-	    result = prime * result + ((ghost == null) ? 0 : ghost.hashCode());
-	    result = prime * result + ((gridLayers == null) ? 0 : gridLayers.hashCode());
-	    result = prime * result + ((name == null) ? 0 : name.hashCode());
-	    result = prime * result + ((select == null) ? 0 : select.hashCode());
-	    result = prime * result + xGridResolution;
-	    result = prime * result + xSize;
-	    result = prime * result + yGridResolution;
-	    result = prime * result + ySize;
-	    return result;
-      }
-
-
-      @Override
-      public boolean equals(Object obj)
-      {
-
-	    if (this == obj)
-	    {
-		  return true;
-	    }
-	    if (obj == null)
-	    {
-		  return false;
-	    }
-	    if (!(obj instanceof PixImage))
-	    {
-		  return false;
-	    }
-	    PixImage other = (PixImage) obj;
-	    if (basePic == null)
-	    {
-		  if (other.basePic != null)
-		  {
-			return false;
-		  }
-	    }
-	    else if (!basePic.equals(other.basePic))
-	    {
-		  return false;
-	    }
-	    if (basePicPos == null)
-	    {
-		  if (other.basePicPos != null)
-		  {
-			return false;
-		  }
-	    }
-	    else if (!basePicPos.equals(other.basePicPos))
-	    {
-		  return false;
-	    }
-	    if (Double.doubleToLongBits(basePicSizeFactor) != Double.doubleToLongBits(other.basePicSizeFactor))
-	    {
-		  return false;
-	    }
-	    if (dateCre == null)
-	    {
-		  if (other.dateCre != null)
-		  {
-			return false;
-		  }
-	    }
-	    else if (!dateCre.equals(other.dateCre))
-	    {
-		  return false;
-	    }
-	    if (ghost == null)
-	    {
-		  if (other.ghost != null)
-		  {
-			return false;
-		  }
-	    }
-	    else if (!ghost.equals(other.ghost))
-	    {
-		  return false;
-	    }
-	    if (gridLayers == null)
-	    {
-		  if (other.gridLayers != null)
-		  {
-			return false;
-		  }
-	    }
-	    else if (!gridLayers.equals(other.gridLayers))
-	    {
-		  return false;
-	    }
-	    if (name == null)
-	    {
-		  if (other.name != null)
-		  {
-			return false;
-		  }
-	    }
-	    else if (!name.equals(other.name))
-	    {
-		  return false;
-	    }
-	    if (select == null)
-	    {
-		  if (other.select != null)
-		  {
-			return false;
-		  }
-	    }
-	    else if (!select.equals(other.select))
-	    {
-		  return false;
-	    }
-	    if (xGridResolution != other.xGridResolution)
-	    {
-		  return false;
-	    }
-	    if (xSize != other.xSize)
-	    {
-		  return false;
-	    }
-	    if (yGridResolution != other.yGridResolution)
-	    {
-		  return false;
-	    }
-	    if (ySize != other.ySize)
-	    {
-		  return false;
-	    }
-	    return true;
       }
 
 
@@ -330,34 +230,6 @@ public class PixImage
       }
 
 
-      public Coord getBasePicPos()
-      {
-
-	    return basePicPos;
-      }
-
-
-      public void setBasePicPos(Coord basePicPos)
-      {
-
-	    this.basePicPos = basePicPos;
-      }
-
-
-      public double getBasePicSizeFactor()
-      {
-
-	    return basePicSizeFactor;
-      }
-
-
-      public void setBasePicSizeFactor(double basePicSizeFactor)
-      {
-
-	    this.basePicSizeFactor = basePicSizeFactor;
-      }
-
-
       public int getxGridResolution()
       {
 
@@ -383,6 +255,27 @@ public class PixImage
       {
 
 	    this.yGridResolution = yGridResolution;
+      }
+
+
+      public boolean isShowGrid()
+      {
+
+	    return showGrid;
+      }
+
+
+      public void setShowGrid(boolean showGrid)
+      {
+
+	    this.showGrid = showGrid;
+      }
+
+
+      public void toggleShowGrid()
+      {
+
+	    showGrid = !showGrid;
       }
 
 }

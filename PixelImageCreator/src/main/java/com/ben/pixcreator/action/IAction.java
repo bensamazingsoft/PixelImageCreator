@@ -1,9 +1,12 @@
+
 package com.ben.pixcreator.action;
 
-public interface IAction {
+public interface IAction
+{
 
-	public void execute();
+      public void execute();
 
-	public void cancel();
+
+      public void cancel();
 
 }

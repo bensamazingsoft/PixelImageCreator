@@ -31,7 +31,7 @@ public class PixLayer implements ILayer
       }
 
 
-      public void show(Canvas canvas)
+      public void show(Canvas canvas, int xGridResolution, int yGridResolution)
       {
 
 	    // TODO Auto-generated method stub
