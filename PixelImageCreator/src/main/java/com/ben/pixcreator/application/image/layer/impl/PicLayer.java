@@ -31,7 +31,7 @@ public class PicLayer implements ILayer
       public void show(Canvas canvas, int xGridResolution, int yGridResolution)
       {
 
-	    // TODO Auto-generated method stub
+	    // TODO draw picimage to canvas
 
       }
 

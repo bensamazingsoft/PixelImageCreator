@@ -1,10 +1,12 @@
 
 package com.ben.pixcreator.application.image;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.application.image.layer.ILayer;
 import com.ben.pixcreator.application.image.layer.impl.PicLayer;
 import com.ben.pixcreator.application.image.layer.impl.PixLayer;
@@ -73,7 +75,7 @@ public class PixImage
       }
 
 
-      public void draw(Canvas canvas)
+      public void draw(Canvas canvas) throws IOException
       {
 
 	    if (basePic != null)
@@ -99,7 +101,7 @@ public class PixImage
 
 
       // show layer grid in canvas if option is toggled on
-      private void showGrid(Canvas canvas)
+      private void showGrid(Canvas canvas) throws IOException
       {
 
 	    GraphicsContext graphics = canvas.getGraphicsContext2D();
@@ -109,7 +111,7 @@ public class PixImage
 	    double yCanvasSize = canvas.getHeight();
 	    int yCellSize = (int) yCanvasSize / yGridResolution;
 
-	    graphics.setStroke(PixAppContext.getGridColor());
+	    graphics.setStroke(AppContext.getInstance().getGridColor());
 
 	    for (int x = xCellSize; x < xCanvasSize; x += xCellSize)
 	    {

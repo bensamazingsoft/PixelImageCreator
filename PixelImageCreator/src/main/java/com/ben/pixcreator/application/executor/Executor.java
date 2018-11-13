@@ -8,13 +8,12 @@ import org.slf4j.LoggerFactory;
 
 import com.ben.pixcreator.application.action.IAction;
 import com.ben.pixcreator.application.action.impl.Operation;
-import com.ben.pixcreator.singletons.ASingleton;
 
-public class Executor 
+public class Executor
 {
 
-	private  Executor instance;
-	
+      private static Executor	  instance;
+
       private static final Logger logger = LoggerFactory.getLogger(Executor.class);
 
       private Operation		  currOperation;
@@ -128,21 +127,20 @@ public class Executor
       {
 
 	    this.history = history;
- 
-      
+
       }
-      
-      public Executor getInstance(){
-    	  
-    	  
-    	  if (instance == null){
-    		  instance = new Executor();
-    	  }
-    	  
-    	  return instance;
-    	  
-    	  
+
+
+      public static Executor getInstance()
+      {
+
+	    if (instance == null)
+	    {
+		  instance = new Executor();
+	    }
+
+	    return instance;
+
       }
-      
-      
+
 }
