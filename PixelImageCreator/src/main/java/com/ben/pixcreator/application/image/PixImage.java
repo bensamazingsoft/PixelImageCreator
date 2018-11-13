@@ -10,7 +10,7 @@ import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.application.image.layer.ILayer;
 import com.ben.pixcreator.application.image.layer.impl.PicLayer;
 import com.ben.pixcreator.application.image.layer.impl.PixLayer;
-
+import com.ben.pixcreator.collection.LayerList;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 
@@ -27,8 +27,8 @@ public class PixImage
       private int	       xGridResolution, yGridResolution;
 
       private ILayer	       ghost, select;
-      private PicLayer	       basePic;
-      private List<ILayer>     gridLayers;
+//      private PicLayer	       basePic;
+      private List<ILayer>     layers;
       private boolean	       showGrid;
 
 
@@ -39,7 +39,7 @@ public class PixImage
 	    dateCre = LocalDate.now();
 	    ghost = new PixLayer();
 	    select = new PixLayer();
-	    gridLayers = new ArrayList<ILayer>();
+	    layers = new LayerList<ILayer>();
 
 	    xSize = ySize = DEFAULTSIZE;
 
@@ -71,21 +71,21 @@ public class PixImage
 
 	    this();
 	    this.name = name;
-	    this.basePic = basePic;
+//	    this.basePic = basePic;
       }
 
 
       public void draw(Canvas canvas) throws IOException
       {
 
-	    if (basePic != null)
-	    {
-		  basePic.show(canvas, xGridResolution, yGridResolution);
-	    }
+//	    if (basePic != null)
+//	    {
+//		  basePic.show(canvas, xGridResolution, yGridResolution);
+//	    }
 
-	    for (int i = 0; i < gridLayers.size(); i++)
+	    for (int i = 0; i < layers.size(); i++)
 	    {
-		  gridLayers.get(i).show(canvas, xGridResolution, yGridResolution);
+		  layers.get(i).show(canvas, xGridResolution, yGridResolution);
 	    }
 
 	    select.show(canvas, xGridResolution, yGridResolution);
@@ -126,15 +126,18 @@ public class PixImage
       }
 
 
+   
+
+
       @Override
-      public String toString()
-      {
+	public String toString() {
+		return "PixImage [name=" + name + ", xSize=" + xSize + ", ySize="
+				+ ySize + ", xGridResolution=" + xGridResolution
+				+ ", yGridResolution=" + yGridResolution + "]";
+	}
 
-	    return "PixImage [name=" + name + ", dateCre=" + dateCre + ", xSize=" + xSize + ", ySize=" + ySize + "]";
-      }
 
-
-      public String getName()
+	public String getName()
       {
 
 	    return name;
@@ -204,31 +207,31 @@ public class PixImage
       }
 
 
-      public PicLayer getBasePic()
-      {
-
-	    return basePic;
-      }
-
-
-      public void setBasePic(PicLayer basePic)
-      {
-
-	    this.basePic = basePic;
-      }
+//      public PicLayer getBasePic()
+//      {
+//
+//	    return basePic;
+//      }
+//
+//
+//      public void setBasePic(PicLayer basePic)
+//      {
+//
+//	    this.basePic = basePic;
+//      }
 
 
       public List<ILayer> getGridLayers()
       {
 
-	    return gridLayers;
+	    return layers;
       }
 
 
       public void setGridLayers(List<ILayer> gridLayers)
       {
 
-	    this.gridLayers = gridLayers;
+	    this.layers = gridLayers;
       }
 
 

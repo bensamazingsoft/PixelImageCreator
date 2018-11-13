@@ -53,6 +53,9 @@ public class PropertiesContext
 	    properties = new Properties(defaultProp);
       }
 
+      public void reset(String key){
+    	  properties.setProperty(key, defaultProp.getProperty(key));
+      }
 
       public String getDefault(String key)
       {

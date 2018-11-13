@@ -12,7 +12,7 @@ public class AppContext
 
       private PropertiesContext	properties;
 
-      private Color		gridColor;
+      private Color		gridColor, currDrawColor;
 
 
       private AppContext() throws IOException
@@ -20,11 +20,30 @@ public class AppContext
 
 	    // TODO initialize color
 	    properties = PropertiesContext.getInstance();
+	    
+	    gridColor = getColor(properties.get("gridColor"));
+	    currDrawColor = getColor(properties.get("drawColor"));
 
       }
 
 
-      public static AppContext getInstance() throws IOException
+      //convert color string property to color object
+      private Color getColor(String string) {
+    	  Color color = Color.BLACK;
+    	  String[] rgbValues = string.split(",");
+    	  
+    	  
+    	  if (rgbValues.length == 3){
+    		  color = Color.rgb(Integer.valueOf(rgbValues[0]), Integer.valueOf(rgbValues[1]), Integer.valueOf(rgbValues[2]));
+    	  } else if (rgbValues.length ==4){
+    		  color = Color.rgb(Integer.valueOf(rgbValues[0]), Integer.valueOf(rgbValues[1]), Integer.valueOf(rgbValues[2]), Double.valueOf(rgbValues[3]));
+    	  }
+    	  
+		return color;
+	}
+
+
+	public static AppContext getInstance() throws IOException
       {
 
 	    if (instance == null)
@@ -36,10 +55,36 @@ public class AppContext
       }
 
 
-      public Color getGridColor()
-      {
+	public PropertiesContext getProperties() {
+		return properties;
+	}
 
-	    return gridColor;
-      }
+
+	public void setProperties(PropertiesContext properties) {
+		this.properties = properties;
+	}
+
+
+	public Color getGridColor() {
+		return gridColor;
+	}
+
+
+	public void setGridColor(Color gridColor) {
+		this.gridColor = gridColor;
+	}
+
+
+	public Color getCurrDrawColor() {
+		return currDrawColor;
+	}
+
+
+	public void setCurrDrawColor(Color currDrawColor) {
+		this.currDrawColor = currDrawColor;
+	}
+
+
+     
 
 }
