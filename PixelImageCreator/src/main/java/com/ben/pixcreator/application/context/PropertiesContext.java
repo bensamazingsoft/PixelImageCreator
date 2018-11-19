@@ -12,7 +12,7 @@ public class PropertiesContext
 
       private Properties	       defaultProp, properties;
       private File		       propFile;
-      private final String	       defaultPropertiesFileName = "default.properties";
+      private final String	       defaultPropertiesFileName = "/properties/default.properties";
 
       private static PropertiesContext instance;
 
