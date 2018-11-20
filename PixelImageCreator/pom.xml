@@ -36,7 +36,7 @@
 				<version>8.1.5</version>
 				<configuration>
 
-					<mainClass>com.bensamazingsoft.PixelImageCreator.MainApp</mainClass>
+					<mainClass>com.ben.pixcreator.gui.MainApp</mainClass>
 
 					<!-- only required if signing the jar file -->
 					<keyStoreAlias>example-user</keyStoreAlias>

@@ -3,7 +3,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
-<?import com.ben.pixcreator.gui.controls.*?>
+<?import com.ben.pixcreator.gui.controls.menu.bar.*?>
 <?import org.tbee.javafx.scene.layout.fxml.MigPane?>
 <?import layouttests.migfxml.sample1.*?>
 

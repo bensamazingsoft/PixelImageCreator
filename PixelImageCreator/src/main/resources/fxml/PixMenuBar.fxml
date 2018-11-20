@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import org.tbee.javafx.scene.layoutilisateurfxml.MigPane?>
+<?import java.lang.*?>
 <?import javafx.scene.control.*?>
 
-<fx:root type="javafx.scene.control.MenuBar"
-	xlmns:fx="http://javafx.com/fxml"
+<fx:root type="javafx.scene.control.MenuBar" xmlns:fx="http://javafx.com/fxml"
 	onKeyPressed="#handleKeyInput">
 	
-
 		<menus>
 			<Menu text="%fichier">
 				<items>
 					<MenuItem text="%nouveau" onAction="#newAction" />
-					<MenuItem text="%ouvrir" onActio="#openAction" />
+					<MenuItem text="%ouvrir" onAction="#openAction" />
 				</items>
 			</Menu>
 		</menus>
