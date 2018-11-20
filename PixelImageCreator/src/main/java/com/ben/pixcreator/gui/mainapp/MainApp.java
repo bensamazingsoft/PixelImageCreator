@@ -3,7 +3,7 @@ package com.ben.pixcreator.gui.mainapp;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import java.util.ResourceBundle;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -25,7 +25,8 @@ public class MainApp extends Application
 
       public void start(Stage stage) throws Exception
       {
-
+    	ResourceBundle bundle = ResourceBundle.getBundle("trad.properties");
+    	
 	    String fxmlFile = "/fxml/main.fxml";
 	    log.debug("Loading FXML for main view from: {}", fxmlFile);
 	    FXMLLoader loader = new FXMLLoader();
@@ -35,7 +36,7 @@ public class MainApp extends Application
 	    Scene scene = new Scene(rootNode, 400, 200);
 	    scene.getStylesheets().add("/styles/styles.css");
 
-	    stage.setTitle("Pix");
+	    stage.setTitle(bundle.);
 	    stage.setScene(scene);
 	    stage.show();
       }

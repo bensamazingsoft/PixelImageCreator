@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import org.tbee.javafx.scene.layoutilisateurfxml.MigPane?>
+<?import javafx.scene.control.*?>
+
+<fx:root type="HBox"
+	xlmns:fx="http://javafx.com/fxml">
+	
+	<ToggleButton id="selectBut" onAction="#toggleSelect"/>
+	
+	
+</fx:root>

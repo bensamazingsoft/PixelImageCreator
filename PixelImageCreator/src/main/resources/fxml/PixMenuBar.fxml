@@ -3,10 +3,11 @@
 <?import org.tbee.javafx.scene.layoutilisateurfxml.MigPane?>
 <?import javafx.scene.control.*?>
 
-<fx:root type="org.tbee.javafx.scene.layout.fxml.MigPane"
-	xlmns:fx="http://javafx.com/fxml">
+<fx:root type="javafx.scene.control.MenuBar"
+	xlmns:fx="http://javafx.com/fxml"
+	onKeyPressed="#handleKeyInput">
 	
-	<MenuBar onKeyPressed="#handleKeyInput">
+
 		<menus>
 			<Menu text="%fichier">
 				<items>
@@ -15,5 +16,5 @@
 				</items>
 			</Menu>
 		</menus>
-	</MenuBar>
+
 </fx:root>

@@ -4,16 +4,17 @@ package com.ben.pixcreator.gui.controls.menu.bar;
 import java.io.IOException;
 import java.util.ResourceBundle;
 
-import org.tbee.javafx.scene.layout.MigPane;
+
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.MenuBar;
 import javafx.scene.input.InputEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
-public class PixMenuBar extends MigPane
+public class PixMenuBar extends MenuBar
 {
 
       public PixMenuBar()
