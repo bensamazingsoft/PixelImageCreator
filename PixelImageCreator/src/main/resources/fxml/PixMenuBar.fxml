@@ -3,25 +3,17 @@
 <?import org.tbee.javafx.scene.layoutilisateurfxml.MigPane?>
 <?import javafx.scene.control.*?>
 
-<fx:root type="org.tbee.javafx.scene.layout.fxml.MigPane" xlmns:fx="http://javafx.com/fxml">
-
-
-
-<MenuBar onKeyPressed="#handleKeyInput">
-<menus>
-<Menu text="%fichier">
-<items>
-<MenuItem text="%nouveau" onAction="#newAction"/>
-<MenuItem text="%ouvrir" onActio="#openAction"/>
-</items>
-</Menu>
-
-
-
-</menus>
-</MenuBar>
-
-
-
-
+<fx:root type="org.tbee.javafx.scene.layout.fxml.MigPane"
+	xlmns:fx="http://javafx.com/fxml">
+	
+	<MenuBar onKeyPressed="#handleKeyInput">
+		<menus>
+			<Menu text="%fichier">
+				<items>
+					<MenuItem text="%nouveau" onAction="#newAction" />
+					<MenuItem text="%ouvrir" onActio="#openAction" />
+				</items>
+			</Menu>
+		</menus>
+	</MenuBar>
 </fx:root>
