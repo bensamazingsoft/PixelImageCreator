@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<fx:root type="javafx.scene.layout.HBox" xlmns:fx="http://javafx.com/fxml">
+
+
+	<fx:define>
+		<ToggleGroup fx:id="toggleGroup" />
+	</fx:define>
+
+	<ToggleButton id="selectBut" toggleGroup="$toggleGroup"
+		onAction="#toggleSelect" />
+	<ToggleButton id="drawBut" toggleGroup="$toggleGroup"
+		onAction="#toggleDraw" />
+	<ToggleButton id="pickBut" toggleGroup="$toggleGroup"
+		onAction="#togglePick" />
+	<ToggleButton id="moveBut" toggleGroup="$toggleGroup"
+		onAction="#toggleMove" />
+	<ToggleButton id="panBut" toggleGroup="$toggleGroup"
+		onAction="#togglePan" />
+	<ToggleButton id="resizeBut" toggleGroup="$toggleGroup"
+		onAction="#toggleResize" />
+	<ToggleButton id="zoomInBut" toggleGroup="$toggleGroup"
+		onAction="#toggleZoomIn" />
+	<ToggleButton id="zoomOutBut" toggleGroup="$toggleGroup"
+		onAction="#toggleZoomOut" />
+
+<Label tex="COUCOU"/>
+
+</fx:root>

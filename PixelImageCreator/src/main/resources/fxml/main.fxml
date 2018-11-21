@@ -4,17 +4,16 @@
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import com.ben.pixcreator.gui.controls.menu.bar.*?>
+<?import com.ben.pixcreator.gui.controls.tool.toolbar.*?>
 <?import org.tbee.javafx.scene.layout.fxml.MigPane?>
 <?import layouttests.migfxml.sample1.*?>
 
-<MigPane id="rootPane" fx:controller="com.ben.pixcreator.gui.mainapp.MainController"
-        styleClass="main-panel"
-        layout="insets 20"
-        cols=""
-        rows=""
-        xmlns:fx="http://javafx.com/fxml">
+<MigPane id="rootPane"
+	fx:controller="com.ben.pixcreator.gui.mainapp.MainController"
+	styleClass="main-panel"  cols="" rows=""
+	xmlns:fx="http://javafx.com/fxml">
 
 
-	<PixMenuBar id="menuBar" MigPane.cc="wrap"/>
-<ToolBar id="toolBar"/> 
-</MigPane >
+	<PixMenuBar id="menuBar" MigPane.cc="wrap" />
+	<PixToolBar id="toolBar" />
+</MigPane>

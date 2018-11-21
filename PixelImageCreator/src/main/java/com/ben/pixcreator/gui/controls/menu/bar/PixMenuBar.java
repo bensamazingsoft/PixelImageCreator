@@ -2,19 +2,17 @@
 package com.ben.pixcreator.gui.controls.menu.bar;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.ResourceBundle;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.control.MenuBar;
 import javafx.scene.input.InputEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
-public class PixMenuBar extends MenuBar implements Initializable
+public class PixMenuBar extends MenuBar
 {
 
       public PixMenuBar()
@@ -86,12 +84,4 @@ public class PixMenuBar extends MenuBar implements Initializable
 	    }
       }
 
-
-      @Override
-      public void initialize(URL location, ResourceBundle resources)
-      {
-
-	    // TODO Auto-generated method stub
-
-      }
 }
