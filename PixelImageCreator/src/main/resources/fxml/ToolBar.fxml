@@ -6,7 +6,14 @@
 <fx:root type="HBox"
 	xlmns:fx="http://javafx.com/fxml">
 	
-	<ToggleButton id="selectBut" onAction="#toggleSelect"/>
+	
+	<fx:define>
+	<ToggleGroup fx:id="toggleGroup"/>
+	</fx:define>
+	
+	
+	
+	<ToggleButton id="selectBut" toggleGroup=""$toggleGroup onAction="#toggleSelect"/>
 	
 	
 </fx:root>

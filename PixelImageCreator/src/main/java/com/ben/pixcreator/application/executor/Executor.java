@@ -21,6 +21,7 @@ public class Executor
       private LinkedList<IAction> cancelled;
       private boolean		  operationStarted;
 
+      
 
       private Executor()
       {

@@ -16,5 +16,5 @@
 
 
 	<PixMenuBar id="menuBar" MigPane.cc="wrap"/>
-
+<ToolBar id="toolBar"/> 
 </MigPane >

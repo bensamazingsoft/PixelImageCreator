@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import com.ben.pixcreator.gui.facade.GuiFacade;
+
 import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -18,15 +20,15 @@ import javafx.scene.layout.HBox;
 
 public class ToolBar extends HBox implements Initializable
 {
-
-      private ToggleGroup toggleGroup;
+	@FXML
+    private ToggleGroup toggleGroup;
 
       @FXML
-      ToggleButton	  selectBut;
+     private ToggleButton	  selectBut;
 
       // TODO get images
       final Image	  selectButSelected   = new Image("");
-      final Image	  selectButUnSelected = new Image("");;
+      final Image	  selectButUnSelected = new Image("");
       final ImageView	  selectButImg	      = new ImageView();
 
 
@@ -55,14 +57,16 @@ public class ToolBar extends HBox implements Initializable
       @FXML
       private void toggleSelect(ActionEvent event)
       {
-
-	    handleToggle();
+   	  
+    	  handleToggle();
       }
 
 
       private void handleToggle()
       {
-	    // TODO handle tool toggle action
+	    // TODO handle tool toggle action with gui facade 
+    	 GuiFacade guiFacade = GuiFacade.getInstance();
+    	 guiFacade.toggleToolTo(toggleGroup.getSelectedToggle().getUserData());
 
       }
 
@@ -72,9 +76,20 @@ public class ToolBar extends HBox implements Initializable
       {
 
 	    selectBut.setGraphic(selectButImg);
+	    selectBut.setUserData(Tool.SELECT);
 	    selectButImg.imageProperty().bind(Bindings.when(selectBut.selectedProperty()).then(selectButSelected).otherwise(selectButUnSelected));
-	    selectBut.setToggleGroup(toggleGroup);
+	
 
       }
+
+
+	public ToggleGroup getToggleGroup() {
+		return toggleGroup;
+	}
+
+
+	public void setToggleGroup(ToggleGroup toggleGroup) {
+		this.toggleGroup = toggleGroup;
+	}
 
 }

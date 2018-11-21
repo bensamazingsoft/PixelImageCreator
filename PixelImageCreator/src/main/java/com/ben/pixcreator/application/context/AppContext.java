@@ -3,6 +3,8 @@ package com.ben.pixcreator.application.context;
 
 import java.io.IOException;
 
+import javax.tools.Tool;
+
 import javafx.scene.paint.Color;
 
 public class AppContext
@@ -14,12 +16,17 @@ public class AppContext
 
       private Color		gridColor, currDrawColor;
 
+	private Tool currTool;
+
 
       private AppContext() throws IOException
       {
 
-	    // TODO initialize color
+	
 	    properties = PropertiesContext.getInstance();
+	    
+	    
+	    currTool = Tool.getTool(properties.get("startTool"));
 	    
 	    gridColor = getColor(properties.get("gridColor"));
 	    currDrawColor = getColor(properties.get("drawColor"));
@@ -27,7 +34,10 @@ public class AppContext
       }
 
 
-      //convert color string property to color object
+
+
+
+	//convert color string property to color object
       private Color getColor(String string) {
     	  Color color = Color.BLACK;
     	  String[] rgbValues = string.split(",");
@@ -82,6 +92,15 @@ public class AppContext
 
 	public void setCurrDrawColor(Color currDrawColor) {
 		this.currDrawColor = currDrawColor;
+	}
+
+
+	public void setCurrTool(Tool tool) {
+		
+		properties.set("startTool", tool.getName());
+		
+		currTool = tool;
+		
 	}
 
 
