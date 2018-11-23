@@ -6,6 +6,6 @@ import javafx.scene.canvas.Canvas;
 public interface ILayer
 {
 
-      public void show(Canvas canvas, int xCellSize, int yCellSize);
+      public void show(Canvas canvas, int xGridResolution, int yGridResolution);
 
 }

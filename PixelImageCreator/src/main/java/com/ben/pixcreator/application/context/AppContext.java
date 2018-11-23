@@ -18,6 +18,7 @@ public class AppContext
 
       private PixTool		currTool;
 
+      private Set<PixImage> openImages;
 
       private AppContext() throws IOException
       {
@@ -28,6 +29,8 @@ public class AppContext
 
 	    gridColor = getColor(properties.get("gridColor"));
 	    currDrawColor = getColor(properties.get("drawColor"));
+	    
+	    openImages = new HashSet<PixImage>();
 
       }
 
@@ -121,5 +124,15 @@ public class AppContext
 
 	    return currTool;
       }
+
+
+	public Set<PixImage> getOpenImages() {
+		return openImages;
+	}
+
+
+	public void setOpenImages(Set<PixImage> openImages) {
+		this.openImages = openImages;
+	}
 
 }

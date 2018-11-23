@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 
 
-<fx:root type="javafx.scene.layout.HBox" xlmns:fx="http://javafx.com/fxml">
+<fx:root type="javafx.scene.control.ToolBar" xlmns:fx="http://javafx.com/fxml">
 
 
 	<fx:define>
@@ -29,6 +29,6 @@
 	<ToggleButton id="zoomOutBut" toggleGroup="$toggleGroup"
 		onAction="#toggleZoomOut" />
 
-<Label tex="COUCOU"/>
+
 
 </fx:root>

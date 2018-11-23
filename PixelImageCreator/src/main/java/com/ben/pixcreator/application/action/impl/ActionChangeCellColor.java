@@ -2,6 +2,7 @@
 package com.ben.pixcreator.application.action.impl;
 
 import com.ben.pixcreator.application.action.IAction;
+import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.application.image.coords.Coord;
 import com.ben.pixcreator.application.image.layer.impl.PixLayer;
 
@@ -10,6 +11,7 @@ import javafx.scene.paint.Color;
 public class ActionChangeCellColor implements IAction
 {
 
+	private PixImage image;
       private PixLayer layer;
       private Coord    coord;
       private Color    color;
@@ -19,7 +21,11 @@ public class ActionChangeCellColor implements IAction
 
       public ActionChangeCellColor(PixLayer layer, Coord coord, Color color)
       {
-
+  		if (!AppContext.getInstance().getOpenImages().contains(image)){
+			throw new ClosedImageException();
+		} else if (!image.getLayers().contains(layer)){
+			throw new InexistantLayerException();
+		}
 	    this.layer = layer;
 	    this.coord = coord;
 	    this.color = color;
@@ -31,17 +37,19 @@ public class ActionChangeCellColor implements IAction
 
       public void execute()
       {
-
+    	  if (AppContext.getInstance().getOpenImages().contains(image)){
+  			if (image.getLayers().contains(layer)){
 	    layer.getGrid().put(coord, color);
-
+  			}}
       }
 
 
       public void cancel()
       {
-
+    	  if (AppContext.getInstance().getOpenImages().contains(image)){
+  			if (image.getLayers().contains(layer)){
 	    layer.getGrid().put(coord, prevColor);
-
+  			}}
       }
 
 

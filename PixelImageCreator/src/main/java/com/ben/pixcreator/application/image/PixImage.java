@@ -16,7 +16,7 @@ import javafx.scene.canvas.GraphicsContext;
 
 public class PixImage
 {
-
+//TODO refactor to get visible/invisible layers 
       private static final int DEFAULTSIZE	     = 800;
       private static final int DEFAULTGRIDRESOLUTION = 80;
 
@@ -27,9 +27,10 @@ public class PixImage
       private int	       xGridResolution, yGridResolution;
 
       private ILayer	       ghost, select;
-      // private PicLayer basePic;
-      private List<ILayer>     layers;
+      //layer and its visibility
+      private Map<ILayer,boolean>     layers;
       private boolean	       showGrid;
+
 
 
       public PixImage()
@@ -78,14 +79,14 @@ public class PixImage
       public void draw(Canvas canvas) throws IOException
       {
 
-	    // if (basePic != null)
-	    // {
-	    // basePic.show(canvas, xGridResolution, yGridResolution);
-	    // }
 
-	    for (int i = 0; i < layers.size(); i++)
+
+	    for (int i = 0; i < layers.keySet().size(); i++)
 	    {
-		  layers.get(i).show(canvas, xGridResolution, yGridResolution);
+	    	ILayer layer = layers.keySet().get(i);
+		  if (layers.get(layer)) {
+			layer.show(canvas, xGridResolution, yGridResolution);
+		}
 	    }
 
 	    select.show(canvas, xGridResolution, yGridResolution);
@@ -126,6 +127,10 @@ public class PixImage
       }
 
 
+      public void toggleLayerVisibility(ILayer layer){
+    	  layers.put(layer, !layers.get(layer));
+      }
+      
       @Override
       public String toString()
       {
@@ -206,24 +211,8 @@ public class PixImage
       }
 
 
-      // public PicLayer getBasePic()
-      // {
-      //
-      // return basePic;
-      // }
-      //
-      //
-      // public void setBasePic(PicLayer basePic)
-      // {
-      //
-      // this.basePic = basePic;
-      // }
-
-      public List<ILayer> getGridLayers()
-      {
-
-	    return layers;
-      }
+ 
+    
 
 
       public void setGridLayers(List<ILayer> gridLayers)
@@ -261,6 +250,9 @@ public class PixImage
       }
 
 
+      
+      
+      
       public boolean isShowGrid()
       {
 
@@ -293,6 +285,10 @@ public class PixImage
       {
 
 	    this.dateCre = dateCre;
+      }
+      
+      public Map<ILayer,boolean> getLayers(){
+    	  return layers;
       }
 
 }
