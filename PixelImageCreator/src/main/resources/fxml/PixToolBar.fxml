@@ -5,30 +5,30 @@
 <?import javafx.scene.layout.*?>
 
 
-<fx:root type="javafx.scene.control.ToolBar" xlmns:fx="http://javafx.com/fxml">
+<fx:root type="javafx.scene.control.ToolBar" xmlns:fx="http://javafx.com/fxml">
+
+
+	<ToggleButton fx:id="selectBut" toggleGroup="$toggleGroup"
+		onAction="#toggleSelect" />
+	<ToggleButton fx:id="drawBut" toggleGroup="$toggleGroup"
+		onAction="#toggleDraw" />
+	<ToggleButton fx:id="pickBut" toggleGroup="$toggleGroup"
+		onAction="#togglePick" />
+	<ToggleButton fx:id="moveBut" toggleGroup="$toggleGroup"
+		onAction="#toggleMove" />
+	<ToggleButton fx:id="panBut" toggleGroup="$toggleGroup"
+		onAction="#togglePan" />
+	<ToggleButton fx:id="resizeBut" toggleGroup="$toggleGroup"
+		onAction="#toggleResize" />
+	<ToggleButton fx:id="zoomInBut" toggleGroup="$toggleGroup"
+		onAction="#toggleZoomIn" />
+	<ToggleButton fx:id="zoomOutBut" toggleGroup="$toggleGroup"
+		onAction="#toggleZoomOut" />
 
 
 	<fx:define>
 		<ToggleGroup fx:id="toggleGroup" />
 	</fx:define>
-
-	<ToggleButton id="selectBut" toggleGroup="$toggleGroup"
-		onAction="#toggleSelect" />
-	<ToggleButton id="drawBut" toggleGroup="$toggleGroup"
-		onAction="#toggleDraw" />
-	<ToggleButton id="pickBut" toggleGroup="$toggleGroup"
-		onAction="#togglePick" />
-	<ToggleButton id="moveBut" toggleGroup="$toggleGroup"
-		onAction="#toggleMove" />
-	<ToggleButton id="panBut" toggleGroup="$toggleGroup"
-		onAction="#togglePan" />
-	<ToggleButton id="resizeBut" toggleGroup="$toggleGroup"
-		onAction="#toggleResize" />
-	<ToggleButton id="zoomInBut" toggleGroup="$toggleGroup"
-		onAction="#toggleZoomIn" />
-	<ToggleButton id="zoomOutBut" toggleGroup="$toggleGroup"
-		onAction="#toggleZoomOut" />
-
 
 
 </fx:root>
