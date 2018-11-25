@@ -3,7 +3,6 @@ package com.ben.pixcreator.application.image;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.List;
 
 import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.application.image.layer.ILayer;
@@ -16,7 +15,8 @@ import javafx.scene.canvas.GraphicsContext;
 
 public class PixImage
 {
-//TODO refactor to get visible/invisible layers 
+
+      // TODO refactor to get visible/invisible layers
       private static final int DEFAULTSIZE	     = 800;
       private static final int DEFAULTGRIDRESOLUTION = 80;
 
@@ -27,10 +27,10 @@ public class PixImage
       private int	       xGridResolution, yGridResolution;
 
       private ILayer	       ghost, select;
-      //layer and its visibility
-      private Map<ILayer,boolean>     layers;
-      private boolean	       showGrid;
+      // layer and its visibility
 
+      private LayerList	       layers;
+      private boolean	       showGrid;
 
 
       public PixImage()
@@ -40,7 +40,7 @@ public class PixImage
 	    dateCre = LocalDate.now();
 	    ghost = new PixLayer();
 	    select = new PixLayer();
-	    layers = new LayerList<ILayer>();
+	    layers = new LayerList();
 
 	    xSize = ySize = DEFAULTSIZE;
 
@@ -79,14 +79,13 @@ public class PixImage
       public void draw(Canvas canvas) throws IOException
       {
 
-
-
-	    for (int i = 0; i < layers.keySet().size(); i++)
+	    for (int i = 0; i < layers.size(); i++)
 	    {
-	    	ILayer layer = layers.keySet().get(i);
-		  if (layers.get(layer)) {
+		  ILayer layer = layers.getId(i);
+		  if (layers.get(layer))
+		  {
 			layer.show(canvas, xGridResolution, yGridResolution);
-		}
+		  }
 	    }
 
 	    select.show(canvas, xGridResolution, yGridResolution);
@@ -127,10 +126,13 @@ public class PixImage
       }
 
 
-      public void toggleLayerVisibility(ILayer layer){
-    	  layers.put(layer, !layers.get(layer));
+      public void toggleLayerVisibility(ILayer layer)
+      {
+
+	    layers.put(layer, !layers.get(layer));
       }
-      
+
+
       @Override
       public String toString()
       {
@@ -183,45 +185,6 @@ public class PixImage
       }
 
 
-      public ILayer getGhost()
-      {
-
-	    return ghost;
-      }
-
-
-      public void setGhost(ILayer ghost)
-      {
-
-	    this.ghost = ghost;
-      }
-
-
-      public ILayer getSelect()
-      {
-
-	    return select;
-      }
-
-
-      public void setSelect(ILayer select)
-      {
-
-	    this.select = select;
-      }
-
-
- 
-    
-
-
-      public void setGridLayers(List<ILayer> gridLayers)
-      {
-
-	    this.layers = gridLayers;
-      }
-
-
       public int getxGridResolution()
       {
 
@@ -250,9 +213,48 @@ public class PixImage
       }
 
 
-      
-      
-      
+      public ILayer getGhost()
+      {
+
+	    return ghost;
+      }
+
+
+      public void setGhost(ILayer ghost)
+      {
+
+	    this.ghost = ghost;
+      }
+
+
+      public ILayer getSelect()
+      {
+
+	    return select;
+      }
+
+
+      public void setSelect(ILayer select)
+      {
+
+	    this.select = select;
+      }
+
+
+      public LayerList getLayers()
+      {
+
+	    return layers;
+      }
+
+
+      public void setLayers(LayerList layers)
+      {
+
+	    this.layers = layers;
+      }
+
+
       public boolean isShowGrid()
       {
 
@@ -264,31 +266,6 @@ public class PixImage
       {
 
 	    this.showGrid = showGrid;
-      }
-
-
-      public void toggleShowGrid()
-      {
-
-	    showGrid = !showGrid;
-      }
-
-
-      public LocalDate getDateCre()
-      {
-
-	    return dateCre;
-      }
-
-
-      public void setDateCre(LocalDate dateCre)
-      {
-
-	    this.dateCre = dateCre;
-      }
-      
-      public Map<ILayer,boolean> getLayers(){
-    	  return layers;
       }
 
 }

@@ -2,7 +2,10 @@
 package com.ben.pixcreator.application.context;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
+import com.ben.pixcreator.application.image.PixImage;
 import com.ben.pixcreator.application.tools.PixTool;
 
 import javafx.scene.paint.Color;
@@ -18,7 +21,8 @@ public class AppContext
 
       private PixTool		currTool;
 
-      private Set<PixImage> openImages;
+      private Set<PixImage>	openImages;
+
 
       private AppContext() throws IOException
       {
@@ -29,7 +33,7 @@ public class AppContext
 
 	    gridColor = getColor(properties.get("gridColor"));
 	    currDrawColor = getColor(properties.get("drawColor"));
-	    
+
 	    openImages = new HashSet<PixImage>();
 
       }
@@ -126,13 +130,17 @@ public class AppContext
       }
 
 
-	public Set<PixImage> getOpenImages() {
-		return openImages;
-	}
+      public Set<PixImage> getOpenImages()
+      {
+
+	    return openImages;
+      }
 
 
-	public void setOpenImages(Set<PixImage> openImages) {
-		this.openImages = openImages;
-	}
+      public void setOpenImages(Set<PixImage> openImages)
+      {
+
+	    this.openImages = openImages;
+      }
 
 }

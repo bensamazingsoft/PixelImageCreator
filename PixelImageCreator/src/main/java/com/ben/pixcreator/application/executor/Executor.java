@@ -21,7 +21,6 @@ public class Executor
       private LinkedList<IAction> cancelled;
       private boolean		  operationStarted;
 
-      
 
       private Executor()
       {
@@ -32,7 +31,7 @@ public class Executor
       }
 
 
-      public void executeAction(IAction action)
+      public void executeAction(IAction action) throws Exception
       {
 
 	    action.execute();
@@ -41,7 +40,7 @@ public class Executor
       }
 
 
-      public void startOperation(IAction action)
+      public void startOperation(IAction action) throws Exception
       {
 
 	    if (!operationStarted)
@@ -59,7 +58,7 @@ public class Executor
       }
 
 
-      public void continueOperation(IAction action)
+      public void continueOperation(IAction action) throws Exception
       {
 
 	    if (operationStarted)
@@ -74,7 +73,7 @@ public class Executor
       }
 
 
-      public void endOperation(IAction action)
+      public void endOperation(IAction action) throws Exception
       {
 
 	    if (operationStarted)
@@ -92,7 +91,7 @@ public class Executor
       }
 
 
-      public void cancel()
+      public void cancel() throws Exception
       {
 
 	    if (history.size() > 0)
@@ -105,7 +104,7 @@ public class Executor
       }
 
 
-      public void redo()
+      public void redo() throws Exception
       {
 
 	    if (cancelled.size() > 0)

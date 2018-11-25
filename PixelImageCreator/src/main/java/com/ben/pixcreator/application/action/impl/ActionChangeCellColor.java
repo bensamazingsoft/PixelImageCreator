@@ -1,8 +1,11 @@
 
 package com.ben.pixcreator.application.action.impl;
 
+import java.io.IOException;
+
 import com.ben.pixcreator.application.action.IAction;
 import com.ben.pixcreator.application.context.AppContext;
+import com.ben.pixcreator.application.image.PixImage;
 import com.ben.pixcreator.application.image.coords.Coord;
 import com.ben.pixcreator.application.image.layer.impl.PixLayer;
 
@@ -11,7 +14,7 @@ import javafx.scene.paint.Color;
 public class ActionChangeCellColor implements IAction
 {
 
-	private PixImage image;
+      private PixImage image;
       private PixLayer layer;
       private Coord    coord;
       private Color    color;
@@ -19,13 +22,17 @@ public class ActionChangeCellColor implements IAction
       private Color    prevColor;
 
 
-      public ActionChangeCellColor(PixLayer layer, Coord coord, Color color)
+      public ActionChangeCellColor(PixLayer layer, Coord coord, Color color) throws IOException, ClosedImageException, InexistantLayerException
       {
-  		if (!AppContext.getInstance().getOpenImages().contains(image)){
-			throw new ClosedImageException();
-		} else if (!image.getLayers().contains(layer)){
-			throw new InexistantLayerException();
-		}
+
+	    if (!AppContext.getInstance().getOpenImages().contains(image))
+	    {
+		  throw new ClosedImageException();
+	    }
+	    else if (!image.getLayers().keySet().contains(layer))
+	    {
+		  throw new InexistantLayerException();
+	    }
 	    this.layer = layer;
 	    this.coord = coord;
 	    this.color = color;
@@ -35,21 +42,29 @@ public class ActionChangeCellColor implements IAction
       }
 
 
-      public void execute()
+      public void execute() throws IOException
       {
-    	  if (AppContext.getInstance().getOpenImages().contains(image)){
-  			if (image.getLayers().contains(layer)){
-	    layer.getGrid().put(coord, color);
-  			}}
+
+	    if (AppContext.getInstance().getOpenImages().contains(image))
+	    {
+		  if (image.getLayers().keySet().contains(layer))
+		  {
+			layer.getGrid().put(coord, color);
+		  }
+	    }
       }
 
 
-      public void cancel()
+      public void cancel() throws IOException
       {
-    	  if (AppContext.getInstance().getOpenImages().contains(image)){
-  			if (image.getLayers().contains(layer)){
-	    layer.getGrid().put(coord, prevColor);
-  			}}
+
+	    if (AppContext.getInstance().getOpenImages().contains(image))
+	    {
+		  if (image.getLayers().keySet().contains(layer))
+		  {
+			layer.getGrid().put(coord, prevColor);
+		  }
+	    }
       }
 
 
