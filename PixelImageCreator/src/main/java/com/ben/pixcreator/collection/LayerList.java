@@ -19,7 +19,7 @@ public class LayerList extends HashMap<ILayer, Boolean>
       {
 
 	    super();
-	    idx = new HashMap<>();
+	    idx = new SortedMap<>();
       }
 
 
@@ -115,7 +115,7 @@ public class LayerList extends HashMap<ILayer, Boolean>
       }
 
 
-      public ILayer getId(int i)
+      public ILayer getLayerById(int i)
       {
 
 	    // TODO Auto-generated method stub

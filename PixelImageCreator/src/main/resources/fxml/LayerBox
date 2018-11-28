@@ -7,13 +7,13 @@
 <fx:root type="javafx.scene.layout.HBox" xmlns:fx="http://javafx.com/fxml">
 	
 
-<StackPane id="eye">
-	<ToggleButton id="eyeBut" onMouseClicked="#toggleEye"/>
+<StackPane fx:id="eye">
+	<ToggleButton fx:id="eyeBut" onMouseClicked="#toggleEye"/>
 
 </StackPane>
-<StackPane id="miniaturePane"/>
-<StackPane id="titlePane"/>
-<StackPane id="lockPane">
-	<ToggleButton id="lockBut" onMouseClicked="#toggleLock"/>
+<StackPane fx:id="miniaturePane" onMouseClicked="#handleMiniatureClicked"/>
+<StackPane fx:id="titlePane"/>
+<StackPane fx:id="lockPane">
+	<ToggleButton fx:id="lockBut" onMouseClicked="#toggleLock"/>
 </StackPane>
 </fx:root>

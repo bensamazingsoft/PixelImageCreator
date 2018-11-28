@@ -21,6 +21,9 @@ public class GuiFacade
       private Scene	       scene;
       private PixMenuBar       pixMenuBar;
       private PixToolBar       pixToolBar;
+      private LayerPanel layerPanel;
+      
+      
 
 
       private GuiFacade()
@@ -62,7 +65,12 @@ public class GuiFacade
 
       }
 
-
+public PixImage getActiveImage(){
+	PixImage activeImage;
+	//TODO retrieve current active image
+	return activeImage;
+}
+      
       public Scene getScene()
       {
 

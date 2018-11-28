@@ -8,8 +8,11 @@
 <fx:root type="javafx.scene.control.ToolBar" xmlns:fx="http://javafx.com/fxml">
 
 
-	<ToggleButton fx:id="selectBut" toggleGroup="$toggleGroup"
-		onAction="#toggleSelect" />
+	<ToggleButton fx:id="selectBut" toggleGroup="$toggleGroup" onAction="#toggleSelect">
+		<toggleGroup>
+			<ToggleGroup fx:id="toggleGroup" />
+		</toggleGroup>
+	</ToggleButton>
 	<ToggleButton fx:id="drawBut" toggleGroup="$toggleGroup"
 		onAction="#toggleDraw" />
 	<ToggleButton fx:id="pickBut" toggleGroup="$toggleGroup"
@@ -26,9 +29,7 @@
 		onAction="#toggleZoomOut" />
 
 
-	<fx:define>
-		<ToggleGroup fx:id="toggleGroup" />
-	</fx:define>
+	
 
 
 </fx:root>
