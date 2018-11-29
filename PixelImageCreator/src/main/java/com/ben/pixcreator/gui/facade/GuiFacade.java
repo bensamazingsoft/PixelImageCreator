@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.application.image.PixImage;
+import com.ben.pixcreator.application.image.layer.ILayer;
 import com.ben.pixcreator.application.tools.PixTool;
 import com.ben.pixcreator.gui.controls.layer.panel.LayerPanel;
 import com.ben.pixcreator.gui.controls.menu.bar.PixMenuBar;
@@ -77,7 +78,15 @@ public class GuiFacade
 	    return activeImage;
       }
 
+      public ILayer getActiveLayer()
+      {
 
+	    ILayer activeLayer;
+	    // TODO retrieve current active layer
+	    return activeLayer;
+      }
+      
+      
       public Scene getScene()
       {
 

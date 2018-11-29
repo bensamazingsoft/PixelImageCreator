@@ -30,8 +30,7 @@ public class LayerPanel extends BorderPane implements Initializable
 
       private final PixImage   image;
 
-      // TODO encapsulate locks somewhere else, this is model logic, not part of gui
-      private Set<Set<ILayer>> lockGroups;
+
 
       // private Image moveLayerDownButImg,moveLayerUpButImg,deleteLayerButImg,duplicateLayerButImg,newLayerButImg;
 
@@ -178,6 +177,8 @@ public class LayerPanel extends BorderPane implements Initializable
 
 	    // TODO initialize
 	    populate();
+	    
+	    
 	    deleteLayerBut.setGraphic(new ImageView(deleteLayerButImg));
 
 	    duplicateLayerBut.setGraphic(new ImageView(duplicateLayerButImg));
@@ -192,20 +193,33 @@ public class LayerPanel extends BorderPane implements Initializable
 
       private void populate()
       {
-	    // TODO populate VBox with layerBoxes and toggleGroup
+	    // populate VBox with layerBoxes and toggleGroup
 
-	    for (int i = 0; i < image.getLayers().getIdx().size(); i++)
-	    {
+    	  togglegroup = new ToggleGroup();
+    	  
+	    if (layer != null) {
+			for (int i = 0; i < image.getLayers().getIdx().size(); i++) {
 
-		  ILayer layer = image.getLayers().getLayerById(i);
-		  LayerBox box = new LayerBox(image, layer);
+				ILayer layer = image.getLayers().getLayerById(i);
+				LayerBox box = new LayerBox(image, layer);
 
-		  layersBox.getChildren().add(box);
+				layersBox.getChildren().add(box);
 
-		  box.setToggleGroup(togglegroup);
+				box.setToggleGroup(togglegroup);
 
-	    }
+			}
+		}
 
       }
+
+
+	public ToggleGroup getTogglegroup() {
+		return togglegroup;
+	}
+
+
+	public void setTogglegroup(ToggleGroup togglegroup) {
+		this.togglegroup = togglegroup;
+	}
 
 }

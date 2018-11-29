@@ -51,38 +51,38 @@ public class PixToolBar extends ToolBar implements Initializable
       @FXML
       private ToggleButton zoomOutBut;
 
-      // TODO get images
-      final Image	   selectButSelected	= new Image(getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "selectButSelected.png"));
-      final Image	   selectButUnSelected	= new Image(getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "selectButUnSelected.png"));
-      final ImageView	   selectButImg		= new ImageView();
+      //  get images
+      final private Image	   selectButSelected	= new Image(getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "selectButSelected.png"));
+      final private Image	   selectButUnSelected	= new Image(getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "selectButUnSelected.png"));
+      final private ImageView	   selectButImg		= new ImageView();
 
-      final Image	   drawButSelected	= new Image(getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "drawButSelected.png"));
-      final Image	   drawButUnSelected	= new Image(getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "drawButUnSelected.png"));
-      final ImageView	   drawButImg		= new ImageView();
+      final private Image	   drawButSelected	= new Image(getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "drawButSelected.png"));
+      final private Image	   drawButUnSelected	= new Image(getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "drawButUnSelected.png"));
+      final private ImageView	   drawButImg		= new ImageView();
 
-      final Image	   pickButSelected	= new Image(getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "pickButSelected.png"));
-      final Image	   pickButUnSelected	= new Image(getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "pickButUnSelected.png"));
-      final ImageView	   pickButImg		= new ImageView();
+      final private Image	   pickButSelected	= new Image(getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "pickButSelected.png"));
+      final private Image	   pickButUnSelected	= new Image(getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "pickButUnSelected.png"));
+      final private ImageView	   pickButImg		= new ImageView();
 
-      final Image	   moveButSelected	= new Image(getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "moveButSelected.png"));
-      final Image	   moveButUnSelected	= new Image(getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "moveButUnSelected.png"));
-      final ImageView	   moveButImg		= new ImageView();
+      final private Image	   moveButSelected	= new Image(getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "moveButSelected.png"));
+      final private Image	   moveButUnSelected	= new Image(getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "moveButUnSelected.png"));
+      final private ImageView	   moveButImg		= new ImageView();
 
-      final Image	   panButSelected	= new Image(getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "panButSelected.png"));
-      final Image	   panButUnSelected	= new Image(getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "panButUnSelected.png"));
-      final ImageView	   panButImg		= new ImageView();
+      final private Image	   panButSelected	= new Image(getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "panButSelected.png"));
+      final private Image	   panButUnSelected	= new Image(getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "panButUnSelected.png"));
+      final private ImageView	   panButImg		= new ImageView();
 
-      final Image	   resizeButSelected	= new Image(getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "resizeButSelected.png"));
-      final Image	   resizeButUnSelected	= new Image(getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "resizeButUnSelected.png"));
-      final ImageView	   resizeButImg		= new ImageView();
+      final private Image	   resizeButSelected	= new Image(getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "resizeButSelected.png"));
+      final private Image	   resizeButUnSelected	= new Image(getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "resizeButUnSelected.png"));
+      final private ImageView	   resizeButImg		= new ImageView();
 
-      final Image	   zoomInButSelected	= new Image(getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "zoomInButSelected.png"));
-      final Image	   zoomInButUnSelected	= new Image(getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "zoomInButUnSelected.png"));
-      final ImageView	   zoomInButImg		= new ImageView();
+      final private Image	   zoomInButSelected	= new Image(getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "zoomInButSelected.png"));
+      final private Image	   zoomInButUnSelected	= new Image(getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "zoomInButUnSelected.png"));
+      final private ImageView	   zoomInButImg		= new ImageView();
 
-      final Image	   zoomOutButSelected	= new Image(getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "zoomOutButSelected.png"));
-      final Image	   zoomOutButUnSelected	= new Image(getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "zoomOutButUnSelected.png"));
-      final ImageView	   zoomOutButImg	= new ImageView();
+      final private Image	   zoomOutButSelected	= new Image(getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "zoomOutButSelected.png"));
+      final private Image	   zoomOutButUnSelected	= new Image(getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "zoomOutButUnSelected.png"));
+      final private ImageView	   zoomOutButImg	= new ImageView();
 
 
       public PixToolBar()

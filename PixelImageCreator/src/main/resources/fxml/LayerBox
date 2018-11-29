@@ -11,7 +11,10 @@
 	<ToggleButton fx:id="eyeBut" onMouseClicked="#toggleEye"/>
 
 </StackPane>
-<StackPane fx:id="miniaturePane" onMouseClicked="#handleMiniatureClicked"/>
+<StackPane fx:id="miniaturePane" onMouseClicked="#handleMiniatureClicked">
+	<Canvas fx:id="canvas"/>
+</StackPane>
+
 <StackPane fx:id="titlePane"/>
 <StackPane fx:id="lockPane">
 	<ToggleButton fx:id="lockBut" onMouseClicked="#toggleLock"/>

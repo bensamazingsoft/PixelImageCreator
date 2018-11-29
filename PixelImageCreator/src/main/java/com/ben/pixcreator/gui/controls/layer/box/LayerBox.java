@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.application.image.PixImage;
 import com.ben.pixcreator.application.image.layer.ILayer;
 
@@ -16,6 +17,7 @@ import javafx.collections.ObservableMap;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
@@ -37,12 +39,24 @@ public class LayerBox extends HBox implements Initializable, Toggle
 	ObservableMap<Object, Object> properties;
 	
 	//instance fields
+	
       private PixImage image;
 
       private ILayer	   layer;
 
-      private Image	   miniature;
+      private Image	   miniature;    
       private ImageView	   miniatureView;
+      
+      private final String IMAGEPATH		= "images/gui/buttons/layerbox/";
+      
+      private Image	   imgTypePicImg = new Image(getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "imgTypePicImg.png"));   
+      private Image	   imgTypePixImg = new Image(getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "imgTypePixImg.png")); 
+      private ImageView	  imgTypeView;
+      
+      
+      final private Image	   lockSelected	= new Image(getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "lockSelected.png"));
+      final private Image	   lockUnSelected	= new Image(getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "lockUnSelected.png"));
+      final private ImageView	   lockButImg		= new ImageView();
 
       @FXML
       private ToggleButton eyeBut;
@@ -55,6 +69,8 @@ public class LayerBox extends HBox implements Initializable, Toggle
 
       @FXML
       private StackPane	   miniaturePane;
+      @FXML
+      private Canvas canvas;
 
       @FXML
       private StackPane	   titlePane;
@@ -124,7 +140,16 @@ public class LayerBox extends HBox implements Initializable, Toggle
       public void initialize(URL arg0, ResourceBundle arg1)
       {
 	    // TODO set height and growh titlepane, set Pix/Pix logo, etc
+		
+		lockBut.setGraphic(lockButImg);
+		lockButImg.imageProperty().bind(Bindings.when(lockBut.selectedProperty()).then(lockButSelected).otherwise(lockButUnSelected));
 
+		imgTypeView.imageProperty().setValue(layer instanceof PixLayer ? imgTypePixImg : imgTypePicImg);
+		
+		this.setHeight(Integer.valueOf(AppContext.getInstance().getProperties().get("layerBoxH")));
+		
+		canvas.setHeight(Integer.valueOf(AppContext.getInstance().getProperties().get("miniatureWH")));
+		canvas.setWidth(Integer.valueOf(AppContext.getInstance().getProperties().get("miniatureWH")));
       }
 
 

@@ -14,6 +14,10 @@
 	xmlns:fx="http://javafx.com/fxml">
 
 
-	<PixMenuBar id="menuBar" MigPane.cc="wrap" />
-	<PixToolBar id="toolBar" />
+	<PixMenuBar fx:id="menuBar" MigPane.cc="wrap" />
+	<PixToolBar fx:id="toolBar" MigPane.cc="wrap" />
+	// put image canvas here ;)
+	<LayerPanel fx:id="layerPanel"/>
+	
+	
 </MigPane>

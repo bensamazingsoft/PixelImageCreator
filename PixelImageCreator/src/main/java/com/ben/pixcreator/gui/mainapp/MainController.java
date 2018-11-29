@@ -13,5 +13,7 @@ public class MainController
       private PixMenuBar pixMenuBar;
       @FXML
       private PixToolBar	 pixToolBar;
+      @FXML
+      private LayerPanel layerPanel;
 
 }
