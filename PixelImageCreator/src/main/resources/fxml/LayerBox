@@ -9,13 +9,16 @@
 
 <StackPane fx:id="eye">
 	<ToggleButton fx:id="eyeBut" onMouseClicked="#toggleEye"/>
-
 </StackPane>
+
 <StackPane fx:id="miniaturePane" onMouseClicked="#handleMiniatureClicked">
-	<Canvas fx:id="canvas"/>
+	<Canvas fx:id="canvas" alignment="Pos.CENTER"/>
 </StackPane>
 
-<StackPane fx:id="titlePane"/>
+<StackPane fx:id="titlePane">
+	<ImageView fx:id="imgTypeView" alignment="Pos.TOP_RIGHT"/>
+</StackPane>
+
 <StackPane fx:id="lockPane">
 	<ToggleButton fx:id="lockBut" onMouseClicked="#toggleLock"/>
 </StackPane>

@@ -25,11 +25,18 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.HBoxBuilder;
 import javafx.scene.layout.StackPane;
 
 //TODO make this a Toggle to handle select mecanism in the layerPanel
 public class LayerBox extends HBox implements Initializable, Toggle
 {
+	
+	//properties
+	private final int MINIATUREHEIGHT= Integer.valueOf(AppContext.getInstance().getProperties().get("miniatureWH"));
+	private final int MINIATUREWIDTH = Integer.valueOf(AppContext.getInstance().getProperties().get("miniatureWH"));
+	private final int BOXHEIGHT = Integer.valueOf(AppContext.getInstance().getProperties().get("layerBoxH"));
+	
 	//toggle fields
 	
 	private ToggleGroup toggleGroup;
@@ -51,6 +58,8 @@ public class LayerBox extends HBox implements Initializable, Toggle
       
       private Image	   imgTypePicImg = new Image(getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "imgTypePicImg.png"));   
       private Image	   imgTypePixImg = new Image(getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "imgTypePixImg.png")); 
+  
+      @FXML
       private ImageView	  imgTypeView;
       
       
@@ -145,11 +154,15 @@ public class LayerBox extends HBox implements Initializable, Toggle
 		lockButImg.imageProperty().bind(Bindings.when(lockBut.selectedProperty()).then(lockButSelected).otherwise(lockButUnSelected));
 
 		imgTypeView.imageProperty().setValue(layer instanceof PixLayer ? imgTypePixImg : imgTypePicImg);
+
 		
-		this.setHeight(Integer.valueOf(AppContext.getInstance().getProperties().get("layerBoxH")));
+		this.setHeight(BOXHEIGHT);
+		this.setHgrow(titlePane, Priority.ALWAYS);
 		
-		canvas.setHeight(Integer.valueOf(AppContext.getInstance().getProperties().get("miniatureWH")));
-		canvas.setWidth(Integer.valueOf(AppContext.getInstance().getProperties().get("miniatureWH")));
+		
+		canvas.setHeight(MINIATUREHEIGHT);
+		canvas.setWidth(MINIATUREWIDTH);
+
       }
 
 
