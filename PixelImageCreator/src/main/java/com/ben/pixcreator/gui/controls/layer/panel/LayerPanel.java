@@ -25,7 +25,7 @@ import javafx.scene.layout.VBox;
 
 public class LayerPanel extends BorderPane implements Initializable
 {
-
+//TODO refactor package to 'panes' instead of 'control'
       private final String     IMAGEPATH	    = "images/gui/buttons/tools/";
 
       private final PixImage   image;

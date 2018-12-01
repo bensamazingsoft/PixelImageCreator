@@ -16,7 +16,7 @@ import javafx.scene.canvas.GraphicsContext;
 public class PixImage
 {
 
-      // TODO refactor to get visible/invisible layers
+      // TODO manage the 'changed' state : do you save on close ? is there a '*' beside the name ?
       private static final int DEFAULTSIZE	     = 800;
       private static final int DEFAULTGRIDRESOLUTION = 80;
 

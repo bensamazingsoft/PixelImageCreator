@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<fx:root type="javafx.scene.control.Tab" xmlns:fx="http://javafx.com/fxml">
+	
+
+<ScrollPane fx:id="scrollPane">
+
+	<Canvas fx:id="canvas" onClosed="#handleClose"/>
+
+</ScrollPane>
+
+</fx:root>

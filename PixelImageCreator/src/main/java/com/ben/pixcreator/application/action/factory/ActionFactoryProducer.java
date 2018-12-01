@@ -5,7 +5,7 @@ import com.ben.pixcreator.application.action.factory.impl.DrawActionFactory;
 
 public class ActionFactoryProducer
 {
-//TOFO a static method or a superFactory to get the Tool-adapted factory
+
       public AActionFactory getActionFactory(PixTool tool)
       {
 

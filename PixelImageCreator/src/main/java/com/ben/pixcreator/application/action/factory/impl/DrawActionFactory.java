@@ -15,7 +15,7 @@ public class DrawActionFactory extends AActionFactory {
 	@Override
 	public IAction getAction(Event event) {
 //TODO need a nullAction
-		IAction action = new NullAction();
+		IAction action = new ActionNull();
 		
 		if (event instanceof MouseEvent){
 			
