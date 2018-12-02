@@ -4,6 +4,7 @@ package com.ben.pixcreator.collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import com.ben.pixcreator.application.image.layer.ILayer;
 
@@ -19,7 +20,7 @@ public class LayerList extends HashMap<ILayer, Boolean>
       {
 
 	    super();
-	    idx = new SortedMap<>();
+	    idx = new TreeMap<>();
       }
 
 

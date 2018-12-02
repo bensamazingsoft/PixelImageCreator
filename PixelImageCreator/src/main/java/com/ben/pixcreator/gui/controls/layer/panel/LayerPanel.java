@@ -4,7 +4,6 @@ package com.ben.pixcreator.gui.controls.layer.panel;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.Set;
 
 import com.ben.pixcreator.application.image.PixImage;
 import com.ben.pixcreator.application.image.layer.ILayer;
@@ -25,47 +24,43 @@ import javafx.scene.layout.VBox;
 
 public class LayerPanel extends BorderPane implements Initializable
 {
-//TODO refactor package to 'panes' instead of 'control'
-      private final String     IMAGEPATH	    = "images/gui/buttons/tools/";
 
-      private final PixImage   image;
+      private final String   IMAGEPATH		  = "images/gui/buttons/tools/";
 
+      private final PixImage image;
 
-
-      // private Image moveLayerDownButImg,moveLayerUpButImg,deleteLayerButImg,duplicateLayerButImg,newLayerButImg;
-
-      final Image	       moveLayerDownButImg  = new Image(getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "moveLayerDownButImg.png"));
-      final Image	       moveLayerUpButImg    = new Image(getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "moveLayerUpButImg.png"));
-      final Image	       deleteLayerButImg    = new Image(getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "deleteLayerButImg.png"));
-      final Image	       duplicateLayerButImg = new Image(getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "duplicateLayerButImg.png"));
-      final Image	       newLayerButImg	    = new Image(getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "newLayerButImg.png"));
+      final Image	     moveLayerDownButImg  = new Image(getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "moveLayerDownButImg.png"));
+      final Image	     moveLayerUpButImg	  = new Image(getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "moveLayerUpButImg.png"));
+      final Image	     deleteLayerButImg	  = new Image(getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "deleteLayerButImg.png"));
+      final Image	     duplicateLayerButImg = new Image(getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "duplicateLayerButImg.png"));
+      final Image	     newLayerButImg	  = new Image(getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "newLayerButImg.png"));
 
       @FXML
-      private ToolBar	       toolBar;
+      private ToolBar	     toolBar;
 
       @FXML
-      private VBox	       moveLayerButBox;
+      private VBox	     moveLayerButBox;
 
       @FXML
-      private VBox	       layersBox;
+      private VBox	     layersBox;
 
       @FXML
-      private Button	       deleteLayerBut;
+      private Button	     deleteLayerBut;
 
       @FXML
-      private Button	       duplicateLayerBut;
+      private Button	     duplicateLayerBut;
 
       @FXML
-      private Button	       newLayerBut;
+      private Button	     newLayerBut;
 
       @FXML
-      private Button	       moveLayerUpBut;
+      private Button	     moveLayerUpBut;
 
       @FXML
-      private Button	       moveLayerDownBut;
+      private Button	     moveLayerDownBut;
 
       @FXML
-      private ToggleGroup      togglegroup;
+      private ToggleGroup    togglegroup;
 
 
       public LayerPanel()
@@ -176,9 +171,16 @@ public class LayerPanel extends BorderPane implements Initializable
       {
 
 	    // TODO initialize
-	    populate();
-	    
-	    
+	    try
+	    {
+		  populate();
+	    }
+	    catch (NumberFormatException | IOException e)
+	    {
+		  // TODO Auto-generated catch block
+		  e.printStackTrace();
+	    }
+
 	    deleteLayerBut.setGraphic(new ImageView(deleteLayerButImg));
 
 	    duplicateLayerBut.setGraphic(new ImageView(duplicateLayerButImg));
@@ -191,35 +193,41 @@ public class LayerPanel extends BorderPane implements Initializable
       }
 
 
-      private void populate()
+      private void populate() throws NumberFormatException, IOException
       {
 	    // populate VBox with layerBoxes and toggleGroup
 
-    	  togglegroup = new ToggleGroup();
-    	  
-	    if (layer != null) {
-			for (int i = 0; i < image.getLayers().getIdx().size(); i++) {
+	    togglegroup = new ToggleGroup();
 
-				ILayer layer = image.getLayers().getLayerById(i);
-				LayerBox box = new LayerBox(image, layer);
+	    if (image != null)
+	    {
+		  for (int i = 0; i < image.getLayers().getIdx().size(); i++)
+		  {
 
-				layersBox.getChildren().add(box);
+			ILayer layer = image.getLayers().getLayerById(i);
+			LayerBox box = new LayerBox(image, layer);
 
-				box.setToggleGroup(togglegroup);
+			layersBox.getChildren().add(box);
 
-			}
-		}
+			box.setToggleGroup(togglegroup);
+
+		  }
+	    }
 
       }
 
 
-	public ToggleGroup getTogglegroup() {
-		return togglegroup;
-	}
+      public ToggleGroup getTogglegroup()
+      {
+
+	    return togglegroup;
+      }
 
 
-	public void setTogglegroup(ToggleGroup togglegroup) {
-		this.togglegroup = togglegroup;
-	}
+      public void setTogglegroup(ToggleGroup togglegroup)
+      {
+
+	    this.togglegroup = togglegroup;
+      }
 
 }

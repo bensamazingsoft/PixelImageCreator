@@ -1,12 +1,18 @@
+
 package com.ben.pixcreator.gui.pane.tabpane;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.control.TabPane;
 
 public class PixTabPane extends TabPane implements Initializable
 {
 
-      private final String     IMAGEPATH	    = "images/gui/buttons/tabpane/";
-
+      private final String IMAGEPATH = "images/gui/buttons/tabpane/";
 
 
       public PixTabPane()
@@ -30,20 +36,20 @@ public class PixTabPane extends TabPane implements Initializable
 
       }
 
-      
+
       public void initialize(URL arg0, ResourceBundle arg1)
       {
 
 	    // TODO initialize
 	    populate();
-	    
 
       }
 
 
-	private void populate() {
-		// TODO populate tabpane
-		
-	}
-      
+      private void populate()
+      {
+	    // TODO populate tabpane
+
+      }
+
 }

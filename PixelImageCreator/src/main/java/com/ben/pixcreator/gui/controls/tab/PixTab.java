@@ -1,32 +1,34 @@
-package com.ben.pixcreator.gui.pane.tabpane;
 
-import javafx.scene.canvas.Canvas;
-import javafx.scene.control.ScrollPane;
+package com.ben.pixcreator.gui.controls.tab;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 import com.ben.pixcreator.application.image.PixImage;
-import com.ben.pixcreator.gui.pane.tabpane.FXMLLoader;
-import com.ben.pixcreator.gui.pane.tabpane.IOException;
-import com.ben.pixcreator.gui.pane.tabpane.Initializable;
-import com.ben.pixcreator.gui.pane.tabpane.ResourceBundle;
-import com.ben.pixcreator.gui.pane.tabpane.TabPane;
-import com.ben.pixcreator.gui.pane.tabpane.URL;
 
-
+import javafx.event.Event;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Tab;
 
 public class PixTab extends Tab implements Initializable
 {
 
-      private final String     IMAGEPATH	    = "images/gui/buttons/tab/";
+      private final String   IMAGEPATH = "images/gui/buttons/tab/";
 
       private final PixImage image;
-      
-      
-      @FXML
-      private ScrollPane scrollPane;
-      @FXML
-      private Canvas canvas;
 
-      public PixTabPane(PixImage image)
+      @FXML
+      private ScrollPane     scrollPane;
+      @FXML
+      private Canvas	     canvas;
+
+
+      public PixTab(PixImage image)
       {
 
 	    super();
@@ -46,51 +48,51 @@ public class PixTab extends Tab implements Initializable
 	    }
 
 	    this.image = image;
-	    
-	    
+
       }
 
-      
-      
-      
+
       @FXML
-      public void handleOnClose(Event event){
-    	  //onClose
-    	  onClose();
+      public void handleOnClose(Event event)
+      {
+
+	    // onClose
+	    onClose();
       }
-      
-      
-      private void onClose() {
-		// TODO implement onClose
-		
-	}
 
 
+      private void onClose()
+      {
+	    // TODO implement onClose
+
+      }
 
 
-	public void initialize(URL arg0, ResourceBundle arg1)
+      @Override
+      public void initialize(URL arg0, ResourceBundle arg1)
       {
 
 	    // TODO initialize
-    	  this.setText(image.getName());
-    	  
-    	  canvas = new Canvas(image.getxSize(),image.getySize());
-   
-    	  scrollPane.setContent(canvas);
-	    
+	    this.setText(image.getName());
+
+	    canvas = new Canvas(image.getxSize(), image.getySize());
+
+	    scrollPane.setContent(canvas);
 
       }
 
 
+      public PixImage getImage()
+      {
+
+	    return image;
+      }
 
 
-	public PixImage getImage() {
-		return image;
-	}
+      public Canvas getCanvas()
+      {
 
+	    return canvas;
+      }
 
-	public Canvas getCanvas() {
-		return canvas;
-	}
-      
 }

@@ -7,6 +7,8 @@
 <?import com.ben.pixcreator.gui.controls.tool.toolbar.*?>
 <?import org.tbee.javafx.scene.layout.fxml.MigPane?>
 <?import layouttests.migfxml.sample1.*?>
+<?import com.ben.pixcreator.gui.pane.tabpane.*?>
+<?import com.ben.pixcreator.gui.controls.layer.panel.*?>
 
 <MigPane id="rootPane"
 	fx:controller="com.ben.pixcreator.gui.mainapp.MainController"
@@ -16,8 +18,8 @@
 
 	<PixMenuBar fx:id="menuBar" MigPane.cc="wrap" />
 	<PixToolBar fx:id="toolBar" MigPane.cc="wrap" />
-	// put image canvas here ;)
-	<LayerPanel fx:id="layerPanel"/>
+	<PixTabPane fx:id="pixTabPane"/>
+	<LayerPanel fx:id="layerPanel"  MigPane.cc="wrap"/>
 	
 	
 </MigPane>

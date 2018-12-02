@@ -81,7 +81,7 @@ public class PixImage
 
 	    for (int i = 0; i < layers.size(); i++)
 	    {
-		  ILayer layer = layers.getId(i);
+		  ILayer layer = layers.getLayerById(i);
 		  if (layers.get(layer))
 		  {
 			layer.show(canvas, xGridResolution, yGridResolution);

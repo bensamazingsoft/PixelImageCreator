@@ -12,6 +12,7 @@ import com.ben.pixcreator.application.tools.PixTool;
 import com.ben.pixcreator.gui.controls.layer.panel.LayerPanel;
 import com.ben.pixcreator.gui.controls.menu.bar.PixMenuBar;
 import com.ben.pixcreator.gui.controls.tool.toolbar.PixToolBar;
+import com.ben.pixcreator.gui.pane.tabpane.PixTabPane;
 
 import javafx.scene.Scene;
 import javafx.scene.control.Toggle;
@@ -24,6 +25,7 @@ public class GuiFacade
       private Scene	       scene;
       private PixMenuBar       pixMenuBar;
       private PixToolBar       pixToolBar;
+      private PixTabPane       pixTabPane;
       private LayerPanel       layerPanel;
 
 
@@ -56,10 +58,7 @@ public class GuiFacade
 	    List<Toggle> list = pixToolBar.getToggleGroup().getToggles()
 			.stream()
 			.filter(togBut -> ((PixTool) togBut.getUserData()).name().equals(pixTool.name()))
-			.map(togl -> {
-			      (PixTool) togl.getUserData();
-			      })
-				    .collect(Collectors.toList());
+			.collect(Collectors.toList());
 
 	    if (list.size() > 0)
 	    {
@@ -75,18 +74,19 @@ public class GuiFacade
 
 	    PixImage activeImage;
 	    // TODO retrieve current active image
-	    return activeImage;
+	    return null;
       }
+
 
       public ILayer getActiveLayer()
       {
 
 	    ILayer activeLayer;
 	    // TODO retrieve current active layer
-	    return activeLayer;
+	    return null;
       }
-      
-      
+
+
       public Scene getScene()
       {
 
@@ -112,6 +112,48 @@ public class GuiFacade
       {
 
 	    this.pixMenuBar = pixMenuBar;
+      }
+
+
+      public PixToolBar getPixToolBar()
+      {
+
+	    return pixToolBar;
+      }
+
+
+      public void setPixToolBar(PixToolBar pixToolBar)
+      {
+
+	    this.pixToolBar = pixToolBar;
+      }
+
+
+      public PixTabPane getPixTabPane()
+      {
+
+	    return pixTabPane;
+      }
+
+
+      public void setPixTabPane(PixTabPane pixTabPane)
+      {
+
+	    this.pixTabPane = pixTabPane;
+      }
+
+
+      public LayerPanel getLayerPanel()
+      {
+
+	    return layerPanel;
+      }
+
+
+      public void setLayerPanel(LayerPanel layerPanel)
+      {
+
+	    this.layerPanel = layerPanel;
       }
 
 }

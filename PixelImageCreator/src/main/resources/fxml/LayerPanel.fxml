@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<fx:root type="javafx.scene.layout.BorderPane"
+	xmlns:fx="http://javafx.com/fxml">
+
+	<center>
+		<ScrollPane>
+			<VBox fx:id="layersBox" />
+		</ScrollPane>
+	</center>
+
+	<right>
+		<VBox fx:id="moveLayerButBox">
+			<Button fx:id="moveLayerUpBut" onAction="#handleMoveLayerUp" />
+			<Button fx:id="moveLayerDownBut" onAction="#handleMoveLayerDown" />
+		</VBox>
+	</right>
+
+	<bottom>
+		<ToolBar fx:id="toolBar">
+	
+			<Pane HBox.hgrow="ALWAYS" />
+			<Button fx:id="newLayerBut" onAction="#handleNewLayer" />	
+			<Button fx:id="duplicateLayerBut" onAction="#handleDuplicateLayer" />
+			<Button fx:id="deleteLayerBut" onAction="#handleDeleteLayer" />
+		</ToolBar>
+
+	</bottom>
+
+</fx:root>
