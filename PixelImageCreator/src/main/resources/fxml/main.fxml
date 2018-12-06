@@ -20,6 +20,6 @@
 	<PixToolBar fx:id="toolBar" MigPane.cc="wrap" />
 	<PixTabPane fx:id="pixTabPane"/>
 	<LayerPanel fx:id="layerPanel"  MigPane.cc="wrap"/>
-	
+	<ColorRoster fx:id="colorRoster"/>
 	
 </MigPane>

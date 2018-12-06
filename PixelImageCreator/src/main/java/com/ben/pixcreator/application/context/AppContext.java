@@ -26,37 +26,19 @@ public class AppContext
 
       private AppContext() throws IOException
       {
-
+    	
 	    properties = PropertiesContext.getInstance();
 
 	    currTool = PixTool.getTool(properties.get("startTool"));
 
-	    gridColor = getColor(properties.get("gridColor"));
-	    currDrawColor = getColor(properties.get("drawColor"));
+	    gridColor = properties.getColor(properties.get("gridColor"));
+	    currDrawColor = properties.getColor(properties.get("drawColor"));
 
 	    openImages = new HashSet<PixImage>();
 
       }
 
 
-      // convert color string property to color object
-      private Color getColor(String string)
-      {
-
-	    Color color = Color.BLACK;
-	    String[] rgbValues = string.split(",");
-
-	    if (rgbValues.length == 3)
-	    {
-		  color = Color.rgb(Integer.valueOf(rgbValues[0]), Integer.valueOf(rgbValues[1]), Integer.valueOf(rgbValues[2]));
-	    }
-	    else if (rgbValues.length == 4)
-	    {
-		  color = Color.rgb(Integer.valueOf(rgbValues[0]), Integer.valueOf(rgbValues[1]), Integer.valueOf(rgbValues[2]), Double.valueOf(rgbValues[3]));
-	    }
-
-	    return color;
-      }
 
 
       public static AppContext getInstance() throws IOException

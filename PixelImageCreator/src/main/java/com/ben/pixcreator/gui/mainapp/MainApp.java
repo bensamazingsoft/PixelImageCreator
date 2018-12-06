@@ -15,6 +15,8 @@ import javafx.stage.Stage;
 public class MainApp extends Application
 {
 
+	//TODO need to implement the onClose behaviour (save properties etc)
+	
       private static final Logger log = LoggerFactory.getLogger(MainApp.class);
 
 

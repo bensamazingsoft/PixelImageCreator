@@ -76,6 +76,7 @@ public class PixTab extends Tab implements Initializable
 	    this.setText(image.getName());
 
 	    canvas = new Canvas(image.getxSize(), image.getySize());
+	    
 
 	    scrollPane.setContent(canvas);
 

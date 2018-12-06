@@ -5,12 +5,12 @@
 <?import javafx.scene.layout.*?>
 
 
-<fx:root type="javafx.scene.control.Tab" xmlns:fx="http://javafx.com/fxml">
+<fx:root type="javafx.scene.control.Tab" xmlns:fx="http://javafx.com/fxml" onClosed="#handleClose">
 	
 
 <ScrollPane fx:id="scrollPane">
 
-	<Canvas fx:id="canvas" onClosed="#handleClose"/>
+	<Canvas fx:id="canvas" />
 
 </ScrollPane>
 

@@ -6,6 +6,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import java.util.Set;
+
+import javafx.scene.paint.Color;
 
 public class PropertiesContext
 {
@@ -76,8 +79,51 @@ public class PropertiesContext
 
 	    properties.setProperty(key, value);
       }
+      
+      
+      public  Set<Color> getStartRosterColors(){
+    	  
+    	  // get the rosteColorors
 
+    	  Set<Color> result = new HashSet<>();
+    	  
+    	  String[] stringColors = properties.getProperty("rosterColors").split("X");
+    	  
+    	  for (String stringColor : stringColors){
+    		  
+    		  
+    		  Color color = getColor(stringColor);
+    		  
+    		  result.add(color);
+    		  
+    	  }
+  	  
+    	  return result;
+     	  
+      }
+      
+      
+      
+   // convert color string property to color object
+      private  Color getColor(String string)
+      {
 
+	    Color color = Color.BLACK;
+	    String[] rgbValues = string.split(",");
+
+	    if (rgbValues.length == 3)
+	    {
+		  color = Color.rgb(Integer.valueOf(rgbValues[0]), Integer.valueOf(rgbValues[1]), Integer.valueOf(rgbValues[2]));
+	    }
+	    else if (rgbValues.length == 4)
+	    {
+		  color = Color.rgb(Integer.valueOf(rgbValues[0]), Integer.valueOf(rgbValues[1]), Integer.valueOf(rgbValues[2]), Double.valueOf(rgbValues[3]));
+	    }
+
+	    return color;
+      }
+      
+      
       public static PropertiesContext getInstance() throws IOException
       {
 

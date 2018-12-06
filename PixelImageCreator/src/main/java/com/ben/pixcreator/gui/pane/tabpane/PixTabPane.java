@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import com.ben.pixcreator.application.context.AppContext;
+import com.ben.pixcreator.application.image.PixImage;
+
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TabPane;
@@ -48,7 +51,9 @@ public class PixTabPane extends TabPane implements Initializable
 
       private void populate()
       {
-	    // TODO populate tabpane
+	    for (PixImage image : AppContext.getInstance().getOpenImages()){
+	    	
+	    }
 
       }
 
