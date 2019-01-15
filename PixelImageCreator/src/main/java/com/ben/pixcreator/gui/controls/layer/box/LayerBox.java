@@ -6,8 +6,9 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import com.ben.pixcreator.application.context.AppContext;
+import com.ben.pixcreator.application.grouplock.manager.GroupLockManager;
 import com.ben.pixcreator.application.image.PixImage;
-import com.ben.pixcreator.application.image.layer.ILayer;
+import com.ben.pixcreator.application.image.layer.impl.ALayer;
 import com.ben.pixcreator.application.image.layer.impl.PixLayer;
 
 import javafx.beans.binding.Bindings;
@@ -31,205 +32,182 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 
 // make this a Toggle to handle select mecanism in the layerPanel
-public class LayerBox extends HBox implements Initializable, Toggle
-{
+public class LayerBox extends HBox implements Initializable, Toggle {
 
-      // properties
-      private final int			  MINIATUREHEIGHT;
-      private final int			  MINIATUREWIDTH;
-      private final int			  BOXHEIGHT;
+	// properties
+	private final int	MINIATUREHEIGHT;
+	private final int	MINIATUREWIDTH;
+	private final int	BOXHEIGHT;
 
-      // toggle fields
+	// toggle fields
 
-      private ToggleGroup		  toggleGroup;
-      private ObjectProperty<ToggleGroup> toggleGroupProperty = new SimpleObjectProperty<ToggleGroup>();
-      private Boolean			  selected	      = false;
-      private BooleanProperty		  selectedProperty    = new SimpleBooleanProperty(selected);
-      ObservableMap<Object, Object>	  properties;
+	private ToggleGroup					toggleGroup;
+	private ObjectProperty<ToggleGroup>	toggleGroupProperty	= new SimpleObjectProperty<ToggleGroup>();
+	private SimpleBooleanProperty		selected			= new SimpleBooleanProperty();
+	ObservableMap<Object, Object>		properties;
 
-      // instance fields
+	// instance fields
 
-      private PixImage			  image;
+	private PixImage image;
 
-      private ILayer			  layer;
+	private ALayer layer;
 
-      private Image			  miniature;
-      private ImageView			  miniatureView;
+	private Image		miniature;
+	private ImageView	miniatureView;
 
-      private final String		  IMAGEPATH	      = "images/gui/buttons/layerbox/";
+	private final String IMAGEPATH = "images/gui/buttons/layerbox/";
 
-      private Image			  imgTypePicImg	      = new Image(getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "imgTypePicImg.png"));
-      private Image			  imgTypePixImg	      = new Image(getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "imgTypePixImg.png"));
+	private Image	imgTypePicImg	= new Image(
+			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "imgTypePicImg.png"));
+	private Image	imgTypePixImg	= new Image(
+			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "imgTypePixImg.png"));
 
-      @FXML
-      private ImageView			  imgTypeView;
+	@FXML
+	private ImageView imgTypeView;
 
-      final private Image		  lockSelected	      = new Image(getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "lockSelected.png"));
-      final private Image		  lockUnSelected      = new Image(getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "lockUnSelected.png"));
-      final private ImageView		  lockButImg	      = new ImageView();
+	final private Image		lockSelected	= new Image(
+			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "lockSelected.png"));
+	final private Image		lockUnSelected	= new Image(
+			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "lockUnSelected.png"));
+	final private ImageView	lockButImg		= new ImageView();
 
-      @FXML
-      private ToggleButton		  eyeBut;
+	@FXML
+	private ToggleButton eyeBut;
 
-      @FXML
-      private ToggleButton		  lockBut;
+	@FXML
+	private ToggleButton lockBut;
 
-      @FXML
-      private StackPane			  eye;
+	@FXML
+	private StackPane eye;
 
-      @FXML
-      private StackPane			  miniaturePane;
-      @FXML
-      private Canvas			  canvas;
+	@FXML
+	private StackPane	miniaturePane;
+	@FXML
+	private Canvas		canvas;
 
-      @FXML
-      private StackPane			  titlePane;
+	@FXML
+	private StackPane titlePane;
 
-      @FXML
-      private StackPane			  lockPane;
+	@FXML
+	private StackPane lockPane;
 
+	public LayerBox(PixImage image, ALayer layer) throws NumberFormatException, IOException {
 
-      public LayerBox(PixImage image, ILayer layer) throws NumberFormatException, IOException
-      {
+		super();
 
-	    super();
+		MINIATUREHEIGHT = Integer.valueOf(AppContext.getInstance().getProperties().get("miniatureWH"));
+		MINIATUREWIDTH = Integer.valueOf(AppContext.getInstance().getProperties().get("miniatureWH"));
+		BOXHEIGHT = Integer.valueOf(AppContext.getInstance().getProperties().get("layerBoxH"));
 
-	    MINIATUREHEIGHT = Integer.valueOf(AppContext.getInstance().getProperties().get("miniatureWH"));
-	    MINIATUREWIDTH = Integer.valueOf(AppContext.getInstance().getProperties().get("miniatureWH"));
-	    BOXHEIGHT = Integer.valueOf(AppContext.getInstance().getProperties().get("layerBoxH"));
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n/trad");
 
-	    ResourceBundle bundle = ResourceBundle.getBundle("i18n/trad");
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/LayerBox.fxml"), bundle);
+		fxmlLoader.setRoot(this);
+		fxmlLoader.setController(this);
 
-	    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/LayerBox.fxml"), bundle);
-	    fxmlLoader.setRoot(this);
-	    fxmlLoader.setController(this);
+		try {
+			fxmlLoader.load();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 
-	    try
-	    {
-		  fxmlLoader.load();
-	    }
-	    catch (IOException e)
-	    {
-		  throw new RuntimeException(e);
-	    }
+		this.image = image;
+		this.layer = layer;
+	}
 
-	    this.image = image;
-	    this.layer = layer;
-      }
+	@FXML
+	private void toggleEye(MouseEvent event) {
 
+		layer.setVisible(!layer.isVisible());
+		;
+	}
 
-      @FXML
-      private void toggleEye(MouseEvent event)
-      {
+	@FXML
+	private void toggleLock(MouseEvent event) {
 
-	    image.toggleLayerVisibility(layer);
-      }
+		toggleLayerLock();
+	}
 
+	private void toggleLayerLock() {
 
-      @FXML
-      private void toggleLock(MouseEvent event)
-      {
+		if (GroupLockManager.getInstance().getGroupLock(layer).size() != 0) {
+			GroupLockManager.getInstance().unlock(layer);
+		} else {
+			GroupLockManager.getInstance().lockToActiveLayer(layer);
+		}
 
-	    // TODO toggle layer lock
-      }
+	}
 
+	@FXML
+	private void handleMiniatureClicked(MouseEvent event) {
 
-      @FXML
-      private void handleMiniatureClicked(MouseEvent event)
-      {
+		miniatureClicked();
+	}
 
-	    // handleMiniatureClicked
-	    miniatureClicked();
-      }
+	private void miniatureClicked() {
 
+		setSelected(!isSelected());
 
-      private void miniatureClicked()
-      {
+	}
 
-	    // miniatureClicked
-	    if (!selected)
-	    {
-		  selected = true;
-		  selectedProperty.setValue(selected);
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
+		// TODO set height and growh titlepane, set Pix/Pix logo, etc
 
-	    }
-      }
+		lockBut.setGraphic(lockButImg);
+		lockButImg.imageProperty()
+				.bind(Bindings.when(lockBut.selectedProperty()).then(lockSelected).otherwise(lockUnSelected));
 
+		imgTypeView.imageProperty().setValue(layer instanceof PixLayer ? imgTypePixImg : imgTypePicImg);
 
-      @Override
-      public void initialize(URL arg0, ResourceBundle arg1)
-      {
-	    // TODO set height and growh titlepane, set Pix/Pix logo, etc
+		this.setHeight(BOXHEIGHT);
+		HBox.setHgrow(titlePane, Priority.ALWAYS);
 
-	    lockBut.setGraphic(lockButImg);
-	    lockButImg.imageProperty().bind(Bindings.when(lockBut.selectedProperty()).then(lockSelected).otherwise(lockUnSelected));
+		canvas.setHeight(MINIATUREHEIGHT);
+		canvas.setWidth(MINIATUREWIDTH);
 
-	    imgTypeView.imageProperty().setValue(layer instanceof PixLayer ? imgTypePixImg : imgTypePicImg);
+	}
 
-	    this.setHeight(BOXHEIGHT);
-	    HBox.setHgrow(titlePane, Priority.ALWAYS);
+	public ToggleGroup getToggleGroup() {
 
-	    canvas.setHeight(MINIATUREHEIGHT);
-	    canvas.setWidth(MINIATUREWIDTH);
+		return toggleGroup;
+	}
 
-      }
+	public ALayer getUserData() {
 
+		return layer;
+	}
 
-      public ToggleGroup getToggleGroup()
-      {
+	public void setToggleGroup(ToggleGroup arg0) {
 
-	    return toggleGroup;
-      }
+		toggleGroup = arg0;
+		toggleGroupProperty.set(toggleGroup);
+	}
 
+	public void setUserData(Object arg0) {
 
-      public ILayer getUserData()
-      {
+	}
 
-	    return layer;
-      }
+	public ObjectProperty<ToggleGroup> toggleGroupProperty() {
 
+		return toggleGroupProperty;
+	}
 
-      public boolean isSelected()
-      {
+	@Override
+	public boolean isSelected() {
+		return selectedProperty().get();
+	}
 
-	    return selected;
-      }
+	@Override
+	public BooleanProperty selectedProperty() {
 
+		return selectedProperty();
+	}
 
-      public BooleanProperty selectedProperty()
-      {
+	@Override
+	public void setSelected(boolean value) {
+		selectedProperty().set(value);
 
-	    return selectedProperty;
-      }
-
-
-      public void setSelected(boolean arg0)
-      {
-
-	    selected = arg0;
-	    selectedProperty.set(selected);
-
-      }
-
-
-      public void setToggleGroup(ToggleGroup arg0)
-      {
-
-	    toggleGroup = arg0;
-	    toggleGroupProperty.set(toggleGroup);
-      }
-
-
-      public void setUserData(Object arg0)
-      {
-
-      }
-
-
-      public ObjectProperty<ToggleGroup> toggleGroupProperty()
-      {
-
-	    return toggleGroupProperty;
-      }
+	}
 
 }

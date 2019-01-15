@@ -1,126 +1,152 @@
 
 package com.ben.pixcreator.collection;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 import com.ben.pixcreator.application.image.layer.ILayer;
+import com.ben.pixcreator.application.image.layer.impl.ALayer;
 
-public class LayerList extends HashMap<ILayer, Boolean>
-{
+/**
+ * Represents the layer stack. Achtung : there is no '0' layer, it starts @ 1
+ * 
+ * @author bmo
+ *
+ */
+public class LayerList {
 
-      private static final long	   serialVersionUID = 1L;
+	List<Pair> items = new ArrayList<>();
 
-      private Map<Integer, ILayer> idx;
+	public LayerList() {
 
+	}
 
-      public LayerList()
-      {
+	public Pair getPair(int idx) {
+		for (Pair pair : items) {
+			if (pair.getIdx() == idx) {
+				return pair;
+			}
+		}
+		return null;
+	}
 
-	    super();
-	    idx = new TreeMap<>();
-      }
+	public Pair getPair(ALayer layer) {
+		for (Pair pair : items) {
+			if (pair.getLayer().equals(layer)) {
+				return pair;
+			}
+		}
+		return null;
+	}
 
+	public ALayer getLayer(int idx) {
 
-      public LayerList(List<ILayer> gridLayers)
-      {
+		for (Pair pair : items) {
+			if (pair.getIdx() == idx) {
+				return pair.getLayer();
+			}
+		}
+		return null;
+	}
 
-	    // TODO Auto-generated constructor stub
-      }
+	private int getIdx(ILayer layer) {
+		for (Pair pair : items) {
+			if (pair.getLayer().equals(layer)) {
+				return pair.getIdx();
+			}
+		}
+		return 0;
+	}
 
+	public void add(ALayer layer) {
+		items.add(new Pair(items.size() == 0 ? 1 : items.size() + 1, layer));
+	}
 
-      public void moveUp(ILayer layer)
-      {
+	public void remove(int idx) {
+		for (Pair pair : items) {
+			if (pair.getIdx() == idx) {
+				items.remove(pair);
+			}
+		}
+	}
 
-	    // TODO move the item one slot up in the list
-      }
+	public void remove(ALayer layer) {
+		for (Pair pair : items) {
+			if (pair.getLayer().equals(layer)) {
+				items.remove(pair);
+			}
+		}
+	}
 
+	public void moveUp(ALayer layer) {
 
-      public void moveDown(ILayer layer)
-      {
+		getPair(getIdx(layer)).decr();
+		getPair(layer).incr();
 
-	    // TODO move the item one slot down in the list
-      }
+	}
 
+	public void moveDown(ALayer layer) {
 
-      public void insertOver(ILayer layer)
-      {
+		getPair(getIdx(layer)).incr();
+		getPair(layer).decr();
+	}
 
-	    // TODO insert an item over a target item in the list
-      }
+	public void insertOver(ALayer layer, ALayer newLayer) {
 
+		int idx = getIdx(layer);
+		items.add(new Pair(++idx, newLayer));
+		for (Pair pair : items) {
+			if (pair.getIdx() > idx) {
+				pair.incr();
+			}
+		}
+	}
 
-      public void insertUnder(ILayer layer)
-      {
+	public void insertUnder(ALayer layer, ALayer newLayer) {
 
-	    // TODO insert an item under a target item in the list
-      }
+		int idx = getIdx(layer);
+		items.add(new Pair(idx, newLayer));
+		for (Pair pair : items) {
+			if (pair.getIdx() >= idx) {
+				pair.incr();
+			}
+		}
+	}
 
+	private class Pair {
 
-      public void toogle(ILayer layer)
-      {
+		int		idx;
+		ALayer	layer;
 
-	    // TODO toggle layer boolean value
-      }
+		public Pair(int idx, ALayer layer) {
+			this.idx = idx;
+			this.layer = layer;
+		}
 
+		public void incr() {
+			idx++;
+		}
 
-      public Map<Integer, ILayer> getIdx()
-      {
+		public void decr() {
+			idx--;
+		}
 
-	    return idx;
-      }
+		public int getIdx() {
+			return idx;
+		}
 
+		public ALayer getLayer() {
+			return layer;
+		}
 
-      public void setIdx(Map<Integer, ILayer> idx)
-      {
+	}
 
-	    this.idx = idx;
-      }
+	public List<Pair> getItems() {
+		return items;
+	}
 
-
-      @Override
-      public Boolean put(ILayer arg0, Boolean arg1)
-      {
-
-	    // TODO Auto-generated method stub
-	    return super.put(arg0, arg1);
-      }
-
-
-      @Override
-      public void putAll(Map<? extends ILayer, ? extends Boolean> arg0)
-      {
-
-	    // TODO Auto-generated method stub
-	    super.putAll(arg0);
-      }
-
-
-      @Override
-      public boolean remove(Object arg0, Object arg1)
-      {
-
-	    // TODO Auto-generated method stub
-	    return super.remove(arg0, arg1);
-      }
-
-
-      @Override
-      public Boolean remove(Object arg0)
-      {
-
-	    // TODO Auto-generated method stub
-	    return super.remove(arg0);
-      }
-
-
-      public ILayer getLayerById(int i)
-      {
-
-	    // TODO Auto-generated method stub
-	    return null;
-      }
+	public void setItems(List<Pair> items) {
+		this.items = items;
+	}
 
 }

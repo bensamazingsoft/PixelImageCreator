@@ -6,64 +6,58 @@ import java.io.IOException;
 import com.ben.pixcreator.application.action.IAction;
 import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.application.image.PixImage;
-import com.ben.pixcreator.application.image.layer.ILayer;
+import com.ben.pixcreator.application.image.layer.impl.ALayer;
 
-public class ActionChangeLayerVisibility implements IAction
-{
+public class ActionChangeLayerVisibility implements IAction {
 
-      private PixImage image;
+	private PixImage image;
 
-      private ILayer   layer;
-      private boolean  changed;
-      private boolean  old;
+	private ALayer	layer;
+	private boolean	state	= layer.isVisible();
 
+	public ActionChangeLayerVisibility(PixImage image, ALayer layer)
+			throws IOException, ClosedImageException, InexistantLayerException {
 
-      public ActionChangeLayerVisibility(PixImage image, ILayer layer) throws IOException, ClosedImageException, InexistantLayerException
-      {
+		super();
+		this.image = image;
+		this.layer = layer;
 
-	    super();
-	    this.image = image;
-	    this.layer = layer;
-	    old = image.getLayers().get(layer);
-	    changed = !old;
+		if (!AppContext.getInstance().getOpenImages().contains(image)) {
+			throw new ClosedImageException();
+		} else if (!image.getLayerList().getItems().contains(layer)) {
+			throw new InexistantLayerException();
+		}
 
-	    if (!AppContext.getInstance().getOpenImages().contains(image))
-	    {
-		  throw new ClosedImageException();
-	    }
-	    else if (!image.getLayers().containsKey(layer))
-	    {
-		  throw new InexistantLayerException();
-	    }
-      }
+	}
 
+	@Override
+	public void execute() throws Exception {
 
-      @Override
-      public void execute() throws IOException
-      {
+		if (AppContext.getInstance().getOpenImages().contains(image)) {
+			if (image.getLayerList().getItems().contains(layer)) {
+				layer.setVisible(!state);
+			} else {
+				throw new InexistantLayerException();
+			}
+		} else {
+			throw new ClosedImageException();
+		}
 
-	    if (AppContext.getInstance().getOpenImages().contains(image))
-	    {
-		  if (image.getLayers().containsKey(layer))
-		  {
-			image.getLayers().put(layer, changed);
-		  }
-	    }
+	}
 
-      }
+	@Override
+	public void cancel() throws Exception {
 
+		if (AppContext.getInstance().getOpenImages().contains(image)) {
+			if (image.getLayerList().getItems().contains(layer)) {
+				layer.setVisible(state);
+			} else {
+				throw new InexistantLayerException();
+			}
+		} else {
+			throw new ClosedImageException();
+		}
 
-      @Override
-      public void cancel() throws IOException
-      {
-
-	    if (AppContext.getInstance().getOpenImages().contains(image))
-	    {
-		  if (image.getLayers().containsKey(layer))
-		  {
-			image.getLayers().put(layer, old);
-		  }
-	    }
-      }
+	}
 
 }

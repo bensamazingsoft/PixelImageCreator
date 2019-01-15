@@ -1,7 +1,6 @@
 
 package com.ben.pixcreator.gui.facade;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,143 +16,107 @@ import com.ben.pixcreator.gui.pane.tabpane.PixTabPane;
 import javafx.scene.Scene;
 import javafx.scene.control.Toggle;
 
-public class GuiFacade
-{
+public class GuiFacade {
 
-      private static GuiFacade instance;
+	private static GuiFacade instance;
 
-      private Scene	       scene;
-      private PixMenuBar       pixMenuBar;
-      private PixToolBar       pixToolBar;
-      private PixTabPane       pixTabPane;
-      private LayerPanel       layerPanel;
+	private Scene		scene;
+	private PixMenuBar	pixMenuBar;
+	private PixToolBar	pixToolBar;
+	private PixTabPane	pixTabPane;
+	private LayerPanel	layerPanel;
 
+	private GuiFacade() {
 
-      private GuiFacade()
-      {
+	}
 
-      }
+	public static GuiFacade getInstance() {
 
+		if (instance == null) {
 
-      public static GuiFacade getInstance()
-      {
+			instance = new GuiFacade();
+		}
 
-	    if (instance == null)
-	    {
+		return instance;
+	}
 
-		  instance = new GuiFacade();
-	    }
+	public void toggleToolTo(PixTool pixTool) {
 
-	    return instance;
-      }
+		// toggle tool in AppContext and Gui Controls
 
+		AppContext.getInstance().setCurrTool(pixTool);
 
-      public void toggleToolTo(PixTool pixTool) throws IOException
-      {
+		List<Toggle> list = pixToolBar.getToggleGroup().getToggles().stream()
+				.filter(togBut -> ((PixTool) togBut.getUserData()).name().equals(pixTool.name()))
+				.collect(Collectors.toList());
 
-	    // toggle tool in AppContext and Gui Controls
+		if (list.size() > 0) {
+			Toggle toggle = list.get(0);
+			pixToolBar.getToggleGroup().selectToggle(toggle);
+		}
 
-	    AppContext.getInstance().setCurrTool(pixTool);
+	}
 
-	    List<Toggle> list = pixToolBar.getToggleGroup().getToggles()
-			.stream()
-			.filter(togBut -> ((PixTool) togBut.getUserData()).name().equals(pixTool.name()))
-			.collect(Collectors.toList());
+	public PixImage getActiveImage() {
 
-	    if (list.size() > 0)
-	    {
-		  Toggle toggle = list.get(0);
-		  pixToolBar.getToggleGroup().selectToggle(toggle);
-	    }
+		PixImage activeImage = (PixImage) pixTabPane.getSelectionModel().getSelectedItem().getUserData();
+		return activeImage;
+	}
 
-      }
+	public ILayer getActiveLayer() {
 
+		ILayer activeLayer = (ILayer) layerPanel.getTogglegroup().getSelectedToggle().getUserData();
+		return activeLayer;
+	}
 
-      public PixImage getActiveImage()
-      {
+	public Scene getScene() {
 
-	    PixImage activeImage;
-	    // TODO retrieve current active image
-	    return null;
-      }
+		return scene;
+	}
 
+	public void setScene(Scene scene) {
 
-      public ILayer getActiveLayer()
-      {
+		this.scene = scene;
+	}
 
-	    ILayer activeLayer;
-	    // TODO retrieve current active layer
-	    return null;
-      }
+	public PixMenuBar getPixMenuBar() {
 
+		return pixMenuBar;
+	}
 
-      public Scene getScene()
-      {
+	public void setPixMenuBar(PixMenuBar pixMenuBar) {
 
-	    return scene;
-      }
+		this.pixMenuBar = pixMenuBar;
+	}
 
+	public PixToolBar getPixToolBar() {
 
-      public void setScene(Scene scene)
-      {
+		return pixToolBar;
+	}
 
-	    this.scene = scene;
-      }
+	public void setPixToolBar(PixToolBar pixToolBar) {
 
+		this.pixToolBar = pixToolBar;
+	}
 
-      public PixMenuBar getPixMenuBar()
-      {
+	public PixTabPane getPixTabPane() {
 
-	    return pixMenuBar;
-      }
+		return pixTabPane;
+	}
 
+	public void setPixTabPane(PixTabPane pixTabPane) {
 
-      public void setPixMenuBar(PixMenuBar pixMenuBar)
-      {
+		this.pixTabPane = pixTabPane;
+	}
 
-	    this.pixMenuBar = pixMenuBar;
-      }
+	public LayerPanel getLayerPanel() {
 
+		return layerPanel;
+	}
 
-      public PixToolBar getPixToolBar()
-      {
+	public void setLayerPanel(LayerPanel layerPanel) {
 
-	    return pixToolBar;
-      }
-
-
-      public void setPixToolBar(PixToolBar pixToolBar)
-      {
-
-	    this.pixToolBar = pixToolBar;
-      }
-
-
-      public PixTabPane getPixTabPane()
-      {
-
-	    return pixTabPane;
-      }
-
-
-      public void setPixTabPane(PixTabPane pixTabPane)
-      {
-
-	    this.pixTabPane = pixTabPane;
-      }
-
-
-      public LayerPanel getLayerPanel()
-      {
-
-	    return layerPanel;
-      }
-
-
-      public void setLayerPanel(LayerPanel layerPanel)
-      {
-
-	    this.layerPanel = layerPanel;
-      }
+		this.layerPanel = layerPanel;
+	}
 
 }
