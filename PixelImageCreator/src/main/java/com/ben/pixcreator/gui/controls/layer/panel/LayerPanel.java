@@ -10,6 +10,7 @@ import com.ben.pixcreator.application.image.layer.impl.ALayer;
 import com.ben.pixcreator.gui.controls.layer.box.LayerBox;
 import com.ben.pixcreator.gui.facade.GuiFacade;
 
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -26,7 +27,7 @@ public class LayerPanel extends BorderPane implements Initializable {
 
 	private final String IMAGEPATH = "images/gui/buttons/tools/";
 
-	private final PixImage image;
+	private SimpleObjectProperty<PixImage> image;
 
 	final Image	moveLayerDownButImg		= new Image(
 			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "moveLayerDownButImg.png"));
@@ -80,8 +81,10 @@ public class LayerPanel extends BorderPane implements Initializable {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+		image = new SimpleObjectProperty<>();
+		image.addListener((obs, oldVal, newVal) -> populate());
 
-		image = GuiFacade.getInstance().getActiveImage();
+		GuiFacade.getInstance().setLayerPanel(this);
 
 	}
 
@@ -147,14 +150,6 @@ public class LayerPanel extends BorderPane implements Initializable {
 
 	public void initialize(URL arg0, ResourceBundle arg1) {
 
-		// TODO initialize
-		try {
-			populate();
-		} catch (NumberFormatException | IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
 		deleteLayerBut.setGraphic(new ImageView(deleteLayerButImg));
 
 		duplicateLayerBut.setGraphic(new ImageView(duplicateLayerButImg));
@@ -166,22 +161,22 @@ public class LayerPanel extends BorderPane implements Initializable {
 		moveLayerDownBut.setGraphic(new ImageView(moveLayerDownButImg));
 	}
 
-	private void populate() throws NumberFormatException, IOException {
+	private void populate() throws NumberFormatException {
 		// populate VBox with layerBoxes and toggleGroup
+
+		layersBox.getChildren().clear();
 
 		togglegroup = new ToggleGroup();
 
-		if (image != null) {
-			for (int i = 0; i < image.getLayerList().getItems().size(); i++) {
+		for (int i = 0; i < getImage().getLayerList().getItems().size(); i++) {
 
-				ALayer layer = image.getLayerList().getLayer(i);
-				LayerBox box = new LayerBox(image, layer);
+			ALayer layer = getImage().getLayerList().getLayer(i);
+			LayerBox box = new LayerBox(getImage(), layer);
 
-				layersBox.getChildren().add(box);
+			layersBox.getChildren().add(box);
 
-				box.setToggleGroup(togglegroup);
+			box.setToggleGroup(togglegroup);
 
-			}
 		}
 
 	}
@@ -194,6 +189,18 @@ public class LayerPanel extends BorderPane implements Initializable {
 	public void setTogglegroup(ToggleGroup togglegroup) {
 
 		this.togglegroup = togglegroup;
+	}
+
+	public final SimpleObjectProperty<PixImage> imageProperty() {
+		return this.image;
+	}
+
+	public final PixImage getImage() {
+		return this.imageProperty().get();
+	}
+
+	public final void setImage(final PixImage image) {
+		this.imageProperty().set(image);
 	}
 
 }

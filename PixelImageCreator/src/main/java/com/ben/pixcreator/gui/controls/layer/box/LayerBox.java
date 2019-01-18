@@ -91,13 +91,13 @@ public class LayerBox extends HBox implements Initializable, Toggle {
 	@FXML
 	private StackPane lockPane;
 
-	public LayerBox(PixImage image, ALayer layer) throws NumberFormatException, IOException {
+	public LayerBox(PixImage image, ALayer layer) throws NumberFormatException {
 
 		super();
 
-		MINIATUREHEIGHT = Integer.valueOf(AppContext.getInstance().getProperties().get("miniatureWH"));
-		MINIATUREWIDTH = Integer.valueOf(AppContext.getInstance().getProperties().get("miniatureWH"));
-		BOXHEIGHT = Integer.valueOf(AppContext.getInstance().getProperties().get("layerBoxH"));
+		MINIATUREHEIGHT = Integer.valueOf(AppContext.getInstance().propertyContext().get("miniatureWH"));
+		MINIATUREWIDTH = Integer.valueOf(AppContext.getInstance().propertyContext().get("miniatureWH"));
+		BOXHEIGHT = Integer.valueOf(AppContext.getInstance().propertyContext().get("layerBoxH"));
 
 		ResourceBundle bundle = ResourceBundle.getBundle("i18n/trad");
 

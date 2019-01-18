@@ -7,9 +7,11 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javafx.scene.paint.Color;
 
@@ -17,7 +19,7 @@ public class PropertiesContext {
 
 	private Properties		defaultProp, properties;
 	private File			propFile;
-	private final String	defaultPropertiesFileName	= "/properties/default.properties";
+	private final String	defaultPropertiesFileName	= "./properties/default.properties";
 
 	public PropertiesContext() throws IOException {
 
@@ -27,6 +29,9 @@ public class PropertiesContext {
 	private void initProperties() throws IOException {
 
 		// initialize default properties
+
+		defaultProp = new Properties();
+		properties = new Properties();
 
 		ClassLoader classloader = Thread.currentThread().getContextClassLoader();
 		InputStream is = classloader.getResourceAsStream(defaultPropertiesFileName);
@@ -106,8 +111,19 @@ public class PropertiesContext {
 	}
 
 	public void save() throws FileNotFoundException, IOException {
+		propFile.getParentFile().mkdirs();
 		properties.store(new FileOutputStream(propFile), null);
 
+	}
+
+	public Set<String> getProps(String string) {
+		Collection<Object> objs = properties.values();
+		Set<String> props = new HashSet<>();
+
+		props = objs.stream().map(obj -> (String) obj).filter(prop -> prop.startsWith("color_"))
+				.collect(Collectors.toSet());
+
+		return props;
 	}
 
 }

@@ -10,6 +10,7 @@ import com.ben.pixcreator.application.image.layer.impl.ALayer;
 import com.ben.pixcreator.application.image.layer.impl.PicLayer;
 import com.ben.pixcreator.application.image.layer.impl.PixLayer;
 import com.ben.pixcreator.collection.LayerList;
+import com.ben.pixcreator.gui.facade.GuiFacade;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -30,8 +31,7 @@ public class PixImage {
 	private ILayer ghost, select;
 	// layer and its visibility
 
-	private LayerList	layerList;
-	private boolean		showGrid;
+	private LayerList layerList;
 
 	public PixImage() {
 
@@ -40,6 +40,7 @@ public class PixImage {
 		ghost = new PixLayer();
 		select = new PixLayer();
 		layerList = new LayerList();
+		layerList.add(new PixLayer());
 
 		xSize = ySize = DEFAULTSIZE;
 
@@ -81,7 +82,7 @@ public class PixImage {
 
 		ghost.show(canvas, xGridResolution, yGridResolution);
 
-		if (showGrid) {
+		if (GuiFacade.getInstance().isShowGrid()) {
 			showGrid(canvas);
 		}
 
@@ -194,16 +195,6 @@ public class PixImage {
 	public void setLayerList(LayerList layers) {
 
 		this.layerList = layers;
-	}
-
-	public boolean isShowGrid() {
-
-		return showGrid;
-	}
-
-	public void setShowGrid(boolean showGrid) {
-
-		this.showGrid = showGrid;
 	}
 
 }

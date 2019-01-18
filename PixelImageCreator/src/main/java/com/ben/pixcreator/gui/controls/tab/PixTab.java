@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 
 import com.ben.pixcreator.application.image.PixImage;
 
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,85 +16,75 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 
-public class PixTab extends Tab implements Initializable
-{
+public class PixTab extends Tab implements Initializable {
 
-      private final String   IMAGEPATH = "images/gui/buttons/tab/";
+	private final String IMAGEPATH = "images/gui/buttons/tab/";
 
-      private final PixImage image;
+	private SimpleObjectProperty<PixImage> image;
 
-      @FXML
-      private ScrollPane     scrollPane;
-      @FXML
-      private Canvas	     canvas;
+	@FXML
+	private ScrollPane	scrollPane;
+	@FXML
+	private Canvas		canvas;
 
+	public PixTab(PixImage image) {
 
-      public PixTab(PixImage image)
-      {
+		super();
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n/trad");
 
-	    super();
-	    ResourceBundle bundle = ResourceBundle.getBundle("i18n/trad");
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/PixTab.fxml"), bundle);
+		fxmlLoader.setRoot(this);
+		fxmlLoader.setController(this);
 
-	    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/PixTab.fxml"), bundle);
-	    fxmlLoader.setRoot(this);
-	    fxmlLoader.setController(this);
+		try {
+			fxmlLoader.load();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 
-	    try
-	    {
-		  fxmlLoader.load();
-	    }
-	    catch (IOException e)
-	    {
-		  throw new RuntimeException(e);
-	    }
+		setImage(image);
 
-	    this.image = image;
+	}
 
-      }
+	@FXML
+	public void handleOnClose(Event event) {
 
+		// onClose
+		onClose();
+	}
 
-      @FXML
-      public void handleOnClose(Event event)
-      {
+	private void onClose() {
+		// TODO implement onClose
 
-	    // onClose
-	    onClose();
-      }
+	}
 
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
 
-      private void onClose()
-      {
-	    // TODO implement onClose
+		// TODO initialize
+		this.setText(getImage().getName());
+		this.setUserData(canvas);
 
-      }
+		canvas = new Canvas(getImage().getxSize(), getImage().getySize());
 
+		scrollPane.setContent(canvas);
 
-      @Override
-      public void initialize(URL arg0, ResourceBundle arg1)
-      {
+	}
 
-	    // TODO initialize
-	    this.setText(image.getName());
+	public Canvas getCanvas() {
 
-	    canvas = new Canvas(image.getxSize(), image.getySize());
-	    
+		return canvas;
+	}
 
-	    scrollPane.setContent(canvas);
+	public final SimpleObjectProperty<PixImage> imageProperty() {
+		return this.image;
+	}
 
-      }
+	public final PixImage getImage() {
+		return this.imageProperty().get();
+	}
 
-
-      public PixImage getImage()
-      {
-
-	    return image;
-      }
-
-
-      public Canvas getCanvas()
-      {
-
-	    return canvas;
-      }
-
+	public final void setImage(final PixImage image) {
+		this.imageProperty().set(image);
+	}
 }

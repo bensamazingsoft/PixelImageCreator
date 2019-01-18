@@ -27,6 +27,8 @@ public class MainApp extends Application {
 
 	public void start(Stage stage) throws Exception {
 
+		AppContext.init();
+
 		ResourceBundle bundle = ResourceBundle.getBundle("i18n/trad");
 
 		String fxmlFile = "/fxml/main.fxml";
@@ -35,7 +37,7 @@ public class MainApp extends Application {
 		Parent rootNode = (Parent) loader.load(getClass().getResourceAsStream(fxmlFile));
 
 		log.debug("Showing JFX scene");
-		Scene scene = new Scene(rootNode, 400, 200);
+		Scene scene = new Scene(rootNode, 800, 600);
 		scene.getStylesheets().add("/styles/styles.css");
 
 		stage.setOnCloseRequest((Event) -> handleClose());
@@ -46,7 +48,7 @@ public class MainApp extends Application {
 
 	private void handleClose() {
 		try {
-			AppContext.getInstance().getProperties().save();
+			AppContext.getInstance().propertyContext().save();
 		} catch (IOException e) {
 			new ExceptionPopUp(e);
 		}

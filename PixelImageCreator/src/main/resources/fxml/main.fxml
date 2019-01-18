@@ -3,23 +3,36 @@
 <?import java.lang.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
 <?import com.ben.pixcreator.gui.controls.menu.bar.*?>
 <?import com.ben.pixcreator.gui.controls.tool.toolbar.*?>
-<?import org.tbee.javafx.scene.layout.fxml.MigPane?>
-<?import layouttests.migfxml.sample1.*?>
 <?import com.ben.pixcreator.gui.pane.tabpane.*?>
 <?import com.ben.pixcreator.gui.controls.layer.panel.*?>
+<?import com.ben.pixcreator.gui.controls.color.roster.*?>
 
-<MigPane id="rootPane"
+<BorderPane id="rootPane"
 	fx:controller="com.ben.pixcreator.gui.mainapp.MainController"
-	styleClass="main-panel"  cols="" rows=""
-	xmlns:fx="http://javafx.com/fxml">
+	styleClass="main-panel" xmlns:fx="http://javafx.com/fxml">
 
+	<top>
+		<VBox>
+			<PixMenuBar fx:id="menuBar"/>
 
-	<PixMenuBar fx:id="menuBar" MigPane.cc="wrap" />
-	<PixToolBar fx:id="toolBar" MigPane.cc="wrap" />
-	<PixTabPane fx:id="pixTabPane"/>
-	<LayerPanel fx:id="layerPanel"  MigPane.cc="wrap"/>
-	<ColorRoster fx:id="colorRoster"/>
+			<PixToolBar fx:id="toolBar" />
+		</VBox>
+	</top>
+
+	<center>
+		<PixTabPane fx:id="tabPane" />
+	</center>
 	
-</MigPane>
+	<right>
+		<LayerPanel fx:id="layerPanel"/>
+	</right>
+	
+	<bottom>
+		<ColorRoster fx:id="colorRoster" />
+	</bottom>
+	
+</BorderPane>

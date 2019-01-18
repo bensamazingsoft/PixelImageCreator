@@ -3,14 +3,13 @@
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 
-<fx:root type="javafx.scene.control.MenuBar" xmlns:fx="http://javafx.com/fxml"
-	onKeyPressed="#handleKeyInput">
+<fx:root type="javafx.scene.control.MenuBar" xmlns:fx="http://javafx.com/fxml">
 	
 		<menus>
 			<Menu text="%fichier">
 				<items>
-					<MenuItem text="%nouveau" onAction="#newAction" />
-					<MenuItem text="%ouvrir" onAction="#openAction" />
+					<MenuItem text="%nouveau" onAction="#newAction" accelerator="Shortcut+n"/>
+					<MenuItem text="%ouvrir" onAction="#openAction" accelerator="Shortcut+o"/>
 				</items>
 			</Menu>
 		</menus>

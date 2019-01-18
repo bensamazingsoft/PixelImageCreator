@@ -12,7 +12,11 @@ import javafx.scene.paint.Color;
 
 public class PixLayer extends ALayer {
 
-	private Map<Coord, Color> grid;
+	/**
+	 * 
+	 */
+	private static final long	serialVersionUID	= 1L;
+	private Map<Coord, Color>	grid;
 
 	public PixLayer() {
 

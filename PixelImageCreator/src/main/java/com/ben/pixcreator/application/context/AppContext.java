@@ -2,6 +2,7 @@
 package com.ben.pixcreator.application.context;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.ResourceBundle;
 import java.util.Set;
 
@@ -32,7 +33,7 @@ public class AppContext {
 
 		properties = new PropertiesContext();
 		bundle = ResourceBundle.getBundle("i18n/trad");
-
+		openImages = new HashSet<PixImage>();
 		currTool = PixTool.getTool(properties.get("startTool"));
 
 		gridColor = properties.getColor(properties.get("gridColor"));
@@ -49,7 +50,7 @@ public class AppContext {
 
 	}
 
-	public PropertiesContext getProperties() {
+	public PropertiesContext propertyContext() {
 
 		return properties;
 	}

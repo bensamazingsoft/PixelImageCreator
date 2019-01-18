@@ -28,9 +28,9 @@ public class ColorBox extends HBox implements Toggle, Initializable {
 
 	private SimpleBooleanProperty				selected	= new SimpleBooleanProperty();
 	private SimpleObjectProperty<ToggleGroup>	toggleGroup	= new SimpleObjectProperty<>();
-	private SimpleObjectProperty<Color>			color		= new SimpleObjectProperty<>();
+	private ObjectProperty<Color>				color		= new SimpleObjectProperty<>();
 
-	public ColorBox() throws IOException {
+	public ColorBox()  {
 
 		super();
 
@@ -48,15 +48,23 @@ public class ColorBox extends HBox implements Toggle, Initializable {
 
 	}
 
-	// TODO the color builder and listen to user change (bind the color prop)
+	// builder
+	public ColorBox color(Color color) {
+
+		setColor(color);
+
+		return this;
+
+	}
 
 	public void setColor(Color color) {
 		setColor(color);
 	}
 
 	@Override
-	public void initialize(URL arg0, ResourceBundle arg1) {
-		// TODO Auto-generated method stub
+	public void initialize(URL arg0, ResourceBundle bundle) {
+
+		colorPicker.valueProperty().bindBidirectional(color);
 
 		this.color.addListener((obs, oldVal, newVal) -> {
 			colorPicker.setValue(newVal);
@@ -64,7 +72,7 @@ public class ColorBox extends HBox implements Toggle, Initializable {
 
 	}
 
-	public SimpleObjectProperty<Color> colorProperty() {
+	public ObjectProperty<Color> colorProperty() {
 		return color;
 	}
 
