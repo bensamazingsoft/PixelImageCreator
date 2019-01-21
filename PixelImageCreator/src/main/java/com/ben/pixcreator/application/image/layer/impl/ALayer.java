@@ -20,7 +20,7 @@ public abstract class ALayer implements ILayer, Serializable {
 	private SimpleBooleanProperty	visible				= new SimpleBooleanProperty();
 
 	@Override
-	public void show(Canvas canvas, int xGridResolution, int yGridResolution) {
+	public void draw(Canvas canvas, int xGridResolution, int yGridResolution) {
 
 	}
 

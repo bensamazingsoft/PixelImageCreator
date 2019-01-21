@@ -23,7 +23,7 @@ public class PicLayer extends ALayer {
 		sizeFactor = 1d;
 	}
 
-	public void show(Canvas canvas, int xGridResolution, int yGridResolution) {
+	public void draw(Canvas canvas, int xGridResolution, int yGridResolution) {
 
 		// TODO draw picimage to canvas
 

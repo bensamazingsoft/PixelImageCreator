@@ -1,10 +1,13 @@
 
 package com.ben.pixcreator.application.image.coords;
 
-public class Coord
+import java.util.Comparator;
+
+public class Coord implements Comparable<Coord>
 {
 
-      private int x, y;
+      private int			    x, y;
+      public static final Comparator<Coord> COMPARATOR = Comparator.comparingInt(Coord::getX).thenComparingInt(Coord::getX);;
 
 
       public Coord(int x, int y)
@@ -21,6 +24,7 @@ public class Coord
 
 	    super();
 	    this.x = this.y = 0;
+
       }
 
 
@@ -89,4 +93,57 @@ public class Coord
 
 	    this.y = y;
       }
+
+
+      @Override
+      public int compareTo(Coord oth)
+      {
+
+	    // if (obj instanceof Coord)
+	    // {
+	    // Coord other = (Coord) obj;
+	    //
+	    // if (this.getX() == other.getX())
+	    // {
+	    //
+	    // if (this.getY() < other.getY())
+	    // {
+	    // return -1;
+	    // }
+	    //
+	    // if (this.getY() > other.getY())
+	    // {
+	    // return 1;
+	    // }
+	    // return 0;
+	    //
+	    // }
+	    // else
+	    // {
+	    //
+	    // if (this.getX() < other.getX())
+	    // {
+	    // return -1;
+	    // }
+	    // else
+	    // {
+	    // return 1;
+	    // }
+	    // }
+	    //
+	    // }
+	    return COMPARATOR.compare(this, oth);
+      }
+
+      // public static class CoordComparator implements Comparator<Coord>
+      // {
+      //
+      // @Override
+      // public int compare(Coord o1, Coord o2)
+      // {
+      //
+      // return o1.compareTo(o2);
+      // }
+      //
+      // }
 }

@@ -8,145 +8,214 @@ import com.ben.pixcreator.application.image.layer.ILayer;
 import com.ben.pixcreator.application.image.layer.impl.ALayer;
 
 /**
- * Represents the layer stack. Achtung : there is no '0' layer, it starts @ 1
+ * Represents the layer stack.
  * 
  * @author bmo
  *
  */
-public class LayerList {
+public class LayerList
+{
 
-	List<Pair> items = new ArrayList<>();
+      List<Pair> items = new ArrayList<>();
 
-	public LayerList() {
 
-	}
+      public LayerList()
+      {
 
-	public Pair getPair(int idx) {
-		for (Pair pair : items) {
-			if (pair.getIdx() == idx) {
-				return pair;
-			}
-		}
-		return null;
-	}
+      }
 
-	public Pair getPair(ALayer layer) {
-		for (Pair pair : items) {
-			if (pair.getLayer().equals(layer)) {
-				return pair;
-			}
-		}
-		return null;
-	}
 
-	public ALayer getLayer(int idx) {
+      public Pair getPair(int idx)
+      {
 
-		for (Pair pair : items) {
-			if (pair.getIdx() == idx) {
-				return pair.getLayer();
-			}
-		}
-		return null;
-	}
+	    for (Pair pair : items)
+	    {
+		  if (pair.getIdx() == idx)
+		  {
+			return pair;
+		  }
+	    }
+	    return null;
+      }
 
-	private int getIdx(ILayer layer) {
-		for (Pair pair : items) {
-			if (pair.getLayer().equals(layer)) {
-				return pair.getIdx();
-			}
-		}
-		return 0;
-	}
 
-	public void add(ALayer layer) {
-		items.add(new Pair(items.size() == 0 ? 1 : items.size() + 1, layer));
-	}
+      public Pair getPair(ALayer layer)
+      {
 
-	public void remove(int idx) {
-		for (Pair pair : items) {
-			if (pair.getIdx() == idx) {
-				items.remove(pair);
-			}
-		}
-	}
+	    for (Pair pair : items)
+	    {
+		  if (pair.getLayer().equals(layer))
+		  {
+			return pair;
+		  }
+	    }
+	    return null;
+      }
 
-	public void remove(ALayer layer) {
-		for (Pair pair : items) {
-			if (pair.getLayer().equals(layer)) {
-				items.remove(pair);
-			}
-		}
-	}
 
-	public void moveUp(ALayer layer) {
+      public ALayer getLayer(int idx)
+      {
 
-		getPair(getIdx(layer)).decr();
-		getPair(layer).incr();
+	    for (Pair pair : items)
+	    {
+		  if (pair.getIdx() == idx)
+		  {
+			return pair.getLayer();
+		  }
+	    }
+	    return null;
+      }
 
-	}
 
-	public void moveDown(ALayer layer) {
+      private int getIdx(ILayer layer)
+      {
 
-		getPair(getIdx(layer)).incr();
-		getPair(layer).decr();
-	}
+	    for (Pair pair : items)
+	    {
+		  if (pair.getLayer().equals(layer))
+		  {
+			return pair.getIdx();
+		  }
+	    }
+	    return 0;
+      }
 
-	public void insertOver(ALayer layer, ALayer newLayer) {
 
-		int idx = getIdx(layer);
-		items.add(new Pair(++idx, newLayer));
-		for (Pair pair : items) {
-			if (pair.getIdx() > idx) {
-				pair.incr();
-			}
-		}
-	}
+      public void add(ALayer layer)
+      {
 
-	public void insertUnder(ALayer layer, ALayer newLayer) {
+	    items.add(new Pair(items.size(), layer));
+      }
 
-		int idx = getIdx(layer);
-		items.add(new Pair(idx, newLayer));
-		for (Pair pair : items) {
-			if (pair.getIdx() >= idx) {
-				pair.incr();
-			}
-		}
-	}
 
-	private class Pair {
+      public void remove(int idx)
+      {
 
-		int		idx;
-		ALayer	layer;
+	    for (Pair pair : items)
+	    {
+		  if (pair.getIdx() == idx)
+		  {
+			items.remove(pair);
+		  }
+	    }
+      }
 
-		public Pair(int idx, ALayer layer) {
-			this.idx = idx;
-			this.layer = layer;
-		}
 
-		public void incr() {
-			idx++;
-		}
+      public void remove(ALayer layer)
+      {
 
-		public void decr() {
-			idx--;
-		}
+	    for (Pair pair : items)
+	    {
+		  if (pair.getLayer().equals(layer))
+		  {
+			items.remove(pair);
+		  }
+	    }
+      }
 
-		public int getIdx() {
-			return idx;
-		}
 
-		public ALayer getLayer() {
-			return layer;
-		}
+      public void moveUp(ALayer layer)
+      {
 
-	}
+	    getPair(getIdx(layer)).decr();
+	    getPair(layer).incr();
 
-	public List<Pair> getItems() {
-		return items;
-	}
+      }
 
-	public void setItems(List<Pair> items) {
-		this.items = items;
-	}
+
+      public void moveDown(ALayer layer)
+      {
+
+	    getPair(getIdx(layer)).incr();
+	    getPair(layer).decr();
+      }
+
+
+      public void insertOver(ALayer layer, ALayer newLayer)
+      {
+
+	    int idx = getIdx(layer);
+	    items.add(new Pair(++idx, newLayer));
+	    for (Pair pair : items)
+	    {
+		  if (pair.getIdx() > idx)
+		  {
+			pair.incr();
+		  }
+	    }
+      }
+
+
+      public void insertUnder(ALayer layer, ALayer newLayer)
+      {
+
+	    int idx = getIdx(layer);
+	    items.add(new Pair(idx, newLayer));
+	    for (Pair pair : items)
+	    {
+		  if (pair.getIdx() >= idx)
+		  {
+			pair.incr();
+		  }
+	    }
+      }
+
+      private class Pair
+      {
+
+	    int	   idx;
+	    ALayer layer;
+
+
+	    public Pair(int idx, ALayer layer)
+	    {
+
+		  this.idx = idx;
+		  this.layer = layer;
+	    }
+
+
+	    public void incr()
+	    {
+
+		  idx++;
+	    }
+
+
+	    public void decr()
+	    {
+
+		  Math.max(0, idx--);
+	    }
+
+
+	    public int getIdx()
+	    {
+
+		  return idx;
+	    }
+
+
+	    public ALayer getLayer()
+	    {
+
+		  return layer;
+	    }
+
+      }
+
+
+      public List<Pair> getItems()
+      {
+
+	    return items;
+      }
+
+
+      public void setItems(List<Pair> items)
+      {
+
+	    this.items = items;
+      }
 
 }

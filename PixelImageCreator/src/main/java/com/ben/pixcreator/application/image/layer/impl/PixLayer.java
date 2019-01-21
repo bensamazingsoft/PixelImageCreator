@@ -8,58 +8,90 @@ import com.ben.pixcreator.application.image.coords.Coord;
 import com.ben.pixcreator.application.image.layer.sampler.LayerSampler;
 
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-public class PixLayer extends ALayer {
+public class PixLayer extends ALayer
+{
 
-	/**
-	 * 
-	 */
-	private static final long	serialVersionUID	= 1L;
-	private Map<Coord, Color>	grid;
+      /**
+       * 
+       */
+      private static final long	serialVersionUID = 1L;
+      private Map<Coord, Color>	grid;
 
-	public PixLayer() {
 
-		this.grid = new HashMap<Coord, Color>();
-	}
+      public PixLayer()
+      {
 
-	public PixLayer(Map<Coord, Color> grid) {
+	    this.grid = new HashMap<Coord, Color>();
+      }
 
-		super();
-		this.grid = grid;
-	}
 
-	public void show(Canvas canvas, int xGridResolution, int yGridResolution) {
+      public PixLayer(Map<Coord, Color> grid)
+      {
 
-		int xCellSize = (int) Math.floor(canvas.getWidth() / xGridResolution);
-		int yCellSize = (int) Math.floor(canvas.getHeight() / yGridResolution);
+	    super();
+	    this.grid = grid;
+      }
 
-		if (xCellSize != 0 || yCellSize != 0) {
 
-			// TODO Draw piximage to canvas
+      public void draw(Canvas canvas, int xGridResolution, int yGridResolution)
+      {
 
-		} else {
-			LayerSampler layerSampler = new LayerSampler(this);
+	    int xCellSize = (int) Math.floor(canvas.getWidth() / xGridResolution);
+	    int yCellSize = (int) Math.floor(canvas.getHeight() / yGridResolution);
 
-			int xDivFactor = (int) Math.floor(xGridResolution / canvas.getWidth());
-			int yDivFactor = (int) Math.floor(yGridResolution / canvas.getHeight());
+	    if (xCellSize >= 1 || yCellSize >= 1)
+	    {
 
-			PixLayer drawLayer = layerSampler.div(xDivFactor, yDivFactor);
+		  drawGraphics(canvas, xCellSize, yCellSize);
 
-			drawLayer.show(canvas, 1, 1);
+	    }
+	    else
+	    {
+		  LayerSampler layerSampler = new LayerSampler(this);
 
-		}
+		  int xDivFactor = (int) Math.floor(xGridResolution / canvas.getWidth());
+		  int yDivFactor = (int) Math.floor(yGridResolution / canvas.getHeight());
 
-	}
+		  PixLayer drawLayer = layerSampler.div(xDivFactor, yDivFactor);
 
-	public Map<Coord, Color> getGrid() {
+		  drawLayer.draw(canvas, 1, 1); // TODO wrong!!
 
-		return grid;
-	}
+	    }
 
-	public void setGrid(Map<Coord, Color> grid) {
+      }
 
-		this.grid = grid;
-	}
+
+      private void drawGraphics(Canvas canvas, int xCellSize, int yCellSize)
+      {
+
+	    GraphicsContext graphic = canvas.getGraphicsContext2D();
+
+	    for (Coord cell : getGrid().keySet())
+	    {
+
+		  graphic.setFill(getGrid().get(cell));
+
+		  graphic.fillRect(xCellSize * cell.getX(), yCellSize * cell.getY(), xCellSize, yCellSize);
+
+	    }
+
+      }
+
+
+      public Map<Coord, Color> getGrid()
+      {
+
+	    return grid;
+      }
+
+
+      public void setGrid(Map<Coord, Color> grid)
+      {
+
+	    this.grid = grid;
+      }
 
 }
