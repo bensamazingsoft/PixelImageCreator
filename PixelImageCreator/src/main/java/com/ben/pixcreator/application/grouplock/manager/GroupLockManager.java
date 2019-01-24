@@ -4,14 +4,14 @@ package com.ben.pixcreator.application.grouplock.manager;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.ben.pixcreator.application.image.layer.ILayer;
+import com.ben.pixcreator.application.image.layer.impl.ALayer;
 import com.ben.pixcreator.gui.facade.GuiFacade;
 
 public class GroupLockManager {
 
 	private static GroupLockManager instance;
 
-	private Set<Set<ILayer>> groups;
+	private Set<Set<ALayer>> groups;
 
 	private GroupLockManager() {
 
@@ -19,11 +19,18 @@ public class GroupLockManager {
 
 	}
 
-	public Set<ILayer> getGroupLock(ILayer layer) {
+	/**
+	 * Get a set of locked-layers, it may contains only the one layer if its
+	 * locked button was clicked.
+	 * 
+	 * @param layer
+	 * @return the lock-group containing the layer or an empty set.
+	 */
+	public Set<ALayer> getGroupLock(ALayer layer) {
 
-		Set<ILayer> emptyResult = new HashSet<>();
+		Set<ALayer> emptyResult = new HashSet<>();
 
-		for (Set<ILayer> set : groups) {
+		for (Set<ALayer> set : groups) {
 
 			if (set.contains(layer)) {
 
@@ -36,13 +43,21 @@ public class GroupLockManager {
 		return emptyResult;
 	}
 
-	public boolean lockToActiveLayer(ILayer layer) {
+	/**
+	 * Lock a layer to the current active layer by adding this layer to all its
+	 * lock-group
+	 * 
+	 * @param layer
+	 * @return true if the layer was successfully added to at least one
+	 *         lock-group
+	 */
+	public boolean lockToActiveLayer(ALayer layer) {
 
 		// lockToActiveLayer
 		boolean success = false;
-		ILayer activeLayer = GuiFacade.getInstance().getActiveLayer();
+		ALayer activeLayer = GuiFacade.getInstance().getActiveLayer();
 
-		for (Set<ILayer> set : groups) {
+		for (Set<ALayer> set : groups) {
 
 			if (set.contains(activeLayer)) {
 
@@ -54,11 +69,18 @@ public class GroupLockManager {
 		return success;
 	}
 
-	public boolean unlock(ILayer layer) {
+	/**
+	 * 
+	 * removes a layer from all its lock-groups
+	 * 
+	 * @param layer
+	 * @return true if the layer was successfully removed from at least one set
+	 */
+	public boolean unlock(ALayer layer) {
 
 		boolean success = false;
 
-		for (Set<ILayer> set : groups) {
+		for (Set<ALayer> set : groups) {
 
 			if (set.contains(layer)) {
 				set.remove(layer);

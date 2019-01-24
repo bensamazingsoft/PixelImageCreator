@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.application.image.PixImage;
-import com.ben.pixcreator.application.image.layer.ILayer;
+import com.ben.pixcreator.application.image.layer.impl.ALayer;
 import com.ben.pixcreator.application.tools.PixTool;
 import com.ben.pixcreator.gui.controls.color.roster.ColorRoster;
 import com.ben.pixcreator.gui.controls.layer.panel.LayerPanel;
@@ -82,10 +82,9 @@ public class GuiFacade {
 		return activeImage;
 	}
 
-	public ILayer getActiveLayer() {
+	public ALayer getActiveLayer() {
 
-		ILayer activeLayer = (ILayer) layerPanel.getTogglegroup().getSelectedToggle().getUserData();
-		return activeLayer;
+		return layerPanel.getActiveLayer();
 	}
 
 	public Scene getScene() {

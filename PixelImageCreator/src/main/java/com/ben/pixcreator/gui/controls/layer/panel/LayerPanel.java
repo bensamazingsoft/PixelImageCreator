@@ -5,9 +5,13 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import com.ben.pixcreator.application.action.impl.LayerAction;
+import com.ben.pixcreator.application.executor.Executor;
 import com.ben.pixcreator.application.image.PixImage;
 import com.ben.pixcreator.application.image.layer.impl.ALayer;
 import com.ben.pixcreator.gui.controls.layer.box.LayerBox;
+import com.ben.pixcreator.gui.controls.layer.panel.actions.LayerListAction;
+import com.ben.pixcreator.gui.exception.popup.ExceptionPopUp;
 import com.ben.pixcreator.gui.facade.GuiFacade;
 
 import javafx.beans.property.SimpleObjectProperty;
@@ -27,7 +31,8 @@ public class LayerPanel extends BorderPane implements Initializable {
 
 	private final String IMAGEPATH = "images/gui/buttons/tools/";
 
-	private SimpleObjectProperty<PixImage> image;
+	private SimpleObjectProperty<PixImage>	image;
+	private SimpleObjectProperty<ALayer>	activeLayer;
 
 	final Image	moveLayerDownButImg		= new Image(
 			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "moveLayerDownButImg.png"));
@@ -144,7 +149,13 @@ public class LayerPanel extends BorderPane implements Initializable {
 	}
 
 	private void deleteLayer() {
-		// TODO deleteLayer
+
+		try {
+			Executor.getInstance()
+					.executeAction(new LayerAction(activeLayer.get(), image.get(), LayerListAction.DELETE));
+		} catch (Exception e) {
+			new ExceptionPopUp(e);
+		}
 
 	}
 
@@ -179,6 +190,12 @@ public class LayerPanel extends BorderPane implements Initializable {
 
 		}
 
+		togglegroup.selectedToggleProperty().addListener((obs, oldVal, newVal) -> {
+			LayerBox box = (LayerBox) newVal;
+			ALayer layer = box.getUserData();
+			activeLayer.set(layer);
+		});
+
 	}
 
 	public ToggleGroup getTogglegroup() {
@@ -201,6 +218,18 @@ public class LayerPanel extends BorderPane implements Initializable {
 
 	public final void setImage(final PixImage image) {
 		this.imageProperty().set(image);
+	}
+
+	public final SimpleObjectProperty<ALayer> activeLayerProperty() {
+		return this.activeLayer;
+	}
+
+	public final ALayer getActiveLayer() {
+		return this.activeLayerProperty().get();
+	}
+
+	public final void setActiveLayer(final ALayer activeLayer) {
+		this.activeLayerProperty().set(activeLayer);
 	}
 
 }
