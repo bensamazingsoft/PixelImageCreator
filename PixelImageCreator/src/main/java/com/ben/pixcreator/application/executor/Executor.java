@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ben.pixcreator.application.action.ICancelable;
 import com.ben.pixcreator.application.action.IAction;
 import com.ben.pixcreator.application.action.impl.Operation;
 
@@ -15,22 +16,24 @@ public class Executor {
 
 	private static final Logger logger = LoggerFactory.getLogger(Executor.class);
 
-	private Operation			currOperation;
-	private LinkedList<IAction>	history;
-	private LinkedList<IAction>	cancelled;
-	private boolean				operationStarted;
+	private Operation				currOperation;
+	private LinkedList<ICancelable>	history;
+	private LinkedList<ICancelable>	cancelled;
+	private boolean					operationStarted;
 
 	private Executor() {
 
-		history = new LinkedList<IAction>();
-		cancelled = new LinkedList<IAction>();
+		history = new LinkedList<>();
+		cancelled = new LinkedList<>();
 		operationStarted = false;
 	}
 
 	public void executeAction(IAction action) throws Exception {
 
 		action.execute();
-		history.add(action);
+		if (action instanceof ICancelable) {
+			history.add((ICancelable) action);
+		}
 		cancelled.clear();
 	}
 
@@ -45,7 +48,7 @@ public class Executor {
 
 	}
 
-	public void continueOperation(IAction action) throws Exception {
+	public void continueOperation(ICancelable action) throws Exception {
 
 		if (operationStarted) {
 			currOperation.addAction(action);
@@ -58,7 +61,9 @@ public class Executor {
 	public void endOperation() throws Exception {
 
 		if (operationStarted) {
-			history.add(currOperation);
+			if (operationStarted) {
+				history.add(currOperation);
+			}
 			operationStarted = false;
 
 		} else {
@@ -69,7 +74,7 @@ public class Executor {
 	public void cancel() throws Exception {
 
 		if (history.size() > 0) {
-			IAction cancelledAction = history.pollLast();
+			ICancelable cancelledAction = history.pollLast();
 			cancelledAction.cancel();
 			cancelled.add(cancelledAction);
 		}
@@ -79,18 +84,18 @@ public class Executor {
 	public void redo() throws Exception {
 
 		if (cancelled.size() > 0) {
-			IAction redoAction = cancelled.pollLast();
+			ICancelable redoAction = cancelled.pollLast();
 			redoAction.execute();
 			history.add(redoAction);
 		}
 	}
 
-	public LinkedList<IAction> getHistory() {
+	public LinkedList<ICancelable> getHistory() {
 
 		return history;
 	}
 
-	public void setHistory(LinkedList<IAction> history) {
+	public void setHistory(LinkedList<ICancelable> history) {
 
 		this.history = history;
 

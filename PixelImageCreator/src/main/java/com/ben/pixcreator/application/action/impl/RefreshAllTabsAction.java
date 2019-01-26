@@ -8,33 +8,19 @@ import com.ben.pixcreator.gui.facade.GuiFacade;
 
 import javafx.scene.control.Tab;
 
-public class RefreshAllTabsAction implements IAction
-{
+public class RefreshAllTabsAction implements IAction {
 
-      @Override
-      public void execute() throws Exception
-      {
+	@Override
+	public void execute() throws Exception {
 
-	    Executor.getInstance().startOperation();
+		for (Tab tab : GuiFacade.getInstance().getPixTabPane().getTabs()) {
 
-	    for (Tab tab : GuiFacade.getInstance().getPixTabPane().getTabs())
-	    {
+			PixTab pxTab = (PixTab) tab;
 
-		  PixTab pxTab = (PixTab) tab;
+			Executor.getInstance().executeAction(new RefreshTabAction(pxTab));
 
-		  Executor.getInstance().continueOperation(new RefreshTabAction(pxTab));
+		}
 
-	    }
-
-	    Executor.getInstance().endOperation();
-
-      }
-
-
-      @Override
-      public void cancel() throws Exception
-      {
-
-      }
+	}
 
 }

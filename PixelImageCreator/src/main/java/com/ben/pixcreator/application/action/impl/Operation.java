@@ -3,78 +3,65 @@ package com.ben.pixcreator.application.action.impl;
 
 import java.util.ArrayList;
 
+import com.ben.pixcreator.application.action.ICancelable;
 import com.ben.pixcreator.application.action.IAction;
 
-public class Operation implements IAction
-{
+/**
+ * Represents a series of <strong>cancellable</strong> actions.
+ * 
+ * @author bmo
+ *
+ */
+public class Operation implements IAction, ICancelable {
 
-      ArrayList<IAction> actions;
+	ArrayList<ICancelable> actions;
 
+	public Operation() {
 
-      public Operation()
-      {
+		actions = new ArrayList<>();
+	}
 
-	    actions = new ArrayList<IAction>();
-      }
+	public Operation(ArrayList<ICancelable> actions) {
 
+		super();
+		this.actions = actions;
+	}
 
-      public Operation(ArrayList<IAction> actions)
-      {
+	public void addAction(ICancelable action) {
 
-	    super();
-	    this.actions = actions;
-      }
+		if (actions == null) {
+			actions = new ArrayList<>();
+		}
+		actions.add(action);
+	}
 
+	public void execute() throws Exception {
 
-      public void addAction(IAction action)
-      {
+		if (actions != null && actions.size() > 0) {
+			for (int i = 0; i < actions.size(); i++) {
+				actions.get(i).execute();
+			}
+		}
 
-	    if (actions == null)
-	    {
-		  actions = new ArrayList<IAction>();
-	    }
-	    actions.add(action);
-      }
+	}
 
+	public void cancel() throws Exception {
 
-      public void execute() throws Exception
-      {
+		if (actions != null && actions.size() > 0) {
+			for (int j = actions.size(); j > 0; j--) {
+				actions.get(j).cancel();
+			}
+		}
+	}
 
-	    if (actions != null && actions.size() > 0)
-	    {
-		  for (int i = 0; i < actions.size(); i++)
-		  {
-			actions.get(i).execute();
-		  }
-	    }
+	public ArrayList<ICancelable> getActions() {
 
-      }
+		return actions;
+	}
 
+	public void setActions(ArrayList<ICancelable> actions) {
 
-      public void cancel() throws Exception
-      {
-
-	    if (actions != null && actions.size() > 0)
-	    {
-		  for (int j = actions.size(); j > 0; j--)
-		  {
-			actions.get(j).cancel();
-		  }
-	    }
-      }
-
-
-      public ArrayList<IAction> getActions()
-      {
-
-	    return actions;
-      }
-
-
-      public void setActions(ArrayList<IAction> actions)
-      {
-
-	    this.actions = actions;
-      }
+		this.actions = actions;
+	}
 
 }

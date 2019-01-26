@@ -11,87 +11,95 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-public class PixLayer extends ALayer
-{
+public class PixLayer extends ALayer {
 
-      /**
-       * 
-       */
-      private static final long	serialVersionUID = 1L;
-      private Map<Coord, Color>	grid;
+	/**
+	 * 
+	 */
+	private static final long	serialVersionUID	= 1L;
+	private Map<Coord, Color>	grid;
 
+	public PixLayer() {
 
-      public PixLayer()
-      {
+		this.grid = new HashMap<Coord, Color>();
+	}
 
-	    this.grid = new HashMap<Coord, Color>();
-      }
+	public PixLayer(Map<Coord, Color> grid) {
 
+		super();
+		this.grid = grid;
+	}
 
-      public PixLayer(Map<Coord, Color> grid)
-      {
+	public void draw(Canvas canvas, int xGridResolution, int yGridResolution) {
 
-	    super();
-	    this.grid = grid;
-      }
+		int xCellSize = (int) Math.floor(canvas.getWidth() / xGridResolution);
+		int yCellSize = (int) Math.floor(canvas.getHeight() / yGridResolution);
 
+		if (xCellSize >= 1 || yCellSize >= 1) {
 
-      public void draw(Canvas canvas, int xGridResolution, int yGridResolution)
-      {
+			drawGraphics(canvas, xCellSize, yCellSize);
 
-	    int xCellSize = (int) Math.floor(canvas.getWidth() / xGridResolution);
-	    int yCellSize = (int) Math.floor(canvas.getHeight() / yGridResolution);
+		} else {
+			LayerSampler layerSampler = new LayerSampler(this);
 
-	    if (xCellSize >= 1 || yCellSize >= 1)
-	    {
+			int xDivFactor = (int) Math.floor(xGridResolution / canvas.getWidth());
+			int yDivFactor = (int) Math.floor(yGridResolution / canvas.getHeight());
 
-		  drawGraphics(canvas, xCellSize, yCellSize);
+			PixLayer drawLayer = layerSampler.div(xDivFactor, yDivFactor);
 
-	    }
-	    else
-	    {
-		  LayerSampler layerSampler = new LayerSampler(this);
+			drawLayer.draw(canvas, 1, 1); // TODO wrong!!
 
-		  int xDivFactor = (int) Math.floor(xGridResolution / canvas.getWidth());
-		  int yDivFactor = (int) Math.floor(yGridResolution / canvas.getHeight());
+		}
 
-		  PixLayer drawLayer = layerSampler.div(xDivFactor, yDivFactor);
+	}
 
-		  drawLayer.draw(canvas, 1, 1); // TODO wrong!!
+	private void drawGraphics(Canvas canvas, int xCellSize, int yCellSize) {
 
-	    }
+		GraphicsContext graphic = canvas.getGraphicsContext2D();
 
-      }
+		for (Coord cell : getGrid().keySet()) {
 
+			graphic.setFill(getGrid().get(cell));
 
-      private void drawGraphics(Canvas canvas, int xCellSize, int yCellSize)
-      {
+			graphic.fillRect(xCellSize * cell.getX(), yCellSize * cell.getY(), xCellSize, yCellSize);
 
-	    GraphicsContext graphic = canvas.getGraphicsContext2D();
+		}
 
-	    for (Coord cell : getGrid().keySet())
-	    {
+	}
 
-		  graphic.setFill(getGrid().get(cell));
+	public Map<Coord, Color> getGrid() {
 
-		  graphic.fillRect(xCellSize * cell.getX(), yCellSize * cell.getY(), xCellSize, yCellSize);
+		return grid;
+	}
 
-	    }
+	public void setGrid(Map<Coord, Color> grid) {
 
-      }
+		this.grid = grid;
+	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((grid == null) ? 0 : grid.hashCode());
+		return result;
+	}
 
-      public Map<Coord, Color> getGrid()
-      {
-
-	    return grid;
-      }
-
-
-      public void setGrid(Map<Coord, Color> grid)
-      {
-
-	    this.grid = grid;
-      }
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		PixLayer other = (PixLayer) obj;
+		if (grid == null) {
+			if (other.grid != null)
+				return false;
+		} else if (!grid.equals(other.grid))
+			return false;
+		return true;
+	}
 
 }

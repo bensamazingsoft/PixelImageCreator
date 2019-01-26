@@ -10,7 +10,7 @@ import com.ben.pixcreator.application.executor.Executor;
 import com.ben.pixcreator.application.image.PixImage;
 import com.ben.pixcreator.application.image.layer.impl.ALayer;
 import com.ben.pixcreator.gui.controls.layer.box.LayerBox;
-import com.ben.pixcreator.gui.controls.layer.panel.actions.LayerListAction;
+import com.ben.pixcreator.gui.controls.layer.panel.actions.LayerActions;
 import com.ben.pixcreator.gui.exception.popup.ExceptionPopUp;
 import com.ben.pixcreator.gui.facade.GuiFacade;
 
@@ -101,7 +101,7 @@ public class LayerPanel extends BorderPane implements Initializable {
 	}
 
 	private void moveLayerDown() {
-		// TODO moveLayerDown
+		executeLayerAction(LayerActions.MOVEDOWN);
 
 	}
 
@@ -113,7 +113,7 @@ public class LayerPanel extends BorderPane implements Initializable {
 	}
 
 	private void moveLayerUp() {
-		// TODO moveLayerUp
+		executeLayerAction(LayerActions.MOVEUP);
 
 	}
 
@@ -125,7 +125,7 @@ public class LayerPanel extends BorderPane implements Initializable {
 	}
 
 	private void duplicateLayer() {
-		// TODO duplicateLayer
+		executeLayerAction(LayerActions.DUPLICATE);
 
 	}
 
@@ -137,7 +137,7 @@ public class LayerPanel extends BorderPane implements Initializable {
 	}
 
 	private void newLayer() {
-		// TODO newLayer
+		executeLayerAction(LayerActions.ADDNEW);
 
 	}
 
@@ -150,13 +150,17 @@ public class LayerPanel extends BorderPane implements Initializable {
 
 	private void deleteLayer() {
 
+		executeLayerAction(LayerActions.DELETE);
+
+	}
+
+	private void executeLayerAction(LayerActions action) {
 		try {
 			Executor.getInstance()
-					.executeAction(new LayerAction(activeLayer.get(), image.get(), LayerListAction.DELETE));
+					.executeAction(new LayerAction(image.get(), activeLayer.get(), action));
 		} catch (Exception e) {
 			new ExceptionPopUp(e);
 		}
-
 	}
 
 	public void initialize(URL arg0, ResourceBundle arg1) {

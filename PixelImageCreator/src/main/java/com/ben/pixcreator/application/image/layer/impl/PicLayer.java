@@ -10,10 +10,14 @@ import javafx.scene.image.Image;
 
 public class PicLayer extends ALayer {
 
-	private File	imageFile;
-	private Image	image;
-	private Coord	position;
-	private double	sizeFactor;
+	/**
+	 * 
+	 */
+	private static final long	serialVersionUID	= 1L;
+	private File				imageFile;
+	private Image				image;
+	private Coord				position;
+	private double				sizeFactor;
 
 	public PicLayer(File imageFile) {
 

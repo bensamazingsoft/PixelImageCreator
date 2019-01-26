@@ -20,10 +20,4 @@ public class OpenTabAction implements IAction {
 
 	}
 
-	@Override
-	public void cancel() throws Exception {
-		// TODO Auto-generated method stub
-
-	}
-
 }

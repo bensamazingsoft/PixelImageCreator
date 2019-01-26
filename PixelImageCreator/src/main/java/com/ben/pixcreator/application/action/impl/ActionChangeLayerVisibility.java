@@ -3,12 +3,13 @@ package com.ben.pixcreator.application.action.impl;
 
 import java.io.IOException;
 
+import com.ben.pixcreator.application.action.ICancelable;
 import com.ben.pixcreator.application.action.IAction;
 import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.application.image.PixImage;
 import com.ben.pixcreator.application.image.layer.impl.ALayer;
 
-public class ActionChangeLayerVisibility implements IAction {
+public class ActionChangeLayerVisibility implements IAction, ICancelable {
 
 	private PixImage image;
 

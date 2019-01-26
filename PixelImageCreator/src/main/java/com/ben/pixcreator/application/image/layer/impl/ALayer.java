@@ -36,4 +36,16 @@ public abstract class ALayer implements ILayer, Serializable {
 		this.visibleProperty().set(visible);
 	}
 
+	@Override
+	public boolean equals(Object arg0) {
+
+		return super.equals(arg0);
+	}
+
+	@Override
+	public int hashCode() {
+
+		return super.hashCode();
+	}
+
 }
