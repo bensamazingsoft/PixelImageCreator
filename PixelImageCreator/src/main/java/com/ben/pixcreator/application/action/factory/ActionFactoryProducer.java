@@ -2,7 +2,9 @@
 package com.ben.pixcreator.application.action.factory;
 
 import com.ben.pixcreator.application.action.factory.impl.DrawActionFactory;
+import com.ben.pixcreator.application.image.layer.impl.PixLayer;
 import com.ben.pixcreator.application.tools.PixTool;
+import com.ben.pixcreator.gui.facade.GuiFacade;
 
 public class ActionFactoryProducer
 {
@@ -13,8 +15,11 @@ public class ActionFactoryProducer
 	    switch (tool)
 	    {
 	    case DRAW:
-		  return new DrawActionFactory();
-	    // TODO all other tool cases
+		  if (GuiFacade.getInstance().getActiveLayer() instanceof PixLayer)
+		  {
+			return new DrawActionFactory();
+		  }
+		  // TODO all other tool cases
 	    case MOVE:
 		  break;
 	    case PAN:

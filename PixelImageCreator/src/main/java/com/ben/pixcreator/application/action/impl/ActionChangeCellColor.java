@@ -1,8 +1,6 @@
 
 package com.ben.pixcreator.application.action.impl;
 
-import java.io.IOException;
-
 import com.ben.pixcreator.application.action.IAction;
 import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.application.image.PixImage;
@@ -11,117 +9,155 @@ import com.ben.pixcreator.application.image.layer.impl.PixLayer;
 
 import javafx.scene.paint.Color;
 
-public class ActionChangeCellColor implements IAction {
+public class ActionChangeCellColor implements IAction
+{
 
-	private PixImage	image;
-	private PixLayer	layer;
-	private Coord		coord;
-	private Color		color;
+      private PixImage image;
+      private PixLayer layer;
+      private Coord    coord;
+      private Color    color;
 
-	private Color prevColor;
+      private Color    prevColor;
 
-	public ActionChangeCellColor(PixLayer layer, Coord coord, Color color)
-			throws IOException, ClosedImageException, InexistantLayerException {
 
-		if (!AppContext.getInstance().getOpenImages().contains(image)) {
-			throw new ClosedImageException();
-		} else if (!image.getLayerList().getItems().contains(layer)) {
+      public ActionChangeCellColor(PixLayer layer, Coord coord, Color color)
+      {
+
+	    this.layer = layer;
+	    this.coord = coord;
+	    this.color = color;
+
+	    prevColor = layer.getGrid().get(coord);
+
+      }
+
+
+      public void execute() throws Exception
+      {
+
+	    if (AppContext.getInstance().getOpenImages().contains(image))
+	    {
+		  if (image.getLayerList().getIdx(layer) > -1)
+		  {
+			layer.getGrid().put(coord, color);
+		  }
+		  else
+		  {
 			throw new InexistantLayerException();
-		}
-		this.layer = layer;
-		this.coord = coord;
-		this.color = color;
+		  }
+	    }
+	    else
+	    {
+		  throw new ClosedImageException();
+	    }
+      }
 
-		prevColor = layer.getGrid().get(coord);
 
-	}
+      public void cancel() throws Exception
+      {
 
-	public void execute() throws Exception {
+	    if (AppContext.getInstance().getOpenImages().contains(image))
+	    {
+		  if (image.getLayerList().getIdx(layer) > -1)
+		  {
+			layer.getGrid().put(coord, prevColor);
+		  }
+		  else
+		  {
+			throw new InexistantLayerException();
+		  }
+	    }
+	    else
+	    {
+		  throw new ClosedImageException();
+	    }
+      }
 
-		if (AppContext.getInstance().getOpenImages().contains(image)) {
-			if (image.getLayerList().getItems().contains(layer)) {
-				layer.getGrid().put(coord, color);
-			} else {
-				throw new InexistantLayerException();
-			}
-		} else {
-			throw new ClosedImageException();
-		}
-	}
 
-	public void cancel() throws Exception {
+      @Override
+      public String toString()
+      {
 
-		if (AppContext.getInstance().getOpenImages().contains(image)) {
-			if (image.getLayerList().getItems().contains(layer)) {
-				layer.getGrid().put(coord, prevColor);
-			} else {
-				throw new InexistantLayerException();
-			}
-		} else {
-			throw new ClosedImageException();
-		}
-	}
+	    return "ActionChangeCellColor [layer=" + layer + ", coord=" + coord + ", color=" + color + "]";
+      }
 
-	@Override
-	public String toString() {
 
-		return "ActionChangeCellColor [layer=" + layer + ", coord=" + coord + ", color=" + color + "]";
-	}
+      @Override
+      public int hashCode()
+      {
 
-	@Override
-	public int hashCode() {
+	    final int prime = 31;
+	    int result = 1;
+	    result = prime * result + ((color == null) ? 0 : color.hashCode());
+	    result = prime * result + ((coord == null) ? 0 : coord.hashCode());
+	    result = prime * result + ((layer == null) ? 0 : layer.hashCode());
+	    result = prime * result + ((prevColor == null) ? 0 : prevColor.hashCode());
+	    return result;
+      }
 
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((color == null) ? 0 : color.hashCode());
-		result = prime * result + ((coord == null) ? 0 : coord.hashCode());
-		result = prime * result + ((layer == null) ? 0 : layer.hashCode());
-		result = prime * result + ((prevColor == null) ? 0 : prevColor.hashCode());
-		return result;
-	}
 
-	@Override
-	public boolean equals(Object obj) {
+      @Override
+      public boolean equals(Object obj)
+      {
 
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
+	    if (this == obj)
+	    {
+		  return true;
+	    }
+	    if (obj == null)
+	    {
+		  return false;
+	    }
+	    if (!(obj instanceof ActionChangeCellColor))
+	    {
+		  return false;
+	    }
+	    ActionChangeCellColor other = (ActionChangeCellColor) obj;
+	    if (color == null)
+	    {
+		  if (other.color != null)
+		  {
 			return false;
-		}
-		if (!(obj instanceof ActionChangeCellColor)) {
+		  }
+	    }
+	    else if (!color.equals(other.color))
+	    {
+		  return false;
+	    }
+	    if (coord == null)
+	    {
+		  if (other.coord != null)
+		  {
 			return false;
-		}
-		ActionChangeCellColor other = (ActionChangeCellColor) obj;
-		if (color == null) {
-			if (other.color != null) {
-				return false;
-			}
-		} else if (!color.equals(other.color)) {
+		  }
+	    }
+	    else if (!coord.equals(other.coord))
+	    {
+		  return false;
+	    }
+	    if (layer == null)
+	    {
+		  if (other.layer != null)
+		  {
 			return false;
-		}
-		if (coord == null) {
-			if (other.coord != null) {
-				return false;
-			}
-		} else if (!coord.equals(other.coord)) {
+		  }
+	    }
+	    else if (!layer.equals(other.layer))
+	    {
+		  return false;
+	    }
+	    if (prevColor == null)
+	    {
+		  if (other.prevColor != null)
+		  {
 			return false;
-		}
-		if (layer == null) {
-			if (other.layer != null) {
-				return false;
-			}
-		} else if (!layer.equals(other.layer)) {
-			return false;
-		}
-		if (prevColor == null) {
-			if (other.prevColor != null) {
-				return false;
-			}
-		} else if (!prevColor.equals(other.prevColor)) {
-			return false;
-		}
-		return true;
-	}
+		  }
+	    }
+	    else if (!prevColor.equals(other.prevColor))
+	    {
+		  return false;
+	    }
+	    return true;
+      }
 
 }
