@@ -1,13 +1,11 @@
 
 package com.ben.pixcreator.application.action.impl;
 
-import java.io.IOException;
-
 import com.ben.pixcreator.application.action.IAction;
-import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.application.image.PixImage;
 import com.ben.pixcreator.application.image.coords.Coord;
 import com.ben.pixcreator.application.image.layer.impl.PixLayer;
+import com.ben.pixcreator.gui.facade.GuiFacade;
 
 import javafx.scene.paint.Color;
 
@@ -27,14 +25,7 @@ public class ActionChangeCellCoord implements IAction {
 		color = Color.BLACK;
 	}
 
-	public ActionChangeCellCoord(PixImage image, PixLayer layer, Coord oldCoord, Coord newCoord)
-			throws IOException, ClosedImageException, InexistantLayerException {
-
-		if (!AppContext.getInstance().getOpenImages().contains(image)) {
-			throw new ClosedImageException();
-		} else if (!image.getLayerList().getItems().contains(layer)) {
-			throw new InexistantLayerException();
-		}
+	public ActionChangeCellCoord(PixImage image, PixLayer layer, Coord oldCoord, Coord newCoord) {
 
 		this.layer = layer;
 		this.oldCoord = oldCoord;
@@ -46,29 +37,21 @@ public class ActionChangeCellCoord implements IAction {
 
 	public void execute() throws Exception {
 
-		if (AppContext.getInstance().getOpenImages().contains(image)) {
+		if (GuiFacade.getInstance().getActiveimage() == image) {
 			if (image.getLayerList().getItems().contains(layer)) {
 				layer.getGrid().remove(oldCoord);
 				layer.getGrid().put(newCoord, color);
-			} else {
-				throw new InexistantLayerException();
 			}
-		} else {
-			throw new ClosedImageException();
 		}
 	}
 
 	public void cancel() throws Exception {
 
-		if (AppContext.getInstance().getOpenImages().contains(image)) {
+		if (GuiFacade.getInstance().getActiveimage() == image) {
 			if (image.getLayerList().getItems().contains(layer)) {
 				layer.getGrid().remove(newCoord);
 				layer.getGrid().put(oldCoord, color);
-			} else {
-				throw new InexistantLayerException();
 			}
-		} else {
-			throw new ClosedImageException();
 		}
 	}
 

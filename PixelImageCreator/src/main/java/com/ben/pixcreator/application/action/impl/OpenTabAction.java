@@ -16,7 +16,7 @@ public class OpenTabAction implements IAction {
 	@Override
 	public void execute() throws Exception {
 
-		GuiFacade.getInstance().getPixTabPane().getTabs().add(new PixTab(image));
+		GuiFacade.getInstance().addTab(new PixTab(image));
 
 	}
 

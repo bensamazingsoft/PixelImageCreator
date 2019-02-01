@@ -2,11 +2,8 @@
 package com.ben.pixcreator.application.context;
 
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.ResourceBundle;
-import java.util.Set;
 
-import com.ben.pixcreator.application.image.PixImage;
 import com.ben.pixcreator.application.tools.PixTool;
 
 import javafx.scene.paint.Color;
@@ -21,8 +18,6 @@ public class AppContext {
 
 	private static PixTool currTool;
 
-	private static Set<PixImage> openImages;
-
 	private static ResourceBundle bundle;
 
 	private AppContext() {
@@ -33,7 +28,6 @@ public class AppContext {
 
 		properties = new PropertiesContext();
 		bundle = ResourceBundle.getBundle("i18n/trad");
-		openImages = new HashSet<PixImage>();
 		currTool = PixTool.getTool(properties.get("startTool"));
 
 		gridColor = properties.getColor(properties.get("gridColor"));
@@ -91,16 +85,6 @@ public class AppContext {
 	public PixTool getCurrTool() {
 
 		return currTool;
-	}
-
-	public Set<PixImage> getOpenImages() {
-
-		return openImages;
-	}
-
-	public void setOpenImages(Set<PixImage> openImages) {
-
-		AppContext.openImages = openImages;
 	}
 
 	public ResourceBundle getBundle() {

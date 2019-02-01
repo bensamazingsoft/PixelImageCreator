@@ -19,142 +19,117 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 
-public class ColorRoster extends HBox
-{
+public class ColorRoster extends HBox {
 
-      private ToggleGroup		     toggleGroup;
-      private Set<ColorBox>		     colorBoxes;
-      private SimpleObjectProperty<PixImage> image;
+	private ToggleGroup						toggleGroup;
+	private Set<ColorBox>					colorBoxes	= new HashSet<>();
+	private SimpleObjectProperty<PixImage>	image;
 
+	public ColorRoster() {
 
-      public ColorRoster()
-      {
+		super();
 
-	    super();
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n/trad");
 
-	    ResourceBundle bundle = ResourceBundle.getBundle("i18n/trad");
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/ColorRoster.fxml"), bundle);
+		fxmlLoader.setRoot(this);
+		fxmlLoader.setController(this);
 
-	    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/ColorRoster.fxml"), bundle);
-	    fxmlLoader.setRoot(this);
-	    fxmlLoader.setController(this);
+		try {
+			fxmlLoader.load();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 
-	    try
-	    {
-		  fxmlLoader.load();
-	    }
-	    catch (IOException e)
-	    {
-		  throw new RuntimeException(e);
-	    }
+		image = new SimpleObjectProperty<>();
+		image.addListener((obs, oldVal, newVal) -> {
+			makeColorBoxes(newVal);
+		});
 
-	    image = new SimpleObjectProperty<>();
-	    image.addListener((obs, oldVal, newVal) -> {
-		  getImageColors(newVal);
-	    });
+		populate();
 
-	    colorBoxes = new HashSet<>();
-	    getDefaultColors(AppContext.getInstance().propertyContext());
+	}
 
-	    populate();
+	private void populate() {
 
-      }
+		this.getChildren().clear();
 
+		if (colorBoxes.isEmpty()) {
+			colorBoxes = makeDefaultColorBoxes(AppContext.getInstance().propertyContext());
+		}
 
-      private void getImageColors(PixImage image)
-      {
+		for (ColorBox box : colorBoxes) {
 
-	    Set<SimpleObjectProperty<Color>> colorProps = GuiFacade.getInstance().getImagesColors().get(image);
+			this.getChildren().add(box);
 
-	    if (colorProps.size() != 0)
-	    {
-		  colorBoxes.clear();
-	    }
+		}
 
-	    for (SimpleObjectProperty<Color> prop : colorProps)
-	    {
+		Button butt = new Button("+");
+		butt.setId("rosterPlusButton");
+		butt.setOnAction(Event -> {
+			SimpleObjectProperty<Color> prop = new SimpleObjectProperty<Color>();
+			prop.set(Color.BLACK);
+			GuiFacade.getInstance().getImagesColors().get(getImage()).add(prop);
 
-		  ColorBox box = new ColorBox().color(prop.get());
-		  colorBoxes.add(box);
-		  box.setToggleGroup(toggleGroup);
+			colorBoxes = makeColorBoxes(getImage());
 
-		  prop.bindBidirectional(box.colorProperty());
+			populate();
+		});
+		this.getChildren().add(butt);
+	}
 
-	    }
+	private Set<ColorBox> makeColorBoxes(PixImage image) {
 
-	    populate();
+		Set<ColorBox> tempBoxes = new HashSet<>();
+		Set<SimpleObjectProperty<Color>> colorProps = GuiFacade.getInstance().getImagesColors().get(image);
 
-      }
+		for (SimpleObjectProperty<Color> prop : colorProps) {
 
+			ColorBox box = new ColorBox().color(prop.get());
+			tempBoxes.add(box);
+			box.setToggleGroup(toggleGroup);
 
-      private void getDefaultColors(PropertiesContext propertyContext)
-      {
+			prop.bindBidirectional(box.colorProperty());
 
-	    for (String prop : propertyContext.getProps("color_"))
-	    {
+		}
 
-		  colorBoxes.add(new ColorBox().color(Color.valueOf(prop)));
+		return tempBoxes;
 
-	    }
+	}
 
-      }
+	private Set<ColorBox> makeDefaultColorBoxes(PropertiesContext propertyContext) {
+		Set<ColorBox> tempBoxes = new HashSet<>();
+		for (String prop : propertyContext.getProps("color_")) {
 
+			tempBoxes.add(new ColorBox().color(Color.valueOf(prop)));
 
-      private void populate()
-      {
+		}
+		return tempBoxes;
+	}
 
-	    this.getChildren().clear();
+	public ToggleGroup getToggleGroup() {
 
-	    for (ColorBox box : colorBoxes)
-	    {
+		return toggleGroup;
+	}
 
-		  this.getChildren().add(box);
+	public void setToggleGroup(ToggleGroup toggleGroup) {
 
-	    }
+		this.toggleGroup = toggleGroup;
+	}
 
-	    Button butt = new Button("+");
-	    butt.setId("rosterPlusButton");
-	    butt.setOnAction(Event -> {
-		  SimpleObjectProperty<Color> prop = new SimpleObjectProperty<Color>();
-		  prop.set(Color.BLACK);
-		  GuiFacade.getInstance().getImagesColors().get(getImage()).add(prop);
-		  getImageColors(getImage());
-	    });
-	    this.getChildren().add(butt);
-      }
+	public final SimpleObjectProperty<PixImage> imageProperty() {
 
+		return this.image;
+	}
 
-      public ToggleGroup getToggleGroup()
-      {
+	public final PixImage getImage() {
 
-	    return toggleGroup;
-      }
+		return this.imageProperty().get();
+	}
 
+	public final void setImage(final PixImage image) {
 
-      public void setToggleGroup(ToggleGroup toggleGroup)
-      {
-
-	    this.toggleGroup = toggleGroup;
-      }
-
-
-      public final SimpleObjectProperty<PixImage> imageProperty()
-      {
-
-	    return this.image;
-      }
-
-
-      public final PixImage getImage()
-      {
-
-	    return this.imageProperty().get();
-      }
-
-
-      public final void setImage(final PixImage image)
-      {
-
-	    this.imageProperty().set(image);
-      }
+		this.imageProperty().set(image);
+	}
 
 }

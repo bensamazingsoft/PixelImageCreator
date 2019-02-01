@@ -1,40 +1,54 @@
 
 package com.ben.pixcreator.application.executor;
 
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ben.pixcreator.application.action.ICancelable;
 import com.ben.pixcreator.application.action.IAction;
+import com.ben.pixcreator.application.action.ICancelable;
 import com.ben.pixcreator.application.action.impl.Operation;
+import com.ben.pixcreator.application.image.PixImage;
+import com.ben.pixcreator.gui.facade.GuiFacade;
 
 public class Executor {
+
+	// TODO when open image occurs : create the entry in history and cancelled
+	// map (computeif..???)
 
 	private static Executor instance;
 
 	private static final Logger logger = LoggerFactory.getLogger(Executor.class);
 
-	private Operation				currOperation;
-	private LinkedList<ICancelable>	history;
-	private LinkedList<ICancelable>	cancelled;
-	private boolean					operationStarted;
+	private Operation currOperation;
+
+	private Map<PixImage, LinkedList<ICancelable>>	historyMap		= new HashMap<>();
+	private Map<PixImage, LinkedList<ICancelable>>	cancelledMap	= new HashMap<>();
+
+	private boolean operationStarted;
 
 	private Executor() {
-
-		history = new LinkedList<>();
-		cancelled = new LinkedList<>();
 		operationStarted = false;
+	}
+
+	private LinkedList<ICancelable> activeHistory() {
+		return historyMap.get(GuiFacade.getInstance().getActiveImage());
+	}
+
+	private LinkedList<ICancelable> activeCancelled() {
+		return cancelledMap.get(GuiFacade.getInstance().getActiveImage());
 	}
 
 	public void executeAction(IAction action) throws Exception {
 
 		action.execute();
 		if (action instanceof ICancelable) {
-			history.add((ICancelable) action);
+			activeHistory().add((ICancelable) action);
 		}
-		cancelled.clear();
+		activeCancelled().clear();
 	}
 
 	public void startOperation() throws Exception {
@@ -62,7 +76,7 @@ public class Executor {
 
 		if (operationStarted) {
 			if (operationStarted) {
-				history.add(currOperation);
+				activeHistory().add(currOperation);
 			}
 			operationStarted = false;
 
@@ -73,32 +87,21 @@ public class Executor {
 
 	public void cancel() throws Exception {
 
-		if (history.size() > 0) {
-			ICancelable cancelledAction = history.pollLast();
+		if (activeHistory().size() > 0) {
+			ICancelable cancelledAction = activeHistory().pollLast();
 			cancelledAction.cancel();
-			cancelled.add(cancelledAction);
+			activeCancelled().add(cancelledAction);
 		}
 
 	}
 
 	public void redo() throws Exception {
 
-		if (cancelled.size() > 0) {
-			ICancelable redoAction = cancelled.pollLast();
+		if (activeCancelled().size() > 0) {
+			ICancelable redoAction = activeCancelled().pollLast();
 			redoAction.execute();
-			history.add(redoAction);
+			activeHistory().add(redoAction);
 		}
-	}
-
-	public LinkedList<ICancelable> getHistory() {
-
-		return history;
-	}
-
-	public void setHistory(LinkedList<ICancelable> history) {
-
-		this.history = history;
-
 	}
 
 	public static Executor getInstance() {
@@ -109,6 +112,22 @@ public class Executor {
 
 		return instance;
 
+	}
+
+	public Map<PixImage, LinkedList<ICancelable>> getHistoryMap() {
+		return historyMap;
+	}
+
+	public void setHistoryMap(Map<PixImage, LinkedList<ICancelable>> historyMap) {
+		this.historyMap = historyMap;
+	}
+
+	public Map<PixImage, LinkedList<ICancelable>> getCancelledMap() {
+		return cancelledMap;
+	}
+
+	public void setCancelledMap(Map<PixImage, LinkedList<ICancelable>> cancelledMap) {
+		this.cancelledMap = cancelledMap;
 	}
 
 }

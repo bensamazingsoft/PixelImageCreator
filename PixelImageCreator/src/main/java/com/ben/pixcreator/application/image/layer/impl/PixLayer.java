@@ -47,7 +47,7 @@ public class PixLayer extends ALayer {
 
 			PixLayer drawLayer = layerSampler.div(xDivFactor, yDivFactor);
 
-			drawLayer.draw(canvas, 1, 1); // TODO wrong!!
+			drawLayer.draw(canvas, xGridResolution, yGridResolution);
 
 		}
 

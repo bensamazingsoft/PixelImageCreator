@@ -37,8 +37,8 @@ public class PixTabPane extends TabPane implements Initializable {
 		getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
 			PixTab tab = (PixTab) newVal;
 			PixImage image = tab.getImage();
-			GuiFacade.getInstance().getLayerPanel().setImage(image);
-			GuiFacade.getInstance().getColorRoster().setImage(image);
+			GuiFacade.getInstance().setActiveImage(image);
+
 		});
 
 	}

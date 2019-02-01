@@ -5,9 +5,9 @@ import com.ben.pixcreator.application.action.IAction;
 
 import javafx.event.Event;
 
-public abstract class AActionFactory
+public interface  IActionFactory
 {
 
-      public abstract IAction getAction(Event event);
+      public  IAction getAction(Event event);
 
 }

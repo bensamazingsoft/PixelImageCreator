@@ -11,6 +11,7 @@ import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.application.image.PixImage;
 import com.ben.pixcreator.application.image.layer.impl.ALayer;
 import com.ben.pixcreator.application.tools.PixTool;
+import com.ben.pixcreator.gui.controls.color.box.ColorBox;
 import com.ben.pixcreator.gui.controls.color.roster.ColorRoster;
 import com.ben.pixcreator.gui.controls.layer.panel.LayerPanel;
 import com.ben.pixcreator.gui.controls.menu.bar.PixMenuBar;
@@ -20,7 +21,9 @@ import com.ben.pixcreator.gui.pane.tabpane.PixTabPane;
 
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.ObservableList;
 import javafx.scene.Scene;
+import javafx.scene.control.Tab;
 import javafx.scene.control.Toggle;
 import javafx.scene.paint.Color;
 
@@ -28,16 +31,18 @@ public class GuiFacade {
 
 	private static GuiFacade instance;
 
-	private Scene		scene;
+	private Scene scene;
+
 	private PixMenuBar	pixMenuBar;
 	private PixToolBar	pixToolBar;
 	private PixTabPane	pixTabPane;
 	private LayerPanel	layerPanel;
 	private ColorRoster	colorRoster;
 
-	private Map<PixImage, Set<SimpleObjectProperty<Color>>> imagesColors;
-
-	private SimpleBooleanProperty showGrid = new SimpleBooleanProperty();
+	private Map<PixImage, Set<SimpleObjectProperty<Color>>>	imagesColors;
+	private SimpleObjectProperty<Color>						activeColor	= new SimpleObjectProperty<>();
+	private SimpleObjectProperty<PixImage>					activeImage	= new SimpleObjectProperty<>();
+	private SimpleBooleanProperty							showGrid	= new SimpleBooleanProperty();
 
 	private GuiFacade() {
 
@@ -74,6 +79,16 @@ public class GuiFacade {
 
 	}
 
+	public void addTab(Tab tab) {
+
+		pixTabPane.getTabs().add(tab);
+
+	}
+
+	public ObservableList<Tab> getTabs() {
+		return pixTabPane.getTabs();
+	}
+
 	public PixImage getActiveImage() {
 
 		PixTab tab = (PixTab) pixTabPane.getSelectionModel().getSelectedItem();
@@ -97,54 +112,6 @@ public class GuiFacade {
 		this.scene = scene;
 	}
 
-	public PixMenuBar getPixMenuBar() {
-
-		return pixMenuBar;
-	}
-
-	public void setPixMenuBar(PixMenuBar pixMenuBar) {
-
-		this.pixMenuBar = pixMenuBar;
-	}
-
-	public PixToolBar getPixToolBar() {
-
-		return pixToolBar;
-	}
-
-	public void setPixToolBar(PixToolBar pixToolBar) {
-
-		this.pixToolBar = pixToolBar;
-	}
-
-	public PixTabPane getPixTabPane() {
-
-		return pixTabPane;
-	}
-
-	public void setPixTabPane(PixTabPane pixTabPane) {
-
-		this.pixTabPane = pixTabPane;
-	}
-
-	public LayerPanel getLayerPanel() {
-
-		return layerPanel;
-	}
-
-	public void setLayerPanel(LayerPanel layerPanel) {
-
-		this.layerPanel = layerPanel;
-	}
-
-	public ColorRoster getColorRoster() {
-		return colorRoster;
-	}
-
-	public void setColorRoster(ColorRoster colorRoster) {
-		this.colorRoster = colorRoster;
-	}
-
 	public Map<PixImage, Set<SimpleObjectProperty<Color>>> getImagesColors() {
 		return imagesColors;
 	}
@@ -163,6 +130,55 @@ public class GuiFacade {
 
 	public final void setShowGrid(final boolean showGrid) {
 		this.showGridProperty().set(showGrid);
+	}
+
+	public final SimpleObjectProperty<PixImage> activeImageProperty() {
+		return this.activeImage;
+	}
+
+	public PixImage getActiveimage() {
+		return this.activeImage.get();
+	}
+
+	public void setActiveImage(PixImage image) {
+		this.activeImage.set(image);
+	}
+
+	public final SimpleObjectProperty<Color> activeColorProperty() {
+		return this.activeColor;
+	}
+
+	public final Color getActiveColor() {
+		return this.activeColorProperty().get();
+	}
+
+	public final void setActiveColor(final Color activeColor) {
+		this.activeColorProperty().set(activeColor);
+	}
+
+	public void setPixTabPane(PixTabPane tabPane) {
+		this.pixTabPane = tabPane;
+	}
+
+	public void setLayerPanel(LayerPanel layerPanel) {
+		this.layerPanel = layerPanel;
+
+		layerPanel.imageProperty().bindBidirectional(activeImage);
+
+	}
+
+	public void setColorRoster(ColorRoster colorRoster) {
+		this.colorRoster = colorRoster;
+
+		colorRoster.imageProperty().bindBidirectional(activeImage);
+
+		activeColor.set(((ColorBox) colorRoster.getToggleGroup().getSelectedToggle()).getColor());
+
+		colorRoster.getToggleGroup().selectedToggleProperty().addListener((obs, oldVal, newVal) -> {
+			Color color = ((ColorBox) newVal).getColor();
+			activeColor.set(color);
+		});
+
 	}
 
 }

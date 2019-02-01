@@ -13,7 +13,7 @@ public class RefreshAllTabsAction implements IAction {
 	@Override
 	public void execute() throws Exception {
 
-		for (Tab tab : GuiFacade.getInstance().getPixTabPane().getTabs()) {
+		for (Tab tab : GuiFacade.getInstance().getTabs()) {
 
 			PixTab pxTab = (PixTab) tab;
 

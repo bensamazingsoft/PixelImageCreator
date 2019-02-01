@@ -1,13 +1,11 @@
 
 package com.ben.pixcreator.application.action.impl;
 
-import java.io.IOException;
-
-import com.ben.pixcreator.application.action.ICancelable;
 import com.ben.pixcreator.application.action.IAction;
-import com.ben.pixcreator.application.context.AppContext;
+import com.ben.pixcreator.application.action.ICancelable;
 import com.ben.pixcreator.application.image.PixImage;
 import com.ben.pixcreator.application.image.layer.impl.ALayer;
+import com.ben.pixcreator.gui.facade.GuiFacade;
 
 public class ActionChangeLayerVisibility implements IAction, ICancelable {
 
@@ -16,32 +14,21 @@ public class ActionChangeLayerVisibility implements IAction, ICancelable {
 	private ALayer	layer;
 	private boolean	state	= layer.isVisible();
 
-	public ActionChangeLayerVisibility(PixImage image, ALayer layer)
-			throws IOException, ClosedImageException, InexistantLayerException {
+	public ActionChangeLayerVisibility(PixImage image, ALayer layer) {
 
 		super();
 		this.image = image;
 		this.layer = layer;
-
-		if (!AppContext.getInstance().getOpenImages().contains(image)) {
-			throw new ClosedImageException();
-		} else if (!image.getLayerList().getItems().contains(layer)) {
-			throw new InexistantLayerException();
-		}
 
 	}
 
 	@Override
 	public void execute() throws Exception {
 
-		if (AppContext.getInstance().getOpenImages().contains(image)) {
+		if (GuiFacade.getInstance().getActiveimage() == image) {
 			if (image.getLayerList().getItems().contains(layer)) {
 				layer.setVisible(!state);
-			} else {
-				throw new InexistantLayerException();
 			}
-		} else {
-			throw new ClosedImageException();
 		}
 
 	}
@@ -49,14 +36,10 @@ public class ActionChangeLayerVisibility implements IAction, ICancelable {
 	@Override
 	public void cancel() throws Exception {
 
-		if (AppContext.getInstance().getOpenImages().contains(image)) {
+		if (GuiFacade.getInstance().getActiveimage() == image) {
 			if (image.getLayerList().getItems().contains(layer)) {
 				layer.setVisible(state);
-			} else {
-				throw new InexistantLayerException();
 			}
-		} else {
-			throw new ClosedImageException();
 		}
 
 	}
