@@ -3,6 +3,8 @@
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.image.ImageView?>
 
 <fx:root type="javafx.scene.layout.HBox" xmlns:fx="http://javafx.com/fxml">
 	
@@ -11,12 +13,12 @@
 	<ToggleButton fx:id="eyeBut" onMouseClicked="#toggleEye"/>
 </StackPane>
 
-<StackPane fx:id="miniaturePane" onMouseClicked="#handleMiniatureClicked">
-	<Canvas fx:id="canvas" alignment="Pos.CENTER"/>
+<StackPane fx:id="miniaturePane" onMouseClicked="#handleMiniatureClicked"  alignment="CENTER">
+	<Canvas fx:id="canvas"/>
 </StackPane>
 
-<StackPane fx:id="titlePane">
-	<ImageView fx:id="imgTypeView" alignment="Pos.TOP_RIGHT"/>
+<StackPane fx:id="titlePane"  alignment="TOP_RIGHT">
+	<ImageView fx:id="imgTypeView"/>
 </StackPane>
 
 <StackPane fx:id="lockPane">

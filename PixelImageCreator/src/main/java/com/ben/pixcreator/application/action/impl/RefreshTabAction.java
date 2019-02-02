@@ -7,22 +7,28 @@ import com.ben.pixcreator.gui.controls.tab.PixTab;
 
 import javafx.scene.canvas.Canvas;
 
-public class RefreshTabAction implements IAction {
+public class RefreshTabAction implements IAction
+{
 
-	private final PixImage	image;
-	private final Canvas	canvas;
+      private final PixImage image;
+      private final Canvas   canvas;
 
-	public RefreshTabAction(PixTab pxTab) {
 
-		canvas = pxTab.getCanvas();
-		image = pxTab.getImage();
-	}
+      public RefreshTabAction(PixTab pxTab)
+      {
 
-	@Override
-	public void execute() throws Exception {
+	    canvas = pxTab.getCanvas();
+	    image = pxTab.getImage();
+      }
 
-		image.draw(canvas);
 
-	}
+      @Override
+      public void execute() throws Exception
+      {
+
+	    canvas.getGraphicsContext2D().clearRect(0, 0, image.getxSize(), image.getySize());
+	    image.draw(canvas);
+
+      }
 
 }

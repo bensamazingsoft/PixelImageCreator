@@ -107,9 +107,9 @@ public class PixToolBar extends ToolBar implements Initializable
       final private ImageView zoomOutButImg	    = new ImageView();
 
       final private Image     showGridButSelected   = new Image(
-		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + " showGridButSelected.png"));
+		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "showGridButSelected.png"));
       final private Image     showGridButUnSelected = new Image(
-		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + " showGridButUnSelected.png"));
+		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "showGridButUnSelected.png"));
       final private ImageView showGridButImg	    = new ImageView();
 
 
@@ -131,6 +131,8 @@ public class PixToolBar extends ToolBar implements Initializable
 	    {
 		  throw new RuntimeException(e);
 	    }
+
+	    GuiFacade.getInstance().setPixToolBar(this);
       }
 
 
@@ -147,6 +149,7 @@ public class PixToolBar extends ToolBar implements Initializable
       {
 
 	    handleToggle();
+
       }
 
 
@@ -205,6 +208,7 @@ public class PixToolBar extends ToolBar implements Initializable
 	    GuiFacade guiFacade = GuiFacade.getInstance();
 
 	    guiFacade.toggleToolTo((PixTool) toggleGroup.getSelectedToggle().getUserData());
+	    System.out.println("TOOL : " + (PixTool) toggleGroup.getSelectedToggle().getUserData());
 
       }
 
@@ -213,11 +217,11 @@ public class PixToolBar extends ToolBar implements Initializable
       private void toggleShowGrid(ActionEvent event)
       {
 
-	    handleToggleShowGrod();
+	    handleToggleShowGrid();
       }
 
 
-      private void handleToggleShowGrod()
+      private void handleToggleShowGrid()
       {
 
 	    try

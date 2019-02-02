@@ -27,158 +27,229 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.Toggle;
 import javafx.scene.paint.Color;
 
-public class GuiFacade {
+public class GuiFacade
+{
 
-	private static GuiFacade instance;
+      private static GuiFacade				      instance;
 
-	private Scene scene;
+      private Scene					      scene;
 
-	private PixMenuBar	pixMenuBar;
-	private PixToolBar	pixToolBar;
-	private PixTabPane	pixTabPane;
-	private LayerPanel	layerPanel;
-	private ColorRoster	colorRoster;
+      private PixMenuBar				      pixMenuBar;
+      private PixToolBar				      pixToolBar;
+      private PixTabPane				      pixTabPane;
+      private LayerPanel				      layerPanel;
+      private ColorRoster				      colorRoster;
 
-	private Map<PixImage, Set<SimpleObjectProperty<Color>>>	imagesColors;
-	private SimpleObjectProperty<Color>						activeColor	= new SimpleObjectProperty<>();
-	private SimpleObjectProperty<PixImage>					activeImage	= new SimpleObjectProperty<>();
-	private SimpleBooleanProperty							showGrid	= new SimpleBooleanProperty();
+      private Map<PixImage, Set<SimpleObjectProperty<Color>>> imagesColors;
+      private SimpleObjectProperty<Color>		      activeColor = new SimpleObjectProperty<>();
+      private SimpleObjectProperty<PixImage>		      activeImage = new SimpleObjectProperty<>();
+      private SimpleBooleanProperty			      showGrid	  = new SimpleBooleanProperty();
 
-	private GuiFacade() {
 
-		imagesColors = new HashMap<>();
+      private GuiFacade()
+      {
 
-		showGrid.set(false);
+	    imagesColors = new HashMap<>();
 
-	}
+	    showGrid.set(false);
 
-	public static GuiFacade getInstance() {
+      }
 
-		if (instance == null) {
 
-			instance = new GuiFacade();
-		}
+      public static GuiFacade getInstance()
+      {
 
-		return instance;
-	}
+	    if (instance == null)
+	    {
 
-	public void toggleToolTo(PixTool pixTool) {
+		  instance = new GuiFacade();
+	    }
 
-		// toggle tool in AppContext and Gui Controls
+	    return instance;
+      }
 
-		AppContext.getInstance().setCurrTool(pixTool);
 
-		List<Toggle> list = pixToolBar.getToggleGroup().getToggles().stream()
-				.filter(togBut -> ((PixTool) togBut.getUserData()).name().equals(pixTool.name()))
-				.collect(Collectors.toList());
+      public void toggleToolTo(PixTool pixTool)
+      {
 
-		if (list.size() > 0) {
-			Toggle toggle = list.get(0);
-			pixToolBar.getToggleGroup().selectToggle(toggle);
-		}
+	    // toggle tool in AppContext and Gui Controls
 
-	}
+	    AppContext.getInstance().setCurrTool(pixTool);
 
-	public void addTab(Tab tab) {
+	    List<Toggle> list = pixToolBar.getToggleGroup().getToggles().stream()
+			.filter(togBut -> ((PixTool) togBut.getUserData()).name().equals(pixTool.name()))
+			.collect(Collectors.toList());
 
-		pixTabPane.getTabs().add(tab);
+	    if (list.size() > 0)
+	    {
+		  Toggle toggle = list.get(0);
+		  pixToolBar.getToggleGroup().selectToggle(toggle);
+	    }
 
-	}
+      }
 
-	public ObservableList<Tab> getTabs() {
-		return pixTabPane.getTabs();
-	}
 
-	public PixImage getActiveImage() {
+      public void addTab(Tab tab)
+      {
 
-		PixTab tab = (PixTab) pixTabPane.getSelectionModel().getSelectedItem();
-		PixImage activeImage = tab.getImage();
+	    pixTabPane.getTabs().add(tab);
 
-		return activeImage;
-	}
+      }
 
-	public ALayer getActiveLayer() {
 
-		return layerPanel.getActiveLayer();
-	}
+      public ObservableList<Tab> getTabs()
+      {
 
-	public Scene getScene() {
+	    return pixTabPane.getTabs();
+      }
 
-		return scene;
-	}
 
-	public void setScene(Scene scene) {
+      public PixImage getActiveImage()
+      {
 
-		this.scene = scene;
-	}
+	    PixTab tab = (PixTab) pixTabPane.getSelectionModel().getSelectedItem();
+	    PixImage activeImage = tab.getImage();
 
-	public Map<PixImage, Set<SimpleObjectProperty<Color>>> getImagesColors() {
-		return imagesColors;
-	}
+	    return activeImage;
+      }
 
-	public void setImagesColors(Map<PixImage, Set<SimpleObjectProperty<Color>>> imagesColors) {
-		this.imagesColors = imagesColors;
-	}
 
-	public final SimpleBooleanProperty showGridProperty() {
-		return this.showGrid;
-	}
+      public ALayer getActiveLayer()
+      {
 
-	public final boolean isShowGrid() {
-		return this.showGridProperty().get();
-	}
+	    return layerPanel.getActiveLayer();
+      }
 
-	public final void setShowGrid(final boolean showGrid) {
-		this.showGridProperty().set(showGrid);
-	}
 
-	public final SimpleObjectProperty<PixImage> activeImageProperty() {
-		return this.activeImage;
-	}
+      public Scene getScene()
+      {
 
-	public PixImage getActiveimage() {
-		return this.activeImage.get();
-	}
+	    return scene;
+      }
 
-	public void setActiveImage(PixImage image) {
-		this.activeImage.set(image);
-	}
 
-	public final SimpleObjectProperty<Color> activeColorProperty() {
-		return this.activeColor;
-	}
+      public void setScene(Scene scene)
+      {
 
-	public final Color getActiveColor() {
-		return this.activeColorProperty().get();
-	}
+	    this.scene = scene;
+      }
 
-	public final void setActiveColor(final Color activeColor) {
-		this.activeColorProperty().set(activeColor);
-	}
 
-	public void setPixTabPane(PixTabPane tabPane) {
-		this.pixTabPane = tabPane;
-	}
+      public Map<PixImage, Set<SimpleObjectProperty<Color>>> getImagesColors()
+      {
 
-	public void setLayerPanel(LayerPanel layerPanel) {
-		this.layerPanel = layerPanel;
+	    return imagesColors;
+      }
 
-		layerPanel.imageProperty().bindBidirectional(activeImage);
 
-	}
+      public void setImagesColors(Map<PixImage, Set<SimpleObjectProperty<Color>>> imagesColors)
+      {
 
-	public void setColorRoster(ColorRoster colorRoster) {
-		this.colorRoster = colorRoster;
+	    this.imagesColors = imagesColors;
+      }
 
-		colorRoster.imageProperty().bindBidirectional(activeImage);
 
-		activeColor.set(((ColorBox) colorRoster.getToggleGroup().getSelectedToggle()).getColor());
+      public final SimpleBooleanProperty showGridProperty()
+      {
 
-		colorRoster.getToggleGroup().selectedToggleProperty().addListener((obs, oldVal, newVal) -> {
-			Color color = ((ColorBox) newVal).getColor();
-			activeColor.set(color);
-		});
+	    return this.showGrid;
+      }
 
-	}
+
+      public final boolean isShowGrid()
+      {
+
+	    return this.showGridProperty().get();
+      }
+
+
+      public final void setShowGrid(final boolean showGrid)
+      {
+
+	    this.showGridProperty().set(showGrid);
+      }
+
+
+      public final SimpleObjectProperty<PixImage> activeImageProperty()
+      {
+
+	    return this.activeImage;
+      }
+
+
+      public PixImage getActiveimage()
+      {
+
+	    return this.activeImage.get();
+      }
+
+
+      public void setActiveImage(PixImage image)
+      {
+
+	    this.activeImage.set(image);
+      }
+
+
+      public final SimpleObjectProperty<Color> activeColorProperty()
+      {
+
+	    return this.activeColor;
+      }
+
+
+      public final Color getActiveColor()
+      {
+
+	    return this.activeColorProperty().get();
+      }
+
+
+      public final void setActiveColor(final Color activeColor)
+      {
+
+	    this.activeColorProperty().set(activeColor);
+      }
+
+
+      public void setPixTabPane(PixTabPane tabPane)
+      {
+
+	    this.pixTabPane = tabPane;
+      }
+
+
+      public void setLayerPanel(LayerPanel layerPanel)
+      {
+
+	    this.layerPanel = layerPanel;
+
+	    layerPanel.imageProperty().bindBidirectional(activeImage);
+
+      }
+
+
+      public void setColorRoster(ColorRoster colorRoster)
+      {
+
+	    this.colorRoster = colorRoster;
+
+	    colorRoster.imageProperty().bindBidirectional(activeImage);
+
+	    activeColor.set(((ColorBox) colorRoster.getToggleGroup().getSelectedToggle()).getColor());
+
+	    colorRoster.getToggleGroup().selectedToggleProperty().addListener((obs, oldVal, newVal) -> {
+		  Color color = ((ColorBox) newVal).getColor();
+		  activeColor.set(color);
+	    });
+
+      }
+
+
+      public void setPixToolBar(PixToolBar pixToolBar)
+      {
+
+	    this.pixToolBar = pixToolBar;
+      }
 
 }

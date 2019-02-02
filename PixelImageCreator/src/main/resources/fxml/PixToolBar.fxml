@@ -5,10 +5,12 @@
 <?import javafx.scene.layout.*?>
 
 
-<fx:root type="javafx.scene.control.ToolBar" xmlns:fx="http://javafx.com/fxml">
+<fx:root type="javafx.scene.control.ToolBar"
+	xmlns:fx="http://javafx.com/fxml">
 
 
-	<ToggleButton fx:id="selectBut" toggleGroup="$toggleGroup" onAction="#toggleSelect">
+	<ToggleButton fx:id="selectBut" toggleGroup="$toggleGroup"
+		onAction="#toggleSelect">
 		<toggleGroup>
 			<ToggleGroup fx:id="toggleGroup" />
 		</toggleGroup>
@@ -25,11 +27,14 @@
 		onAction="#toggleResize" />
 	<ToggleButton fx:id="zoomInBut" toggleGroup="$toggleGroup"
 		onAction="#toggleZoomIn" />
-	<ToggleButton fx:id="zoomOutBut" toggleGroup="$toggleGroup"
-		onAction="#toggleZoomOut" />
+	<ToggleButton fx:id="zoomOutBut"
+		toggleGroup="$toggleGroup" onAction="#toggleZoomOut" />
+
+	<Separator />
+	<ToggleButton fx:id="showGridBut"
+		onAction="#toggleShowGrid" />
 
 
-	
 
 
 </fx:root>

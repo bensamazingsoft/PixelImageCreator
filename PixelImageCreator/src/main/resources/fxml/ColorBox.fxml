@@ -3,8 +3,9 @@
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.control.ColorPicker?>
 
 <fx:root type="javafx.scene.layout.StackPane" xmlns:fx="http://javafx.com/fxml">
 	
-
+<ColorPicker fx:id="colorPicker"/>
 </fx:root>

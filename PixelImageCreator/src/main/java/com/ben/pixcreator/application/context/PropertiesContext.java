@@ -7,123 +7,139 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import javafx.scene.paint.Color;
 
-public class PropertiesContext {
+public class PropertiesContext
+{
 
-	private Properties		defaultProp, properties;
-	private File			propFile;
-	private final String	defaultPropertiesFileName	= "./properties/default.properties";
+      private Properties   defaultProp, properties;
+      private File	   propFile;
+      private final String defaultPropertiesFileName = "./properties/default.properties";
 
-	public PropertiesContext() throws IOException {
 
-		initProperties();
-	}
+      public PropertiesContext() throws IOException
+      {
 
-	private void initProperties() throws IOException {
+	    initProperties();
+      }
 
-		// initialize default properties
 
-		defaultProp = new Properties();
-		properties = new Properties();
+      private void initProperties() throws IOException
+      {
 
-		ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-		InputStream is = classloader.getResourceAsStream(defaultPropertiesFileName);
-		defaultProp.load(is);
+	    // initialize default properties
 
-		// initialize properties with default in case there are new ones
-		properties = new Properties(defaultProp);
+	    defaultProp = new Properties();
+	    properties = new Properties();
 
-		propFile = new File("data/config.properties");
-		if (propFile.exists()) {
+	    ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+	    InputStream is = classloader.getResourceAsStream(defaultPropertiesFileName);
+	    defaultProp.load(is);
 
-			properties.load(new FileInputStream(propFile.toString()));
+	    // initialize properties with default in case there are new ones
+	    properties = new Properties(defaultProp);
 
-		}
+	    propFile = new File("data/config.properties");
+	    if (propFile.exists())
+	    {
 
-	}
+		  properties.load(new FileInputStream(propFile.toString()));
 
-	public void reset() {
+	    }
 
-		properties = new Properties(defaultProp);
-	}
+      }
 
-	public void reset(String key) {
-		properties.setProperty(key, defaultProp.getProperty(key));
-	}
 
-	public String getDefault(String key) {
+      public void reset()
+      {
 
-		return defaultProp.getProperty(key);
-	}
+	    properties = new Properties(defaultProp);
+      }
 
-	public String get(String key) {
 
-		return properties.getProperty(key);
-	}
+      public void reset(String key)
+      {
 
-	public void set(String key, String value) {
+	    properties.setProperty(key, defaultProp.getProperty(key));
+      }
 
-		properties.setProperty(key, value);
-	}
 
-	public Set<Color> getStartRosterColors() {
+      public String getDefault(String key)
+      {
 
-		// get the rosteColorors
+	    return defaultProp.getProperty(key);
+      }
 
-		Set<Color> result = new HashSet<>();
 
-		String[] stringColors = properties.getProperty("rosterColors").split("X");
+      public String get(String key)
+      {
 
-		for (String stringColor : stringColors) {
+	    return properties.getProperty(key);
+      }
 
-			Color color = getColor(stringColor);
 
-			result.add(color);
+      public void set(String key, String value)
+      {
 
-		}
+	    properties.setProperty(key, value);
+      }
 
-		return result;
 
-	}
+      public Set<Color> getStartRosterColors()
+      {
 
-	// convert color string property to color object
-	Color getColor(String string) {
+	    // get the rosteColorors
 
-		Color color = Color.BLACK;
-		String[] rgbValues = string.split(",");
+	    Set<Color> result = new HashSet<>();
 
-		if (rgbValues.length == 3) {
-			color = Color.rgb(Integer.valueOf(rgbValues[0]), Integer.valueOf(rgbValues[1]),
-					Integer.valueOf(rgbValues[2]));
-		} else if (rgbValues.length == 4) {
-			color = Color.rgb(Integer.valueOf(rgbValues[0]), Integer.valueOf(rgbValues[1]),
-					Integer.valueOf(rgbValues[2]), Double.valueOf(rgbValues[3]));
-		}
+	    String[] stringColors = properties.getProperty("rosterColors").split("X");
 
-		return color;
-	}
+	    for (String stringColor : stringColors)
+	    {
 
-	public void save() throws FileNotFoundException, IOException {
-		propFile.getParentFile().mkdirs();
-		properties.store(new FileOutputStream(propFile), null);
+		  Color color = getColor(stringColor);
 
-	}
+		  result.add(color);
 
-	public Set<String> getProps(String string) {
-		Collection<Object> objs = properties.values();
-		Set<String> props = new HashSet<>();
+	    }
 
-		props = objs.stream().map(obj -> (String) obj).filter(prop -> prop.startsWith("color_"))
-				.collect(Collectors.toSet());
+	    return result;
 
-		return props;
-	}
+      }
+
+
+      // convert color string property to color object
+      Color getColor(String string)
+      {
+
+	    Color color = Color.BLACK;
+	    String[] rgbValues = string.split(",");
+
+	    if (rgbValues.length == 3)
+	    {
+		  color = Color.rgb(Integer.valueOf(rgbValues[0]), Integer.valueOf(rgbValues[1]),
+			      Integer.valueOf(rgbValues[2]));
+	    }
+	    else if (rgbValues.length == 4)
+	    {
+		  color = Color.rgb(Integer.valueOf(rgbValues[0]), Integer.valueOf(rgbValues[1]),
+			      Integer.valueOf(rgbValues[2]), Double.valueOf(rgbValues[3]));
+	    }
+
+	    return color;
+      }
+
+
+      public void save() throws FileNotFoundException, IOException
+      {
+
+	    propFile.getParentFile().mkdirs();
+	    properties.store(new FileOutputStream(propFile), null);
+
+      }
 
 }

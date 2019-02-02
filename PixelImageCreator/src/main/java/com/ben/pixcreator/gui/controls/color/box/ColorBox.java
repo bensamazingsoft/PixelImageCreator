@@ -15,14 +15,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
 /**
  * has a color builder method
  *
  */
-public class ColorBox extends HBox implements Toggle, Initializable
+public class ColorBox extends StackPane implements Toggle, Initializable
 {
 
       @FXML
@@ -118,6 +118,7 @@ public class ColorBox extends HBox implements Toggle, Initializable
       {
 
 	    toggleGroup.set(arg0);
+	    toggleGroup.get().getToggles().add(this);
 
       }
 
