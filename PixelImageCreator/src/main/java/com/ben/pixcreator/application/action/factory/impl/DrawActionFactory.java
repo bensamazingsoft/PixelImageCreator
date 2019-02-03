@@ -1,9 +1,13 @@
 
 package com.ben.pixcreator.application.action.factory.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.ben.pixcreator.application.action.IAction;
 import com.ben.pixcreator.application.action.factory.IActionFactory;
 import com.ben.pixcreator.application.action.impl.ActionChangeCellColor;
+import com.ben.pixcreator.application.image.PixImage;
 import com.ben.pixcreator.application.image.coords.Coord;
 import com.ben.pixcreator.application.image.layer.impl.ALayer;
 import com.ben.pixcreator.application.image.layer.impl.PixLayer;
@@ -13,36 +17,49 @@ import javafx.event.Event;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 
-public class DrawActionFactory implements IActionFactory {
+public class DrawActionFactory implements IActionFactory
+{
 
-	@Override
-	public IAction getAction(Event event) {
+      private static final Logger log = LoggerFactory.getLogger(DrawActionFactory.class);
 
-		IAction action = null;
 
-		if (event instanceof MouseEvent) {
+      @Override
+      public IAction getAction(Event event)
+      {
 
-			switch (event.getEventType().getName()) {
+	    // log.debug(event.getEventType().getName());
 
-			case ("MOUSE_CLICKED"): {
-				int x = new Double(((MouseEvent) event).getX()).intValue();
-				int y = new Double(((MouseEvent) event).getY()).intValue();
+	    IAction action = null;
 
-				Color color = GuiFacade.getInstance().getActiveColor();
+	    if (event instanceof MouseEvent)
+	    {
 
-				ALayer layer = GuiFacade.getInstance().getActiveLayer();
-				if (GuiFacade.getInstance().getActiveLayer() instanceof PixLayer) {
-					PixLayer pxLayer = (PixLayer) layer;
-					return new ActionChangeCellColor(pxLayer, new Coord(x, y), color);
-				}
-				break;
+		  switch (event.getEventType().getName())
+		  {
+
+		  case ("MOUSE_CLICKED"):
+		  {
+
+			int x = new Double(((MouseEvent) event).getX()).intValue();
+			int y = new Double(((MouseEvent) event).getY()).intValue();
+
+			Color color = GuiFacade.getInstance().getActiveColor();
+
+			ALayer layer = GuiFacade.getInstance().getActiveLayer();
+			PixImage image = GuiFacade.getInstance().getActiveimage();
+			if (GuiFacade.getInstance().getActiveLayer() instanceof PixLayer)
+			{
+			      PixLayer pxLayer = (PixLayer) layer;
+			      return new ActionChangeCellColor(image, pxLayer, new Coord(x, y), color);
 			}
-			// TODO all other cases
+			break;
+		  }
+		  // TODO all other cases
 
-			}
-		}
+		  }
+	    }
 
-		return action;
-	}
+	    return action;
+      }
 
 }

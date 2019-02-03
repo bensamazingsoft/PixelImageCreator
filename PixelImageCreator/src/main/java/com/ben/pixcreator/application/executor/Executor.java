@@ -56,12 +56,15 @@ public class Executor
       public void executeAction(IAction action) throws Exception
       {
 
-	    action.execute();
-	    if (action instanceof ICancelable)
+	    if (null != action)
 	    {
-		  activeHistory().add((ICancelable) action);
+		  action.execute();
+		  if (action instanceof ICancelable)
+		  {
+			activeHistory().add((ICancelable) action);
+		  }
+		  activeCancelled().clear();
 	    }
-	    activeCancelled().clear();
       }
 
 

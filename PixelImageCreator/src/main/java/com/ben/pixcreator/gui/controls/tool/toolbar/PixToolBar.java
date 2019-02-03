@@ -6,6 +6,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import com.ben.pixcreator.application.action.impl.RefreshAllTabsAction;
+import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.application.executor.Executor;
 import com.ben.pixcreator.application.tools.PixTool;
 import com.ben.pixcreator.gui.exception.popup.ExceptionPopUp;
@@ -13,6 +14,7 @@ import com.ben.pixcreator.gui.facade.GuiFacade;
 
 import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -133,6 +135,7 @@ public class PixToolBar extends ToolBar implements Initializable
 	    }
 
 	    GuiFacade.getInstance().setPixToolBar(this);
+	    GuiFacade.getInstance().toggleToolTo(AppContext.getInstance().getCurrTool());
       }
 
 
@@ -208,7 +211,6 @@ public class PixToolBar extends ToolBar implements Initializable
 	    GuiFacade guiFacade = GuiFacade.getInstance();
 
 	    guiFacade.toggleToolTo((PixTool) toggleGroup.getSelectedToggle().getUserData());
-	    System.out.println("TOOL : " + (PixTool) toggleGroup.getSelectedToggle().getUserData());
 
       }
 
@@ -224,13 +226,16 @@ public class PixToolBar extends ToolBar implements Initializable
       private void handleToggleShowGrid()
       {
 
-	    try
+	    if (null != GuiFacade.getInstance().getActiveimage())
 	    {
-		  Executor.getInstance().executeAction(new RefreshAllTabsAction());
-	    }
-	    catch (Exception e)
-	    {
-		  new ExceptionPopUp(e);
+		  try
+		  {
+			Executor.getInstance().executeAction(new RefreshAllTabsAction());
+		  }
+		  catch (Exception e)
+		  {
+			new ExceptionPopUp(e);
+		  }
 	    }
 
       }
@@ -244,41 +249,95 @@ public class PixToolBar extends ToolBar implements Initializable
 	    selectBut.setUserData(PixTool.SELECT);
 	    selectButImg.imageProperty().bind(
 			Bindings.when(selectBut.selectedProperty()).then(selectButSelected).otherwise(selectButUnSelected));
+	    selectBut.addEventFilter(Event.ANY, event -> {
+		  if (AppContext.getInstance().getCurrTool() == PixTool.SELECT)
+		  {
+			event.consume();
+		  }
+	    });
 
 	    drawBut.setGraphic(drawButImg);
 	    drawBut.setUserData(PixTool.DRAW);
 	    drawButImg.imageProperty()
 			.bind(Bindings.when(drawBut.selectedProperty()).then(drawButSelected).otherwise(drawButUnSelected));
+	    drawBut.addEventFilter(Event.ANY, event -> {
+		  if (AppContext.getInstance().getCurrTool() == PixTool.DRAW)
+		  {
+			event.consume();
+		  }
+	    });
 
 	    pickBut.setGraphic(pickButImg);
 	    pickBut.setUserData(PixTool.PICK);
 	    pickButImg.imageProperty()
 			.bind(Bindings.when(pickBut.selectedProperty()).then(pickButSelected).otherwise(pickButUnSelected));
 
+	    pickBut.addEventFilter(Event.ANY, event -> {
+		  if (AppContext.getInstance().getCurrTool() == PixTool.PICK)
+		  {
+			event.consume();
+		  }
+	    });
+
 	    moveBut.setGraphic(moveButImg);
 	    moveBut.setUserData(PixTool.MOVE);
 	    moveButImg.imageProperty()
 			.bind(Bindings.when(moveBut.selectedProperty()).then(moveButSelected).otherwise(moveButUnSelected));
+
+	    moveBut.addEventFilter(Event.ANY, event -> {
+		  if (AppContext.getInstance().getCurrTool() == PixTool.MOVE)
+		  {
+			event.consume();
+		  }
+	    });
 
 	    panBut.setGraphic(panButImg);
 	    panBut.setUserData(PixTool.PAN);
 	    panButImg.imageProperty()
 			.bind(Bindings.when(panBut.selectedProperty()).then(panButSelected).otherwise(panButUnSelected));
 
+	    panBut.addEventFilter(Event.ANY, event -> {
+		  if (AppContext.getInstance().getCurrTool() == PixTool.PAN)
+		  {
+			event.consume();
+		  }
+	    });
+
 	    resizeBut.setGraphic(resizeButImg);
 	    resizeBut.setUserData(PixTool.RESIZE);
 	    resizeButImg.imageProperty().bind(
 			Bindings.when(resizeBut.selectedProperty()).then(resizeButSelected).otherwise(resizeButUnSelected));
+
+	    resizeBut.addEventFilter(Event.ANY, event -> {
+		  if (AppContext.getInstance().getCurrTool() == PixTool.RESIZE)
+		  {
+			event.consume();
+		  }
+	    });
 
 	    zoomInBut.setGraphic(zoomInButImg);
 	    zoomInBut.setUserData(PixTool.ZOOMIN);
 	    zoomInButImg.imageProperty().bind(
 			Bindings.when(zoomInBut.selectedProperty()).then(zoomInButSelected).otherwise(zoomInButUnSelected));
 
+	    zoomInBut.addEventFilter(Event.ANY, event -> {
+		  if (AppContext.getInstance().getCurrTool() == PixTool.ZOOMIN)
+		  {
+			event.consume();
+		  }
+	    });
+
 	    zoomOutBut.setGraphic(zoomOutButImg);
 	    zoomOutBut.setUserData(PixTool.ZOOMOUT);
 	    zoomOutButImg.imageProperty().bind(
 			Bindings.when(zoomOutBut.selectedProperty()).then(zoomOutButSelected).otherwise(zoomOutButUnSelected));
+
+	    zoomOutBut.addEventFilter(Event.ANY, event -> {
+		  if (AppContext.getInstance().getCurrTool() == PixTool.ZOOMOUT)
+		  {
+			event.consume();
+		  }
+	    });
 
 	    showGridBut.setGraphic(showGridButImg);
 	    showGridButImg.imageProperty().bind(

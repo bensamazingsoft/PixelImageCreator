@@ -1,6 +1,14 @@
 
 
 .main-panel {
+}
+
+
+
+.layerpanel{
 
 }
 
+.layerbox {
+	-fx-background-color:lightgray;
+}

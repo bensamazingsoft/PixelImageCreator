@@ -3,6 +3,9 @@ package com.ben.pixcreator.application.image;
 
 import java.time.LocalDate;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.application.image.layer.ILayer;
 import com.ben.pixcreator.application.image.layer.impl.ALayer;
@@ -17,21 +20,23 @@ import javafx.scene.canvas.GraphicsContext;
 public class PixImage
 {
 
+      private static final Logger log			= LoggerFactory.getLogger(PixImage.class);
+
       // TODO manage the 'changed' state : do you save on close ? is there a '*'
       // beside the name ?
-      private static final int DEFAULTSIZE	     = 800;
-      private static final int DEFAULTGRIDRESOLUTION = 80;
+      private static final int	  DEFAULTSIZE		= 800;
+      private static final int	  DEFAULTGRIDRESOLUTION	= 80;
 
-      private String	       name;
-      private LocalDate	       dateCre;
+      private String		  name;
+      private LocalDate		  dateCre;
 
-      private int	       xSize, ySize;
-      private int	       xGridResolution, yGridResolution;
+      private int		  xSize, ySize;
+      private int		  xGridResolution, yGridResolution;
 
-      private ILayer	       ghost, select;
+      private ILayer		  ghost, select;
       // layer and its visibility
 
-      private LayerList	       layerList;
+      private LayerList		  layerList;
 
 
       public PixImage()
@@ -86,6 +91,7 @@ public class PixImage
 		  ALayer layer = layerList.getLayer(i);
 		  if (layer.isVisible())
 		  {
+			// log.debug("drawing " + layer.toString());
 			layer.draw(canvas, xGridResolution, yGridResolution);
 		  }
 	    }

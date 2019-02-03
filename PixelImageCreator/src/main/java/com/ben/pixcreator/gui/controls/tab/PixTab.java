@@ -5,7 +5,13 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import com.ben.pixcreator.application.action.factory.ActionFactoryProducer;
+import com.ben.pixcreator.application.action.factory.IActionFactory;
+import com.ben.pixcreator.application.action.impl.RefreshTabAction;
+import com.ben.pixcreator.application.context.AppContext;
+import com.ben.pixcreator.application.executor.Executor;
 import com.ben.pixcreator.application.image.PixImage;
+import com.ben.pixcreator.gui.exception.popup.ExceptionPopUp;
 
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.Event;
@@ -15,6 +21,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
+import javafx.scene.input.MouseEvent;
 
 public class PixTab extends Tab implements Initializable
 {
@@ -81,6 +88,22 @@ public class PixTab extends Tab implements Initializable
 	    canvas = new Canvas(getImage().getxSize(), getImage().getySize());
 
 	    scrollPane.setContent(canvas);
+
+	    canvas.addEventHandler(MouseEvent.ANY, event -> {
+
+		  IActionFactory factory = ActionFactoryProducer.getActionFactory(AppContext.getInstance().getCurrTool());
+
+		  try
+		  {
+			Executor.getInstance().executeAction(factory.getAction(event));
+			Executor.getInstance().executeAction(new RefreshTabAction(this));
+		  }
+		  catch (Exception e)
+		  {
+			new ExceptionPopUp(e);
+		  }
+
+	    });
 
       }
 

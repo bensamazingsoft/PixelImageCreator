@@ -119,6 +119,7 @@ public class ColorBox extends StackPane implements Toggle, Initializable
 
 	    toggleGroup.set(arg0);
 	    toggleGroup.get().getToggles().add(this);
+	    toggleGroup.get().selectToggle(this);
 
       }
 

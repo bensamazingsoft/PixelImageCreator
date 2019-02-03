@@ -15,6 +15,7 @@ import com.ben.pixcreator.gui.exception.popup.ExceptionPopUp;
 import com.ben.pixcreator.gui.facade.GuiFacade;
 
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -23,7 +24,6 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.ToolBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 
@@ -33,7 +33,7 @@ public class LayerPanel extends BorderPane implements Initializable
       private final String		     IMAGEPATH		  = "images/gui/buttons/tools/";
 
       private SimpleObjectProperty<PixImage> image;
-      private SimpleObjectProperty<ALayer>   activeLayer;
+      private SimpleObjectProperty<ALayer>   activeLayer	  = new SimpleObjectProperty<>();
 
       final Image			     moveLayerDownButImg  = new Image(
 		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "moveLayerDownButImg.png"));
@@ -79,6 +79,9 @@ public class LayerPanel extends BorderPane implements Initializable
 
 	    super();
 
+	    getStylesheets().add("/styles/styles.css");
+	    getStyleClass().add("layerpanel");
+
 	    image = new SimpleObjectProperty<>();
 	    image.addListener((obs, oldVal, newVal) -> populate());
 
@@ -103,7 +106,7 @@ public class LayerPanel extends BorderPane implements Initializable
 
 
       @FXML
-      private void handleMoveLayerDown(MouseEvent event)
+      private void handleMoveLayerDown(ActionEvent event)
       {
 
 	    // handleMoveLayerDown
@@ -120,7 +123,7 @@ public class LayerPanel extends BorderPane implements Initializable
 
 
       @FXML
-      private void handleMoveLayerUp(MouseEvent event)
+      private void handleMoveLayerUp(ActionEvent event)
       {
 
 	    // handleMoveLayerUp
@@ -137,7 +140,7 @@ public class LayerPanel extends BorderPane implements Initializable
 
 
       @FXML
-      private void handleDuplicateLayer(MouseEvent event)
+      private void handleDuplicateLayer(ActionEvent event)
       {
 
 	    // handleDuplicateLayer
@@ -154,7 +157,7 @@ public class LayerPanel extends BorderPane implements Initializable
 
 
       @FXML
-      private void handleNewLayer(MouseEvent event)
+      private void handleNewLayer(ActionEvent event)
       {
 
 	    // handleNewLayer
@@ -171,7 +174,7 @@ public class LayerPanel extends BorderPane implements Initializable
 
 
       @FXML
-      private void handleDeleteLayer(MouseEvent event)
+      private void handleDeleteLayer(ActionEvent event)
       {
 
 	    // handleDeleteLayer
@@ -190,14 +193,18 @@ public class LayerPanel extends BorderPane implements Initializable
       private void executeLayerAction(LayerActions action)
       {
 
-	    try
+	    if (null != activeLayer.get())
 	    {
-		  Executor.getInstance()
-			      .executeAction(new LayerAction(image.get(), activeLayer.get(), action));
-	    }
-	    catch (Exception e)
-	    {
-		  new ExceptionPopUp(e);
+		  try
+		  {
+			Executor.getInstance()
+				    .executeAction(new LayerAction(image.get(), activeLayer.get(), action));
+			populate();
+		  }
+		  catch (Exception e)
+		  {
+			new ExceptionPopUp(e);
+		  }
 	    }
       }
 
@@ -226,6 +233,12 @@ public class LayerPanel extends BorderPane implements Initializable
 
 	    togglegroup = new ToggleGroup();
 
+	    togglegroup.selectedToggleProperty().addListener((obs, oldVal, newVal) -> {
+		  LayerBox box = (LayerBox) newVal;
+		  ALayer layer = box.getUserData();
+		  activeLayer.set(layer);
+	    });
+
 	    for (int i = 0; i < getImage().getLayerList().getItems().size(); i++)
 	    {
 
@@ -235,14 +248,7 @@ public class LayerPanel extends BorderPane implements Initializable
 		  layersBox.getChildren().add(box);
 
 		  box.setToggleGroup(togglegroup);
-
 	    }
-
-	    togglegroup.selectedToggleProperty().addListener((obs, oldVal, newVal) -> {
-		  LayerBox box = (LayerBox) newVal;
-		  ALayer layer = box.getUserData();
-		  activeLayer.set(layer);
-	    });
 
       }
 

@@ -17,11 +17,13 @@
 	<Canvas fx:id="canvas"/>
 </StackPane>
 
-<StackPane fx:id="titlePane"  alignment="TOP_RIGHT">
+<StackPane fx:id="titlePane">
 	<ImageView fx:id="imgTypeView"/>
 </StackPane>
 
 <StackPane fx:id="lockPane">
 	<ToggleButton fx:id="lockBut" onMouseClicked="#toggleLock"/>
 </StackPane>
+
+
 </fx:root>

@@ -39,12 +39,12 @@ public class LayerBox extends HBox implements Initializable, Toggle
       private final int			  MINIATUREHEIGHT;
       private final int			  MINIATUREWIDTH;
       private final int			  BOXHEIGHT;
+      private final int			  BOXWIDTH;
 
       // toggle fields
 
-      private ToggleGroup		  toggleGroup;
-      private ObjectProperty<ToggleGroup> toggleGroupProperty = new SimpleObjectProperty<ToggleGroup>();
-      private SimpleBooleanProperty	  selected	      = new SimpleBooleanProperty();
+      private ObjectProperty<ToggleGroup> toggleGroup	 = new SimpleObjectProperty<ToggleGroup>();
+      private SimpleBooleanProperty	  selected	 = new SimpleBooleanProperty();
       ObservableMap<Object, Object>	  properties;
 
       // instance fields
@@ -56,21 +56,27 @@ public class LayerBox extends HBox implements Initializable, Toggle
       private Image			  miniature;
       private ImageView			  miniatureView;
 
-      private final String		  IMAGEPATH	      = "images/gui/buttons/layerbox/";
+      private final String		  IMAGEPATH	 = "images/gui/buttons/layerbox/";
 
-      private Image			  imgTypePicImg	      = new Image(
+      private Image			  imgTypePicImg	 = new Image(
 		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "imgTypePicImg.png"));
-      private Image			  imgTypePixImg	      = new Image(
+      private Image			  imgTypePixImg	 = new Image(
 		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "imgTypePixImg.png"));
 
       @FXML
       private ImageView			  imgTypeView;
 
-      final private Image		  lockSelected	      = new Image(
+      final private Image		  lockSelected	 = new Image(
 		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "lockSelected.png"));
-      final private Image		  lockUnSelected      = new Image(
+      final private Image		  lockUnSelected = new Image(
 		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "lockUnSelected.png"));
-      final private ImageView		  lockButImg	      = new ImageView();
+      final private ImageView		  lockButImg	 = new ImageView();
+
+      final private Image		  eyeSelected	 = new Image(
+		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "eyeSelected.png"));
+      final private Image		  eyeUnSelected	 = new Image(
+		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "eyeUnSelected.png"));
+      final private ImageView		  eyeButImg	 = new ImageView();
 
       @FXML
       private ToggleButton		  eyeBut;
@@ -97,10 +103,13 @@ public class LayerBox extends HBox implements Initializable, Toggle
       {
 
 	    super();
+	    getStylesheets().add("/styles/styles.css");
+	    getStyleClass().add("layerbox");
 
 	    MINIATUREHEIGHT = Integer.valueOf(AppContext.getInstance().propertyContext().get("miniatureWH"));
 	    MINIATUREWIDTH = Integer.valueOf(AppContext.getInstance().propertyContext().get("miniatureWH"));
 	    BOXHEIGHT = Integer.valueOf(AppContext.getInstance().propertyContext().get("layerBoxH"));
+	    BOXWIDTH = Integer.valueOf(AppContext.getInstance().propertyContext().get("layerBoxW"));
 
 	    this.image = image;
 	    this.layer = layer;
@@ -127,8 +136,6 @@ public class LayerBox extends HBox implements Initializable, Toggle
       private void toggleEye(MouseEvent event)
       {
 
-	    layer.setVisible(!layer.isVisible());
-	    ;
       }
 
 
@@ -166,7 +173,10 @@ public class LayerBox extends HBox implements Initializable, Toggle
       private void miniatureClicked()
       {
 
-	    setSelected(!isSelected());
+	    if (!isSelected())
+	    {
+		  toggleGroup.get().selectToggle(this);
+	    }
 
       }
 
@@ -176,6 +186,11 @@ public class LayerBox extends HBox implements Initializable, Toggle
       {
 	    // TODO set height and growh titlepane, set Pix/Pix logo, etc
 
+	    eyeBut.setGraphic(eyeButImg);
+	    eyeBut.selectedProperty().bindBidirectional(layer.visibleProperty());
+	    eyeButImg.imageProperty()
+			.bind(Bindings.when(eyeBut.selectedProperty()).then(eyeSelected).otherwise(eyeUnSelected));
+
 	    lockBut.setGraphic(lockButImg);
 	    lockButImg.imageProperty()
 			.bind(Bindings.when(lockBut.selectedProperty()).then(lockSelected).otherwise(lockUnSelected));
@@ -183,18 +198,31 @@ public class LayerBox extends HBox implements Initializable, Toggle
 	    imgTypeView.imageProperty().setValue(layer instanceof PixLayer ? imgTypePixImg : imgTypePicImg);
 
 	    this.setMaxHeight(BOXHEIGHT);
+	    this.setMinWidth(BOXWIDTH);
 	    HBox.setHgrow(titlePane, Priority.ALWAYS);
 
 	    canvas.setHeight(MINIATUREHEIGHT);
 	    canvas.setWidth(MINIATUREWIDTH);
 
+	    selected.addListener((obs, oldVal, newVal) -> {
+		  if (newVal)
+		  {
+			setStyle("-fx-background-color:red");
+		  }
+		  else
+		  {
+			setStyle("-fx-background-color:gray");
+		  }
+	    });
+
       }
 
 
+      @Override
       public ToggleGroup getToggleGroup()
       {
 
-	    return toggleGroup;
+	    return toggleGroup.get();
       }
 
 
@@ -205,11 +233,13 @@ public class LayerBox extends HBox implements Initializable, Toggle
       }
 
 
+      @Override
       public void setToggleGroup(ToggleGroup arg0)
       {
 
-	    toggleGroup = arg0;
-	    toggleGroupProperty.set(toggleGroup);
+	    toggleGroup.set(arg0);
+	    toggleGroup.get().getToggles().add(this);
+	    toggleGroup.get().selectToggle(this);
       }
 
 
@@ -222,7 +252,7 @@ public class LayerBox extends HBox implements Initializable, Toggle
       public ObjectProperty<ToggleGroup> toggleGroupProperty()
       {
 
-	    return toggleGroupProperty;
+	    return toggleGroup;
       }
 
 
@@ -238,7 +268,7 @@ public class LayerBox extends HBox implements Initializable, Toggle
       public BooleanProperty selectedProperty()
       {
 
-	    return selectedProperty();
+	    return selected;
       }
 
 

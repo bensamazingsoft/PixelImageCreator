@@ -8,88 +8,114 @@ import com.ben.pixcreator.application.tools.PixTool;
 
 import javafx.scene.paint.Color;
 
-public class AppContext {
+public class AppContext
+{
 
-	private static AppContext instance;
+      private static AppContext	       instance;
 
-	private static PropertiesContext properties;
+      private static PropertiesContext properties;
 
-	private static Color gridColor, currDrawColor;
+      private static Color	       gridColor, currDrawColor;
 
-	private static PixTool currTool;
+      private static PixTool	       currTool;
 
-	private static ResourceBundle bundle;
+      private static ResourceBundle    bundle;
 
-	private AppContext() {
 
-	}
+      private AppContext()
+      {
 
-	public static void init() throws IOException {
+      }
 
-		properties = new PropertiesContext();
-		bundle = ResourceBundle.getBundle("i18n/trad");
-		currTool = PixTool.getTool(properties.get("startTool"));
 
-		gridColor = properties.getColor(properties.get("gridColor"));
-		currDrawColor = properties.getColor(properties.get("drawColor"));
+      public static void init() throws IOException
+      {
 
-	}
+	    properties = new PropertiesContext();
+	    bundle = ResourceBundle.getBundle("i18n/trad");
+	    currTool = PixTool.valueOf(properties.get("startTool"));
 
-	public static AppContext getInstance() {
+	    gridColor = properties.getColor(properties.get("gridColor"));
+	    currDrawColor = properties.getColor(properties.get("drawColor"));
 
-		if (instance == null) {
-			instance = new AppContext();
-		}
-		return instance;
+      }
 
-	}
 
-	public PropertiesContext propertyContext() {
+      public static AppContext getInstance()
+      {
 
-		return properties;
-	}
+	    if (instance == null)
+	    {
+		  instance = new AppContext();
+	    }
+	    return instance;
 
-	public void setProperties(PropertiesContext properties) {
+      }
 
-		AppContext.properties = properties;
-	}
 
-	public Color getGridColor() {
+      public PropertiesContext propertyContext()
+      {
 
-		return gridColor;
-	}
+	    return properties;
+      }
 
-	public void setGridColor(Color gridColor) {
 
-		AppContext.gridColor = gridColor;
-	}
+      public void setProperties(PropertiesContext properties)
+      {
 
-	public Color getCurrDrawColor() {
+	    AppContext.properties = properties;
+      }
 
-		return currDrawColor;
-	}
 
-	public void setCurrDrawColor(Color currDrawColor) {
+      public Color getGridColor()
+      {
 
-		AppContext.currDrawColor = currDrawColor;
-	}
+	    return gridColor;
+      }
 
-	public void setCurrTool(PixTool pixTool) {
 
-		properties.set("startTool", pixTool.name());
+      public void setGridColor(Color gridColor)
+      {
 
-		currTool = pixTool;
+	    AppContext.gridColor = gridColor;
+      }
 
-	}
 
-	public PixTool getCurrTool() {
+      public Color getCurrDrawColor()
+      {
 
-		return currTool;
-	}
+	    return currDrawColor;
+      }
 
-	public ResourceBundle getBundle() {
 
-		return bundle;
-	}
+      public void setCurrDrawColor(Color currDrawColor)
+      {
+
+	    AppContext.currDrawColor = currDrawColor;
+      }
+
+
+      public void setCurrTool(PixTool pixTool)
+      {
+
+	    properties.set("startTool", pixTool.name());
+
+	    currTool = pixTool;
+
+      }
+
+
+      public PixTool getCurrTool()
+      {
+
+	    return currTool;
+      }
+
+
+      public ResourceBundle getBundle()
+      {
+
+	    return bundle;
+      }
 
 }
