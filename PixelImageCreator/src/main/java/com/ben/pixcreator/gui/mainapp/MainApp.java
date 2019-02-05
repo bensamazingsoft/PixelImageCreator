@@ -32,11 +32,11 @@ public class MainApp extends Application {
 		ResourceBundle bundle = ResourceBundle.getBundle("i18n/trad");
 
 		String fxmlFile = "/fxml/main.fxml";
-		log.debug("Loading FXML for main view from: {}", fxmlFile);
+		// log.debug("Loading FXML for main view from: {}", fxmlFile);
 		FXMLLoader loader = new FXMLLoader();
 		Parent rootNode = (Parent) loader.load(getClass().getResourceAsStream(fxmlFile));
 
-		log.debug("Showing JFX scene");
+		// log.debug("Showing JFX scene");
 		Scene scene = new Scene(rootNode, 800, 600);
 		scene.getStylesheets().add("/styles/styles.css");
 

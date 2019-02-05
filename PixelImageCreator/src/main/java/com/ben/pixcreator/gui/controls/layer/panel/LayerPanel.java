@@ -27,285 +27,232 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 
-public class LayerPanel extends BorderPane implements Initializable
-{
+public class LayerPanel extends BorderPane implements Initializable {
 
-      private final String		     IMAGEPATH		  = "images/gui/buttons/tools/";
+	private final String IMAGEPATH = "images/gui/buttons/tools/";
 
-      private SimpleObjectProperty<PixImage> image;
-      private SimpleObjectProperty<ALayer>   activeLayer	  = new SimpleObjectProperty<>();
+	private SimpleObjectProperty<PixImage>	image;
+	private SimpleObjectProperty<ALayer>	activeLayer	= new SimpleObjectProperty<>();
 
-      final Image			     moveLayerDownButImg  = new Image(
-		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "moveLayerDownButImg.png"));
-      final Image			     moveLayerUpButImg	  = new Image(
-		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "moveLayerUpButImg.png"));
-      final Image			     deleteLayerButImg	  = new Image(
-		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "deleteLayerButImg.png"));
-      final Image			     duplicateLayerButImg = new Image(
-		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "duplicateLayerButImg.png"));
-      final Image			     newLayerButImg	  = new Image(
-		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "newLayerButImg.png"));
+	final Image	moveLayerDownButImg		= new Image(
+			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "moveLayerDownButImg.png"));
+	final Image	moveLayerUpButImg		= new Image(
+			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "moveLayerUpButImg.png"));
+	final Image	deleteLayerButImg		= new Image(
+			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "deleteLayerButImg.png"));
+	final Image	duplicateLayerButImg	= new Image(
+			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "duplicateLayerButImg.png"));
+	final Image	newLayerButImg			= new Image(
+			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "newLayerButImg.png"));
 
-      @FXML
-      private ToolBar			     toolBar;
+	@FXML
+	private ToolBar toolBar;
 
-      @FXML
-      private VBox			     moveLayerButBox;
+	@FXML
+	private VBox moveLayerButBox;
 
-      @FXML
-      private VBox			     layersBox;
+	@FXML
+	private VBox layersBox;
 
-      @FXML
-      private Button			     deleteLayerBut;
+	@FXML
+	private Button deleteLayerBut;
 
-      @FXML
-      private Button			     duplicateLayerBut;
+	@FXML
+	private Button duplicateLayerBut;
 
-      @FXML
-      private Button			     newLayerBut;
+	@FXML
+	private Button newLayerBut;
 
-      @FXML
-      private Button			     moveLayerUpBut;
+	@FXML
+	private Button moveLayerUpBut;
 
-      @FXML
-      private Button			     moveLayerDownBut;
+	@FXML
+	private Button moveLayerDownBut;
 
-      @FXML
-      private ToggleGroup		     togglegroup;
+	@FXML
+	private ToggleGroup togglegroup;
 
+	public LayerPanel() {
 
-      public LayerPanel()
-      {
+		super();
 
-	    super();
+		getStylesheets().add("/styles/styles.css");
+		getStyleClass().add("layerpanel");
 
-	    getStylesheets().add("/styles/styles.css");
-	    getStyleClass().add("layerpanel");
+		image = new SimpleObjectProperty<>();
+		image.addListener((obs, oldVal, newVal) -> populate());
 
-	    image = new SimpleObjectProperty<>();
-	    image.addListener((obs, oldVal, newVal) -> populate());
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n/trad");
 
-	    ResourceBundle bundle = ResourceBundle.getBundle("i18n/trad");
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/LayerPanel.fxml"), bundle);
+		fxmlLoader.setRoot(this);
+		fxmlLoader.setController(this);
 
-	    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/LayerPanel.fxml"), bundle);
-	    fxmlLoader.setRoot(this);
-	    fxmlLoader.setController(this);
+		try {
+			fxmlLoader.load();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 
-	    try
-	    {
-		  fxmlLoader.load();
-	    }
-	    catch (IOException e)
-	    {
-		  throw new RuntimeException(e);
-	    }
+		GuiFacade.getInstance().setLayerPanel(this);
 
-	    GuiFacade.getInstance().setLayerPanel(this);
+	}
 
-      }
+	@FXML
+	private void handleMoveLayerDown(ActionEvent event) {
 
+		// handleMoveLayerDown
+		moveLayerDown();
+	}
 
-      @FXML
-      private void handleMoveLayerDown(ActionEvent event)
-      {
+	private void moveLayerDown() {
 
-	    // handleMoveLayerDown
-	    moveLayerDown();
-      }
+		executeLayerAction(LayerActions.MOVEDOWN);
 
+	}
 
-      private void moveLayerDown()
-      {
+	@FXML
+	private void handleMoveLayerUp(ActionEvent event) {
 
-	    executeLayerAction(LayerActions.MOVEDOWN);
+		// handleMoveLayerUp
+		moveLayerUp();
+	}
 
-      }
+	private void moveLayerUp() {
 
+		executeLayerAction(LayerActions.MOVEUP);
 
-      @FXML
-      private void handleMoveLayerUp(ActionEvent event)
-      {
+	}
 
-	    // handleMoveLayerUp
-	    moveLayerUp();
-      }
+	@FXML
+	private void handleDuplicateLayer(ActionEvent event) {
 
+		// handleDuplicateLayer
+		duplicateLayer();
+	}
 
-      private void moveLayerUp()
-      {
+	private void duplicateLayer() {
 
-	    executeLayerAction(LayerActions.MOVEUP);
+		executeLayerAction(LayerActions.DUPLICATE);
 
-      }
+	}
 
+	@FXML
+	private void handleNewLayer(ActionEvent event) {
 
-      @FXML
-      private void handleDuplicateLayer(ActionEvent event)
-      {
+		// handleNewLayer
+		newLayer();
+	}
 
-	    // handleDuplicateLayer
-	    duplicateLayer();
-      }
+	private void newLayer() {
 
+		executeLayerAction(LayerActions.ADDNEW);
 
-      private void duplicateLayer()
-      {
+	}
 
-	    executeLayerAction(LayerActions.DUPLICATE);
+	@FXML
+	private void handleDeleteLayer(ActionEvent event) {
 
-      }
+		// handleDeleteLayer
+		deleteLayer();
+	}
 
+	private void deleteLayer() {
 
-      @FXML
-      private void handleNewLayer(ActionEvent event)
-      {
+		executeLayerAction(LayerActions.DELETE);
 
-	    // handleNewLayer
-	    newLayer();
-      }
+	}
 
+	private void executeLayerAction(LayerActions action) {
 
-      private void newLayer()
-      {
+		if (null != activeLayer.get()) {
+			try {
+				Executor.getInstance()
+						.executeAction(new LayerAction(image.get(), activeLayer.get(), action));
+				populate();
+			} catch (Exception e) {
+				new ExceptionPopUp(e);
+			}
+		}
+	}
 
-	    executeLayerAction(LayerActions.ADDNEW);
+	public void initialize(URL arg0, ResourceBundle arg1) {
 
-      }
+		deleteLayerBut.setGraphic(new ImageView(deleteLayerButImg));
 
+		duplicateLayerBut.setGraphic(new ImageView(duplicateLayerButImg));
 
-      @FXML
-      private void handleDeleteLayer(ActionEvent event)
-      {
+		newLayerBut.setGraphic(new ImageView(newLayerButImg));
 
-	    // handleDeleteLayer
-	    deleteLayer();
-      }
+		moveLayerUpBut.setGraphic(new ImageView(moveLayerUpButImg));
 
+		moveLayerDownBut.setGraphic(new ImageView(moveLayerDownButImg));
 
-      private void deleteLayer()
-      {
+	}
 
-	    executeLayerAction(LayerActions.DELETE);
+	private void populate() throws NumberFormatException {
+		// populate VBox with layerBoxes and toggleGroup
 
-      }
+		layersBox.getChildren().clear();
 
+		togglegroup = new ToggleGroup();
 
-      private void executeLayerAction(LayerActions action)
-      {
+		togglegroup.selectedToggleProperty().addListener((obs, oldVal, newVal) -> {
+			LayerBox box = (LayerBox) newVal;
+			ALayer layer = box.getUserData();
+			activeLayer.set(layer);
+		});
 
-	    if (null != activeLayer.get())
-	    {
-		  try
-		  {
-			Executor.getInstance()
-				    .executeAction(new LayerAction(image.get(), activeLayer.get(), action));
-			populate();
-		  }
-		  catch (Exception e)
-		  {
-			new ExceptionPopUp(e);
-		  }
-	    }
-      }
+		for (int i = 0; i < getImage().getLayerList().getItems().size(); i++) {
 
+			ALayer layer = getImage().getLayerList().getLayer(i);
+			LayerBox box = new LayerBox(getImage(), layer);
 
-      public void initialize(URL arg0, ResourceBundle arg1)
-      {
+			layersBox.getChildren().add(0, box);
 
-	    deleteLayerBut.setGraphic(new ImageView(deleteLayerButImg));
+			box.setToggleGroup(togglegroup);
+		}
 
-	    duplicateLayerBut.setGraphic(new ImageView(duplicateLayerButImg));
+	}
 
-	    newLayerBut.setGraphic(new ImageView(newLayerButImg));
+	public ToggleGroup getTogglegroup() {
 
-	    moveLayerUpBut.setGraphic(new ImageView(moveLayerUpButImg));
+		return togglegroup;
+	}
 
-	    moveLayerDownBut.setGraphic(new ImageView(moveLayerDownButImg));
+	public void setTogglegroup(ToggleGroup togglegroup) {
 
-      }
+		this.togglegroup = togglegroup;
+	}
 
+	public final SimpleObjectProperty<PixImage> imageProperty() {
 
-      private void populate() throws NumberFormatException
-      {
-	    // populate VBox with layerBoxes and toggleGroup
+		return this.image;
+	}
 
-	    layersBox.getChildren().clear();
+	public final PixImage getImage() {
 
-	    togglegroup = new ToggleGroup();
+		return this.imageProperty().get();
+	}
 
-	    togglegroup.selectedToggleProperty().addListener((obs, oldVal, newVal) -> {
-		  LayerBox box = (LayerBox) newVal;
-		  ALayer layer = box.getUserData();
-		  activeLayer.set(layer);
-	    });
+	public final void setImage(final PixImage image) {
 
-	    for (int i = 0; i < getImage().getLayerList().getItems().size(); i++)
-	    {
+		this.imageProperty().set(image);
+	}
 
-		  ALayer layer = getImage().getLayerList().getLayer(i);
-		  LayerBox box = new LayerBox(getImage(), layer);
+	public final SimpleObjectProperty<ALayer> activeLayerProperty() {
 
-		  layersBox.getChildren().add(box);
+		return this.activeLayer;
+	}
 
-		  box.setToggleGroup(togglegroup);
-	    }
+	public final ALayer getActiveLayer() {
 
-      }
+		return this.activeLayerProperty().get();
+	}
 
+	public final void setActiveLayer(final ALayer activeLayer) {
 
-      public ToggleGroup getTogglegroup()
-      {
-
-	    return togglegroup;
-      }
-
-
-      public void setTogglegroup(ToggleGroup togglegroup)
-      {
-
-	    this.togglegroup = togglegroup;
-      }
-
-
-      public final SimpleObjectProperty<PixImage> imageProperty()
-      {
-
-	    return this.image;
-      }
-
-
-      public final PixImage getImage()
-      {
-
-	    return this.imageProperty().get();
-      }
-
-
-      public final void setImage(final PixImage image)
-      {
-
-	    this.imageProperty().set(image);
-      }
-
-
-      public final SimpleObjectProperty<ALayer> activeLayerProperty()
-      {
-
-	    return this.activeLayer;
-      }
-
-
-      public final ALayer getActiveLayer()
-      {
-
-	    return this.activeLayerProperty().get();
-      }
-
-
-      public final void setActiveLayer(final ALayer activeLayer)
-      {
-
-	    this.activeLayerProperty().set(activeLayer);
-      }
+		this.activeLayerProperty().set(activeLayer);
+	}
 
 }

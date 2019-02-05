@@ -21,157 +21,135 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 
-public class ColorRoster extends HBox implements Initializable
-{
+public class ColorRoster extends HBox implements Initializable {
 
-      private ToggleGroup		     toggleGroup = new ToggleGroup();
+	private ToggleGroup toggleGroup = new ToggleGroup();
 
-      private Set<ColorBox>		     colorBoxes	 = new HashSet<>();
-      private SimpleObjectProperty<PixImage> image;
+	private Set<ColorBox>					colorBoxes	= new HashSet<>();
+	private SimpleObjectProperty<PixImage>	image;
 
+	public ColorRoster() {
 
-      public ColorRoster()
-      {
+		super();
 
-	    super();
+		image = new SimpleObjectProperty<>();
+		image.addListener((obs, oldVal, newVal) -> {
+			colorBoxes = makeColorBoxes(newVal);
+			populate();
+		});
 
-	    image = new SimpleObjectProperty<>();
-	    image.addListener((obs, oldVal, newVal) -> {
-		  makeColorBoxes(newVal);
-	    });
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n/trad");
 
-	    ResourceBundle bundle = ResourceBundle.getBundle("i18n/trad");
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/ColorRoster.fxml"), bundle);
+		fxmlLoader.setRoot(this);
+		fxmlLoader.setController(this);
 
-	    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/ColorRoster.fxml"), bundle);
-	    fxmlLoader.setRoot(this);
-	    fxmlLoader.setController(this);
+		try {
+			fxmlLoader.load();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 
-	    try
-	    {
-		  fxmlLoader.load();
-	    }
-	    catch (IOException e)
-	    {
-		  throw new RuntimeException(e);
-	    }
+		populate();
+		// toggleGroup.selectToggle(toggleGroup.getToggles().get(0));
 
-	    populate();
-	    toggleGroup.selectToggle(toggleGroup.getToggles().get(0));
+		GuiFacade.getInstance().setColorRoster(this);
 
-	    GuiFacade.getInstance().setColorRoster(this);
+	}
 
-      }
+	private void populate() {
 
+		this.getChildren().clear();
 
-      private void populate()
-      {
+		if (colorBoxes.isEmpty()) {
+			colorBoxes = makeDefaultColorBoxes(AppContext.getInstance().propertyContext());
+		}
 
-	    this.getChildren().clear();
+		for (ColorBox box : colorBoxes) {
 
-	    if (colorBoxes.isEmpty())
-	    {
-		  colorBoxes = makeDefaultColorBoxes(AppContext.getInstance().propertyContext());
-	    }
+			this.getChildren().add(box);
 
-	    for (ColorBox box : colorBoxes)
-	    {
+		}
 
-		  this.getChildren().add(box);
+		Button butt = new Button("+");
+		butt.setId("rosterPlusButton");
+		butt.setOnAction(Event -> {
 
-	    }
+			if (null != image.get()) {
+				SimpleObjectProperty<Color> prop = new SimpleObjectProperty<Color>();
+				prop.set(Color.BLACK);
+				GuiFacade.getInstance().getImagesColors().get(getImage()).add(prop);
 
-	    Button butt = new Button("+");
-	    butt.setId("rosterPlusButton");
-	    butt.setOnAction(Event -> {
-		  SimpleObjectProperty<Color> prop = new SimpleObjectProperty<Color>();
-		  prop.set(Color.BLACK);
-		  GuiFacade.getInstance().getImagesColors().get(getImage()).add(prop);
+				colorBoxes = makeColorBoxes(getImage());
 
-		  colorBoxes = makeColorBoxes(getImage());
+				populate();
+			}
+		});
+		this.getChildren().add(butt);
+	}
 
-		  populate();
-	    });
-	    this.getChildren().add(butt);
-      }
+	private Set<ColorBox> makeColorBoxes(PixImage image) {
 
+		Set<ColorBox> tempBoxes = new HashSet<>();
+		Set<SimpleObjectProperty<Color>> colorProps = GuiFacade.getInstance().getImagesColors().get(image);
 
-      private Set<ColorBox> makeColorBoxes(PixImage image)
-      {
+		for (SimpleObjectProperty<Color> prop : colorProps) {
 
-	    Set<ColorBox> tempBoxes = new HashSet<>();
-	    Set<SimpleObjectProperty<Color>> colorProps = GuiFacade.getInstance().getImagesColors().get(image);
+			ColorBox box = new ColorBox().color(prop.get());
+			tempBoxes.add(box);
+			box.setToggleGroup(toggleGroup);
 
-	    for (SimpleObjectProperty<Color> prop : colorProps)
-	    {
+			prop.bindBidirectional(box.colorProperty());
 
-		  ColorBox box = new ColorBox().color(prop.get());
-		  tempBoxes.add(box);
-		  box.setToggleGroup(toggleGroup);
+		}
 
-		  prop.bindBidirectional(box.colorProperty());
+		return tempBoxes;
 
-	    }
+	}
 
-	    return tempBoxes;
+	private Set<ColorBox> makeDefaultColorBoxes(PropertiesContext propertyContext) {
 
-      }
+		Set<ColorBox> tempBoxes = new HashSet<>();
+		for (Color col : propertyContext.getStartRosterColors()) {
 
+			ColorBox box = new ColorBox().color(col);
+			box.setToggleGroup(toggleGroup);
+			tempBoxes.add(box);
 
-      private Set<ColorBox> makeDefaultColorBoxes(PropertiesContext propertyContext)
-      {
+		}
+		return tempBoxes;
+	}
 
-	    Set<ColorBox> tempBoxes = new HashSet<>();
-	    for (Color col : propertyContext.getStartRosterColors())
-	    {
+	public ToggleGroup getToggleGroup() {
 
-		  ColorBox box = new ColorBox().color(col);
-		  box.setToggleGroup(toggleGroup);
-		  tempBoxes.add(box);
+		return toggleGroup;
+	}
 
-	    }
-	    return tempBoxes;
-      }
+	public void setToggleGroup(ToggleGroup toggleGroup) {
 
+		this.toggleGroup = toggleGroup;
+	}
 
-      public ToggleGroup getToggleGroup()
-      {
+	public final SimpleObjectProperty<PixImage> imageProperty() {
 
-	    return toggleGroup;
-      }
+		return this.image;
+	}
 
+	public final PixImage getImage() {
 
-      public void setToggleGroup(ToggleGroup toggleGroup)
-      {
+		return this.imageProperty().get();
+	}
 
-	    this.toggleGroup = toggleGroup;
-      }
+	public final void setImage(final PixImage image) {
 
+		this.imageProperty().set(image);
+	}
 
-      public final SimpleObjectProperty<PixImage> imageProperty()
-      {
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
 
-	    return this.image;
-      }
+		setSpacing(5.0);
 
-
-      public final PixImage getImage()
-      {
-
-	    return this.imageProperty().get();
-      }
-
-
-      public final void setImage(final PixImage image)
-      {
-
-	    this.imageProperty().set(image);
-      }
-
-
-      @Override
-      public void initialize(URL location, ResourceBundle resources)
-      {
-
-      }
+	}
 
 }

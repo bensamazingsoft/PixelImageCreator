@@ -10,177 +10,179 @@ import org.slf4j.LoggerFactory;
 
 import com.ben.pixcreator.application.action.IAction;
 import com.ben.pixcreator.application.action.ICancelable;
-import com.ben.pixcreator.application.action.impl.Operation;
+import com.ben.pixcreator.application.action.impl.operation.Operation;
 import com.ben.pixcreator.application.image.PixImage;
 import com.ben.pixcreator.gui.facade.GuiFacade;
 
-public class Executor
-{
+/**
+ * Executes the actions and manage histories.</br>
+ * A single action, if cancellable, is added to the current image history.<br/>
+ * An operation is added do the active image history when it is terminated.
+ * 
+ * @author bmo
+ *
+ */
+public class Executor {
 
-      // TODO when open image occurs : create the entry in history and cancelled
-      // map (computeif..???)
+	private static Executor instance;
 
-      private static Executor			     instance;
+	private static final Logger logger = LoggerFactory.getLogger(Executor.class);
 
-      private static final Logger		     logger	  = LoggerFactory.getLogger(Executor.class);
+	private Operation currOperation;
 
-      private Operation				     currOperation;
+	private Map<PixImage, LinkedList<ICancelable>>	historyMap		= new HashMap<>();
+	private Map<PixImage, LinkedList<ICancelable>>	cancelledMap	= new HashMap<>();
 
-      private Map<PixImage, LinkedList<ICancelable>> historyMap	  = new HashMap<>();
-      private Map<PixImage, LinkedList<ICancelable>> cancelledMap = new HashMap<>();
+	private boolean operationStarted;
 
-      private boolean				     operationStarted;
+	private Executor() {
 
+		operationStarted = false;
+	}
 
-      private Executor()
-      {
+	private LinkedList<ICancelable> activeHistory() {
 
-	    operationStarted = false;
-      }
+		return historyMap.computeIfAbsent(GuiFacade.getInstance().getActiveImage(),
+				image -> new LinkedList<ICancelable>());
+	}
 
+	private LinkedList<ICancelable> activeCancelled() {
 
-      private LinkedList<ICancelable> activeHistory()
-      {
+		return cancelledMap.computeIfAbsent(GuiFacade.getInstance().getActiveImage(),
+				image -> new LinkedList<ICancelable>());
+	}
 
-	    return historyMap.computeIfAbsent(GuiFacade.getInstance().getActiveImage(), image -> new LinkedList<ICancelable>());
-      }
+	/**
+	 * Executes a single action and store it to the active image history if it
+	 * is a cancellable action.
+	 * 
+	 * @param action
+	 * @throws Exception
+	 */
+	public void executeAction(IAction action) throws Exception {
 
+		if (null != action) {
+			action.execute();
+			if (action instanceof ICancelable) {
+				activeHistory().add((ICancelable) action);
+			}
+			activeCancelled().clear();
+		}
+	}
 
-      private LinkedList<ICancelable> activeCancelled()
-      {
+	/**
+	 * If no prior operation is started, creates a new operation and update the
+	 * operationStarted status.
+	 * 
+	 * 
+	 */
+	public void startOperation() {
 
-	    return cancelledMap.computeIfAbsent(GuiFacade.getInstance().getActiveImage(), image -> new LinkedList<ICancelable>());
-      }
+		if (!operationStarted) {
+			currOperation = new Operation();
+			operationStarted = true;
+		} else {
+			logger.info("operation already started");
+		}
 
+	}
 
-      public void executeAction(IAction action) throws Exception
-      {
+	/**
+	 * Adds the action to the current operation (if one is started) and executes
+	 * it.
+	 * 
+	 * @param action
+	 * @throws Exception
+	 */
+	public void continueOperation(ICancelable action) throws Exception {
 
-	    if (null != action)
-	    {
-		  action.execute();
-		  if (action instanceof ICancelable)
-		  {
-			activeHistory().add((ICancelable) action);
-		  }
-		  activeCancelled().clear();
-	    }
-      }
+		if (operationStarted) {
+			currOperation.addAction(action);
+			action.execute();
+		} else {
+			logger.info("no started operation to continue");
+		}
+	}
 
+	/**
+	 * Terminates the current operation (if one is started) and adds it to the
+	 * active image history.<br/>
+	 * Then updates the operation status.
+	 * 
+	 * 
+	 */
+	public void endOperation() {
 
-      public void startOperation() throws Exception
-      {
+		if (operationStarted) {
+			if (operationStarted) {
+				activeHistory().add(currOperation);
+			}
+			operationStarted = false;
 
-	    if (!operationStarted)
-	    {
-		  currOperation = new Operation();
-		  operationStarted = true;
-	    }
-	    else
-	    {
-		  logger.info("operation already started");
-	    }
+		} else {
+			logger.info("no started operation to end");
+		}
+	}
 
-      }
+	/**
+	 * Removes the last item (action or operation) from the active image
+	 * history, undoes it and puts it in the active image redo history.
+	 * 
+	 * @throws Exception
+	 */
+	public void cancel() throws Exception {
 
+		if (activeHistory().size() > 0) {
+			ICancelable cancelledAction = activeHistory().pollLast();
+			cancelledAction.cancel();
+			activeCancelled().add(cancelledAction);
+		}
 
-      public void continueOperation(ICancelable action) throws Exception
-      {
+	}
 
-	    if (operationStarted)
-	    {
-		  currOperation.addAction(action);
-		  action.execute();
-	    }
-	    else
-	    {
-		  logger.info("no started operation to continue");
-	    }
-      }
+	/**
+	 * Removes the last item (action or operation) from the active image redo
+	 * history, executes it and puts it in the active image history.
+	 * 
+	 * @throws Exception
+	 */
+	public void redo() throws Exception {
 
+		if (activeCancelled().size() > 0) {
+			ICancelable redoAction = activeCancelled().pollLast();
+			redoAction.execute();
+			activeHistory().add(redoAction);
+		}
+	}
 
-      public void endOperation() throws Exception
-      {
+	public static Executor getInstance() {
 
-	    if (operationStarted)
-	    {
-		  if (operationStarted)
-		  {
-			activeHistory().add(currOperation);
-		  }
-		  operationStarted = false;
+		if (instance == null) {
+			instance = new Executor();
+		}
 
-	    }
-	    else
-	    {
-		  logger.info("no started operation to end");
-	    }
-      }
+		return instance;
 
+	}
 
-      public void cancel() throws Exception
-      {
+	public Map<PixImage, LinkedList<ICancelable>> getHistoryMap() {
 
-	    if (activeHistory().size() > 0)
-	    {
-		  ICancelable cancelledAction = activeHistory().pollLast();
-		  cancelledAction.cancel();
-		  activeCancelled().add(cancelledAction);
-	    }
+		return historyMap;
+	}
 
-      }
+	public void setHistoryMap(Map<PixImage, LinkedList<ICancelable>> historyMap) {
 
+		this.historyMap = historyMap;
+	}
 
-      public void redo() throws Exception
-      {
+	public Map<PixImage, LinkedList<ICancelable>> getCancelledMap() {
 
-	    if (activeCancelled().size() > 0)
-	    {
-		  ICancelable redoAction = activeCancelled().pollLast();
-		  redoAction.execute();
-		  activeHistory().add(redoAction);
-	    }
-      }
+		return cancelledMap;
+	}
 
+	public void setCancelledMap(Map<PixImage, LinkedList<ICancelable>> cancelledMap) {
 
-      public static Executor getInstance()
-      {
-
-	    if (instance == null)
-	    {
-		  instance = new Executor();
-	    }
-
-	    return instance;
-
-      }
-
-
-      public Map<PixImage, LinkedList<ICancelable>> getHistoryMap()
-      {
-
-	    return historyMap;
-      }
-
-
-      public void setHistoryMap(Map<PixImage, LinkedList<ICancelable>> historyMap)
-      {
-
-	    this.historyMap = historyMap;
-      }
-
-
-      public Map<PixImage, LinkedList<ICancelable>> getCancelledMap()
-      {
-
-	    return cancelledMap;
-      }
-
-
-      public void setCancelledMap(Map<PixImage, LinkedList<ICancelable>> cancelledMap)
-      {
-
-	    this.cancelledMap = cancelledMap;
-      }
+		this.cancelledMap = cancelledMap;
+	}
 
 }
