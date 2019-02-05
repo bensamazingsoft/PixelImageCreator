@@ -17,241 +17,189 @@ import com.ben.pixcreator.gui.facade.GuiFacade;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 
-public class PixImage
-{
+public class PixImage {
 
-      private static final Logger log			= LoggerFactory.getLogger(PixImage.class);
+	private static final Logger log = LoggerFactory.getLogger(PixImage.class);
 
-      // TODO manage the 'changed' state : do you save on close ? is there a '*'
-      // beside the name ?
-      private static final int	  DEFAULTSIZE		= 800;
-      private static final int	  DEFAULTGRIDRESOLUTION	= 80;
+	// TODO manage the 'changed' state : do you save on close ? is there a '*'
+	// beside the name ?
+	private static final int	DEFAULTSIZE				= 800;
+	private static final int	DEFAULTGRIDRESOLUTION	= 80;
 
-      private String		  name;
-      private LocalDate		  dateCre;
+	private String		name;
+	private LocalDate	dateCre;
 
-      private int		  xSize, ySize;
-      private int		  xGridResolution, yGridResolution;
+	private int	xSize, ySize;
+	private int	xGridResolution, yGridResolution;
 
-      private ILayer		  ghost, select;
-      // layer and its visibility
+	private ILayer ghost, select;
+	// layer and its visibility
 
-      private LayerList		  layerList;
+	private LayerList layerList;
 
+	public PixImage() {
 
-      public PixImage()
-      {
+		name = "sans_titre";
+		dateCre = LocalDate.now();
+		ghost = new PixLayer();
+		select = new PixLayer();
+		layerList = new LayerList();
+		layerList.add(new PixLayer());
 
-	    name = "sans_titre";
-	    dateCre = LocalDate.now();
-	    ghost = new PixLayer();
-	    select = new PixLayer();
-	    layerList = new LayerList();
-	    layerList.add(new PixLayer());
+		xSize = ySize = DEFAULTSIZE;
 
-	    xSize = ySize = DEFAULTSIZE;
+		xGridResolution = yGridResolution = DEFAULTGRIDRESOLUTION;
 
-	    xGridResolution = yGridResolution = DEFAULTGRIDRESOLUTION;
+	}
 
-      }
+	public PixImage(String name) {
 
+		this();
+		this.name = name;
+	}
 
-      public PixImage(String name)
-      {
+	public PixImage(String name, int xSize, int ySize) {
 
-	    this();
-	    this.name = name;
-      }
+		super();
+		this.name = name;
+		this.xSize = xSize;
+		this.ySize = ySize;
+	}
 
+	public PixImage(String name, PicLayer basePic) {
 
-      public PixImage(String name, int xSize, int ySize)
-      {
+		this();
+		this.name = name;
+		// this.basePic = basePic;
+	}
 
-	    super();
-	    this.name = name;
-	    this.xSize = xSize;
-	    this.ySize = ySize;
-      }
+	public void draw(Canvas canvas) {
 
+		for (int i = 0; i < layerList.getItems().size(); i++) {
+			ALayer layer = layerList.getLayer(i);
+			if (layer.isVisible()) {
+				// log.debug("drawing " + layer.toString());
+				layer.draw(canvas, xGridResolution, yGridResolution);
+			}
+		}
 
-      public PixImage(String name, PicLayer basePic)
-      {
+		select.draw(canvas, xGridResolution, yGridResolution);
 
-	    this();
-	    this.name = name;
-	    // this.basePic = basePic;
-      }
+		ghost.draw(canvas, xGridResolution, yGridResolution);
 
+		if (GuiFacade.getInstance().isShowGrid()) {
+			showGrid(canvas);
+		}
 
-      public void draw(Canvas canvas)
-      {
+	}
 
-	    for (int i = 0; i < layerList.getItems().size(); i++)
-	    {
-		  ALayer layer = layerList.getLayer(i);
-		  if (layer.isVisible())
-		  {
-			// log.debug("drawing " + layer.toString());
-			layer.draw(canvas, xGridResolution, yGridResolution);
-		  }
-	    }
+	// show layer grid in canvas if option is toggled on
+	private void showGrid(Canvas canvas) {
 
-	    select.draw(canvas, xGridResolution, yGridResolution);
+		GraphicsContext graphics = canvas.getGraphicsContext2D();
 
-	    ghost.draw(canvas, xGridResolution, yGridResolution);
+		double xCanvasSize = canvas.getWidth();
+		int xCellSize = (int) xCanvasSize / xGridResolution;
+		double yCanvasSize = canvas.getHeight();
+		int yCellSize = (int) yCanvasSize / yGridResolution;
 
-	    if (GuiFacade.getInstance().isShowGrid())
-	    {
-		  showGrid(canvas);
-	    }
+		graphics.setStroke(AppContext.getInstance().getGridColor());
 
-      }
+		for (int x = xCellSize; x < xCanvasSize; x += xCellSize) {
+			graphics.strokeLine(x, yCellSize, x, yCanvasSize);
 
+		}
+		for (int y = yCellSize; y < yCanvasSize; y += yCellSize) {
+			graphics.strokeLine(xCellSize, y, xCanvasSize, y);
+		}
 
-      // show layer grid in canvas if option is toggled on
-      private void showGrid(Canvas canvas)
-      {
+	}
 
-	    GraphicsContext graphics = canvas.getGraphicsContext2D();
+	@Override
+	public String toString() {
 
-	    double xCanvasSize = canvas.getWidth();
-	    int xCellSize = (int) xCanvasSize / xGridResolution;
-	    double yCanvasSize = canvas.getHeight();
-	    int yCellSize = (int) yCanvasSize / yGridResolution;
+		return "PixImage [name=" + name + ", xSize=" + xSize + ", ySize=" + ySize + ", xGridResolution="
+				+ xGridResolution + ", yGridResolution=" + yGridResolution + "]";
+	}
 
-	    graphics.setStroke(AppContext.getInstance().getGridColor());
+	public String getName() {
 
-	    for (int x = xCellSize; x < xCanvasSize; x += xCellSize)
-	    {
-		  graphics.strokeLine(x, yCellSize, x, yCanvasSize);
+		return name;
+	}
 
-	    }
-	    for (int y = yCellSize; y < yCanvasSize; y += yCellSize)
-	    {
-		  graphics.strokeLine(xCellSize, y, xCanvasSize, y);
-	    }
+	public void setName(String name) {
 
-      }
+		this.name = name;
+	}
 
+	public int getxSize() {
 
-      @Override
-      public String toString()
-      {
+		return xSize;
+	}
 
-	    return "PixImage [name=" + name + ", xSize=" + xSize + ", ySize=" + ySize + ", xGridResolution="
-			+ xGridResolution + ", yGridResolution=" + yGridResolution + "]";
-      }
+	public void setxSize(int xSize) {
 
+		this.xSize = xSize;
+	}
 
-      public String getName()
-      {
+	public int getySize() {
 
-	    return name;
-      }
+		return ySize;
+	}
 
+	public void setySize(int ySize) {
 
-      public void setName(String name)
-      {
+		this.ySize = ySize;
+	}
 
-	    this.name = name;
-      }
+	public int getxGridResolution() {
 
+		return xGridResolution;
+	}
 
-      public int getxSize()
-      {
+	public void setxGridResolution(int xGridResolution) {
 
-	    return xSize;
-      }
+		this.xGridResolution = xGridResolution;
+	}
 
+	public int getyGridResolution() {
 
-      public void setxSize(int xSize)
-      {
+		return yGridResolution;
+	}
 
-	    this.xSize = xSize;
-      }
+	public void setyGridResolution(int yGridResolution) {
 
+		this.yGridResolution = yGridResolution;
+	}
 
-      public int getySize()
-      {
+	public ILayer getGhost() {
 
-	    return ySize;
-      }
+		return ghost;
+	}
 
+	public void setGhost(ILayer ghost) {
 
-      public void setySize(int ySize)
-      {
+		this.ghost = ghost;
+	}
 
-	    this.ySize = ySize;
-      }
+	public ILayer getSelect() {
 
+		return select;
+	}
 
-      public int getxGridResolution()
-      {
+	public void setSelect(ILayer select) {
 
-	    return xGridResolution;
-      }
+		this.select = select;
+	}
 
+	public LayerList getLayerList() {
 
-      public void setxGridResolution(int xGridResolution)
-      {
+		return layerList;
+	}
 
-	    this.xGridResolution = xGridResolution;
-      }
+	public void setLayerList(LayerList layers) {
 
-
-      public int getyGridResolution()
-      {
-
-	    return yGridResolution;
-      }
-
-
-      public void setyGridResolution(int yGridResolution)
-      {
-
-	    this.yGridResolution = yGridResolution;
-      }
-
-
-      public ILayer getGhost()
-      {
-
-	    return ghost;
-      }
-
-
-      public void setGhost(ILayer ghost)
-      {
-
-	    this.ghost = ghost;
-      }
-
-
-      public ILayer getSelect()
-      {
-
-	    return select;
-      }
-
-
-      public void setSelect(ILayer select)
-      {
-
-	    this.select = select;
-      }
-
-
-      public LayerList getLayerList()
-      {
-
-	    return layerList;
-      }
-
-
-      public void setLayerList(LayerList layers)
-      {
-
-	    this.layerList = layers;
-      }
+		this.layerList = layers;
+	}
 
 }

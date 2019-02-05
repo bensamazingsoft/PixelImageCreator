@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.ben.pixcreator.application.action.impl.OpenTabAction;
+import com.ben.pixcreator.application.action.impl.RefreshTabAction;
 import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.application.executor.Executor;
 import com.ben.pixcreator.application.image.PixImage;
@@ -20,77 +21,92 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.MenuBar;
 import javafx.scene.paint.Color;
 
-public class PixMenuBar extends MenuBar
-{
+public class PixMenuBar extends MenuBar {
 
-      public PixMenuBar()
-      {
+	public PixMenuBar() {
 
-	    ResourceBundle bundle = ResourceBundle.getBundle("i18n/trad");
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n/trad");
 
-	    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/PixMenuBar.fxml"), bundle);
-	    fxmlLoader.setRoot(this);
-	    fxmlLoader.setController(this);
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/PixMenuBar.fxml"), bundle);
+		fxmlLoader.setRoot(this);
+		fxmlLoader.setController(this);
 
-	    try
-	    {
-		  fxmlLoader.load();
-	    }
-	    catch (IOException e)
-	    {
-		  throw new RuntimeException(e);
-	    }
+		try {
+			fxmlLoader.load();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 
-      }
+	}
 
+	@FXML
+	private void newAction(final ActionEvent event) {
 
-      @FXML
-      private void newAction(final ActionEvent event)
-      {
+		handleNewAction();
+	}
 
-	    handleNewAction();
-      }
+	private void handleNewAction() {
 
+		try {
+			PixImage newImage = new PixImage();
 
-      private void handleNewAction()
-      {
+			Set<SimpleObjectProperty<Color>> colorProps = AppContext.getInstance().propertyContext()
+					.getStartRosterColors().stream()
+					.map(color -> {
+						SimpleObjectProperty<Color> prop = new SimpleObjectProperty<Color>();
+						prop.set(color);
+						return prop;
+					})
+					.collect(Collectors.toSet());
 
-	    try
-	    {
-		  PixImage newImage = new PixImage();
+			GuiFacade.getInstance().getImagesColors().put(newImage, colorProps);
 
-		  Set<SimpleObjectProperty<Color>> colorProps = AppContext.getInstance().propertyContext().getStartRosterColors().stream()
-			      .map(color -> {
-				    SimpleObjectProperty<Color> prop = new SimpleObjectProperty<Color>();
-				    prop.set(color);
-				    return prop;
-			      })
-			      .collect(Collectors.toSet());
+			Executor.getInstance().executeAction(new OpenTabAction(newImage));
+		} catch (Exception e) {
+			new ExceptionPopUp(e);
+		}
 
-		  GuiFacade.getInstance().getImagesColors().put(newImage, colorProps);
+	}
 
-		  Executor.getInstance().executeAction(new OpenTabAction(newImage));
-	    }
-	    catch (Exception e)
-	    {
-		  new ExceptionPopUp(e);
-	    }
+	@FXML
+	private void openAction(final ActionEvent event) {
 
-      }
+		handleOpenAction();
+	}
 
+	private void handleOpenAction() {
+		// TODO handle Open action
 
-      @FXML
-      private void openAction(final ActionEvent event)
-      {
+	}
 
-	    handleOpenAction();
-      }
+	@FXML
+	public void cancel(final ActionEvent event) {
+		handleCancel();
+	}
 
+	private void handleCancel() {
+		try {
+			Executor.getInstance().cancel();
+			Executor.getInstance().executeAction(new RefreshTabAction(GuiFacade.getInstance().getActiveTab()));
+		} catch (Exception e) {
+			new ExceptionPopUp(e);
+		}
 
-      private void handleOpenAction()
-      {
-	    // TODO handle Open action
+	}
 
-      }
+	@FXML
+	public void redo(final ActionEvent event) {
+		handleRedo();
+	}
+
+	private void handleRedo() {
+		try {
+			Executor.getInstance().redo();
+			Executor.getInstance().executeAction(new RefreshTabAction(GuiFacade.getInstance().getActiveTab()));
+		} catch (Exception e) {
+			new ExceptionPopUp(e);
+		}
+
+	}
 
 }

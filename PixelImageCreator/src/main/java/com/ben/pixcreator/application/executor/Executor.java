@@ -65,8 +65,8 @@ public class Executor {
 			action.execute();
 			if (action instanceof ICancelable) {
 				activeHistory().add((ICancelable) action);
+				activeCancelled().clear();
 			}
-			activeCancelled().clear();
 		}
 	}
 
@@ -106,7 +106,7 @@ public class Executor {
 
 	/**
 	 * Terminates the current operation (if one is started) and adds it to the
-	 * active image history.<br/>
+	 * active image history IF it contains at least one action.<br/>
 	 * Then updates the operation status.
 	 * 
 	 * 
@@ -114,7 +114,7 @@ public class Executor {
 	public void endOperation() {
 
 		if (operationStarted) {
-			if (operationStarted) {
+			if (!currOperation.getActions().isEmpty()) {
 				activeHistory().add(currOperation);
 			}
 			operationStarted = false;

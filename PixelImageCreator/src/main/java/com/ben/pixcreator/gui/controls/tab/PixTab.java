@@ -12,6 +12,7 @@ import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.application.executor.Executor;
 import com.ben.pixcreator.application.image.PixImage;
 import com.ben.pixcreator.gui.exception.popup.ExceptionPopUp;
+import com.ben.pixcreator.gui.facade.GuiFacade;
 
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.Event;
@@ -23,115 +24,94 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.input.MouseEvent;
 
-public class PixTab extends Tab implements Initializable
-{
+public class PixTab extends Tab implements Initializable {
 
-      private final String		     IMAGEPATH = "images/gui/buttons/tab/";
+	private final String IMAGEPATH = "images/gui/buttons/tab/";
 
-      private SimpleObjectProperty<PixImage> image     = new SimpleObjectProperty<PixImage>();
+	private SimpleObjectProperty<PixImage> image = new SimpleObjectProperty<PixImage>();
 
-      @FXML
-      private ScrollPane		     scrollPane;
-      @FXML
-      private Canvas			     canvas;
+	@FXML
+	private ScrollPane	scrollPane;
+	@FXML
+	private Canvas		canvas;
 
+	public PixTab(PixImage image) {
 
-      public PixTab(PixImage image)
-      {
+		super();
 
-	    super();
+		setImage(image);
 
-	    setImage(image);
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n/trad");
 
-	    ResourceBundle bundle = ResourceBundle.getBundle("i18n/trad");
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/PixTab.fxml"), bundle);
+		fxmlLoader.setRoot(this);
+		fxmlLoader.setController(this);
 
-	    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/PixTab.fxml"), bundle);
-	    fxmlLoader.setRoot(this);
-	    fxmlLoader.setController(this);
+		try {
+			fxmlLoader.load();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 
-	    try
-	    {
-		  fxmlLoader.load();
-	    }
-	    catch (IOException e)
-	    {
-		  throw new RuntimeException(e);
-	    }
+	}
 
-      }
+	@FXML
+	public void handleClose(Event event) {
 
+		// onClose
+		onClose();
+	}
 
-      @FXML
-      public void handleClose(Event event)
-      {
+	private void onClose() {
 
-	    // onClose
-	    onClose();
-      }
+		GuiFacade.getInstance().getImagesColors().remove(getUserData());
+		Executor.getInstance().getHistoryMap().remove(getUserData());
 
+	}
 
-      private void onClose()
-      {
-	    // TODO implement onClose
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
 
-      }
+		// TODO initialize
+		this.setText(getImage().getName());
+		this.setUserData(canvas);
 
+		canvas = new Canvas(getImage().getxSize(), getImage().getySize());
 
-      @Override
-      public void initialize(URL arg0, ResourceBundle arg1)
-      {
+		scrollPane.setContent(canvas);
 
-	    // TODO initialize
-	    this.setText(getImage().getName());
-	    this.setUserData(canvas);
+		canvas.addEventHandler(MouseEvent.ANY, event -> {
 
-	    canvas = new Canvas(getImage().getxSize(), getImage().getySize());
+			IActionFactory factory = ActionFactoryProducer.getActionFactory(AppContext.getInstance().getCurrTool());
 
-	    scrollPane.setContent(canvas);
+			try {
+				Executor.getInstance().executeAction(factory.getAction(event));
+				Executor.getInstance().executeAction(new RefreshTabAction(this));
+			} catch (Exception e) {
+				new ExceptionPopUp(e);
+			}
 
-	    canvas.addEventHandler(MouseEvent.ANY, event -> {
+		});
 
-		  IActionFactory factory = ActionFactoryProducer.getActionFactory(AppContext.getInstance().getCurrTool());
+	}
 
-		  try
-		  {
-			Executor.getInstance().executeAction(factory.getAction(event));
-			Executor.getInstance().executeAction(new RefreshTabAction(this));
-		  }
-		  catch (Exception e)
-		  {
-			new ExceptionPopUp(e);
-		  }
+	public Canvas getCanvas() {
 
-	    });
+		return canvas;
+	}
 
-      }
+	public final SimpleObjectProperty<PixImage> imageProperty() {
 
+		return this.image;
+	}
 
-      public Canvas getCanvas()
-      {
+	public final PixImage getImage() {
 
-	    return canvas;
-      }
+		return this.imageProperty().get();
+	}
 
+	public final void setImage(final PixImage image) {
 
-      public final SimpleObjectProperty<PixImage> imageProperty()
-      {
-
-	    return this.image;
-      }
-
-
-      public final PixImage getImage()
-      {
-
-	    return this.imageProperty().get();
-      }
-
-
-      public final void setImage(final PixImage image)
-      {
-
-	    this.imageProperty().set(image);
-      }
+		this.imageProperty().set(image);
+	}
 }

@@ -202,9 +202,9 @@ public class GuiFacade {
 		this.pixToolBar = pixToolBar;
 	}
 
-	public Tab getActiveTab() {
+	public PixTab getActiveTab() {
 
-		return pixTabPane.getSelectionModel().getSelectedItem();
+		return (PixTab) pixTabPane.getSelectionModel().getSelectedItem();
 	}
 
 }

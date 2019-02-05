@@ -3,8 +3,8 @@ package com.ben.pixcreator.application.action.impl.operation;
 
 import java.util.ArrayList;
 
-import com.ben.pixcreator.application.action.ICancelable;
 import com.ben.pixcreator.application.action.IAction;
+import com.ben.pixcreator.application.action.ICancelable;
 
 /**
  * Represents a series of <strong>cancellable</strong> actions.
@@ -49,7 +49,7 @@ public class Operation implements IAction, ICancelable {
 
 		if (actions != null && actions.size() > 0) {
 			for (int j = actions.size(); j > 0; j--) {
-				actions.get(j).cancel();
+				actions.get(j - 1).cancel();
 			}
 		}
 	}

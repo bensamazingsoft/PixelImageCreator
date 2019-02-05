@@ -12,6 +12,12 @@
 					<MenuItem text="%ouvrir" onAction="#openAction" accelerator="Shortcut+o"/>
 				</items>
 			</Menu>
+			<Menu text="%edition">
+				<items>
+					<MenuItem text="%annuler" onAction="#cancel" accelerator="Shortcut+z"/>
+					<MenuItem text="%redo" onAction="#redo" accelerator="Shortcut+y"/>
+				</items>
+			</Menu>
 		</menus>
 
 </fx:root>
