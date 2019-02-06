@@ -37,21 +37,19 @@ public class DrawActionFactory implements IActionFactory {
 
 			switch (event.getEventType().getName()) {
 
-			case ("MOUSE_CLICKED"): {
-
-				if (((MouseEvent) event).getButton() == MouseButton.PRIMARY) {
-					event.consume();
-					return getChangeCellColorAction(event);
-				}
-				if (((MouseEvent) event).getButton() == MouseButton.SECONDARY) {
-					event.consume();
-					return getDeleteCellAction(event);
-				}
-
-			}
-
 			case ("MOUSE_PRESSED"): {
 				Executor.getInstance().startOperation();
+				try {
+					if (((MouseEvent) event).getButton() == MouseButton.PRIMARY) {
+						Executor.getInstance().continueOperation((ICancelable) getChangeCellColorAction(event));
+					}
+					if (((MouseEvent) event).getButton() == MouseButton.SECONDARY) {
+						Executor.getInstance().continueOperation((ICancelable) getDeleteCellAction(event));
+					}
+				} catch (Exception e) {
+					new ExceptionPopUp(e);
+				}
+				event.consume();
 				break;
 			}
 

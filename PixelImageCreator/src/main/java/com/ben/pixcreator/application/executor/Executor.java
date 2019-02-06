@@ -116,6 +116,7 @@ public class Executor {
 		if (operationStarted) {
 			if (!currOperation.getActions().isEmpty()) {
 				activeHistory().add(currOperation);
+				activeCancelled().clear();
 			}
 			operationStarted = false;
 
