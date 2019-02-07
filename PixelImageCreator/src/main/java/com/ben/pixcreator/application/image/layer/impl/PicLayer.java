@@ -5,6 +5,7 @@ import java.io.File;
 
 import com.ben.pixcreator.application.image.coords.Coord;
 
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 
@@ -13,11 +14,12 @@ public class PicLayer extends ALayer {
 	/**
 	 * 
 	 */
-	private static final long	serialVersionUID	= 1L;
-	private File				imageFile;
-	private Image				image;
-	private Coord				position;
-	private double				sizeFactor;
+	private static final long		serialVersionUID	= 1L;
+	private File					imageFile;
+	private Image					image;
+	private Coord					position;
+	private double					sizeFactor;
+	private SimpleDoubleProperty	zoomFactor			= new SimpleDoubleProperty();
 
 	public PicLayer(File imageFile) {
 
@@ -29,7 +31,10 @@ public class PicLayer extends ALayer {
 
 	public void draw(Canvas canvas, int xGridResolution, int yGridResolution) {
 
-		// TODO draw picimage to canvas
+		canvas.getGraphicsContext2D().drawImage(image,
+				0, 0, image.getWidth() * sizeFactor, image.getHeight() * sizeFactor,
+				position.getX(), position.getY(),
+				image.getWidth() * sizeFactor * zoomFactor.get(), image.getHeight() * sizeFactor * zoomFactor.get());
 
 	}
 
@@ -131,6 +136,18 @@ public class PicLayer extends ALayer {
 	public void setSizeFactor(double sizeFactor) {
 
 		this.sizeFactor = sizeFactor;
+	}
+
+	public final SimpleDoubleProperty zoomFactorProperty() {
+		return this.zoomFactor;
+	}
+
+	public final double getZoomFactor() {
+		return this.zoomFactorProperty().get();
+	}
+
+	public final void setZoomFactor(final double zoomFactor) {
+		this.zoomFactorProperty().set(zoomFactor);
 	}
 
 }

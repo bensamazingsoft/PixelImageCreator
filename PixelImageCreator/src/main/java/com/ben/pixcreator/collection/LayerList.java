@@ -3,6 +3,7 @@ package com.ben.pixcreator.collection;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.ben.pixcreator.application.image.layer.impl.ALayer;
 
@@ -282,6 +283,11 @@ public class LayerList {
 	public List<Pair> getItems() {
 
 		return items;
+	}
+
+	public List<ALayer> getAllLayers() {
+
+		return items.stream().map(Pair::getLayer).collect(Collectors.toList());
 	}
 
 }

@@ -5,30 +5,61 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import org.apache.commons.math3.analysis.function.Logistic;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.ben.pixcreator.application.action.factory.ActionFactoryProducer;
 import com.ben.pixcreator.application.action.factory.IActionFactory;
 import com.ben.pixcreator.application.action.impl.RefreshTabAction;
 import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.application.executor.Executor;
 import com.ben.pixcreator.application.image.PixImage;
+import com.ben.pixcreator.application.image.layer.impl.ALayer;
+import com.ben.pixcreator.application.image.layer.impl.PicLayer;
 import com.ben.pixcreator.gui.exception.popup.ExceptionPopUp;
 import com.ben.pixcreator.gui.facade.GuiFacade;
 
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Bounds;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 
+/**
+ * public Logistic(double k, double m, double b, double q, double a, double n)
+ * throws NotStrictlyPositiveException Parameters: k - If b > 0, value of the
+ * function for x going towards inf If b < 0, value of the function for x going
+ * towards -inf. m - Abscissa of maximum growth. b - Growth rate. q - Parameter
+ * that affects the position of the curve along the ordinate axis. a - If b > 0,
+ * value of the function for x going towards -inf. If b < 0, value of the
+ * function for x going towards inf. n - Parameter that affects near which
+ * asymptote the maximum growth occurs.
+ * 
+ * @author bmo
+ *
+ */
 public class PixTab extends Tab implements Initializable {
+
+	private static final Logger log = LoggerFactory.getLogger(PixTab.class);
 
 	private final String IMAGEPATH = "images/gui/buttons/tab/";
 
-	private SimpleObjectProperty<PixImage> image = new SimpleObjectProperty<PixImage>();
+	private SimpleObjectProperty<PixImage>	image		= new SimpleObjectProperty<PixImage>();
+	private SimpleDoubleProperty			zoomFactor	= new SimpleDoubleProperty();
+
+	private Logistic	logistic;
+	private double		x, step;	// x is the abscissa of the logistic
+									// function and step is the amount added/sub
+									// of it foreach scroll event
 
 	@FXML
 	private ScrollPane	scrollPane;
@@ -38,8 +69,12 @@ public class PixTab extends Tab implements Initializable {
 	public PixTab(PixImage image) {
 
 		super();
-
+		x = 0d;
+		step = 0.5;
 		setImage(image);
+		setZoomFactor(1d);
+
+		logistic = new Logistic(10.0, 0d, 1.0, 1.0, 0.2, 1.0);
 
 		ResourceBundle bundle = ResourceBundle.getBundle("i18n/trad");
 
@@ -72,13 +107,27 @@ public class PixTab extends Tab implements Initializable {
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 
-		// TODO initialize
 		this.setText(getImage().getName());
 		this.setUserData(canvas);
 
 		canvas = new Canvas(getImage().getxSize(), getImage().getySize());
 
 		scrollPane.setContent(canvas);
+		scrollPane.addEventFilter(ScrollEvent.ANY, new ZoomControl());
+
+		bindPicLayersZoomFactor();
+		zoomFactor.addListener((obs, oldVal, newVal) -> {
+
+			canvas = new Canvas(getImage().getxSize() * (double) newVal, getImage().getySize() * (double) newVal);
+			scrollPane.setContent(canvas);
+
+			try {
+				Executor.getInstance().executeAction(new RefreshTabAction(this));
+			} catch (Exception e) {
+				new ExceptionPopUp(e);
+			}
+
+		});
 
 		canvas.addEventHandler(MouseEvent.ANY, event -> {
 
@@ -92,6 +141,93 @@ public class PixTab extends Tab implements Initializable {
 			}
 
 		});
+
+	}
+
+	private void bindPicLayersZoomFactor() {
+
+		for (ALayer layer : image.get().getLayerList().getAllLayers()) {
+			if (layer instanceof PicLayer) {
+				PicLayer picLayer = (PicLayer) layer;
+				picLayer.zoomFactorProperty().bindBidirectional(zoomFactor);
+
+			}
+		}
+
+	}
+
+	public class ZoomControl implements EventHandler<ScrollEvent> {
+
+		@Override
+		public void handle(ScrollEvent event) {
+
+			if (event.getDeltaY() > 0) {
+				zoomIn();
+			} else {
+				zoomOut();
+			}
+			event.consume();
+		}
+
+	}
+
+	private void zoomIn() {
+
+		Bounds viewPort = scrollPane.getViewportBounds();
+		Bounds contentSize = canvas.getBoundsInParent();
+
+		double centerPosX = (contentSize.getWidth() - viewPort.getWidth()) *
+				scrollPane.getHvalue()
+				+ viewPort.getWidth() / 2;
+		double centerPosY = (contentSize.getHeight() - viewPort.getHeight())
+				* scrollPane.getVvalue()
+				+ viewPort.getHeight() / 2;
+
+		x += step;
+		zoomFactor.set(logistic.value(x));
+		log.debug("zoom in : X = " + x + " factor = " + zoomFactor.get());
+
+		double newCenterX = centerPosX * zoomFactor.get() / (zoomFactor.get()
+				- 1);
+		double newCenterY = centerPosY * zoomFactor.get() / (zoomFactor.get()
+				- 1);
+
+		scrollPane.setHvalue((newCenterX - viewPort.getWidth() / 2)
+				/ (contentSize.getWidth() * zoomFactor.get() / (zoomFactor.get() - 1)
+						- viewPort.getWidth()));
+		scrollPane.setVvalue((newCenterY - viewPort.getHeight() / 2)
+				/ (contentSize.getHeight() * zoomFactor.get() / (zoomFactor.get() -
+						1) - viewPort.getHeight()));
+
+	}
+
+	private void zoomOut() {
+
+		Bounds viewPort = scrollPane.getViewportBounds();
+		Bounds contentSize = canvas.getBoundsInParent();
+
+		double centerPosX = (contentSize.getWidth() - viewPort.getWidth()) *
+				scrollPane.getHvalue()
+				+ viewPort.getWidth() / 2;
+		double centerPosY = (contentSize.getHeight() - viewPort.getHeight())
+				* scrollPane.getVvalue()
+				+ viewPort.getHeight() / 2;
+
+		x -= step;
+		zoomFactor.set(logistic.value(x));
+		log.debug("zoom out : X = " + x + " factor = " + zoomFactor.get());
+
+		double newCenterX = centerPosX * zoomFactor.get() / (zoomFactor.get()
+				+ 1);
+		double newCenterY = centerPosY * zoomFactor.get() / (zoomFactor.get()
+				+ 1);
+
+		scrollPane.setHvalue((newCenterX - viewPort.getWidth() / 2)
+				/ (contentSize.getWidth() * zoomFactor.get() / (zoomFactor.get() + 1)
+						- viewPort.getWidth()));
+		scrollPane.setVvalue((newCenterY - viewPort.getHeight() / 2)
+				/ (contentSize.getHeight() * zoomFactor.get() / (zoomFactor.get() +
+						1) - viewPort.getHeight()));
 
 	}
 
@@ -114,4 +250,17 @@ public class PixTab extends Tab implements Initializable {
 
 		this.imageProperty().set(image);
 	}
+
+	public final SimpleDoubleProperty zoomFactorProperty() {
+		return this.zoomFactor;
+	}
+
+	public final double getZoomFactor() {
+		return this.zoomFactorProperty().get();
+	}
+
+	public final void setZoomFactor(final double zoomFactor) {
+		this.zoomFactorProperty().set(zoomFactor);
+	}
+
 }
