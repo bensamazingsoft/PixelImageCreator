@@ -118,8 +118,8 @@ public class PixTab extends Tab implements Initializable {
 		bindPicLayersZoomFactor();
 		zoomFactor.addListener((obs, oldVal, newVal) -> {
 
-			canvas = new Canvas(getImage().getxSize() * (double) newVal, getImage().getySize() * (double) newVal);
-			scrollPane.setContent(canvas);
+			canvas.setWidth(getImage().getxSize() * (double) newVal);
+			canvas.setHeight(getImage().getySize() * (double) newVal);
 
 			try {
 				Executor.getInstance().executeAction(new RefreshTabAction(this));
@@ -129,18 +129,30 @@ public class PixTab extends Tab implements Initializable {
 
 		});
 
-		canvas.addEventHandler(MouseEvent.ANY, event -> {
+		canvas.addEventHandler(MouseEvent.ANY, new MouseManager(this));
 
+	}
+
+	private class MouseManager implements EventHandler<MouseEvent> {
+
+		protected PixTab tab;
+
+		public MouseManager(PixTab tab) {
+			this.tab = tab;
+		}
+
+		@Override
+		public void handle(MouseEvent event) {
 			IActionFactory factory = ActionFactoryProducer.getActionFactory(AppContext.getInstance().getCurrTool());
 
 			try {
 				Executor.getInstance().executeAction(factory.getAction(event));
-				Executor.getInstance().executeAction(new RefreshTabAction(this));
+				Executor.getInstance().executeAction(new RefreshTabAction(tab));
 			} catch (Exception e) {
 				new ExceptionPopUp(e);
 			}
 
-		});
+		}
 
 	}
 
@@ -185,7 +197,7 @@ public class PixTab extends Tab implements Initializable {
 
 		x += step;
 		zoomFactor.set(logistic.value(x));
-		log.debug("zoom in : X = " + x + " factor = " + zoomFactor.get());
+		// log.debug("zoom in : X = " + x + " factor = " + zoomFactor.get());
 
 		double newCenterX = centerPosX * zoomFactor.get() / (zoomFactor.get()
 				- 1);
@@ -215,7 +227,7 @@ public class PixTab extends Tab implements Initializable {
 
 		x -= step;
 		zoomFactor.set(logistic.value(x));
-		log.debug("zoom out : X = " + x + " factor = " + zoomFactor.get());
+		// log.debug("zoom out : X = " + x + " factor = " + zoomFactor.get());
 
 		double newCenterX = centerPosX * zoomFactor.get() / (zoomFactor.get()
 				+ 1);

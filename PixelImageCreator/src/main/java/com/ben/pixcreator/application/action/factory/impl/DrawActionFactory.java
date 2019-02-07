@@ -38,16 +38,19 @@ public class DrawActionFactory implements IActionFactory {
 			switch (event.getEventType().getName()) {
 
 			case ("MOUSE_PRESSED"): {
-				Executor.getInstance().startOperation();
-				try {
-					if (((MouseEvent) event).getButton() == MouseButton.PRIMARY) {
-						Executor.getInstance().continueOperation((ICancelable) getChangeCellColorAction(event));
+				if (((MouseEvent) event).getButton() == MouseButton.PRIMARY
+						|| ((MouseEvent) event).getButton() == MouseButton.SECONDARY) {
+					Executor.getInstance().startOperation();
+					try {
+						if (((MouseEvent) event).getButton() == MouseButton.PRIMARY) {
+							Executor.getInstance().continueOperation((ICancelable) getChangeCellColorAction(event));
+						}
+						if (((MouseEvent) event).getButton() == MouseButton.SECONDARY) {
+							Executor.getInstance().continueOperation((ICancelable) getDeleteCellAction(event));
+						}
+					} catch (Exception e) {
+						new ExceptionPopUp(e);
 					}
-					if (((MouseEvent) event).getButton() == MouseButton.SECONDARY) {
-						Executor.getInstance().continueOperation((ICancelable) getDeleteCellAction(event));
-					}
-				} catch (Exception e) {
-					new ExceptionPopUp(e);
 				}
 				event.consume();
 				break;
@@ -55,24 +58,29 @@ public class DrawActionFactory implements IActionFactory {
 
 			case ("MOUSE_DRAGGED"): {
 
-				try {
-					if (((MouseEvent) event).getButton() == MouseButton.PRIMARY) {
-						Executor.getInstance().continueOperation((ICancelable) getChangeCellColorAction(event));
+				if (((MouseEvent) event).getButton() == MouseButton.PRIMARY
+						|| ((MouseEvent) event).getButton() == MouseButton.SECONDARY) {
+					try {
+						if (((MouseEvent) event).getButton() == MouseButton.PRIMARY) {
+							Executor.getInstance().continueOperation((ICancelable) getChangeCellColorAction(event));
+						}
+						if (((MouseEvent) event).getButton() == MouseButton.SECONDARY) {
+							event.consume();
+							Executor.getInstance().continueOperation((ICancelable) getDeleteCellAction(event));
+						}
+					} catch (Exception e) {
+						new ExceptionPopUp(e);
 					}
-					if (((MouseEvent) event).getButton() == MouseButton.SECONDARY) {
-						event.consume();
-						Executor.getInstance().continueOperation((ICancelable) getDeleteCellAction(event));
-					}
-				} catch (Exception e) {
-					new ExceptionPopUp(e);
 				}
-
 				break;
 			}
 
 			case ("MOUSE_RELEASED"): {
-				Executor.getInstance().endOperation();
-				event.consume();
+				if (((MouseEvent) event).getButton() == MouseButton.PRIMARY
+						|| ((MouseEvent) event).getButton() == MouseButton.SECONDARY) {
+					Executor.getInstance().endOperation();
+					event.consume();
+				}
 				break;
 			}
 
@@ -89,9 +97,13 @@ public class DrawActionFactory implements IActionFactory {
 		ALayer layer = GuiFacade.getInstance().getActiveLayer();
 		PixImage image = GuiFacade.getInstance().getActiveimage();
 
-		Coord coord = eventCoord(event, image);
+		double canvasW = GuiFacade.getInstance().getActiveTab().getCanvas().getWidth();
+		double canvasH = GuiFacade.getInstance().getActiveTab().getCanvas().getHeight();
+
+		Coord coord = eventCoord(event, image, canvasW, canvasH);
 
 		return new ActionDeleteCell(image, (PixLayer) layer, coord);
+
 	}
 
 	private IAction getChangeCellColorAction(Event event) {
@@ -100,22 +112,21 @@ public class DrawActionFactory implements IActionFactory {
 		PixImage image = GuiFacade.getInstance().getActiveimage();
 		Color color = GuiFacade.getInstance().getActiveColor();
 
-		if (GuiFacade.getInstance().getActiveLayer() instanceof PixLayer) {
+		double canvasW = GuiFacade.getInstance().getActiveTab().getCanvas().getWidth();
+		double canvasH = GuiFacade.getInstance().getActiveTab().getCanvas().getHeight();
 
-			PixLayer pxLayer = (PixLayer) layer;
-			Coord eventCoord = eventCoord(event, image);
+		Coord eventCoord = eventCoord(event, image, canvasW, canvasH);
 
-			return new ActionChangeCellColor(image, pxLayer, eventCoord, color);
-		}
-		return null;
+		return new ActionChangeCellColor(image, (PixLayer) layer, eventCoord, color);
+
 	}
 
-	private Coord eventCoord(Event event, PixImage image) {
+	private Coord eventCoord(Event event, PixImage image, double width, double height) {
 
 		int x = new Double(((MouseEvent) event).getX()).intValue();
 		int y = new Double(((MouseEvent) event).getY()).intValue();
-		int cellX = (int) Math.floor(x / (image.getxSize() / image.getxGridResolution()));
-		int cellY = (int) Math.floor(y / (image.getySize() / image.getyGridResolution()));
+		int cellX = (int) Math.floor(x / (width / image.getxGridResolution()));
+		int cellY = (int) Math.floor(y / (height / image.getyGridResolution()));
 
 		return new Coord(cellX, cellY);
 	}
