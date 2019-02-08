@@ -7,7 +7,6 @@ import com.ben.pixcreator.application.action.IAction;
 import com.ben.pixcreator.application.action.factory.IActionFactory;
 import com.ben.pixcreator.application.action.impl.ActionUpdateSelection;
 import com.ben.pixcreator.application.image.coords.Coord;
-import com.ben.pixcreator.application.image.layer.impl.PixLayer;
 import com.ben.pixcreator.application.selection.Selection;
 import com.ben.pixcreator.gui.exception.popup.ExceptionPopUp;
 import com.ben.pixcreator.gui.facade.GuiFacade;
@@ -24,7 +23,7 @@ public class SelectActionFactory implements IActionFactory {
 	public IAction getAction(Event event) {
 		IAction action = null;
 
-		if (event instanceof MouseEvent && GuiFacade.getInstance().getActiveLayer() instanceof PixLayer) {
+		if (event instanceof MouseEvent) {
 
 			switch (event.getEventType().getName()) {
 

@@ -24,11 +24,13 @@ public class GroupLockManager {
 	 * locked button was clicked.
 	 * 
 	 * @param layer
-	 * @return the lock-group containing the layer or an empty set.
+	 * @return the lock-group containing the layer or a set containing only the
+	 *         layer.
 	 */
 	public Set<ALayer> getGroupLock(ALayer layer) {
 
-		Set<ALayer> emptyResult = new HashSet<>();
+		Set<ALayer> result = new HashSet<>();
+		result.add(layer);
 
 		for (Set<ALayer> set : groups) {
 
@@ -40,7 +42,7 @@ public class GroupLockManager {
 
 		}
 
-		return emptyResult;
+		return result;
 	}
 
 	/**
