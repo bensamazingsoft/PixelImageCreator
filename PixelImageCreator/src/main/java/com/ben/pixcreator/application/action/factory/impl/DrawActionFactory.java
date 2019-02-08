@@ -40,7 +40,9 @@ public class DrawActionFactory implements IActionFactory {
 			case ("MOUSE_PRESSED"): {
 				if (((MouseEvent) event).getButton() == MouseButton.PRIMARY
 						|| ((MouseEvent) event).getButton() == MouseButton.SECONDARY) {
+
 					Executor.getInstance().startOperation();
+
 					try {
 						if (((MouseEvent) event).getButton() == MouseButton.PRIMARY) {
 							Executor.getInstance().continueOperation((ICancelable) getChangeCellColorAction(event));
@@ -84,8 +86,6 @@ public class DrawActionFactory implements IActionFactory {
 				break;
 			}
 
-			// TODO all other cases
-
 			}
 		}
 
@@ -97,10 +97,7 @@ public class DrawActionFactory implements IActionFactory {
 		ALayer layer = GuiFacade.getInstance().getActiveLayer();
 		PixImage image = GuiFacade.getInstance().getActiveimage();
 
-		double canvasW = GuiFacade.getInstance().getActiveTab().getCanvas().getWidth();
-		double canvasH = GuiFacade.getInstance().getActiveTab().getCanvas().getHeight();
-
-		Coord coord = eventCoord(event, image, canvasW, canvasH);
+		Coord coord = eventCoord((MouseEvent) event);
 
 		return new ActionDeleteCell(image, (PixLayer) layer, coord);
 
@@ -108,27 +105,31 @@ public class DrawActionFactory implements IActionFactory {
 
 	private IAction getChangeCellColorAction(Event event) {
 
-		ALayer layer = GuiFacade.getInstance().getActiveLayer();
 		PixImage image = GuiFacade.getInstance().getActiveimage();
+		ALayer layer = GuiFacade.getInstance().getActiveLayer();
 		Color color = GuiFacade.getInstance().getActiveColor();
 
-		double canvasW = GuiFacade.getInstance().getActiveTab().getCanvas().getWidth();
-		double canvasH = GuiFacade.getInstance().getActiveTab().getCanvas().getHeight();
-
-		Coord eventCoord = eventCoord(event, image, canvasW, canvasH);
+		Coord eventCoord = eventCoord((MouseEvent) event);
 
 		return new ActionChangeCellColor(image, (PixLayer) layer, eventCoord, color);
 
 	}
 
-	private Coord eventCoord(Event event, PixImage image, double width, double height) {
-
-		int x = new Double(((MouseEvent) event).getX()).intValue();
-		int y = new Double(((MouseEvent) event).getY()).intValue();
-		int cellX = (int) Math.floor(x / (width / image.getxGridResolution()));
-		int cellY = (int) Math.floor(y / (height / image.getyGridResolution()));
-
-		return new Coord(cellX, cellY);
-	}
+	// private Coord eventCoord(Event event) {
+	//
+	// PixImage image = GuiFacade.getInstance().getActiveimage();
+	//
+	// double width =
+	// GuiFacade.getInstance().getActiveTab().getCanvas().getWidth();
+	// double height =
+	// GuiFacade.getInstance().getActiveTab().getCanvas().getHeight();
+	//
+	// int x = new Double(((MouseEvent) event).getX()).intValue();
+	// int y = new Double(((MouseEvent) event).getY()).intValue();
+	// int cellX = (int) Math.floor(x / (width / image.getxGridResolution()));
+	// int cellY = (int) Math.floor(y / (height / image.getyGridResolution()));
+	//
+	// return new Coord(cellX, cellY);
+	// }
 
 }

@@ -4,20 +4,31 @@
 <?import javafx.scene.control.*?>
 
 <fx:root type="javafx.scene.control.MenuBar" xmlns:fx="http://javafx.com/fxml">
-	
-		<menus>
-			<Menu text="%fichier">
-				<items>
-					<MenuItem text="%nouveau" onAction="#newAction" accelerator="Shortcut+n"/>
-					<MenuItem text="%ouvrir" onAction="#openAction" accelerator="Shortcut+o"/>
-				</items>
-			</Menu>
-			<Menu text="%edition">
-				<items>
-					<MenuItem text="%annuler" onAction="#cancel" accelerator="Shortcut+z"/>
-					<MenuItem text="%redo" onAction="#redo" accelerator="Shortcut+y"/>
-				</items>
-			</Menu>
-		</menus>
+
+	<menus>
+		<Menu text="%fichier">
+			<items>
+				<MenuItem text="%nouveau" onAction="#newAction"
+					accelerator="Shortcut+n" />
+				<MenuItem text="%ouvrir" onAction="#openAction"
+					accelerator="Shortcut+o" />
+			</items>
+		</Menu>
+
+		<Menu text="%edition">
+			<items>
+				<MenuItem text="%annuler" onAction="#cancel" accelerator="Shortcut+z" />
+				<MenuItem text="%redo" onAction="#redo" accelerator="Shortcut+y" />
+			</items>
+		</Menu>
+
+		<Menu text="%selection">
+			<items>
+				<MenuItem text="%deselectionner" onAction="#unSelect"
+					accelerator="Shortcut+d" />
+			</items>
+		</Menu>
+
+	</menus>
 
 </fx:root>

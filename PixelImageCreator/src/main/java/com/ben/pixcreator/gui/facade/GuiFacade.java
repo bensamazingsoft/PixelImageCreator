@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.application.image.PixImage;
 import com.ben.pixcreator.application.image.layer.impl.ALayer;
+import com.ben.pixcreator.application.selection.Selection;
 import com.ben.pixcreator.application.tools.PixTool;
 import com.ben.pixcreator.gui.controls.color.box.ColorBox;
 import com.ben.pixcreator.gui.controls.color.roster.ColorRoster;
@@ -40,6 +41,7 @@ public class GuiFacade {
 	private ColorRoster	colorRoster;
 
 	private Map<PixImage, Set<SimpleObjectProperty<Color>>>	imagesColors;
+	private Map<PixImage, Selection>						selections;
 	private SimpleObjectProperty<Color>						activeColor	= new SimpleObjectProperty<>();
 	private SimpleObjectProperty<PixImage>					activeImage	= new SimpleObjectProperty<>();
 	private SimpleBooleanProperty							showGrid	= new SimpleBooleanProperty();
@@ -47,6 +49,7 @@ public class GuiFacade {
 	private GuiFacade() {
 
 		imagesColors = new HashMap<>();
+		selections = new HashMap<>();
 
 		showGrid.set(false);
 
@@ -205,6 +208,14 @@ public class GuiFacade {
 	public PixTab getActiveTab() {
 
 		return (PixTab) pixTabPane.getSelectionModel().getSelectedItem();
+	}
+
+	public Map<PixImage, Selection> getSelections() {
+		return selections;
+	}
+
+	public void setSelections(Map<PixImage, Selection> selections) {
+		this.selections = selections;
 	}
 
 }

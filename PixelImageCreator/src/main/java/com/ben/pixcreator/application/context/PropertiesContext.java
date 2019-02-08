@@ -13,133 +13,112 @@ import java.util.Set;
 
 import javafx.scene.paint.Color;
 
-public class PropertiesContext
-{
+public class PropertiesContext {
 
-      private Properties   defaultProp, properties;
-      private File	   propFile;
-      private final String defaultPropertiesFileName = "./properties/default.properties";
+	private Properties		defaultProp, properties;
+	private File			propFile;
+	private final String	defaultPropertiesFileName	= "./properties/default.properties";
 
+	public PropertiesContext() throws IOException {
 
-      public PropertiesContext() throws IOException
-      {
+		initProperties();
+	}
 
-	    initProperties();
-      }
+	private void initProperties() throws IOException {
 
+		// initialize default properties
 
-      private void initProperties() throws IOException
-      {
+		defaultProp = new Properties();
+		properties = new Properties();
 
-	    // initialize default properties
+		ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+		InputStream is = classloader.getResourceAsStream(defaultPropertiesFileName);
+		defaultProp.load(is);
 
-	    defaultProp = new Properties();
-	    properties = new Properties();
+		// initialize properties with default in case there are new ones
+		properties = new Properties(defaultProp);
 
-	    ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-	    InputStream is = classloader.getResourceAsStream(defaultPropertiesFileName);
-	    defaultProp.load(is);
+		propFile = new File("data/config.properties");
+		if (propFile.exists()) {
 
-	    // initialize properties with default in case there are new ones
-	    properties = new Properties(defaultProp);
+			properties.load(new FileInputStream(propFile.toString()));
 
-	    propFile = new File("data/config.properties");
-	    if (propFile.exists())
-	    {
+		}
 
-		  properties.load(new FileInputStream(propFile.toString()));
+	}
 
-	    }
+	public void reset() {
 
-      }
+		properties = new Properties(defaultProp);
+	}
 
+	public void reset(String key) {
 
-      public void reset()
-      {
+		properties.setProperty(key, defaultProp.getProperty(key));
+	}
 
-	    properties = new Properties(defaultProp);
-      }
+	public String getDefault(String key) {
 
+		return defaultProp.getProperty(key);
+	}
 
-      public void reset(String key)
-      {
+	public String get(String key) {
 
-	    properties.setProperty(key, defaultProp.getProperty(key));
-      }
+		return properties.getProperty(key);
+	}
 
+	public void set(String key, String value) {
 
-      public String getDefault(String key)
-      {
+		properties.setProperty(key, value);
+	}
 
-	    return defaultProp.getProperty(key);
-      }
+	public Set<Color> getStartRosterColors() {
 
+		// get the rosteColorors
 
-      public String get(String key)
-      {
+		Set<Color> result = new HashSet<>();
 
-	    return properties.getProperty(key);
-      }
+		String[] stringColors = properties.getProperty("rosterColors").split("X");
 
+		for (String stringColor : stringColors) {
 
-      public void set(String key, String value)
-      {
+			Color color = getColor(stringColor);
 
-	    properties.setProperty(key, value);
-      }
+			result.add(color);
 
+		}
 
-      public Set<Color> getStartRosterColors()
-      {
+		return result;
 
-	    // get the rosteColorors
+	}
 
-	    Set<Color> result = new HashSet<>();
+	// convert color string property to color object
+	Color getColor(String string) {
 
-	    String[] stringColors = properties.getProperty("rosterColors").split("X");
+		Color color = Color.BLACK;
+		String[] rgbValues = string.split(",");
 
-	    for (String stringColor : stringColors)
-	    {
+		if (rgbValues.length == 3) {
+			color = Color.rgb(Integer.valueOf(rgbValues[0]), Integer.valueOf(rgbValues[1]),
+					Integer.valueOf(rgbValues[2]));
+		} else if (rgbValues.length == 4) {
+			color = Color.rgb(Integer.valueOf(rgbValues[0]), Integer.valueOf(rgbValues[1]),
+					Integer.valueOf(rgbValues[2]), Double.valueOf(rgbValues[3]));
+		}
 
-		  Color color = getColor(stringColor);
+		return color;
+	}
 
-		  result.add(color);
+	public void save() throws FileNotFoundException, IOException {
 
-	    }
+		propFile.getParentFile().mkdirs();
+		properties.store(new FileOutputStream(propFile), null);
 
-	    return result;
+	}
 
-      }
+	public Color getSelectionColor() {
 
-
-      // convert color string property to color object
-      Color getColor(String string)
-      {
-
-	    Color color = Color.BLACK;
-	    String[] rgbValues = string.split(",");
-
-	    if (rgbValues.length == 3)
-	    {
-		  color = Color.rgb(Integer.valueOf(rgbValues[0]), Integer.valueOf(rgbValues[1]),
-			      Integer.valueOf(rgbValues[2]));
-	    }
-	    else if (rgbValues.length == 4)
-	    {
-		  color = Color.rgb(Integer.valueOf(rgbValues[0]), Integer.valueOf(rgbValues[1]),
-			      Integer.valueOf(rgbValues[2]), Double.valueOf(rgbValues[3]));
-	    }
-
-	    return color;
-      }
-
-
-      public void save() throws FileNotFoundException, IOException
-      {
-
-	    propFile.getParentFile().mkdirs();
-	    properties.store(new FileOutputStream(propFile), null);
-
-      }
+		return getColor(properties.getProperty("selectionColor"));
+	}
 
 }

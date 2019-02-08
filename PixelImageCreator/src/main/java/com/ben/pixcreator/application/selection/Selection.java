@@ -6,7 +6,7 @@ import com.ben.pixcreator.application.image.coords.Coord;
 
 public class Selection {
 
-	private Coord			from, to;
+	private Coord			start, from, to;
 	private TreeSet<Coord>	coords	= new TreeSet<>();
 	private int				xSize, ySize;
 
@@ -15,6 +15,8 @@ public class Selection {
 	}
 
 	public Selection(Coord start, Coord end) {
+
+		this.start = start;
 
 		if (!start.equals(end)) {
 			this.from = (start.compareTo(end) < 0) ? start : end;
@@ -130,6 +132,14 @@ public class Selection {
 	public void setySize(int ySize) {
 
 		this.ySize = ySize;
+	}
+
+	public Coord getStart() {
+		return start;
+	}
+
+	public void setStart(Coord start) {
+		this.start = start;
 	}
 
 }

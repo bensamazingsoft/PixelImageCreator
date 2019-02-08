@@ -6,11 +6,13 @@ import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.ben.pixcreator.application.action.impl.ActionUpdateSelection;
 import com.ben.pixcreator.application.action.impl.OpenTabAction;
 import com.ben.pixcreator.application.action.impl.RefreshTabAction;
 import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.application.executor.Executor;
 import com.ben.pixcreator.application.image.PixImage;
+import com.ben.pixcreator.gui.controls.tab.PixTab;
 import com.ben.pixcreator.gui.exception.popup.ExceptionPopUp;
 import com.ben.pixcreator.gui.facade.GuiFacade;
 
@@ -103,6 +105,26 @@ public class PixMenuBar extends MenuBar {
 		try {
 			Executor.getInstance().redo();
 			Executor.getInstance().executeAction(new RefreshTabAction(GuiFacade.getInstance().getActiveTab()));
+		} catch (Exception e) {
+			new ExceptionPopUp(e);
+		}
+
+	}
+
+	@FXML
+	public void unSelect(ActionEvent event) {
+		handleUnSelect();
+	}
+
+	private void handleUnSelect() {
+
+		PixImage activeImage = GuiFacade.getInstance().getActiveimage();
+		GuiFacade.getInstance().getSelections().remove(activeImage);
+		PixTab tab = GuiFacade.getInstance().getActiveTab();
+
+		try {
+			Executor.getInstance().executeAction(new ActionUpdateSelection(activeImage));
+			Executor.getInstance().executeAction(new RefreshTabAction(tab));
 		} catch (Exception e) {
 			new ExceptionPopUp(e);
 		}
