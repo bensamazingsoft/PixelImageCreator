@@ -3,58 +3,98 @@ package com.ben.pixcreator.application.action.impl;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import com.ben.pixcreator.application.action.IAction;
 import com.ben.pixcreator.application.action.ICancelable;
 import com.ben.pixcreator.application.image.coords.Coord;
 import com.ben.pixcreator.application.image.layer.impl.ALayer;
+import com.ben.pixcreator.application.image.layer.impl.PicLayer;
 import com.ben.pixcreator.application.image.layer.impl.PixLayer;
 import com.ben.pixcreator.application.selection.Selection;
 
 import javafx.scene.paint.Color;
 
-public class ActionTranslateLayer implements IAction, ICancelable
-{
+public class ActionTranslateLayer implements IAction, ICancelable {
 
-      private final int		      translateX;
-      private final int		      translateY;
-      private final ALayer	      layer;
-      private final Selection	      selection;
+	private final int		translateX;
+	private final int		translateY;
+	private final ALayer	layer;
+	private final Selection	selection;
 
-      private final Map<Coord, Color> originalCells = new HashMap<>();
+	private Map<Coord, Color>	originalCells	= new HashMap<>();
+	private Map<Coord, Color>	newCells		= new HashMap<>();
 
+	public ActionTranslateLayer(int translateX, int translateY, ALayer layer, Selection selection) {
 
-      public ActionTranslateLayer(int translateX, int translateY, ALayer layer, Selection selection)
-      {
+		super();
+		this.translateX = translateX;
+		this.translateY = translateY;
+		this.layer = layer;
+		this.selection = selection;
 
-	    super();
-	    this.translateX = translateX;
-	    this.translateY = translateY;
-	    this.layer = layer;
-	    this.selection = selection;
+		if (layer instanceof PixLayer) {
 
-	    if (!selection.getCoords().isEmpty() && layer instanceof PixLayer)
-	    {
+			PixLayer pix = (PixLayer) layer;
 
-	    }
+			// compute cells to translate (selcted or not)
+			if (null == selection || selection.getCoords().isEmpty()) {
 
-      }
+				originalCells = pix.getGrid();
 
+			}
 
-      @Override
-      public void execute() throws Exception
-      {
-	    // TODO Auto-generated method stub
+			else if (!selection.getCoords().isEmpty()) {
 
-      }
+				originalCells = pix.getGrid().entrySet().stream()
+						.filter(entry -> selection.getCoords().contains(entry.getKey()))
+						.collect(Collectors.toMap(Entry::getKey, Entry::getValue));
 
+			}
 
-      @Override
-      public void cancel() throws Exception
-      {
+			// compute new cells position
 
-	    // TODO Auto-generated method stub
+			// TODO add unselected cells
+			newCells = originalCells.entrySet().stream()
+					.collect(Collectors.toMap(entry -> new Coord(entry.getKey().getX() + translateX,
+							entry.getKey().getY() + translateY), Entry::getValue));
 
-      }
+		}
+
+	}
+
+	@Override
+	public void execute() throws Exception {
+
+		if (layer instanceof PixLayer) {
+
+			((PixLayer) layer).setGrid(newCells);
+
+		}
+
+		else if (layer instanceof PicLayer) {
+
+			PicLayer pic = (PicLayer) layer;
+
+			pic.setPosition(new Coord(pic.getPosition().getX() + translateX, pic.getPosition().getY() + translateY));
+
+		}
+
+	}
+
+	@Override
+	public void cancel() throws Exception {
+
+		if (layer instanceof PixLayer) {
+
+			((PixLayer) layer).setGrid(originalCells);
+
+		} else if (layer instanceof PicLayer) {
+
+			PicLayer pic = (PicLayer) layer;
+			pic.setPosition(new Coord(pic.getPosition().getX() - translateX, pic.getPosition().getY() - translateY));
+		}
+	}
 
 }
