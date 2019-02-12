@@ -113,10 +113,39 @@ public class PixLayer extends ALayer {
 		return true;
 	}
 
+	public class Memento extends ALayer.Memento {
+
+		private Map<Coord, Color> grid;
+
+		protected Memento(ALayer layer) {
+			super(layer);
+
+		}
+
+		@Override
+		protected void init(ALayer layer) {
+
+			grid = ((PixLayer) layer).getGrid();
+
+		}
+
+		@Override
+		public void restore() {
+			((PixLayer) layer).setGrid(grid);
+
+		}
+
+	}
+
 	@Override
 	public String toString() {
 
 		return "PixLayer [grid=" + grid + "]";
+	}
+
+	@Override
+	public Memento getMemento() {
+		return new PixLayer.Memento(this);
 	}
 
 }

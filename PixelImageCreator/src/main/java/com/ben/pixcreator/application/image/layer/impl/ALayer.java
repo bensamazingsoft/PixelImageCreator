@@ -8,61 +8,67 @@ import com.ben.pixcreator.application.image.layer.ILayer;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.canvas.Canvas;
 
-public abstract class ALayer implements ILayer, Serializable
-{
+public abstract class ALayer implements ILayer, Serializable {
 
-      /**
-       * 
-       */
-      private static final long	      serialVersionUID = 1L;
-      /**
-       * 
-       */
+	/**
+	   * 
+	   */
+	private static final long		serialVersionUID	= 1L;
+	/**
+	 * 
+	 */
 
-      protected SimpleBooleanProperty visible	       = new SimpleBooleanProperty();
+	protected SimpleBooleanProperty	visible				= new SimpleBooleanProperty();
 
+	@Override
+	public void draw(Canvas canvas, int xGridResolution, int yGridResolution) {
 
-      @Override
-      public void draw(Canvas canvas, int xGridResolution, int yGridResolution)
-      {
+	}
 
-      }
+	public abstract class Memento {
 
+		protected ALayer layer;
 
-      public final SimpleBooleanProperty visibleProperty()
-      {
+		protected Memento(ALayer layer) {
 
-	    return this.visible;
-      }
+			this.layer = layer;
 
+			init(layer);
+		}
 
-      public final boolean isVisible()
-      {
+		protected abstract void init(ALayer layer);
 
-	    return this.visibleProperty().get();
-      }
+		public abstract void restore();
 
+	}
 
-      public final void setVisible(final boolean visible)
-      {
+	public final SimpleBooleanProperty visibleProperty() {
 
-	    this.visibleProperty().set(visible);
-      }
+		return this.visible;
+	}
 
+	public final boolean isVisible() {
 
-      @Override
-      public boolean equals(Object arg0)
-      {
+		return this.visibleProperty().get();
+	}
 
-	    return super.equals(arg0);
-      }
+	public final void setVisible(final boolean visible) {
 
+		this.visibleProperty().set(visible);
+	}
 
-      @Override
-      public int hashCode()
-      {
+	@Override
+	public boolean equals(Object arg0) {
 
-	    return super.hashCode();
-      }
+		return super.equals(arg0);
+	}
+
+	@Override
+	public int hashCode() {
+
+		return super.hashCode();
+	}
+
+	public abstract Memento getMemento();
 
 }

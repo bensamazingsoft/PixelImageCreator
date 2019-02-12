@@ -21,84 +21,76 @@ import com.ben.pixcreator.gui.facade.GuiFacade;
 import javafx.event.Event;
 import javafx.scene.input.MouseEvent;
 
-public class MoveActionFactory implements IActionFactory
-{
+public class MoveActionFactory implements IActionFactory {
 
-      private static final Logger log = LoggerFactory.getLogger(MoveActionFactory.class);
+	private static final Logger log = LoggerFactory.getLogger(MoveActionFactory.class);
 
-      public static boolean	  moveStarted;
-      public static Coord	  startCoord;
+	public static boolean			moveStarted;
+	public static Coord				startCoord;
+	public static ALayer.Memento	startState;
 
+	@Override
+	public IAction getAction(Event event) {
 
-      @Override
-      public IAction getAction(Event event)
-      {
+		if (event instanceof MouseEvent) {
 
-	    if (event instanceof MouseEvent)
-	    {
+			switch (event.getEventType().getName()) {
 
-		  switch (event.getEventType().getName())
-		  {
+			case ("MOUSE_PRESSED"): {
+				Executor.getInstance().startOperation();
+				moveStarted = true;
+				startCoord = eventCoord((MouseEvent) event);
+				startState = GuiFacade.getInstance().getActiveLayer().getMemento();
+				;
+				// log.debug(event.getEventType().getName());
+				// log.debug(startCoord.toString());
+				event.consume();
+				break;
+			}
 
-		  case ("MOUSE_PRESSED"):
-		  {
-			Executor.getInstance().startOperation();
-			moveStarted = true;
-			startCoord = eventCoord((MouseEvent) event);
-			// log.debug(event.getEventType().getName());
-			// log.debug(startCoord.toString());
-			event.consume();
-			break;
-		  }
+			case ("MOUSE_DRAGGED"): {
+				// log.debug(event.getEventType().getName());
+				PixImage image = GuiFacade.getInstance().getActiveImage();
+				ALayer activeLayer = GuiFacade.getInstance().getActiveLayer();
 
-		  case ("MOUSE_DRAGGED"):
-		  {
-			// log.debug(event.getEventType().getName());
-			PixImage image = GuiFacade.getInstance().getActiveImage();
-			ALayer activeLayer = GuiFacade.getInstance().getActiveLayer();
+				Set<ALayer> layers = GroupLockManager.getInstance().getGroupLock(activeLayer);
 
-			Set<ALayer> layers = GroupLockManager.getInstance().getGroupLock(activeLayer);
+				Selection selection = GuiFacade.getInstance().getSelections().get(image);
 
-			Selection selection = GuiFacade.getInstance().getSelections().get(image);
+				Coord eventCoord = eventCoord((MouseEvent) event);
 
-			Coord eventCoord = eventCoord((MouseEvent) event);
+				int translateX = eventCoord.getX() - startCoord.getX();
+				int translateY = eventCoord.getY() - startCoord.getY();
+				// log.debug("" + translateX);
+				for (ALayer layer : layers) {
 
-			int translateX = eventCoord.getX() - startCoord.getX();
-			int translateY = eventCoord.getY() - startCoord.getY();
-			log.debug("" + translateX);
-			for (ALayer layer : layers)
-			{
+					try {
+						startState.restore();
+						Executor.getInstance()
+								.continueOperation(new ActionTranslateLayer(translateX, translateY, layer, selection));
+					} catch (Exception e) {
+						new ExceptionPopUp(e);
+					}
 
-			      try
-			      {
-				    Executor.getInstance()
-						.executeAction(new ActionTranslateLayer(translateX, translateY, layer, selection));
-			      }
-			      catch (Exception e)
-			      {
-				    new ExceptionPopUp(e);
-			      }
+				}
+				event.consume();
+				break;
+			}
+
+			case ("MOUSE_RELEASED"): {
+				Executor.getInstance().endOperation();
+				moveStarted = false;
+				startCoord = null;
+				// log.debug(event.getEventType().getName());
+				event.consume();
+				break;
+			}
 
 			}
-			event.consume();
-			break;
-		  }
 
-		  case ("MOUSE_RELEASED"):
-		  {
-			Executor.getInstance().endOperation();
-			moveStarted = false;
-			startCoord = null;
-			// log.debug(event.getEventType().getName());
-			event.consume();
-			break;
-		  }
+		}
 
-		  }
-
-	    }
-
-	    return null;
-      }
+		return null;
+	}
 
 }

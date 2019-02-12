@@ -150,4 +150,31 @@ public class PicLayer extends ALayer {
 		this.zoomFactorProperty().set(zoomFactor);
 	}
 
+	public class Memento extends ALayer.Memento {
+
+		protected Memento(ALayer layer) {
+			super(layer);
+			// TODO Auto-generated constructor stub
+		}
+
+		@Override
+		protected void init(ALayer layer) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void restore() {
+			// TODO Auto-generated method stub
+
+		}
+
+	}
+
+	@Override
+	public Memento getMemento() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
