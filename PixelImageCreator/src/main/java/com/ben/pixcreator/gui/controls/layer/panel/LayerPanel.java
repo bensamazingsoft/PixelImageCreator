@@ -223,8 +223,9 @@ public class LayerPanel extends BorderPane implements Initializable {
 			LayerBox box = new LayerBox(getImage(), layer);
 
 			layersBox.getChildren().add(0, box);
-
 			box.setToggleGroup(togglegroup);
+
+			GuiFacade.getInstance().getMiniatureManager().addMiniature(layer, box.getCanvas());
 		}
 
 	}

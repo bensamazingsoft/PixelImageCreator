@@ -20,6 +20,7 @@ import com.ben.pixcreator.application.image.layer.impl.PicLayer;
 import com.ben.pixcreator.gui.exception.popup.ExceptionPopUp;
 import com.ben.pixcreator.gui.facade.GuiFacade;
 
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.Event;
@@ -33,6 +34,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
+import javafx.scene.layout.StackPane;
 
 /**
  * public Logistic(double k, double m, double b, double q, double a, double n)
@@ -59,12 +61,14 @@ public class PixTab extends Tab implements Initializable {
 	private Logistic	logistic;
 	private double		x, step;	// x is the abscissa of the logistic
 	// function and step is the amount added/sub
-	// of it foreach scroll event
+	// of it for each scroll event
 
 	@FXML
 	private ScrollPane	scrollPane;
 	@FXML
 	private Canvas		canvas;
+	@FXML
+	private StackPane	stackPane;
 
 	public PixTab(PixImage image) {
 
@@ -149,6 +153,11 @@ public class PixTab extends Tab implements Initializable {
 
 		canvas.addEventHandler(MouseEvent.ANY, new MouseManager(this));
 
+		stackPane.minWidthProperty().bind(Bindings.createDoubleBinding(() -> scrollPane.getViewportBounds().getWidth(),
+				scrollPane.viewportBoundsProperty()));
+
+		scrollPane.setFitToWidth(true);
+		scrollPane.setFitToHeight(true);
 	}
 
 	private class MouseManager implements EventHandler<MouseEvent> {

@@ -4,14 +4,15 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.layout.StackPane?>
 
 <fx:root type="javafx.scene.control.Tab" xmlns:fx="http://javafx.com/fxml" onClosed="#handleClose">
 	
 
 <ScrollPane fx:id="scrollPane">
-
-	<Canvas fx:id="canvas" />
-
+	<StackPane fx:id="stackPane">
+		<Canvas fx:id="canvas" />
+	</StackPane> 
 </ScrollPane>
 
 </fx:root>

@@ -130,43 +130,6 @@ public class LayerBox extends HBox implements Initializable, Toggle {
 
 	}
 
-	@FXML
-	private void toggleEye(MouseEvent event) {
-
-	}
-
-	@FXML
-	private void toggleLock(MouseEvent event) {
-
-		toggleLayerLock();
-	}
-
-	private void toggleLayerLock() {
-
-		if (GroupLockManager.getInstance().getGroupLock(GuiFacade.getInstance().getActiveLayer()).contains(layer)) {
-			GroupLockManager.getInstance().unlock(layer);
-			setLocked(false);
-		} else {
-			GroupLockManager.getInstance().lockToActiveLayer(layer);
-			setLocked(true);
-		}
-
-	}
-
-	@FXML
-	private void handleMiniatureClicked(MouseEvent event) {
-
-		miniatureClicked();
-	}
-
-	private void miniatureClicked() {
-
-		if (!isSelected()) {
-			toggleGroup.get().selectToggle(this);
-		}
-
-	}
-
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 
@@ -207,6 +170,43 @@ public class LayerBox extends HBox implements Initializable, Toggle {
 				setStyle("-fx-background-color:gray");
 			}
 		});
+
+	}
+
+	@FXML
+	private void toggleEye(MouseEvent event) {
+
+	}
+
+	@FXML
+	private void toggleLock(MouseEvent event) {
+
+		toggleLayerLock();
+	}
+
+	private void toggleLayerLock() {
+
+		if (GroupLockManager.getInstance().getGroupLock(GuiFacade.getInstance().getActiveLayer()).contains(layer)) {
+			GroupLockManager.getInstance().unlock(layer);
+			setLocked(false);
+		} else {
+			GroupLockManager.getInstance().lockToActiveLayer(layer);
+			setLocked(true);
+		}
+
+	}
+
+	@FXML
+	private void handleMiniatureClicked(MouseEvent event) {
+
+		miniatureClicked();
+	}
+
+	private void miniatureClicked() {
+
+		if (!isSelected()) {
+			toggleGroup.get().selectToggle(this);
+		}
 
 	}
 
@@ -267,6 +267,10 @@ public class LayerBox extends HBox implements Initializable, Toggle {
 
 	public ALayer getLayer() {
 		return layer;
+	}
+
+	public Canvas getCanvas() {
+		return canvas;
 	}
 
 }

@@ -18,6 +18,7 @@ import com.ben.pixcreator.gui.controls.layer.panel.LayerPanel;
 import com.ben.pixcreator.gui.controls.menu.bar.PixMenuBar;
 import com.ben.pixcreator.gui.controls.tab.PixTab;
 import com.ben.pixcreator.gui.controls.tool.toolbar.PixToolBar;
+import com.ben.pixcreator.gui.miniature.manager.MiniatureManager;
 import com.ben.pixcreator.gui.pane.tabpane.PixTabPane;
 
 import javafx.beans.property.SimpleBooleanProperty;
@@ -46,11 +47,13 @@ public class GuiFacade {
 	private SimpleObjectProperty<PixImage>					activeImage	= new SimpleObjectProperty<>();
 	private SimpleBooleanProperty							showGrid	= new SimpleBooleanProperty();
 
+	private MiniatureManager miniatureManager;
+
 	private GuiFacade() {
 
 		imagesColors = new HashMap<>();
 		selections = new HashMap<>();
-
+		miniatureManager = new MiniatureManager();
 		showGrid.set(false);
 
 	}
@@ -216,6 +219,11 @@ public class GuiFacade {
 
 	public void setSelections(Map<PixImage, Selection> selections) {
 		this.selections = selections;
+	}
+
+	public MiniatureManager getMiniatureManager() {
+
+		return miniatureManager;
 	}
 
 }

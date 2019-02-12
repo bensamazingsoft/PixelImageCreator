@@ -6,7 +6,9 @@ import org.slf4j.LoggerFactory;
 
 import com.ben.pixcreator.application.action.IAction;
 import com.ben.pixcreator.application.image.PixImage;
+import com.ben.pixcreator.application.image.layer.impl.ALayer;
 import com.ben.pixcreator.gui.controls.tab.PixTab;
+import com.ben.pixcreator.gui.facade.GuiFacade;
 
 import javafx.scene.canvas.Canvas;
 
@@ -28,6 +30,12 @@ public class RefreshTabAction implements IAction {
 		// log.debug("Refresh tab : " + image.toString());
 		canvas.getGraphicsContext2D().clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		image.draw(canvas);
+
+		for (ALayer layer : image.getLayerList().getAllLayers()) {
+
+			GuiFacade.getInstance().getMiniatureManager().update(layer);
+
+		}
 
 	}
 
