@@ -37,7 +37,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 
-// make this a Toggle to handle select mecanism in the layerPanel
 public class LayerBox extends HBox implements Initializable, Toggle {
 
 	// properties
@@ -47,16 +46,14 @@ public class LayerBox extends HBox implements Initializable, Toggle {
 	private final int	BOXWIDTH;
 
 	// toggle fields
-
 	private ObjectProperty<ToggleGroup>	toggleGroup	= new SimpleObjectProperty<ToggleGroup>();
 	private SimpleBooleanProperty		selected	= new SimpleBooleanProperty();
 	ObservableMap<Object, Object>		properties;
 
 	// instance fields
-
-	private PixImage image;
-
-	private ALayer layer;
+	private PixImage				image;
+	private ALayer					layer;
+	private SimpleBooleanProperty	locked	= new SimpleBooleanProperty();
 
 	private Image		miniature;
 	private ImageView	miniatureView;
@@ -129,6 +126,8 @@ public class LayerBox extends HBox implements Initializable, Toggle {
 			throw new RuntimeException(e);
 		}
 
+		setLocked(false);
+
 	}
 
 	@FXML
@@ -144,10 +143,12 @@ public class LayerBox extends HBox implements Initializable, Toggle {
 
 	private void toggleLayerLock() {
 
-		if (GroupLockManager.getInstance().getGroupLock(layer).size() != 0) {
+		if (GroupLockManager.getInstance().getGroupLock(GuiFacade.getInstance().getActiveLayer()).contains(layer)) {
 			GroupLockManager.getInstance().unlock(layer);
+			setLocked(false);
 		} else {
 			GroupLockManager.getInstance().lockToActiveLayer(layer);
+			setLocked(true);
 		}
 
 	}
@@ -168,7 +169,6 @@ public class LayerBox extends HBox implements Initializable, Toggle {
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		// TODO set height and growh titlepane, set Pix/Pix logo, etc
 
 		eyeBut.setGraphic(eyeButImg);
 		eyeBut.selectedProperty().bindBidirectional(layer.visibleProperty());
@@ -189,7 +189,7 @@ public class LayerBox extends HBox implements Initializable, Toggle {
 
 		lockBut.setGraphic(lockButImg);
 		lockButImg.imageProperty()
-				.bind(Bindings.when(lockBut.selectedProperty()).then(lockSelected).otherwise(lockUnSelected));
+				.bind(Bindings.when(lockedProperty()).then(lockSelected).otherwise(lockUnSelected));
 
 		imgTypeView.imageProperty().setValue(layer instanceof PixLayer ? imgTypePixImg : imgTypePicImg);
 
@@ -229,10 +229,6 @@ public class LayerBox extends HBox implements Initializable, Toggle {
 		toggleGroup.get().selectToggle(this);
 	}
 
-	public void setUserData(Object arg0) {
-
-	}
-
 	public ObjectProperty<ToggleGroup> toggleGroupProperty() {
 
 		return toggleGroup;
@@ -255,6 +251,22 @@ public class LayerBox extends HBox implements Initializable, Toggle {
 
 		selected.set(value);
 
+	}
+
+	public final SimpleBooleanProperty lockedProperty() {
+		return this.locked;
+	}
+
+	public final boolean isLocked() {
+		return this.lockedProperty().get();
+	}
+
+	public final void setLocked(final boolean locked) {
+		this.lockedProperty().set(locked);
+	}
+
+	public ALayer getLayer() {
+		return layer;
 	}
 
 }

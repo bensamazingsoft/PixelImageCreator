@@ -86,32 +86,32 @@ public class PixLayer extends ALayer {
 		this.grid = grid;
 	}
 
-	@Override
-	public int hashCode() {
+	// @Override
+	// public int hashCode() {
+	//
+	// final int prime = 31;
+	// int result = super.hashCode();
+	// result = prime * result + ((grid == null) ? 0 : grid.hashCode());
+	// return result;
+	// }
 
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + ((grid == null) ? 0 : grid.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-
-		if (this == obj)
-			return true;
-		if (!super.equals(obj))
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		PixLayer other = (PixLayer) obj;
-		if (grid == null) {
-			if (other.grid != null)
-				return false;
-		} else if (!grid.equals(other.grid))
-			return false;
-		return true;
-	}
+	// @Override
+	// public boolean equals(Object obj) {
+	//
+	// if (this == obj)
+	// return true;
+	// if (!super.equals(obj))
+	// return false;
+	// if (getClass() != obj.getClass())
+	// return false;
+	// PixLayer other = (PixLayer) obj;
+	// if (grid == null) {
+	// if (other.grid != null)
+	// return false;
+	// } else if (!grid.equals(other.grid))
+	// return false;
+	// return true;
+	// }
 
 	public class Memento extends ALayer.Memento {
 
@@ -140,7 +140,7 @@ public class PixLayer extends ALayer {
 	@Override
 	public String toString() {
 
-		return "PixLayer [grid=" + grid + "]";
+		return "PixLayer [nbCells =" + grid.size() + "]";
 	}
 
 	@Override

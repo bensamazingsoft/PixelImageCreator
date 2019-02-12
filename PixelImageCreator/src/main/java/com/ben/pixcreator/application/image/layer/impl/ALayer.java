@@ -2,6 +2,7 @@
 package com.ben.pixcreator.application.image.layer.impl;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 import com.ben.pixcreator.application.image.layer.ILayer;
 
@@ -19,6 +20,12 @@ public abstract class ALayer implements ILayer, Serializable {
 	 */
 
 	protected SimpleBooleanProperty	visible				= new SimpleBooleanProperty();
+	protected final UUID			uuid;
+
+	public ALayer() {
+		super();
+		this.uuid = UUID.randomUUID();
+	}
 
 	@Override
 	public void draw(Canvas canvas, int xGridResolution, int yGridResolution) {
@@ -42,6 +49,8 @@ public abstract class ALayer implements ILayer, Serializable {
 
 	}
 
+	public abstract Memento getMemento();
+
 	public final SimpleBooleanProperty visibleProperty() {
 
 		return this.visible;
@@ -58,17 +67,21 @@ public abstract class ALayer implements ILayer, Serializable {
 	}
 
 	@Override
-	public boolean equals(Object arg0) {
+	public boolean equals(Object obj) {
 
-		return super.equals(arg0);
+		if (obj instanceof ALayer) {
+			return this.getUuid().equals(((ALayer) obj).getUuid());
+		}
+		return false;
 	}
 
 	@Override
 	public int hashCode() {
-
-		return super.hashCode();
+		return getUuid().hashCode();
 	}
 
-	public abstract Memento getMemento();
+	public UUID getUuid() {
+		return uuid;
+	}
 
 }

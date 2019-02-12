@@ -1,6 +1,8 @@
 
 package com.ben.pixcreator.application.action.factory.impl;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -25,9 +27,9 @@ public class MoveActionFactory implements IActionFactory {
 
 	private static final Logger log = LoggerFactory.getLogger(MoveActionFactory.class);
 
-	public static boolean			moveStarted;
-	public static Coord				startCoord;
-	public static ALayer.Memento	startState;
+	public static boolean						moveStarted;
+	public static Coord							startCoord;
+	public static Map<ALayer, ALayer.Memento>	startState;
 
 	@Override
 	public IAction getAction(Event event) {
@@ -40,8 +42,15 @@ public class MoveActionFactory implements IActionFactory {
 				Executor.getInstance().startOperation();
 				moveStarted = true;
 				startCoord = eventCoord((MouseEvent) event);
-				startState = GuiFacade.getInstance().getActiveLayer().getMemento();
-				;
+				startState = new HashMap<>();
+
+				ALayer activeLayer = GuiFacade.getInstance().getActiveLayer();
+				Set<ALayer> layers = GroupLockManager.getInstance().getGroupLock(activeLayer);
+				layers.add(activeLayer);
+
+				for (ALayer layer : layers) {
+					startState.put(layer, layer.getMemento());
+				}
 				// log.debug(event.getEventType().getName());
 				// log.debug(startCoord.toString());
 				event.consume();
@@ -54,6 +63,7 @@ public class MoveActionFactory implements IActionFactory {
 				ALayer activeLayer = GuiFacade.getInstance().getActiveLayer();
 
 				Set<ALayer> layers = GroupLockManager.getInstance().getGroupLock(activeLayer);
+				layers.add(activeLayer);
 
 				Selection selection = GuiFacade.getInstance().getSelections().get(image);
 
@@ -63,9 +73,9 @@ public class MoveActionFactory implements IActionFactory {
 				int translateY = eventCoord.getY() - startCoord.getY();
 				// log.debug("" + translateX);
 				for (ALayer layer : layers) {
-
+					// log.debug(startState.toString());
 					try {
-						startState.restore();
+						startState.get(layer).restore();
 						Executor.getInstance()
 								.continueOperation(new ActionTranslateLayer(translateX, translateY, layer, selection));
 					} catch (Exception e) {
