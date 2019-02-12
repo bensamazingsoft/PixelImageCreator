@@ -10,117 +10,156 @@ import com.ben.pixcreator.gui.facade.GuiFacade;
 
 import javafx.scene.paint.Color;
 
-public class ActionChangeCellColor implements IAction, ICancelable {
+public class ActionChangeCellColor implements IAction, ICancelable
+{
 
-	private PixImage	image;
-	private PixLayer	layer;
-	private Coord		coord;
-	private Color		color;
+      private PixImage	    image;
+      private PixLayer	    layer;
+      private Coord	    coord;
+      private Color	    color;
 
-	private Color prevColor;
+      private Color	    prevColor;
 
-	private final boolean newCell;
+      private final boolean newCell;
 
-	public ActionChangeCellColor(PixImage image, PixLayer layer, Coord coord, Color color) {
 
-		this.image = image;
-		this.layer = layer;
-		this.coord = coord;
-		this.color = color;
+      public ActionChangeCellColor(PixImage image, PixLayer layer, Coord coord, Color color)
+      {
 
-		this.newCell = !layer.getGrid().keySet().contains(image);
+	    this.image = image;
+	    this.layer = layer;
+	    this.coord = coord;
+	    this.color = color;
 
-		prevColor = layer.getGrid().get(coord);
+	    this.newCell = !layer.getGrid().containsKey(coord);
 
-	}
+	    prevColor = layer.getGrid().get(coord);
 
-	public void execute() throws Exception {
+      }
 
-		if (GuiFacade.getInstance().getActiveimage() == image) {
-			if (image.getLayerList().getIdx(layer) > -1) {
 
-				layer.getGrid().put(coord, color);
+      public void execute() throws Exception
+      {
 
+	    if (GuiFacade.getInstance().getActiveimage() == image)
+	    {
+		  if (image.getLayerList().getIdx(layer) > -1)
+		  {
+
+			layer.getGrid().put(coord, color);
+
+		  }
+	    }
+      }
+
+
+      public void cancel() throws Exception
+      {
+
+	    if (GuiFacade.getInstance().getActiveimage() == image)
+	    {
+		  if (image.getLayerList().getIdx(layer) > -1)
+		  {
+			if (newCell)
+			{
+			      layer.getGrid().remove(coord);
 			}
-		}
-	}
-
-	public void cancel() throws Exception {
-
-		if (GuiFacade.getInstance().getActiveimage() == image) {
-			if (image.getLayerList().getIdx(layer) > -1) {
-				if (newCell) {
-					layer.getGrid().remove(coord);
-				} else {
-					layer.getGrid().put(coord, prevColor);
-				}
+			else
+			{
+			      layer.getGrid().put(coord, prevColor);
 			}
+		  }
 
-		}
+	    }
 
-	}
+      }
 
-	@Override
-	public String toString() {
 
-		return "ActionChangeCellColor (" + newCell + ") [layer=" + layer + ", coord=" + coord + ", color=" + color
-				+ "]";
-	}
+      @Override
+      public String toString()
+      {
 
-	@Override
-	public int hashCode() {
+	    return "ActionChangeCellColor (" + newCell + ") [layer=" + layer + ", coord=" + coord + ", color=" + color
+			+ "]";
+      }
 
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((color == null) ? 0 : color.hashCode());
-		result = prime * result + ((coord == null) ? 0 : coord.hashCode());
-		result = prime * result + ((layer == null) ? 0 : layer.hashCode());
-		result = prime * result + ((prevColor == null) ? 0 : prevColor.hashCode());
-		return result;
-	}
 
-	@Override
-	public boolean equals(Object obj) {
+      @Override
+      public int hashCode()
+      {
 
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
+	    final int prime = 31;
+	    int result = 1;
+	    result = prime * result + ((color == null) ? 0 : color.hashCode());
+	    result = prime * result + ((coord == null) ? 0 : coord.hashCode());
+	    result = prime * result + ((layer == null) ? 0 : layer.hashCode());
+	    result = prime * result + ((prevColor == null) ? 0 : prevColor.hashCode());
+	    return result;
+      }
+
+
+      @Override
+      public boolean equals(Object obj)
+      {
+
+	    if (this == obj)
+	    {
+		  return true;
+	    }
+	    if (obj == null)
+	    {
+		  return false;
+	    }
+	    if (!(obj instanceof ActionChangeCellColor))
+	    {
+		  return false;
+	    }
+	    ActionChangeCellColor other = (ActionChangeCellColor) obj;
+	    if (color == null)
+	    {
+		  if (other.color != null)
+		  {
 			return false;
-		}
-		if (!(obj instanceof ActionChangeCellColor)) {
+		  }
+	    }
+	    else if (!color.equals(other.color))
+	    {
+		  return false;
+	    }
+	    if (coord == null)
+	    {
+		  if (other.coord != null)
+		  {
 			return false;
-		}
-		ActionChangeCellColor other = (ActionChangeCellColor) obj;
-		if (color == null) {
-			if (other.color != null) {
-				return false;
-			}
-		} else if (!color.equals(other.color)) {
+		  }
+	    }
+	    else if (!coord.equals(other.coord))
+	    {
+		  return false;
+	    }
+	    if (layer == null)
+	    {
+		  if (other.layer != null)
+		  {
 			return false;
-		}
-		if (coord == null) {
-			if (other.coord != null) {
-				return false;
-			}
-		} else if (!coord.equals(other.coord)) {
+		  }
+	    }
+	    else if (!layer.equals(other.layer))
+	    {
+		  return false;
+	    }
+	    if (prevColor == null)
+	    {
+		  if (other.prevColor != null)
+		  {
 			return false;
-		}
-		if (layer == null) {
-			if (other.layer != null) {
-				return false;
-			}
-		} else if (!layer.equals(other.layer)) {
-			return false;
-		}
-		if (prevColor == null) {
-			if (other.prevColor != null) {
-				return false;
-			}
-		} else if (!prevColor.equals(other.prevColor)) {
-			return false;
-		}
-		return true;
-	}
+		  }
+	    }
+	    else if (!prevColor.equals(other.prevColor))
+	    {
+		  return false;
+	    }
+	    return true;
+      }
 
 }
