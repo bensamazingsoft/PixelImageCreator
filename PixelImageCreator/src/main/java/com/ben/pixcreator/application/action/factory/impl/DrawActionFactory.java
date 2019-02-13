@@ -9,6 +9,7 @@ import com.ben.pixcreator.application.action.ICancelable;
 import com.ben.pixcreator.application.action.factory.IActionFactory;
 import com.ben.pixcreator.application.action.impl.ActionChangeCellColor;
 import com.ben.pixcreator.application.action.impl.ActionDeleteCell;
+import com.ben.pixcreator.application.action.impl.ActionNoOp;
 import com.ben.pixcreator.application.executor.Executor;
 import com.ben.pixcreator.application.image.PixImage;
 import com.ben.pixcreator.application.image.coords.Coord;
@@ -29,9 +30,7 @@ public class DrawActionFactory implements IActionFactory {
 	@Override
 	public IAction getAction(Event event) {
 
-		// log.debug(event.getEventType().getName());
-
-		IAction action = null;
+		log.debug(event.getEventType().getName());
 
 		if (event instanceof MouseEvent && GuiFacade.getInstance().getActiveLayer() instanceof PixLayer) {
 
@@ -86,10 +85,26 @@ public class DrawActionFactory implements IActionFactory {
 				break;
 			}
 
+			case ("MOUSE_ENTERED"): {
+
+				event.consume();
+				return new ActionNoOp();
+
+			}
+			case ("MOUSE_MOVED"): {
+				event.consume();
+				return new ActionNoOp();
+			}
+			case ("MOUSE_EXITED"): {
+				event.consume();
+				return new ActionNoOp();
+			}
+
 			}
 		}
 
-		return action;
+		return null;
+
 	}
 
 	private IAction getDeleteCellAction(Event event) {

@@ -45,22 +45,22 @@ public class MiniatureManager {
 						.mapToInt(Coord::getX)
 						.min()
 						.orElse(0);
-				log.debug("minX : " + minX);
+				// log.debug("minX : " + minX);
 				int maxX = ((PixLayer) layer).getGrid().keySet().stream()
 						.mapToInt(Coord::getX)
 						.max()
 						.orElse(0);
-				log.debug("maxX : " + maxX);
+				// log.debug("maxX : " + maxX);
 				int minY = ((PixLayer) layer).getGrid().keySet().stream()
 						.mapToInt(Coord::getY)
 						.min()
 						.orElse(0);
-				log.debug("minY : " + minY);
+				// log.debug("minY : " + minY);
 				int maxY = ((PixLayer) layer).getGrid().keySet().stream()
 						.mapToInt(Coord::getY)
 						.max()
 						.orElse(0);
-				log.debug("maxY : " + maxY);
+				// log.debug("maxY : " + maxY);
 
 				xGridResolution = maxX - minX + 1;
 				yGridResolution = maxY - minY + 1;

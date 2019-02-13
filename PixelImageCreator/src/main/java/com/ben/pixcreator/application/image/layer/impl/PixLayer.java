@@ -49,7 +49,7 @@ public class PixLayer extends ALayer {
 			drawGraphics(canvas, xCellSize, yCellSize);
 
 		} else {
-			log.debug("Using LayerSample for layer " + toString());
+			// log.debug("Using LayerSample for layer " + toString());
 			LayerSampler layerSampler = new LayerSampler(this);
 
 			int xDivFactor = (int) Math.ceil(xGridResolution / canvas.getWidth());

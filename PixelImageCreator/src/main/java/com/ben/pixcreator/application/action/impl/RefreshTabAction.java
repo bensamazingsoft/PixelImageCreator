@@ -27,7 +27,7 @@ public class RefreshTabAction implements IAction {
 
 	@Override
 	public void execute() throws Exception {
-		// log.debug("Refresh tab : " + image.toString());
+		log.debug("Refresh tab : " + image.toString());
 		canvas.getGraphicsContext2D().clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		image.draw(canvas);
 

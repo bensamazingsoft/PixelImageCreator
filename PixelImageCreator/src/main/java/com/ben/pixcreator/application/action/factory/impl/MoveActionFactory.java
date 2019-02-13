@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import com.ben.pixcreator.application.action.IAction;
 import com.ben.pixcreator.application.action.factory.IActionFactory;
+import com.ben.pixcreator.application.action.impl.ActionNoOp;
 import com.ben.pixcreator.application.action.impl.ActionTranslateLayer;
 import com.ben.pixcreator.application.executor.Executor;
 import com.ben.pixcreator.application.grouplock.manager.GroupLockManager;
@@ -95,7 +96,19 @@ public class MoveActionFactory implements IActionFactory {
 				event.consume();
 				break;
 			}
+			case ("MOUSE_ENTERED"): {
 
+				event.consume();
+				return new ActionNoOp();
+			}
+			case ("MOUSE_MOVED"): {
+				event.consume();
+				return new ActionNoOp();
+			}
+			case ("MOUSE_EXITED"): {
+				event.consume();
+				return new ActionNoOp();
+			}
 			}
 
 		}

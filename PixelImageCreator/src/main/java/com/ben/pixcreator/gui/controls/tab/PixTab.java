@@ -9,8 +9,10 @@ import org.apache.commons.math3.analysis.function.Logistic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ben.pixcreator.application.action.IAction;
 import com.ben.pixcreator.application.action.factory.ActionFactoryProducer;
 import com.ben.pixcreator.application.action.factory.IActionFactory;
+import com.ben.pixcreator.application.action.impl.ActionNoOp;
 import com.ben.pixcreator.application.action.impl.RefreshTabAction;
 import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.application.executor.Executor;
@@ -175,8 +177,17 @@ public class PixTab extends Tab implements Initializable {
 			IActionFactory factory = ActionFactoryProducer.getActionFactory(AppContext.getInstance().getCurrTool());
 
 			try {
-				Executor.getInstance().executeAction(factory.getAction(event));
-				Executor.getInstance().executeAction(new RefreshTabAction(tab));
+
+				IAction action = factory.getAction(event);
+
+				if (action instanceof ActionNoOp) {
+				} else {
+
+					Executor.getInstance().executeAction(action);
+					Executor.getInstance().executeAction(new RefreshTabAction(tab));
+
+				}
+
 			} catch (Exception e) {
 				new ExceptionPopUp(e);
 			}
