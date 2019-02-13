@@ -1,6 +1,7 @@
 
 package com.ben.pixcreator.application.image;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 import org.slf4j.Logger;
@@ -17,7 +18,12 @@ import com.ben.pixcreator.gui.facade.GuiFacade;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 
-public class PixImage {
+public class PixImage implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	private static final Logger log = LoggerFactory.getLogger(PixImage.class);
 
