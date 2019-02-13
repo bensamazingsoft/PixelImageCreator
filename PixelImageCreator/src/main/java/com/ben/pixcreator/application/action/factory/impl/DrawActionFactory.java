@@ -115,21 +115,4 @@ public class DrawActionFactory implements IActionFactory {
 
 	}
 
-	// private Coord eventCoord(Event event) {
-	//
-	// PixImage image = GuiFacade.getInstance().getActiveimage();
-	//
-	// double width =
-	// GuiFacade.getInstance().getActiveTab().getCanvas().getWidth();
-	// double height =
-	// GuiFacade.getInstance().getActiveTab().getCanvas().getHeight();
-	//
-	// int x = new Double(((MouseEvent) event).getX()).intValue();
-	// int y = new Double(((MouseEvent) event).getY()).intValue();
-	// int cellX = (int) Math.floor(x / (width / image.getxGridResolution()));
-	// int cellY = (int) Math.floor(y / (height / image.getyGridResolution()));
-	//
-	// return new Coord(cellX, cellY);
-	// }
-
 }

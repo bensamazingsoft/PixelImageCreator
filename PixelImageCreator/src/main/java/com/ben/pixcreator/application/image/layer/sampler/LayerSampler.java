@@ -74,13 +74,13 @@ public class LayerSampler {
 		return Color.rgb(averageMap.get("red"), averageMap.get("green"), averageMap.get("blue"));
 	}
 
-	public Map<String, Integer> getRVB(Color color) {
+	private Map<String, Integer> getRVB(Color color) {
 
 		Map<String, Integer> rvb = new HashMap<>();
 
-		rvb.put("blue", ((Double) color.getBlue()).intValue());
-		rvb.put("green", ((Double) color.getGreen()).intValue());
-		rvb.put("red", ((Double) color.getRed()).intValue());
+		rvb.put("blue", (int) (color.getBlue() * 255));
+		rvb.put("green", (int) (color.getGreen() * 255));
+		rvb.put("red", (int) (color.getRed() * 255));
 
 		return rvb;
 	}

@@ -179,4 +179,10 @@ public class PicLayer extends ALayer {
 		return null;
 	}
 
+	@Override
+	public ALayer offset(Coord min) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

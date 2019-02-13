@@ -44,19 +44,20 @@ public class PixLayer extends ALayer {
 		// canvas.getHeight() + "xCellSize :" + xCellSize
 		// + " yCellSize : " + yCellSize);
 
-		if (xCellSize >= 1 || yCellSize >= 1) {
+		if (xCellSize >= 1 && yCellSize >= 1) {
 
 			drawGraphics(canvas, xCellSize, yCellSize);
 
 		} else {
+			log.debug("Using LayerSample for layer " + toString());
 			LayerSampler layerSampler = new LayerSampler(this);
 
-			int xDivFactor = (int) Math.floor(xGridResolution / canvas.getWidth());
-			int yDivFactor = (int) Math.floor(yGridResolution / canvas.getHeight());
+			int xDivFactor = (int) Math.ceil(xGridResolution / canvas.getWidth());
+			int yDivFactor = (int) Math.ceil(yGridResolution / canvas.getHeight());
 
 			PixLayer drawLayer = layerSampler.div(xDivFactor, yDivFactor);
 
-			drawLayer.draw(canvas, xGridResolution, yGridResolution);
+			drawLayer.draw(canvas, xGridResolution / xDivFactor, yGridResolution / yDivFactor);
 
 		}
 
@@ -86,33 +87,6 @@ public class PixLayer extends ALayer {
 		this.grid = grid;
 	}
 
-	// @Override
-	// public int hashCode() {
-	//
-	// final int prime = 31;
-	// int result = super.hashCode();
-	// result = prime * result + ((grid == null) ? 0 : grid.hashCode());
-	// return result;
-	// }
-
-	// @Override
-	// public boolean equals(Object obj) {
-	//
-	// if (this == obj)
-	// return true;
-	// if (!super.equals(obj))
-	// return false;
-	// if (getClass() != obj.getClass())
-	// return false;
-	// PixLayer other = (PixLayer) obj;
-	// if (grid == null) {
-	// if (other.grid != null)
-	// return false;
-	// } else if (!grid.equals(other.grid))
-	// return false;
-	// return true;
-	// }
-
 	public class Memento extends ALayer.Memento {
 
 		private Map<Coord, Color> grid;
@@ -140,12 +114,37 @@ public class PixLayer extends ALayer {
 	@Override
 	public String toString() {
 
-		return "PixLayer [nbCells =" + grid.size() + "]";
+		return "PixLayer [" + uuid + "]";
 	}
 
 	@Override
 	public Memento getMemento() {
 		return new PixLayer.Memento(this);
+	}
+
+	public PixLayer duplicate() {
+
+		PixLayer duplicate = new PixLayer(new HashMap<>(this.grid));
+		duplicate.setVisible(true);
+
+		return duplicate;
+	}
+
+	/*
+	 * Builder that returns a new PixLayer which grid is offsetted by the param
+	 * coord values.
+	 */
+	@Override
+	public ALayer offset(Coord min) {
+
+		Map<Coord, Color> offset = new HashMap<>();
+
+		this.getGrid().forEach((coord, color) -> {
+			offset.put(new Coord(coord.getX() - min.getX(), coord.getY() - min.getY()), color);
+		});
+		this.setGrid(offset);
+
+		return this;
 	}
 
 }

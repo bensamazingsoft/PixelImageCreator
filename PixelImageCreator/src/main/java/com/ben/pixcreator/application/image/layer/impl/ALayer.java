@@ -4,6 +4,7 @@ package com.ben.pixcreator.application.image.layer.impl;
 import java.io.Serializable;
 import java.util.UUID;
 
+import com.ben.pixcreator.application.image.coords.Coord;
 import com.ben.pixcreator.application.image.layer.ILayer;
 
 import javafx.beans.property.SimpleBooleanProperty;
@@ -79,6 +80,8 @@ public abstract class ALayer implements ILayer, Serializable {
 	public int hashCode() {
 		return getUuid().hashCode();
 	}
+
+	public abstract ALayer offset(Coord min);
 
 	public UUID getUuid() {
 		return uuid;
