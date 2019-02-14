@@ -1,12 +1,17 @@
 
 package com.ben.pixcreator.application.image.coords;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
-public class Coord implements Comparable<Coord> {
+public class Coord implements Serializable, Comparable<Coord> {
 
-	private int								x, y;
-	public static final Comparator<Coord>	COMPARATOR	= Comparator.comparingInt(Coord::getY)
+	/**
+	 * 
+	 */
+	private static final long						serialVersionUID	= 1L;
+	private int										x, y;
+	public static final transient Comparator<Coord>	COMPARATOR			= Comparator.comparingInt(Coord::getY)
 			.thenComparingInt(Coord::getX);
 
 	public Coord(int x, int y) {

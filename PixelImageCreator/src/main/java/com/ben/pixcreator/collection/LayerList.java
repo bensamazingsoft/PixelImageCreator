@@ -1,6 +1,7 @@
 
 package com.ben.pixcreator.collection;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,9 +14,13 @@ import com.ben.pixcreator.application.image.layer.impl.ALayer;
  * @author bmo
  *
  */
-public class LayerList {
+public class LayerList implements Serializable {
 
-	List<Pair> items = new ArrayList<>();
+	/**
+	 * 
+	 */
+	private static final long	serialVersionUID	= 1L;
+	List<Pair>					items				= new ArrayList<>();
 
 	public LayerList() {
 
@@ -192,10 +197,14 @@ public class LayerList {
 	 * @author bmo
 	 *
 	 */
-	private class Pair {
+	private class Pair implements Serializable {
 
-		int		idx;
-		ALayer	layer;
+		/**
+		 * 
+		 */
+		private static final long	serialVersionUID	= 1L;
+		int							idx;
+		ALayer						layer;
 
 		public Pair(int idx, ALayer layer) {
 

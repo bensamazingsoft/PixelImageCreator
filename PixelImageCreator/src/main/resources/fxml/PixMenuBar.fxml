@@ -12,6 +12,10 @@
 					accelerator="Shortcut+n" />
 				<MenuItem text="%ouvrir" onAction="#openAction"
 					accelerator="Shortcut+o" />
+									<MenuItem text="%save" onAction="#saveAction"
+					accelerator="Shortcut+s" />
+									<MenuItem text="%saveAs" onAction="#saveAsAction"
+					accelerator="Shortcut+Shift+s" />
 			</items>
 		</Menu>
 
