@@ -157,9 +157,12 @@ public class LayerBox extends HBox implements Initializable, Toggle {
 		imgTypeView.imageProperty().setValue(layer instanceof PixLayer ? imgTypePixImg : imgTypePicImg);
 
 		this.setMaxHeight(BOXHEIGHT);
+		this.setMinHeight(BOXHEIGHT);
 		this.setMinWidth(BOXWIDTH);
 		HBox.setHgrow(titlePane, Priority.ALWAYS);
 
+		miniaturePane.setStyle("-fx-background-color:white");
+		miniaturePane.setMinWidth(MINIATUREWIDTH);
 		canvas.setHeight(MINIATUREHEIGHT);
 		canvas.setWidth(MINIATUREWIDTH);
 

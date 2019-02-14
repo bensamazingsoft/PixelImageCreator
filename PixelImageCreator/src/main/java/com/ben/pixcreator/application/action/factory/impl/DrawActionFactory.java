@@ -30,7 +30,7 @@ public class DrawActionFactory implements IActionFactory {
 	@Override
 	public IAction getAction(Event event) {
 
-		log.debug(event.getEventType().getName());
+		// log.debug(event.getEventType().getName());
 
 		if (event instanceof MouseEvent && GuiFacade.getInstance().getActiveLayer() instanceof PixLayer) {
 
