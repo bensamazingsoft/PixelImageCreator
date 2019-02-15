@@ -15,13 +15,13 @@ public abstract class ALayer implements ILayer, Serializable {
 	/**
 	   * 
 	   */
-	private static final long		serialVersionUID	= 1L;
+	private static final long					serialVersionUID	= 1L;
 	/**
 	 * 
 	 */
 
-	protected SimpleBooleanProperty	visible				= new SimpleBooleanProperty();
-	protected final UUID			uuid;
+	protected transient SimpleBooleanProperty	visible				= new SimpleBooleanProperty();
+	protected final UUID						uuid;
 
 	public ALayer() {
 		super();
@@ -71,19 +71,19 @@ public abstract class ALayer implements ILayer, Serializable {
 	public boolean equals(Object obj) {
 
 		if (obj instanceof ALayer) {
-			return this.getUuid().equals(((ALayer) obj).getUuid());
+			return this.getUUID().equals(((ALayer) obj).getUUID());
 		}
 		return false;
 	}
 
 	@Override
 	public int hashCode() {
-		return getUuid().hashCode();
+		return getUUID().hashCode();
 	}
 
 	public abstract ALayer offset(Coord min);
 
-	public UUID getUuid() {
+	public UUID getUUID() {
 		return uuid;
 	}
 

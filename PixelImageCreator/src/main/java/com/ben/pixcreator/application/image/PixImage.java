@@ -38,7 +38,7 @@ public class PixImage implements Serializable {
 	private int	xSize, ySize;
 	private int	xGridResolution, yGridResolution;
 
-	private PixLayer ghost, select;
+	private transient PixLayer ghost, select;
 	// layer and its visibility
 
 	private LayerList layerList;

@@ -1,5 +1,5 @@
 
-package com.ben.pixcreator.application.grouplock.manager;
+package com.ben.pixcreator.application.grouplock;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -9,16 +9,19 @@ import java.util.Set;
 import com.ben.pixcreator.application.image.layer.impl.ALayer;
 import com.ben.pixcreator.gui.facade.GuiFacade;
 
-public class GroupLockManager {
-
-	private static GroupLockManager instance;
+public class GroupLock {
 
 	private Map<ALayer, Set<ALayer>> groups;
 
-	private GroupLockManager() {
+	public GroupLock() {
 
 		groups = new HashMap<>();
 
+	}
+
+	public GroupLock(Map<ALayer, Set<ALayer>> groups) {
+		super();
+		this.groups = groups;
 	}
 
 	/**
@@ -27,7 +30,7 @@ public class GroupLockManager {
 	 * @param layer
 	 * @return a set of layers locked to the layer
 	 */
-	public Set<ALayer> getGroupLock(ALayer layer) {
+	public Set<ALayer> getLockedLayers(ALayer layer) {
 
 		return groups.computeIfAbsent(layer, key -> new HashSet<ALayer>());
 
@@ -74,12 +77,8 @@ public class GroupLockManager {
 
 	}
 
-	public static GroupLockManager getInstance() {
-
-		if (instance == null) {
-			instance = new GroupLockManager();
-		}
-		return instance;
+	public Map<ALayer, Set<ALayer>> getGroups() {
+		return groups;
 	}
 
 }

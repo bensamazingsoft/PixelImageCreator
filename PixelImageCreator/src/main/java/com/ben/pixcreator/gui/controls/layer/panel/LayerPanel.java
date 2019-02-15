@@ -6,8 +6,9 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import com.ben.pixcreator.application.action.impl.LayerAction;
+import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.application.executor.Executor;
-import com.ben.pixcreator.application.grouplock.manager.GroupLockManager;
+import com.ben.pixcreator.application.grouplock.GroupLock;
 import com.ben.pixcreator.application.image.PixImage;
 import com.ben.pixcreator.application.image.layer.impl.ALayer;
 import com.ben.pixcreator.gui.controls.layer.box.LayerBox;
@@ -102,8 +103,9 @@ public class LayerPanel extends BorderPane implements Initializable {
 			layersBox.getChildren().forEach(box -> {
 				LayerBox lBox = (LayerBox) box;
 				lBox.setLocked(false);
-
-				if (GroupLockManager.getInstance().getGroupLock(newVal).contains(lBox.getLayer())) {
+				GroupLock groupLock = AppContext.getInstance().getGroupLocks()
+						.get(GuiFacade.getInstance().getActiveImage());
+				if (groupLock.getLockedLayers(newVal).contains(lBox.getLayer())) {
 					lBox.setLocked(true);
 				}
 			});

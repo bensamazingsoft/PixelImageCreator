@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import com.ben.pixcreator.application.grouplock.GroupLock;
 import com.ben.pixcreator.application.image.PixImage;
 import com.ben.pixcreator.application.tools.PixTool;
 
@@ -26,6 +27,8 @@ public class AppContext {
 
 	private static Map<PixImage, File> files;
 
+	private static Map<PixImage, GroupLock> groupLocks;
+
 	private AppContext() {
 
 	}
@@ -40,6 +43,7 @@ public class AppContext {
 		currDrawColor = properties.getColor(properties.get("drawColor"));
 
 		files = new HashMap<>();
+		groupLocks = new HashMap<>();
 
 	}
 
@@ -103,6 +107,10 @@ public class AppContext {
 	public Map<PixImage, File> getFiles() {
 
 		return files;
+	}
+
+	public Map<PixImage, GroupLock> getGroupLocks() {
+		return groupLocks;
 	}
 
 }

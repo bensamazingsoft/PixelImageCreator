@@ -12,8 +12,9 @@ import com.ben.pixcreator.application.action.IAction;
 import com.ben.pixcreator.application.action.factory.IActionFactory;
 import com.ben.pixcreator.application.action.impl.ActionNoOp;
 import com.ben.pixcreator.application.action.impl.ActionTranslateLayer;
+import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.application.executor.Executor;
-import com.ben.pixcreator.application.grouplock.manager.GroupLockManager;
+import com.ben.pixcreator.application.grouplock.GroupLock;
 import com.ben.pixcreator.application.image.PixImage;
 import com.ben.pixcreator.application.image.coords.Coord;
 import com.ben.pixcreator.application.image.layer.impl.ALayer;
@@ -45,8 +46,11 @@ public class MoveActionFactory implements IActionFactory {
 				startCoord = eventCoord((MouseEvent) event);
 				startState = new HashMap<>();
 
-				ALayer activeLayer = GuiFacade.getInstance().getActiveLayer();
-				Set<ALayer> layers = GroupLockManager.getInstance().getGroupLock(activeLayer);
+				GuiFacade gui = GuiFacade.getInstance();
+				GroupLock groupLock = AppContext.getInstance().getGroupLocks().get(gui.getActiveImage());
+
+				ALayer activeLayer = gui.getActiveLayer();
+				Set<ALayer> layers = groupLock.getLockedLayers(activeLayer);
 				layers.add(activeLayer);
 
 				for (ALayer layer : layers) {
@@ -59,11 +63,15 @@ public class MoveActionFactory implements IActionFactory {
 			}
 
 			case ("MOUSE_DRAGGED"): {
-				// log.debug(event.getEventType().getName());
-				PixImage image = GuiFacade.getInstance().getActiveImage();
-				ALayer activeLayer = GuiFacade.getInstance().getActiveLayer();
 
-				Set<ALayer> layers = GroupLockManager.getInstance().getGroupLock(activeLayer);
+				GuiFacade gui = GuiFacade.getInstance();
+				GroupLock groupLock = AppContext.getInstance().getGroupLocks().get(gui.getActiveImage());
+
+				// log.debug(event.getEventType().getName());
+				PixImage image = gui.getActiveImage();
+				ALayer activeLayer = gui.getActiveLayer();
+
+				Set<ALayer> layers = groupLock.getLockedLayers(activeLayer);
 				layers.add(activeLayer);
 
 				Selection selection = GuiFacade.getInstance().getSelections().get(image);

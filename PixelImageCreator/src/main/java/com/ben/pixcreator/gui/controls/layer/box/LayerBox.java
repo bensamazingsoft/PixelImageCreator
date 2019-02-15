@@ -8,7 +8,7 @@ import java.util.ResourceBundle;
 import com.ben.pixcreator.application.action.impl.RefreshTabAction;
 import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.application.executor.Executor;
-import com.ben.pixcreator.application.grouplock.manager.GroupLockManager;
+import com.ben.pixcreator.application.grouplock.GroupLock;
 import com.ben.pixcreator.application.image.PixImage;
 import com.ben.pixcreator.application.image.layer.impl.ALayer;
 import com.ben.pixcreator.application.image.layer.impl.PixLayer;
@@ -189,11 +189,13 @@ public class LayerBox extends HBox implements Initializable, Toggle {
 
 	private void toggleLayerLock() {
 
-		if (GroupLockManager.getInstance().getGroupLock(GuiFacade.getInstance().getActiveLayer()).contains(layer)) {
-			GroupLockManager.getInstance().unlock(layer);
+		GroupLock groupLock = AppContext.getInstance().getGroupLocks().get(GuiFacade.getInstance().getActiveImage());
+
+		if (groupLock.getLockedLayers(GuiFacade.getInstance().getActiveLayer()).contains(layer)) {
+			groupLock.unlock(layer);
 			setLocked(false);
 		} else {
-			GroupLockManager.getInstance().lockToActiveLayer(layer);
+			groupLock.lockToActiveLayer(layer);
 			setLocked(true);
 		}
 

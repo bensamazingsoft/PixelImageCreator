@@ -1,14 +1,12 @@
 package com.ben.pixcreator.application.file;
 
-import java.io.File;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import com.ben.pixcreator.application.color.rgb.ColorRGB;
 import com.ben.pixcreator.application.image.PixImage;
-
-import javafx.scene.paint.Color;
 
 /**
  * 
@@ -25,26 +23,32 @@ public class PixFile implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private PixImage				image;
-	private Set<Color>				colors;
+	private Set<ColorRGB>			colors;
 	private Map<UUID, Set<UUID>>	locks;
-	private File					file;
+	private Map<UUID, Boolean>		visibility;
 
-	public PixFile(PixImage image, Set<Color> colors, Map<UUID, Set<UUID>> locks) {
+	public PixFile(PixImage image, Set<ColorRGB> colors, Map<UUID, Set<UUID>> locks, Map<UUID, Boolean> visibility) {
 		super();
 		this.image = image;
 		this.colors = colors;
 		this.locks = locks;
+		this.visibility = visibility;
 	}
 
-	public PixFile(File file) {
-		super();
-		this.file = file;
-
+	public PixImage getImage() {
+		return image;
 	}
 
-	@Override
-	public String toString() {
-		return "PixFile [file=" + file + "]";
+	public Set<ColorRGB> getColors() {
+		return colors;
+	}
+
+	public Map<UUID, Set<UUID>> getLocks() {
+		return locks;
+	}
+
+	public Map<UUID, Boolean> getVisibility() {
+		return visibility;
 	}
 
 }

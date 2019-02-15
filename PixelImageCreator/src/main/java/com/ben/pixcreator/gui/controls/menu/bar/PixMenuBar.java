@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ben.pixcreator.application.action.impl.ActionUpdateSelection;
+import com.ben.pixcreator.application.action.impl.LoadFileAction;
 import com.ben.pixcreator.application.action.impl.OpenTabAction;
 import com.ben.pixcreator.application.action.impl.RefreshTabAction;
 import com.ben.pixcreator.application.action.impl.SaveAction;
@@ -86,7 +87,25 @@ public class PixMenuBar extends MenuBar {
 	}
 
 	private void handleOpenAction() {
-		// TODO handle Open action
+
+		FileChooser fc = new FileChooser();
+		fc.getExtensionFilters().add(new ExtensionFilter("pix", "*.pix"));
+
+		File file = fc.showOpenDialog(null);
+
+		if (null != file) {
+
+			if (file.exists()) {
+
+				try {
+					Executor.getInstance().executeAction(new LoadFileAction(file));
+				} catch (Exception e) {
+					new ExceptionPopUp(e);
+				}
+
+			}
+
+		}
 
 	}
 
