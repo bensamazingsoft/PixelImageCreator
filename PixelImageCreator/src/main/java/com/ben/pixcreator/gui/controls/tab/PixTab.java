@@ -55,7 +55,7 @@ public class PixTab extends Tab implements Initializable {
 
 	private static final Logger log = LoggerFactory.getLogger(PixTab.class);
 
-	private final String IMAGEPATH = "images/gui/buttons/tab/";
+	// private final String IMAGEPATH = "images/gui/buttons/tab/";
 
 	private SimpleObjectProperty<PixImage>	image		= new SimpleObjectProperty<PixImage>();
 	private SimpleDoubleProperty			zoomFactor	= new SimpleDoubleProperty();
