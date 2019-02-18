@@ -3,6 +3,7 @@ package com.ben.pixcreator.application.action.impl;
 
 import com.ben.pixcreator.application.action.IAction;
 import com.ben.pixcreator.application.action.ICancelable;
+import com.ben.pixcreator.application.color.rgb.ColorRGB;
 import com.ben.pixcreator.application.image.PixImage;
 import com.ben.pixcreator.application.image.coords.Coord;
 import com.ben.pixcreator.application.image.layer.impl.PixLayer;
@@ -33,7 +34,10 @@ public class ActionChangeCellColor implements IAction, ICancelable
 
 	    this.newCell = !layer.getGrid().containsKey(coord);
 
-	    prevColor = layer.getGrid().get(coord);
+	    if (!newCell)
+	    {
+		  prevColor = layer.getGrid().get(coord).getColor();
+	    }
 
       }
 
@@ -46,7 +50,7 @@ public class ActionChangeCellColor implements IAction, ICancelable
 		  if (image.getLayerList().getIdx(layer) > -1)
 		  {
 
-			layer.getGrid().put(coord, color);
+			layer.getGrid().put(coord, new ColorRGB(color));
 
 		  }
 	    }
@@ -66,7 +70,7 @@ public class ActionChangeCellColor implements IAction, ICancelable
 			}
 			else
 			{
-			      layer.getGrid().put(coord, prevColor);
+			      layer.getGrid().put(coord, new ColorRGB(prevColor));
 			}
 		  }
 
@@ -90,10 +94,10 @@ public class ActionChangeCellColor implements IAction, ICancelable
 
 	    final int prime = 31;
 	    int result = 1;
-	    result = prime * result + ((color == null) ? 0 : color.hashCode());
-	    result = prime * result + ((coord == null) ? 0 : coord.hashCode());
-	    result = prime * result + ((layer == null) ? 0 : layer.hashCode());
-	    result = prime * result + ((prevColor == null) ? 0 : prevColor.hashCode());
+	    result = prime * result + (newCell ? 0 : color.hashCode());
+	    result = prime * result + (newCell ? 0 : coord.hashCode());
+	    result = prime * result + (newCell ? 0 : layer.hashCode());
+	    result = prime * result + (newCell ? 0 : prevColor.hashCode());
 	    return result;
       }
 

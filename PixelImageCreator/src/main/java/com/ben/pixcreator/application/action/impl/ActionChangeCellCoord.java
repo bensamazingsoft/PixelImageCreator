@@ -2,6 +2,7 @@
 package com.ben.pixcreator.application.action.impl;
 
 import com.ben.pixcreator.application.action.IAction;
+import com.ben.pixcreator.application.color.rgb.ColorRGB;
 import com.ben.pixcreator.application.image.PixImage;
 import com.ben.pixcreator.application.image.coords.Coord;
 import com.ben.pixcreator.application.image.layer.impl.PixLayer;
@@ -9,50 +10,63 @@ import com.ben.pixcreator.gui.facade.GuiFacade;
 
 import javafx.scene.paint.Color;
 
-public class ActionChangeCellCoord implements IAction {
+public class ActionChangeCellCoord implements IAction
+{
 
-	private PixImage	image;
-	private PixLayer	layer;
-	private Coord		oldCoord;
-	private Coord		newCoord;
-	private Color		color;
+      private PixImage image;
+      private PixLayer layer;
+      private Coord    oldCoord;
+      private Coord    newCoord;
+      private ColorRGB color;
 
-	public ActionChangeCellCoord() {
 
-		layer = new PixLayer();
-		oldCoord = new Coord();
-		newCoord = new Coord();
-		color = Color.BLACK;
-	}
+      public ActionChangeCellCoord()
+      {
 
-	public ActionChangeCellCoord(PixImage image, PixLayer layer, Coord oldCoord, Coord newCoord) {
+	    layer = new PixLayer();
+	    oldCoord = new Coord();
+	    newCoord = new Coord();
+	    color = new ColorRGB(Color.BLACK);
+      }
 
-		this.layer = layer;
-		this.oldCoord = oldCoord;
-		this.newCoord = newCoord;
 
-		color = layer.getGrid().get(oldCoord);
+      public ActionChangeCellCoord(PixImage image, PixLayer layer, Coord oldCoord, Coord newCoord)
+      {
 
-	}
+	    this.layer = layer;
+	    this.oldCoord = oldCoord;
+	    this.newCoord = newCoord;
 
-	public void execute() throws Exception {
+	    color = layer.getGrid().get(oldCoord);
 
-		if (GuiFacade.getInstance().getActiveimage() == image) {
-			if (image.getLayerList().getItems().contains(layer)) {
-				layer.getGrid().remove(oldCoord);
-				layer.getGrid().put(newCoord, color);
-			}
-		}
-	}
+      }
 
-	public void cancel() throws Exception {
 
-		if (GuiFacade.getInstance().getActiveimage() == image) {
-			if (image.getLayerList().getItems().contains(layer)) {
-				layer.getGrid().remove(newCoord);
-				layer.getGrid().put(oldCoord, color);
-			}
-		}
-	}
+      public void execute() throws Exception
+      {
+
+	    if (GuiFacade.getInstance().getActiveimage() == image)
+	    {
+		  if (image.getLayerList().getItems().contains(layer))
+		  {
+			layer.getGrid().remove(oldCoord);
+			layer.getGrid().put(newCoord, color);
+		  }
+	    }
+      }
+
+
+      public void cancel() throws Exception
+      {
+
+	    if (GuiFacade.getInstance().getActiveimage() == image)
+	    {
+		  if (image.getLayerList().getItems().contains(layer))
+		  {
+			layer.getGrid().remove(newCoord);
+			layer.getGrid().put(oldCoord, color);
+		  }
+	    }
+      }
 
 }
