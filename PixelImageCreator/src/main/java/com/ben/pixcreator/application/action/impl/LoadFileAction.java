@@ -1,3 +1,4 @@
+
 package com.ben.pixcreator.application.action.impl;
 
 import static java.util.stream.Collectors.toSet;
@@ -22,77 +23,99 @@ import com.ben.pixcreator.application.image.layer.impl.ALayer;
 import com.ben.pixcreator.gui.exception.popup.ExceptionPopUp;
 import com.ben.pixcreator.gui.facade.GuiFacade;
 
-public class LoadFileAction implements IAction {
+public class LoadFileAction implements IAction
+{
 
-	private final File file;
+      private final File file;
 
-	public LoadFileAction(File file) {
-		this.file = file;
-	}
 
-	@Override
-	public void execute() throws Exception {
+      public LoadFileAction(File file)
+      {
 
-		try (FileInputStream fileIn = new FileInputStream(file);
-				ObjectInputStream in = new ObjectInputStream(fileIn);) {
+	    this.file = file;
+      }
 
-			PixFile pixFile = (PixFile) in.readObject();
 
-			PixImage image = getImage(pixFile);
+      @Override
+      public void execute() throws Exception
+      {
 
-			Executor.getInstance().executeAction(new OpenTabAction(image));
+	    try (FileInputStream fileIn = new FileInputStream(file);
+			ObjectInputStream in = new ObjectInputStream(fileIn);)
+	    {
 
-		} catch (IOException e) {
-			new ExceptionPopUp(e);
-		}
+		  PixFile pixFile = (PixFile) in.readObject();
 
-	}
+		  PixImage image = getImage(pixFile);
 
-	private PixImage getImage(PixFile pixFile) {
+		  Executor.getInstance().executeAction(new OpenTabAction(image));
 
-		GuiFacade gui = GuiFacade.getInstance();
-		GroupLock groupLock = AppContext.getInstance().getGroupLocks().get(gui.getActiveImage());
-		Map<ALayer, Set<ALayer>> lock = groupLock.getGroups();
+	    }
+	    catch (IOException e)
+	    {
+		  new ExceptionPopUp(e);
+	    }
 
-		PixImage image = pixFile.getImage();
-		Map<UUID, Set<UUID>> locks = pixFile.getLocks();
-		Map<UUID, Boolean> visibility = pixFile.getVisibility();
+      }
 
-		List<ALayer> imageLayers = image.getLayerList().getAllLayers();
-		for (ALayer layer : imageLayers) {
 
-			// set each layers visibility
-			layer.setVisible(visibility.get(layer.getUUID()));
+      private PixImage getImage(PixFile pixFile)
+      {
 
-			// set the lock relations between each "active" layers and the
-			// others
-			if (locks.containsKey(layer.getUUID())) {
-				if (!locks.get(layer.getUUID()).isEmpty()) {
-					Set<ALayer> locked = locks.get(layer.getUUID()).stream()
-							.map(uuid -> getLayerByUUID(uuid, imageLayers))
-							.collect(toSet());
-					lock.put(layer, locked);
-				}
+	    GuiFacade gui = GuiFacade.getInstance();
+
+	    PixImage image = pixFile.getImage();
+	    GroupLock groupLock = new GroupLock();
+	    AppContext.getInstance().getGroupLocks().put(image, groupLock);
+
+	    Map<UUID, Set<UUID>> locks = pixFile.getLocks();
+	    Map<UUID, Boolean> visibility = pixFile.getVisibility();
+
+	    List<ALayer> imageLayers = image.getLayerList().getAllLayers();
+	    for (ALayer layer : imageLayers)
+	    {
+
+		  // set each layers visibility
+		  layer.setVisible(visibility.get(layer.getUUID()));
+
+		  // set the lock relations between each "active" layers and the
+		  // others
+		  if (locks.containsKey(layer.getUUID()))
+		  {
+			if (!locks.get(layer.getUUID()).isEmpty())
+			{
+			      Set<ALayer> locked = locks.get(layer.getUUID()).stream()
+					  .map(uuid -> getLayerByUUID(uuid, imageLayers))
+					  .collect(toSet());
+			      groupLock.getGroup().put(layer, locked);
 			}
+		  }
 
-		}
+	    }
 
-		// set image colors in the gui facade map (checked when a tab is opened)
-		Set<ColorRGB> colors = pixFile.getColors();
-		gui.getImagesColors().put(image, colors.stream().map(ColorRGB::getColorProperty).collect(toSet()));
+	    // set image colors in the gui facade map (checked when a tab is opened)
+	    Set<ColorRGB> colors = pixFile.getColors();
+	    gui.getImagesColors().put(image, colors.stream().map(ColorRGB::getColorProperty).collect(toSet()));
 
-		return image;
-	}
+	    // set file path in files context map
+	    AppContext.getInstance().getFiles().put(image, file);
 
-	private ALayer getLayerByUUID(UUID uuid, List<ALayer> set) {
+	    return image;
+      }
 
-		for (ALayer layer : set) {
-			if (layer.getUUID().equals(uuid)) {
-				return layer;
-			}
-		}
 
-		return null;
-	}
+      private ALayer getLayerByUUID(UUID uuid, List<ALayer> set)
+      {
+
+	    for (ALayer layer : set)
+	    {
+		  if (layer.getUUID().equals(uuid))
+		  {
+			return layer;
+		  }
+	    }
+
+	    return null;
+      }
 
 }

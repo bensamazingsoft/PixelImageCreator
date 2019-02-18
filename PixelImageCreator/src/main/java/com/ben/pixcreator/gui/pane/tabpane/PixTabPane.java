@@ -5,8 +5,11 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import com.ben.pixcreator.application.action.impl.OpenNewImageAction;
+import com.ben.pixcreator.application.executor.Executor;
 import com.ben.pixcreator.application.image.PixImage;
 import com.ben.pixcreator.gui.controls.tab.PixTab;
+import com.ben.pixcreator.gui.exception.popup.ExceptionPopUp;
 import com.ben.pixcreator.gui.facade.GuiFacade;
 
 import javafx.fxml.FXMLLoader;
@@ -49,6 +52,19 @@ public class PixTabPane extends TabPane implements Initializable
 			PixImage image = tab.getImage();
 			GuiFacade.getInstance().setActiveImage(image);
 		  }
+
+		  else if (null == newVal)
+		  {
+			try
+			{
+			      Executor.getInstance().executeAction(new OpenNewImageAction());
+			}
+			catch (Exception e)
+			{
+			      new ExceptionPopUp(e);
+			}
+		  }
+
 	    });
 
       }
