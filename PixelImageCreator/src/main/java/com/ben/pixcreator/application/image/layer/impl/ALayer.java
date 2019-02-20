@@ -100,6 +100,9 @@ public abstract class ALayer implements ILayer, Serializable
       }
 
 
+      public abstract ALayer duplicate();
+
+
       public abstract ALayer offset(Coord min);
 
 

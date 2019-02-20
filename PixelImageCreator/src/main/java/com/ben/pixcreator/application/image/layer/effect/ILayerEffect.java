@@ -1,5 +1,5 @@
 
-package com.ben.pixcreator.application.image.layer.impl.effect;
+package com.ben.pixcreator.application.image.layer.effect;
 
 import com.ben.pixcreator.application.image.layer.impl.ALayer;
 

@@ -6,13 +6,13 @@ import com.ben.pixcreator.application.action.ICancelable;
 import com.ben.pixcreator.application.image.PixImage;
 import com.ben.pixcreator.application.image.layer.impl.ALayer;
 import com.ben.pixcreator.application.image.layer.impl.PixLayer;
-import com.ben.pixcreator.collection.LayerList;
+import com.ben.pixcreator.application.pile.Pile;
 import com.ben.pixcreator.gui.controls.layer.panel.actions.LayerActions;
 
 public class LayerAction implements IAction, ICancelable
 {
 
-      private final LayerList	 layerList;
+      private final Pile<ALayer> layerList;
       private final ALayer	 layer;
       private final LayerActions action;
 

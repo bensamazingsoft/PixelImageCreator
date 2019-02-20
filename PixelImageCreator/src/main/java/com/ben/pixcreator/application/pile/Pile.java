@@ -32,7 +32,7 @@ public class Pile<T> implements Serializable
        * @param idx
        * @return the index of the item or null.
        */
-      public T getitem(int idx)
+      public T getItem(int idx)
       {
 
 	    for (Pair pair : items)
@@ -215,6 +215,24 @@ public class Pile<T> implements Serializable
       }
 
       /**
+       * replaces the item at specified index with supplied replacement.
+       * 
+       * @param i
+       * @param other
+       * @return true if the item was successfully replaced
+       */
+      public boolean replace(int i, T other)
+      {
+      
+            if (items.add(new Pair(i, other)))
+            {
+        	  removeOfIndex(i);
+        	  return true;
+            }
+            return false;
+      }
+
+      /**
        * utility class that represents an index-item association.
        * 
        * @author bmo
@@ -350,7 +368,7 @@ public class Pile<T> implements Serializable
       }
 
 
-      public List<T> getAllitems()
+      public List<T> getAllItems()
       {
 
 	    return items.stream().map(Pair::getitem).collect(Collectors.toList());

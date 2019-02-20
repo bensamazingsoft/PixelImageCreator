@@ -1,18 +1,18 @@
 
-package com.ben.pixcreator.application.image.layer.impl.effect.impl;
+package com.ben.pixcreator.application.image.layer.effect.applier.impl;
 
+import com.ben.pixcreator.application.image.layer.effect.applier.EffectApplier;
+import com.ben.pixcreator.application.image.layer.effect.params.impl.OpacityEffectParams;
 import com.ben.pixcreator.application.image.layer.impl.ALayer;
 import com.ben.pixcreator.application.image.layer.impl.PixLayer;
-import com.ben.pixcreator.application.image.layer.impl.effect.EffectApplier;
-import com.ben.pixcreator.application.image.layer.impl.effect.params.impl.OpacityEffectParams;
 
-public class OpacityPixEffectizer implements EffectApplier
+public class OpacityPixEffectApplier implements EffectApplier
 {
 
       private final OpacityEffectParams param;
 
 
-      public OpacityPixEffectizer(OpacityEffectParams params)
+      public OpacityPixEffectApplier(OpacityEffectParams params)
       {
 
 	    this.param = params;

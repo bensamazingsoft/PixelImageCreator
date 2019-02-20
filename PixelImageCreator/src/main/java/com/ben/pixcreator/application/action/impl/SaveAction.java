@@ -1,3 +1,4 @@
+
 package com.ben.pixcreator.application.action.impl;
 
 import static java.util.stream.Collectors.toMap;
@@ -23,61 +24,72 @@ import com.ben.pixcreator.gui.facade.GuiFacade;
 
 import javafx.scene.paint.Color;
 
-public class SaveAction implements IAction {
+public class SaveAction implements IAction
+{
 
-	private final PixImage image;
+      private final PixImage image;
 
-	public SaveAction(PixImage image) {
-		this.image = image;
-	}
 
-	@Override
-	public void execute() throws Exception {
+      public SaveAction(PixImage image)
+      {
 
-		File file = AppContext.getInstance().getFiles().get(image);
+	    this.image = image;
+      }
 
-		image.setName(file.getName());
 
-		PixFile pixFile = getPixFile(file);
+      @Override
+      public void execute() throws Exception
+      {
 
-		try (FileOutputStream fileOut = new FileOutputStream(file);
-				ObjectOutputStream out = new ObjectOutputStream(fileOut);) {
+	    File file = AppContext.getInstance().getFiles().get(image);
 
-			out.writeObject(pixFile);
+	    image.setName(file.getName());
 
-		} catch (IOException e) {
-			new ExceptionPopUp(e);
-		}
+	    PixFile pixFile = getPixFile(file);
 
-	}
+	    try (FileOutputStream fileOut = new FileOutputStream(file);
+			ObjectOutputStream out = new ObjectOutputStream(fileOut);)
+	    {
 
-	private PixFile getPixFile(File file) {
+		  out.writeObject(pixFile);
 
-		Map<UUID, Set<UUID>> locks;
-		Map<UUID, Boolean> visibility;
-		Set<ColorRGB> colors;
+	    }
+	    catch (IOException e)
+	    {
+		  new ExceptionPopUp(e);
+	    }
 
-		GuiFacade gui = GuiFacade.getInstance();
-		GroupLock groupLock = AppContext.getInstance().getGroupLocks().get(gui.getActiveImage());
+      }
 
-		colors = gui.getImagesColors().get(image).stream()
-				.map(prop -> new ColorRGB((Color) prop.get())).collect(toSet());
 
-		locks = image.getLayerList().getAllLayers().stream()
-				.collect(toMap(
-						ALayer::getUUID,
-						layer -> (Set<UUID>) groupLock.getLockedLayers(layer).stream()
-								.map(ALayer::getUUID)
-								.collect(toSet())));
+      private PixFile getPixFile(File file)
+      {
 
-		visibility = image.getLayerList().getAllLayers().stream()
-				.collect(toMap(
-						ALayer::getUUID,
-						ALayer::isVisible));
+	    Map<UUID, Set<UUID>> locks;
+	    Map<UUID, Boolean> visibility;
+	    Set<ColorRGB> colors;
 
-		PixFile pixFile = new PixFile(image, colors, locks, visibility);
+	    GuiFacade gui = GuiFacade.getInstance();
+	    GroupLock groupLock = AppContext.getInstance().getGroupLocks().get(gui.getActiveImage());
 
-		return pixFile;
-	}
+	    colors = gui.getImagesColors().get(image).stream()
+			.map(prop -> new ColorRGB((Color) prop.get())).collect(toSet());
+
+	    locks = image.getLayerList().getAllItems().stream()
+			.collect(toMap(
+				    ALayer::getUUID,
+				    layer -> (Set<UUID>) groupLock.getLockedLayers(layer).stream()
+						.map(ALayer::getUUID)
+						.collect(toSet())));
+
+	    visibility = image.getLayerList().getAllItems().stream()
+			.collect(toMap(
+				    ALayer::getUUID,
+				    ALayer::isVisible));
+
+	    PixFile pixFile = new PixFile(image, colors, locks, visibility);
+
+	    return pixFile;
+      }
 
 }

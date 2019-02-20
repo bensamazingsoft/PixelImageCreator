@@ -1,5 +1,5 @@
 
-package com.ben.pixcreator.application.image.layer.impl.effect.params;
+package com.ben.pixcreator.application.image.layer.effect.params;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,7 +1,7 @@
 
-package com.ben.pixcreator.application.image.layer.impl.effect.params.impl;
+package com.ben.pixcreator.application.image.layer.effect.params.impl;
 
-import com.ben.pixcreator.application.image.layer.impl.effect.params.EffectParams;
+import com.ben.pixcreator.application.image.layer.effect.params.EffectParams;
 
 public class OpacityEffectParams extends EffectParams<Double>
 {
