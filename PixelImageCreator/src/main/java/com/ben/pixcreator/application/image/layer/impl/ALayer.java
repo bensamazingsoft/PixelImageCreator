@@ -10,81 +10,103 @@ import com.ben.pixcreator.application.image.layer.ILayer;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.canvas.Canvas;
 
-public abstract class ALayer implements ILayer, Serializable {
+public abstract class ALayer implements ILayer, Serializable
+{
 
-	/**
-	   * 
-	   */
-	private static final long					serialVersionUID	= 1L;
-	/**
-	 * 
-	 */
+      private static final long			serialVersionUID = 1L;
 
-	protected transient SimpleBooleanProperty	visible				= new SimpleBooleanProperty();
-	protected final UUID						uuid;
+      protected transient SimpleBooleanProperty	visible		 = new SimpleBooleanProperty();
+      protected final UUID			uuid;
 
-	public ALayer() {
-		super();
-		this.uuid = UUID.randomUUID();
-	}
 
-	@Override
-	public void draw(Canvas canvas, int xGridResolution, int yGridResolution) {
+      public ALayer()
+      {
 
-	}
+	    super();
+	    this.uuid = UUID.randomUUID();
+      }
 
-	public abstract class Memento {
 
-		protected ALayer layer;
+      @Override
+      public void draw(Canvas canvas, int xGridResolution, int yGridResolution)
+      {
 
-		protected Memento(ALayer layer) {
+      }
 
-			this.layer = layer;
+      public abstract class Memento
+      {
 
-			init(layer);
-		}
+	    protected ALayer layer;
 
-		protected abstract void init(ALayer layer);
 
-		public abstract void restore();
+	    protected Memento(ALayer layer)
+	    {
 
-	}
+		  this.layer = layer;
 
-	public abstract Memento getMemento();
+		  init(layer);
+	    }
 
-	public final SimpleBooleanProperty visibleProperty() {
 
-		return this.visible;
-	}
+	    protected abstract void init(ALayer layer);
 
-	public final boolean isVisible() {
 
-		return this.visibleProperty().get();
-	}
+	    public abstract void restore();
 
-	public final void setVisible(final boolean visible) {
+      }
 
-		this.visibleProperty().set(visible);
-	}
 
-	@Override
-	public boolean equals(Object obj) {
+      public abstract Memento getMemento();
 
-		if (obj instanceof ALayer) {
-			return this.getUUID().equals(((ALayer) obj).getUUID());
-		}
-		return false;
-	}
 
-	@Override
-	public int hashCode() {
-		return getUUID().hashCode();
-	}
+      public final SimpleBooleanProperty visibleProperty()
+      {
 
-	public abstract ALayer offset(Coord min);
+	    return this.visible;
+      }
 
-	public UUID getUUID() {
-		return uuid;
-	}
+
+      public final boolean isVisible()
+      {
+
+	    return this.visibleProperty().get();
+      }
+
+
+      public final void setVisible(final boolean visible)
+      {
+
+	    this.visibleProperty().set(visible);
+      }
+
+
+      @Override
+      public boolean equals(Object obj)
+      {
+
+	    if (obj instanceof ALayer)
+	    {
+		  return this.getUUID().equals(((ALayer) obj).getUUID());
+	    }
+	    return false;
+      }
+
+
+      @Override
+      public int hashCode()
+      {
+
+	    return getUUID().hashCode();
+      }
+
+
+      public abstract ALayer offset(Coord min);
+
+
+      public UUID getUUID()
+      {
+
+	    return uuid;
+      }
 
 }
