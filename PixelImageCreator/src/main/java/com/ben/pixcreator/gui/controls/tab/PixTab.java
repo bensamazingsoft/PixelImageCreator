@@ -224,6 +224,7 @@ public class PixTab extends Tab implements Initializable
       {
 
 	    for (ALayer layer : image.get().getLayerList().getAllItems())
+
 	    {
 		  if (layer instanceof PicLayer)
 		  {

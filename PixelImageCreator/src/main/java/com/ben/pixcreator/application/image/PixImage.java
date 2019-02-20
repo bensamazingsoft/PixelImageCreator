@@ -39,7 +39,7 @@ public class PixImage implements Serializable
       private int		  xSize, ySize;
       private int		  xGridResolution, yGridResolution;
 
-      private transient PixLayer  ghost, select;
+      private PixLayer		  ghost, select;
       // layer and its visibility
 
       private Pile<ALayer>	  layerList;
@@ -52,7 +52,9 @@ public class PixImage implements Serializable
 	    dateCre = LocalDate.now();
 	    ghost = new PixLayer();
 	    select = new PixLayer();
+
 	    layerList = new Pile<>();
+
 	    layerList.add(new PixLayer());
 
 	    xSize = ySize = DEFAULTSIZE;
@@ -94,7 +96,9 @@ public class PixImage implements Serializable
 
 	    for (int i = 0; i < layerList.getItems().size(); i++)
 	    {
+
 		  ALayer layer = layerList.getItem(i);
+
 		  if (layer.isVisible())
 		  {
 			// log.debug("drawing " + layer.toString());

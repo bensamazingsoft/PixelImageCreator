@@ -7,12 +7,12 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ben.pixcreator.application.color.rgb.ColorRGB;
 import com.ben.pixcreator.application.image.coords.Coord;
 import com.ben.pixcreator.application.image.layer.sampler.LayerSampler;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
 
 public class PixLayer extends ALayer
 {
@@ -20,20 +20,23 @@ public class PixLayer extends ALayer
       /**
        * 
        */
-      private static final Logger log		   = LoggerFactory.getLogger(PixLayer.class);
-      private static final long	  serialVersionUID = 1L;
-      private Map<Coord, Color>	  grid;
+
+      private static final Logger  log		    = LoggerFactory.getLogger(PixLayer.class);
+      private static final long	   serialVersionUID = 1L;
+      private Map<Coord, ColorRGB> grid;
 
 
       public PixLayer()
       {
 
-	    this.grid = new HashMap<Coord, Color>();
+	    this.grid = new HashMap<Coord, ColorRGB>();
+
 	    visible.set(true);
       }
 
 
-      public PixLayer(Map<Coord, Color> grid)
+      public PixLayer(Map<Coord, ColorRGB> grid)
+
       {
 
 	    this();
@@ -82,7 +85,7 @@ public class PixLayer extends ALayer
 	    for (Coord cell : getGrid().keySet())
 	    {
 
-		  graphic.setFill(getGrid().get(cell));
+		  graphic.setFill(getGrid().get(cell).getColor());
 
 		  graphic.fillRect(xCellSize * cell.getX(), yCellSize * cell.getY(), xCellSize, yCellSize);
 
@@ -91,14 +94,16 @@ public class PixLayer extends ALayer
       }
 
 
-      public Map<Coord, Color> getGrid()
+      public Map<Coord, ColorRGB> getGrid()
+
       {
 
 	    return grid;
       }
 
 
-      public void setGrid(Map<Coord, Color> grid)
+      public void setGrid(Map<Coord, ColorRGB> grid)
+
       {
 
 	    this.grid = grid;
@@ -107,7 +112,7 @@ public class PixLayer extends ALayer
       public class Memento extends ALayer.Memento
       {
 
-	    private Map<Coord, Color> grid;
+	    private Map<Coord, ColorRGB> grid;
 
 
 	    protected Memento(ALayer layer)
@@ -154,12 +159,11 @@ public class PixLayer extends ALayer
       }
 
 
-      @Override
       public PixLayer duplicate()
       {
 
 	    PixLayer duplicate = new PixLayer(new HashMap<>(this.grid));
-	    duplicate.setVisible(true);
+	    duplicate.setVisible(isVisible());
 
 	    return duplicate;
       }
@@ -172,7 +176,7 @@ public class PixLayer extends ALayer
       public ALayer offset(Coord min)
       {
 
-	    Map<Coord, Color> offset = new HashMap<>();
+	    Map<Coord, ColorRGB> offset = new HashMap<>();
 
 	    this.getGrid().forEach((coord, color) -> {
 		  offset.put(new Coord(coord.getX() - min.getX(), coord.getY() - min.getY()), color);

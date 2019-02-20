@@ -63,10 +63,11 @@ public class LoadFileAction implements IAction
       {
 
 	    GuiFacade gui = GuiFacade.getInstance();
-	    GroupLock groupLock = AppContext.getInstance().getGroupLocks().get(gui.getActiveImage());
-	    Map<ALayer, Set<ALayer>> lock = groupLock.getGroups();
 
 	    PixImage image = pixFile.getImage();
+	    GroupLock groupLock = new GroupLock();
+	    AppContext.getInstance().getGroupLocks().put(image, groupLock);
+
 	    Map<UUID, Set<UUID>> locks = pixFile.getLocks();
 	    Map<UUID, Boolean> visibility = pixFile.getVisibility();
 
@@ -86,7 +87,7 @@ public class LoadFileAction implements IAction
 			      Set<ALayer> locked = locks.get(layer.getUUID()).stream()
 					  .map(uuid -> getLayerByUUID(uuid, imageLayers))
 					  .collect(toSet());
-			      lock.put(layer, locked);
+			      groupLock.getGroup().put(layer, locked);
 			}
 		  }
 
@@ -95,6 +96,9 @@ public class LoadFileAction implements IAction
 	    // set image colors in the gui facade map (checked when a tab is opened)
 	    Set<ColorRGB> colors = pixFile.getColors();
 	    gui.getImagesColors().put(image, colors.stream().map(ColorRGB::getColorProperty).collect(toSet()));
+
+	    // set file path in files context map
+	    AppContext.getInstance().getFiles().put(image, file);
 
 	    return image;
       }

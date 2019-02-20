@@ -75,7 +75,6 @@ public class MoveActionFactory implements IActionFactory
 			GuiFacade gui = GuiFacade.getInstance();
 			GroupLock groupLock = AppContext.getInstance().getGroupLocks().get(gui.getActiveImage());
 
-			// log.debug(event.getEventType().getName());
 			PixImage image = gui.getActiveImage();
 			ALayer activeLayer = gui.getActiveLayer();
 

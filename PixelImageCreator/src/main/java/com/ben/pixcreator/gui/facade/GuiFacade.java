@@ -7,6 +7,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.application.image.PixImage;
 import com.ben.pixcreator.application.image.layer.impl.ALayer;
@@ -29,201 +32,264 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.Toggle;
 import javafx.scene.paint.Color;
 
-public class GuiFacade {
+public class GuiFacade
+{
 
-	private static GuiFacade instance;
+      private static final Logger			      log	  = LoggerFactory.getLogger(GuiFacade.class);
 
-	private Scene scene;
+      private static GuiFacade				      instance;
 
-	private PixMenuBar	pixMenuBar;
-	private PixToolBar	pixToolBar;
-	private PixTabPane	pixTabPane;
-	private LayerPanel	layerPanel;
-	private ColorRoster	colorRoster;
+      private Scene					      scene;
 
-	private Map<PixImage, Set<SimpleObjectProperty<Color>>>	imagesColors;
-	private Map<PixImage, Selection>						selections;
-	private SimpleObjectProperty<Color>						activeColor	= new SimpleObjectProperty<>();
-	private SimpleObjectProperty<PixImage>					activeImage	= new SimpleObjectProperty<>();
-	private SimpleBooleanProperty							showGrid	= new SimpleBooleanProperty();
+      private PixMenuBar				      pixMenuBar;
+      private PixToolBar				      pixToolBar;
+      private PixTabPane				      pixTabPane;
+      private LayerPanel				      layerPanel;
+      private ColorRoster				      colorRoster;
 
-	private MiniatureManager miniatureManager;
+      private Map<PixImage, Set<SimpleObjectProperty<Color>>> imagesColors;
+      private Map<PixImage, Selection>			      selections;
+      private SimpleObjectProperty<Color>		      activeColor = new SimpleObjectProperty<>();
+      private SimpleObjectProperty<PixImage>		      activeImage = new SimpleObjectProperty<>();
+      private SimpleBooleanProperty			      showGrid	  = new SimpleBooleanProperty();
 
-	private GuiFacade() {
+      private MiniatureManager				      miniatureManager;
 
-		imagesColors = new HashMap<>();
-		selections = new HashMap<>();
-		miniatureManager = new MiniatureManager();
-		showGrid.set(false);
 
-	}
+      private GuiFacade()
+      {
 
-	public static GuiFacade getInstance() {
+	    imagesColors = new HashMap<>();
+	    selections = new HashMap<>();
+	    miniatureManager = new MiniatureManager();
+	    showGrid.set(false);
 
-		if (instance == null) {
+      }
 
-			instance = new GuiFacade();
-		}
 
-		return instance;
-	}
+      public static GuiFacade getInstance()
+      {
 
-	public void toggleToolTo(PixTool pixTool) {
+	    if (instance == null)
+	    {
 
-		// toggle tool in AppContext and Gui Controls
+		  instance = new GuiFacade();
+	    }
 
-		AppContext.getInstance().setCurrTool(pixTool);
+	    return instance;
+      }
 
-		List<Toggle> list = pixToolBar.getToggleGroup().getToggles().stream()
-				.filter(togBut -> ((PixTool) togBut.getUserData()).name().equals(pixTool.name()))
-				.collect(Collectors.toList());
 
-		if (list.size() > 0) {
-			Toggle toggle = list.get(0);
-			pixToolBar.getToggleGroup().selectToggle(toggle);
-		}
+      public void toggleToolTo(PixTool pixTool)
+      {
 
-	}
+	    // toggle tool in AppContext and Gui Controls
 
-	public void addTab(Tab tab) {
+	    AppContext.getInstance().setCurrTool(pixTool);
 
-		pixTabPane.getTabs().add(tab);
-		pixTabPane.getSelectionModel().select(tab);
+	    List<Toggle> list = pixToolBar.getToggleGroup().getToggles().stream()
+			.filter(togBut -> ((PixTool) togBut.getUserData()).name().equals(pixTool.name()))
+			.collect(Collectors.toList());
 
-	}
+	    if (list.size() > 0)
+	    {
+		  Toggle toggle = list.get(0);
+		  pixToolBar.getToggleGroup().selectToggle(toggle);
+	    }
 
-	public ObservableList<Tab> getTabs() {
+      }
 
-		return pixTabPane.getTabs();
-	}
 
-	public PixImage getActiveImage() {
+      public void addTab(Tab tab)
+      {
 
-		PixTab tab = (PixTab) pixTabPane.getSelectionModel().getSelectedItem();
-		PixImage activeImage = tab.getImage();
+	    pixTabPane.getTabs().add(tab);
+	    pixTabPane.getSelectionModel().select(tab);
 
-		return activeImage;
-	}
+      }
 
-	public ALayer getActiveLayer() {
 
-		return layerPanel.getActiveLayer();
-	}
+      public ObservableList<Tab> getTabs()
+      {
 
-	public Scene getScene() {
+	    return pixTabPane.getTabs();
+      }
 
-		return scene;
-	}
 
-	public void setScene(Scene scene) {
+      public PixImage getActiveImage()
+      {
 
-		this.scene = scene;
-	}
+	    PixTab tab = (PixTab) pixTabPane.getSelectionModel().getSelectedItem();
+	    PixImage activeImage = tab.getImage();
 
-	public Map<PixImage, Set<SimpleObjectProperty<Color>>> getImagesColors() {
+	    return activeImage;
+      }
 
-		return imagesColors;
-	}
 
-	public void setImagesColors(Map<PixImage, Set<SimpleObjectProperty<Color>>> imagesColors) {
+      public ALayer getActiveLayer()
+      {
 
-		this.imagesColors = imagesColors;
-	}
+	    return layerPanel.getActiveLayer();
+      }
 
-	public final SimpleBooleanProperty showGridProperty() {
 
-		return this.showGrid;
-	}
+      public Scene getScene()
+      {
 
-	public final boolean isShowGrid() {
+	    return scene;
+      }
 
-		return this.showGridProperty().get();
-	}
 
-	public final void setShowGrid(final boolean showGrid) {
+      public void setScene(Scene scene)
+      {
 
-		this.showGridProperty().set(showGrid);
-	}
+	    this.scene = scene;
+      }
 
-	public final SimpleObjectProperty<PixImage> activeImageProperty() {
 
-		return this.activeImage;
-	}
+      public Map<PixImage, Set<SimpleObjectProperty<Color>>> getImagesColors()
+      {
 
-	public PixImage getActiveimage() {
+	    return imagesColors;
+      }
 
-		return this.activeImage.get();
-	}
 
-	public void setActiveImage(PixImage image) {
+      public void setImagesColors(Map<PixImage, Set<SimpleObjectProperty<Color>>> imagesColors)
+      {
 
-		this.activeImage.set(image);
-	}
+	    this.imagesColors = imagesColors;
+      }
 
-	public final SimpleObjectProperty<Color> activeColorProperty() {
 
-		return this.activeColor;
-	}
+      public final SimpleBooleanProperty showGridProperty()
+      {
 
-	public final Color getActiveColor() {
+	    return this.showGrid;
+      }
 
-		return this.activeColorProperty().get();
-	}
 
-	public final void setActiveColor(final Color activeColor) {
+      public final boolean isShowGrid()
+      {
 
-		this.activeColorProperty().set(activeColor);
-	}
+	    return this.showGridProperty().get();
+      }
 
-	public void setPixTabPane(PixTabPane tabPane) {
 
-		this.pixTabPane = tabPane;
-	}
+      public final void setShowGrid(final boolean showGrid)
+      {
 
-	public void setLayerPanel(LayerPanel layerPanel) {
+	    this.showGridProperty().set(showGrid);
+      }
 
-		this.layerPanel = layerPanel;
 
-		layerPanel.imageProperty().bindBidirectional(activeImage);
+      public final SimpleObjectProperty<PixImage> activeImageProperty()
+      {
 
-	}
+	    return this.activeImage;
+      }
 
-	public void setColorRoster(ColorRoster colorRoster) {
 
-		this.colorRoster = colorRoster;
+      public PixImage getActiveimage()
+      {
 
-		colorRoster.imageProperty().bindBidirectional(activeImage);
+	    return this.activeImage.get();
+      }
 
-		activeColor.set(((ColorBox) colorRoster.getToggleGroup().getSelectedToggle()).getColor());
 
-		colorRoster.getToggleGroup().selectedToggleProperty().addListener((obs, oldVal, newVal) -> {
-			Color color = ((ColorBox) newVal).getColor();
-			activeColor.set(color);
-		});
+      public void setActiveImage(PixImage image)
+      {
 
-	}
+	    this.activeImage.set(image);
+      }
 
-	public void setPixToolBar(PixToolBar pixToolBar) {
 
-		this.pixToolBar = pixToolBar;
-	}
+      public final SimpleObjectProperty<Color> activeColorProperty()
+      {
 
-	public PixTab getActiveTab() {
+	    return this.activeColor;
+      }
 
-		return (PixTab) pixTabPane.getSelectionModel().getSelectedItem();
-	}
 
-	public Map<PixImage, Selection> getSelections() {
-		return selections;
-	}
+      public final Color getActiveColor()
+      {
 
-	public void setSelections(Map<PixImage, Selection> selections) {
-		this.selections = selections;
-	}
+	    return this.activeColorProperty().get();
+      }
 
-	public MiniatureManager getMiniatureManager() {
 
-		return miniatureManager;
-	}
+      public final void setActiveColor(final Color activeColor)
+      {
+
+	    this.activeColorProperty().set(activeColor);
+      }
+
+
+      public void setPixTabPane(PixTabPane tabPane)
+      {
+
+	    this.pixTabPane = tabPane;
+      }
+
+
+      public void setLayerPanel(LayerPanel layerPanel)
+      {
+
+	    this.layerPanel = layerPanel;
+
+	    layerPanel.imageProperty().bindBidirectional(activeImage);
+
+      }
+
+
+      public void setColorRoster(ColorRoster colorRoster)
+      {
+
+	    this.colorRoster = colorRoster;
+
+	    colorRoster.imageProperty().bindBidirectional(activeImage);
+
+	    activeColor.set(((ColorBox) colorRoster.getToggleGroup().getSelectedToggle()).getColor());
+
+	    colorRoster.getToggleGroup().selectedToggleProperty().addListener((obs, oldVal, newVal) -> {
+		  Color color = ((ColorBox) newVal).getColor();
+		  activeColor.set(color);
+	    });
+
+      }
+
+
+      public void setPixToolBar(PixToolBar pixToolBar)
+      {
+
+	    this.pixToolBar = pixToolBar;
+      }
+
+
+      public PixTab getActiveTab()
+      {
+
+	    return (PixTab) pixTabPane.getSelectionModel().getSelectedItem();
+      }
+
+
+      public Map<PixImage, Selection> getSelections()
+      {
+
+	    return selections;
+      }
+
+
+      public void setSelections(Map<PixImage, Selection> selections)
+      {
+
+	    this.selections = selections;
+      }
+
+
+      public MiniatureManager getMiniatureManager()
+      {
+
+	    return miniatureManager;
+      }
 
 }

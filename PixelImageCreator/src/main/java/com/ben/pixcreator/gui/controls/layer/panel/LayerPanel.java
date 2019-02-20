@@ -6,6 +6,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import com.ben.pixcreator.application.action.impl.LayerAction;
+import com.ben.pixcreator.application.action.impl.RefreshTabAction;
 import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.application.executor.Executor;
 import com.ben.pixcreator.application.grouplock.GroupLock;
@@ -217,6 +218,9 @@ public class LayerPanel extends BorderPane implements Initializable
 			Executor.getInstance()
 				    .executeAction(new LayerAction(image.get(), activeLayer.get(), action));
 			populate();
+
+			Executor.getInstance().executeAction(new RefreshTabAction(GuiFacade.getInstance().getActiveTab()));
+
 		  }
 		  catch (Exception e)
 		  {
@@ -260,6 +264,7 @@ public class LayerPanel extends BorderPane implements Initializable
 	    {
 
 		  ALayer layer = getImage().getLayerList().getItem(i);
+
 		  LayerBox box = new LayerBox(getImage(), layer);
 
 		  layersBox.getChildren().add(0, box);

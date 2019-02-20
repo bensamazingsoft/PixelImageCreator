@@ -1,6 +1,7 @@
 
 package com.ben.pixcreator.application.image.layer.impl;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.UUID;
 
@@ -13,6 +14,9 @@ import javafx.scene.canvas.Canvas;
 public abstract class ALayer implements ILayer, Serializable
 {
 
+      /**
+         * 
+         */
       private static final long			serialVersionUID = 1L;
 
       protected transient SimpleBooleanProperty	visible		 = new SimpleBooleanProperty();
@@ -110,6 +114,15 @@ public abstract class ALayer implements ILayer, Serializable
       {
 
 	    return uuid;
+      }
+
+
+      private void readObject(java.io.ObjectInputStream in)
+		  throws IOException, ClassNotFoundException
+      {
+
+	    in.defaultReadObject();
+	    visible = new SimpleBooleanProperty();
       }
 
 }
