@@ -2,11 +2,10 @@
 package com.ben.pixcreator.application.image.layer.effect;
 
 import com.ben.pixcreator.application.image.coords.Coord;
+import com.ben.pixcreator.application.image.effect.Effect;
 import com.ben.pixcreator.application.image.layer.effect.applier.EffectApplier;
 import com.ben.pixcreator.application.image.layer.effect.applier.factory.EffectApplierFactory;
-import com.ben.pixcreator.application.image.layer.effect.params.EffectParams;
 import com.ben.pixcreator.application.image.layer.impl.ALayer;
-import com.ben.pixcreator.application.image.layer.impl.PixLayer;
 
 import javafx.scene.canvas.Canvas;
 
@@ -16,23 +15,23 @@ public class EffectLayer extends ALayer
       /**
        * 
        */
-      private static final long	serialVersionUID = 1L;
-      protected final PixLayer	sourceLayer;
-      private static Effect	effect;
-      protected EffectApplier	effectApplier;
+      private static final long	  serialVersionUID = 1L;
+      protected final ALayer	  sourceLayer;
+      private static EffectDesign effectDesign;
+      protected EffectApplier	  effectApplier;
 
 
-      public EffectLayer(PixLayer layer, EffectParams<?> params)
+      public EffectLayer(ALayer layer, Effect effect)
       {
 
 	    super();
 	    this.sourceLayer = layer;
-	    this.effectApplier = EffectApplierFactory.getEffectApplier(params);
+	    this.effectApplier = EffectApplierFactory.getEffectApplier(effect);
 
       }
 
 
-      public PixLayer getLayer()
+      public ALayer getLayer()
       {
 
 	    return sourceLayer;
@@ -48,10 +47,10 @@ public class EffectLayer extends ALayer
       }
 
 
-      public static Effect getEffect()
+      public static EffectDesign getEffect()
       {
 
-	    return effect;
+	    return effectDesign;
       }
 
 

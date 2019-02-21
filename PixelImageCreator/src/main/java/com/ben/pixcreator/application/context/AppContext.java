@@ -9,108 +9,150 @@ import java.util.ResourceBundle;
 
 import com.ben.pixcreator.application.grouplock.GroupLock;
 import com.ben.pixcreator.application.image.PixImage;
+import com.ben.pixcreator.application.image.effect.manager.EffectManager;
 import com.ben.pixcreator.application.tools.PixTool;
 
 import javafx.scene.paint.Color;
 
-public class AppContext {
+public class AppContext
+{
 
-	private static AppContext instance;
+      private static AppContext		      instance;
 
-	private static PropertiesContext properties;
+      private static PropertiesContext	      properties;
 
-	private static Color gridColor, currDrawColor;
+      private static Color		      gridColor, currDrawColor;
 
-	private static PixTool currTool;
+      private static PixTool		      currTool;
 
-	private static ResourceBundle bundle;
+      private static ResourceBundle	      bundle;
 
-	private static Map<PixImage, File> files;
+      private static Map<PixImage, File>      files;
 
-	private static Map<PixImage, GroupLock> groupLocks;
+      private static Map<PixImage, GroupLock> groupLocks;
 
-	private AppContext() {
+      private static EffectManager	      effectManager;
 
-	}
 
-	public static void init() throws IOException {
+      private AppContext()
+      {
 
-		properties = new PropertiesContext();
-		bundle = ResourceBundle.getBundle("i18n/trad");
-		currTool = PixTool.valueOf(properties.get("startTool"));
+      }
 
-		gridColor = properties.getColor(properties.get("gridColor"));
-		currDrawColor = properties.getColor(properties.get("drawColor"));
 
-		files = new HashMap<>();
-		groupLocks = new HashMap<>();
+      public static void init() throws IOException
+      {
 
-	}
+	    properties = new PropertiesContext();
+	    bundle = ResourceBundle.getBundle("i18n/trad");
+	    currTool = PixTool.valueOf(properties.get("startTool"));
 
-	public static AppContext getInstance() {
+	    gridColor = properties.getColor(properties.get("gridColor"));
+	    currDrawColor = properties.getColor(properties.get("drawColor"));
 
-		if (instance == null) {
-			instance = new AppContext();
-		}
-		return instance;
+	    files = new HashMap<>();
+	    groupLocks = new HashMap<>();
+	    effectManager = new EffectManager();
 
-	}
+      }
 
-	public PropertiesContext propertyContext() {
 
-		return properties;
-	}
+      public static AppContext getInstance()
+      {
 
-	public void setProperties(PropertiesContext properties) {
+	    if (instance == null)
+	    {
+		  instance = new AppContext();
+	    }
+	    return instance;
 
-		AppContext.properties = properties;
-	}
+      }
 
-	public Color getGridColor() {
 
-		return gridColor;
-	}
+      public PropertiesContext propertyContext()
+      {
 
-	public void setGridColor(Color gridColor) {
+	    return properties;
+      }
 
-		AppContext.gridColor = gridColor;
-	}
 
-	public Color getCurrDrawColor() {
+      public void setProperties(PropertiesContext properties)
+      {
 
-		return currDrawColor;
-	}
+	    AppContext.properties = properties;
+      }
 
-	public void setCurrDrawColor(Color currDrawColor) {
 
-		AppContext.currDrawColor = currDrawColor;
-	}
+      public Color getGridColor()
+      {
 
-	public void setCurrTool(PixTool pixTool) {
+	    return gridColor;
+      }
 
-		properties.set("startTool", pixTool.name());
 
-		currTool = pixTool;
+      public void setGridColor(Color gridColor)
+      {
 
-	}
+	    AppContext.gridColor = gridColor;
+      }
 
-	public PixTool getCurrTool() {
 
-		return currTool;
-	}
+      public Color getCurrDrawColor()
+      {
 
-	public ResourceBundle getBundle() {
+	    return currDrawColor;
+      }
 
-		return bundle;
-	}
 
-	public Map<PixImage, File> getFiles() {
+      public void setCurrDrawColor(Color currDrawColor)
+      {
 
-		return files;
-	}
+	    AppContext.currDrawColor = currDrawColor;
+      }
 
-	public Map<PixImage, GroupLock> getGroupLocks() {
-		return groupLocks;
-	}
+
+      public void setCurrTool(PixTool pixTool)
+      {
+
+	    properties.set("startTool", pixTool.name());
+
+	    currTool = pixTool;
+
+      }
+
+
+      public PixTool getCurrTool()
+      {
+
+	    return currTool;
+      }
+
+
+      public ResourceBundle getBundle()
+      {
+
+	    return bundle;
+      }
+
+
+      public Map<PixImage, File> getFiles()
+      {
+
+	    return files;
+      }
+
+
+      public Map<PixImage, GroupLock> getGroupLocks()
+      {
+
+	    return groupLocks;
+      }
+
+
+      public EffectManager getEffectManager()
+      {
+
+	    return effectManager;
+      }
 
 }

@@ -153,6 +153,9 @@ public class PixImage implements Serializable
       }
 
 
+      /**
+       * @return a clone of the image, including a clone for each layers
+       */
       public PixImage duplicate()
       {
 

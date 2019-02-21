@@ -39,7 +39,7 @@ public class Pile<T> implements Serializable
 	    {
 		  if (pair.getIdx() == idx)
 		  {
-			return pair.getitem();
+			return pair.getItem();
 		  }
 	    }
 	    return null;
@@ -55,7 +55,7 @@ public class Pile<T> implements Serializable
 
 	    for (Pair pair : items)
 	    {
-		  if (pair.getitem().equals(item))
+		  if (pair.getItem().equals(item))
 		  {
 			return pair.getIdx();
 		  }
@@ -111,7 +111,7 @@ public class Pile<T> implements Serializable
 
 	    for (Pair pair : items)
 	    {
-		  if (pair.getitem().equals(item))
+		  if (pair.getItem().equals(item))
 		  {
 			return items.remove(pair);
 		  }
@@ -214,6 +214,7 @@ public class Pile<T> implements Serializable
 	    return -1;
       }
 
+
       /**
        * replaces the item at specified index with supplied replacement.
        * 
@@ -223,13 +224,13 @@ public class Pile<T> implements Serializable
        */
       public boolean replace(int i, T other)
       {
-      
-            if (items.add(new Pair(i, other)))
-            {
-        	  removeOfIndex(i);
-        	  return true;
-            }
-            return false;
+
+	    if (items.add(new Pair(i, other)))
+	    {
+		  removeOfIndex(i);
+		  return true;
+	    }
+	    return false;
       }
 
       /**
@@ -238,7 +239,7 @@ public class Pile<T> implements Serializable
        * @author bmo
        *
        */
-      private class Pair implements Serializable
+      public class Pair implements Serializable
       {
 
 	    /**
@@ -278,7 +279,7 @@ public class Pile<T> implements Serializable
 	    }
 
 
-	    public T getitem()
+	    public T getItem()
 	    {
 
 		  return item;
@@ -352,7 +353,7 @@ public class Pile<T> implements Serializable
 
 	    for (Pair pair : items)
 	    {
-		  if (pair.getitem().equals(item))
+		  if (pair.getItem().equals(item))
 		  {
 			return pair;
 		  }
@@ -371,7 +372,7 @@ public class Pile<T> implements Serializable
       public List<T> getAllItems()
       {
 
-	    return items.stream().map(Pair::getitem).collect(Collectors.toList());
+	    return items.stream().map(Pair::getItem).collect(Collectors.toList());
       }
 
 }

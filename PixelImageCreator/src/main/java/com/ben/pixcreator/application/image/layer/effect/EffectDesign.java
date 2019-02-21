@@ -1,7 +1,7 @@
 
 package com.ben.pixcreator.application.image.layer.effect;
 
-public enum Effect {
+public enum EffectDesign {
 
       OPACITY, SIZE;
 

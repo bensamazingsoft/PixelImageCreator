@@ -159,6 +159,7 @@ public class PixLayer extends ALayer
       }
 
 
+      @Override
       public PixLayer duplicate()
       {
 

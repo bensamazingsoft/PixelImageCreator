@@ -1,10 +1,14 @@
 
 package com.ben.pixcreator.application.image.draw.factory;
 
+import java.util.Map;
+
+import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.application.image.PixImage;
+import com.ben.pixcreator.application.image.effect.Effect;
 import com.ben.pixcreator.application.image.layer.draw.factory.DrawLayerFactory;
-import com.ben.pixcreator.application.image.layer.effect.EffectLayer;
 import com.ben.pixcreator.application.image.layer.impl.ALayer;
+import com.ben.pixcreator.application.pile.Pile;
 
 /**
  * Static factory that process effects of a PixImage. The draw() method of the result image can then be called on a canvas for display.
@@ -15,24 +19,38 @@ import com.ben.pixcreator.application.image.layer.impl.ALayer;
 public class DrawImageFactory
 {
 
+      /**
+       * Static factory method that process effects of a PixImage. The draw() method of the result image can then be called on a canvas for display.
+       * 
+       * @param image
+       * @return
+       */
       public static PixImage getDrawImage(PixImage image)
       {
 
-	    PixImage drawImage = image.duplicate();
+	    Map<ALayer, Pile<Effect>> imageEffects = AppContext.getInstance().getEffectManager().getImageEffects(image);
 
-	    for (int i = 0; i < drawImage.getLayerList().getItems().size(); i++)
+	    if (!imageEffects.isEmpty())
 	    {
+		  PixImage drawImage = image.duplicate();
 
-		  ALayer layer = drawImage.getLayerList().getItem(i);
-
-		  if (layer instanceof EffectLayer)
+		  // loop through all layers
+		  for (int i = 0; i < drawImage.getLayerList().getItems().size(); i++)
 		  {
-			drawImage.getLayerList().replace(i, DrawLayerFactory.getDrawLayer(image, layer));
+
+			ALayer layer = drawImage.getLayerList().getItem(i);
+
+			// if layer has effects
+			if (imageEffects.containsKey(layer))
+			{
+
+			      drawImage.getLayerList().replace(i, DrawLayerFactory.getDrawLayer(image, layer));
+
+			}
 		  }
-
+		  image = drawImage;
 	    }
-
-	    return drawImage;
+	    return image;
       }
 
 }
