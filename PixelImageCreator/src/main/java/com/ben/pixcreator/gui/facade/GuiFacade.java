@@ -292,4 +292,11 @@ public class GuiFacade
 	    return miniatureManager;
       }
 
+
+      public LayerPanel getLayerPanel()
+      {
+
+	    return layerPanel;
+      }
+
 }

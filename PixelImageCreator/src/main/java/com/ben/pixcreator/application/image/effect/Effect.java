@@ -13,11 +13,11 @@ import com.ben.pixcreator.application.image.layer.effect.params.EffectParams;
 public class Effect
 {
 
-      private final EffectDesign    effect;
-      private final EffectParams<?> params;
+      private final EffectDesign effect;
+      private final EffectParams params;
 
 
-      public Effect(EffectDesign effect, EffectParams<?> params)
+      public Effect(EffectDesign effect, EffectParams params)
       {
 
 	    super();
@@ -26,7 +26,7 @@ public class Effect
       }
 
 
-      public EffectParams<?> getParams()
+      public EffectParams getParams()
       {
 
 	    return params;

@@ -369,10 +369,25 @@ public class Pile<T> implements Serializable
       }
 
 
+      public boolean isEmpty()
+      {
+
+	    return items.isEmpty();
+
+      }
+
+
+      /**
+       * Convienience method, return a java.util.List holding the effects of the layer
+       * 
+       * @return java.util.List<T>
+       */
       public List<T> getAllItems()
       {
 
-	    return items.stream().map(Pair::getItem).collect(Collectors.toList());
+	    List<T> list = new ArrayList<T>();
+	    list.addAll(items.stream().map(Pair::getItem).collect(Collectors.toList()));
+	    return list;
       }
 
 }

@@ -2,29 +2,35 @@
 package com.ben.pixcreator.application.image.layer.effect.params.impl;
 
 import com.ben.pixcreator.application.image.layer.effect.params.EffectParams;
+import com.ben.pixcreator.application.image.layer.effect.params.param.value.ParamValue;
 
-public class OpacityEffectParams extends EffectParams<Double>
+public class OpacityEffectParams extends EffectParams
 {
 
       public OpacityEffectParams()
       {
 
-	    super();
-	    map.put(EffectParams.Param.OPACITY, 1.0);
+	    ParamValue<Double> param = new ParamValue<Double>(0.0, 1.0, 1.0);
+	    param.setValue(1.0);
+	    map.put(EffectParams.Param.OPACITY, param);
+
       }
 
 
       public void setOpacity(Double value)
       {
 
-	    map.put(EffectParams.Param.OPACITY, value);
+	    ParamValue<Double> param = new ParamValue<Double>(0.0, 1.0, 1.0);
+	    param.setValue(value);
+
+	    map.put(EffectParams.Param.OPACITY, param);
       }
 
 
       public double getOpacity()
       {
 
-	    return map.get(EffectParams.Param.OPACITY);
+	    return (double) map.get(EffectParams.Param.OPACITY).getValue();
       }
 
 }

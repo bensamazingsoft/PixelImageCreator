@@ -246,7 +246,7 @@ public class LayerPanel extends BorderPane implements Initializable
       }
 
 
-      private void populate() throws NumberFormatException
+      public void populate() throws NumberFormatException
       {
 	    // populate VBox with layerBoxes and toggleGroup
 

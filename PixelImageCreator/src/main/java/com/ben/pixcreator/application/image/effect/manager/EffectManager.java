@@ -37,10 +37,33 @@ public class EffectManager
       }
 
 
+      /**
+       * Convenience method, returns the image effects piles (compute if absent)
+       * 
+       * @param image
+       * @return com.ben.pixcreator.application.pile.Pile<com.ben.pixcreator.application.image.effect.Effect>
+       */
       public Map<ALayer, Pile<Effect>> getImageEffects(PixImage image)
       {
 
 	    return manager.computeIfAbsent(image, k -> new HashMap<ALayer, Pile<Effect>>());
+      }
+
+
+      /**
+       * Convenience method, returns the layer effects piles (compute empty Pile if absent)
+       * 
+       * @param image
+       * @param layer
+       * @return com.ben.pixcreator.application.pile.Pile<com.ben.pixcreator.application.image.effect.Effect>
+       */
+      public Pile<Effect> getImageLayerEffects(PixImage image, ALayer layer)
+      {
+
+	    Map<ALayer, Pile<Effect>> imageEffects = getImageEffects(image);
+
+	    return imageEffects.computeIfAbsent(layer, k -> new Pile<Effect>());
+
       }
 
 }

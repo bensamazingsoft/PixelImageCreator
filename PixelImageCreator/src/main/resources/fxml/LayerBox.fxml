@@ -6,24 +6,27 @@
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.image.ImageView?>
 
-<fx:root type="javafx.scene.layout.HBox" xmlns:fx="http://javafx.com/fxml">
-	
+<fx:root type="javafx.scene.layout.VBox"
+	xmlns:fx="http://javafx.com/fxml">
 
-<StackPane fx:id="eye">
-	<ToggleButton fx:id="eyeBut" onMouseClicked="#toggleEye"/>
-</StackPane>
+	<HBox>
+		<StackPane fx:id="eye">
+			<ToggleButton fx:id="eyeBut" onMouseClicked="#toggleEye" />
+		</StackPane>
 
-<StackPane fx:id="miniaturePane" onMouseClicked="#handleMiniatureClicked"  alignment="CENTER">
-	<Canvas fx:id="canvas"/>
-</StackPane>
+		<StackPane fx:id="miniaturePane"
+			onMouseClicked="#handleMiniatureClicked" alignment="CENTER">
+			<Canvas fx:id="canvas" />
+		</StackPane>
 
-<StackPane fx:id="titlePane">
-	<ImageView fx:id="imgTypeView"/>
-</StackPane>
+		<StackPane fx:id="titlePane">
+			<ImageView fx:id="imgTypeView" />
+		</StackPane>
 
-<StackPane fx:id="lockPane">
-	<ToggleButton fx:id="lockBut" onMouseClicked="#toggleLock"/>
-</StackPane>
-
+		<StackPane fx:id="lockPane">
+			<ToggleButton fx:id="lockBut"
+				onMouseClicked="#toggleLock" />
+		</StackPane>
+	</HBox>
 
 </fx:root>

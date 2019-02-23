@@ -4,24 +4,34 @@ package com.ben.pixcreator.application.image.layer.effect.params;
 import java.util.HashMap;
 import java.util.Map;
 
-public class EffectParams<T>
+import com.ben.pixcreator.application.image.layer.effect.params.param.value.ParamValue;
+
+public class EffectParams
 {
+
+      protected Map<Param, ParamValue<?>> map = new HashMap<>();
+
+
+      public EffectParams()
+      {
+
+	    super();
+
+      }
 
       public static enum Param {
 	    OPACITY, XSIZE, YSIZE;
       }
 
-      protected Map<Param, T> map = new HashMap<>();
 
-
-      public T put(Param param, T value)
+      public ParamValue<?> put(Param param, ParamValue<?> value)
       {
 
 	    return map.put(param, value);
       }
 
 
-      public T get(Param param)
+      public ParamValue<?> get(Param param)
       {
 
 	    return map.get(param);
