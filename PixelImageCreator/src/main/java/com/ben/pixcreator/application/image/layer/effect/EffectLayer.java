@@ -27,6 +27,7 @@ public class EffectLayer extends ALayer
 	    super();
 	    this.sourceLayer = layer;
 	    this.effectApplier = EffectApplierFactory.getEffectApplier(effect);
+	    setVisible(true);
 
       }
 

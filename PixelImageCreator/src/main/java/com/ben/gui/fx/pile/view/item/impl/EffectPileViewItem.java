@@ -36,13 +36,18 @@ public class EffectPileViewItem extends HBox
       public EffectPileViewItem(Effect fx)
       {
 
+	    setBypass(false);
+
+	    bypassBut.setGraphic(bypassButImg);
 	    bypassButImg.imageProperty()
 			.bind(Bindings.when(bypass).then(bypassSelected).otherwise(bypassUnSelected));
+	    // bypassBut.selectedProperty().bindBidirectional(bypass);
+	    bypassBut.setOnAction(event -> setBypass(!isBypass()));
 
 	    EffectPileViewItemControl control = EffectPileViewItemControlFactory.getControl(fx);
 	    content.getChildren().add(control.node());
 
-	    bypass.addListener((obs, newVal, oldVal) -> {
+	    bypass.addListener((obs, oldVal, newVal) -> {
 		  if (newVal)
 		  {
 			control.bypass();

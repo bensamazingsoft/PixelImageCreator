@@ -1,8 +1,6 @@
 
 package com.ben.pixcreator.application.image.layer.draw.factory;
 
-import com.ben.pixcreator.application.context.AppContext;
-import com.ben.pixcreator.application.image.PixImage;
 import com.ben.pixcreator.application.image.effect.Effect;
 import com.ben.pixcreator.application.image.layer.effect.factory.EffectLayerFactory;
 import com.ben.pixcreator.application.image.layer.impl.ALayer;
@@ -17,10 +15,8 @@ import com.ben.pixcreator.application.pile.Pile;
 public class DrawLayerFactory
 {
 
-      public static ALayer getDrawLayer(PixImage image, ALayer layer)
+      public static ALayer getDrawLayer(Pile<Effect> effectPile, ALayer layer)
       {
-
-	    Pile<Effect> effectPile = AppContext.getInstance().getEffectManager().getImageEffects(image).get(layer);
 
 	    ALayer sourceLayer = layer.duplicate();
 

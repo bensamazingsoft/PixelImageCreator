@@ -28,6 +28,7 @@ public abstract class ALayer implements ILayer, Serializable
 
 	    super();
 	    this.uuid = UUID.randomUUID();
+	    // setVisible(true);
       }
 
 

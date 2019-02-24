@@ -1,6 +1,9 @@
 
 package com.ben.pixcreator.application.image.layer.effect.applier.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.ben.pixcreator.application.color.rgb.ColorRGB;
 import com.ben.pixcreator.application.image.layer.effect.applier.EffectApplier;
 import com.ben.pixcreator.application.image.layer.effect.params.impl.OpacityEffectParams;
@@ -16,7 +19,9 @@ import com.ben.pixcreator.application.image.layer.impl.PixLayer;
 public class OpacityEffectApplier implements EffectApplier
 {
 
-      private final OpacityEffectParams param;
+      private static final Logger	log = LoggerFactory.getLogger(OpacityEffectApplier.class);
+
+      private final OpacityEffectParams	param;
 
 
       public OpacityEffectApplier(OpacityEffectParams params)
@@ -49,7 +54,9 @@ public class OpacityEffectApplier implements EffectApplier
       private ColorRGB computeNewColor(ColorRGB rgb)
       {
 
-	    return new ColorRGB(rgb.getRed(), rgb.getGreen(), rgb.getBlue(), rgb.getOpacity() * param.getOpacity());
+	    ColorRGB newColor = new ColorRGB(rgb.getRed(), rgb.getGreen(), rgb.getBlue(), rgb.getOpacity() * param.getOpacity());
+	    // log.debug("newColor : " + newColor);
+	    return newColor;
       }
 
 }

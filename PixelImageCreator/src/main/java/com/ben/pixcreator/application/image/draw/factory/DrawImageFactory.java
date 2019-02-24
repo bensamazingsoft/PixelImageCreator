@@ -1,8 +1,6 @@
 
 package com.ben.pixcreator.application.image.draw.factory;
 
-import java.util.Map;
-
 import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.application.image.PixImage;
 import com.ben.pixcreator.application.image.effect.Effect;
@@ -28,29 +26,26 @@ public class DrawImageFactory
       public static PixImage getDrawImage(PixImage image)
       {
 
-	    Map<ALayer, Pile<Effect>> imageEffects = AppContext.getInstance().getEffectManager().getImageEffects(image);
+	    PixImage drawImage = image.duplicate();
 
-	    if (!imageEffects.isEmpty())
+	    // loop through all layers
+	    for (int i = 0; i < drawImage.getLayerList().getItems().size(); i++)
 	    {
-		  PixImage drawImage = image.duplicate();
 
-		  // loop through all layers
-		  for (int i = 0; i < drawImage.getLayerList().getItems().size(); i++)
+		  Pile<Effect> effectPile = AppContext.getInstance().getEffectManager().getImageLayerEffects(image, image.getLayerList().getItem(i));
+
+		  ALayer layer = drawImage.getLayerList().getItem(i);
+
+		  // check visibility here cause if no effect, no need to compute a non visible effect layer
+		  if (!effectPile.isEmpty() && layer.isVisible())
 		  {
 
-			ALayer layer = drawImage.getLayerList().getItem(i);
+			drawImage.getLayerList().replace(i, DrawLayerFactory.getDrawLayer(effectPile, layer));
 
-			// if layer has effects
-			if (imageEffects.containsKey(layer))
-			{
-
-			      drawImage.getLayerList().replace(i, DrawLayerFactory.getDrawLayer(image, layer));
-
-			}
 		  }
-		  image = drawImage;
 	    }
-	    return image;
+
+	    return drawImage;
       }
 
 }
