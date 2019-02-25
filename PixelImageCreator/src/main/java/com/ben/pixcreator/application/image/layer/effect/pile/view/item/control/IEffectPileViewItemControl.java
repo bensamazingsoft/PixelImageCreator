@@ -1,9 +1,9 @@
 
-package com.ben.gui.fx.pile.view.item.control.factory;
+package com.ben.pixcreator.application.image.layer.effect.pile.view.item.control;
 
 import javafx.scene.Node;
 
-public interface EffectPileViewItemControl
+public interface IEffectPileViewItemControl
 {
 
       public void bypass();
@@ -12,7 +12,7 @@ public interface EffectPileViewItemControl
       public void enable();
 
 
-      public void delete();
+      public void reset();
 
 
       /**
