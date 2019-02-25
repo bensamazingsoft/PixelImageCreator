@@ -1,8 +1,10 @@
 
 package com.ben.pixcreator.application.image.layer.effect;
 
-public enum EffectDesign {
+import java.io.Serializable;
 
-      OPACITY, SIZE;
+public enum EffectDesign implements Serializable {
+
+	OPACITY, SIZE;
 
 }

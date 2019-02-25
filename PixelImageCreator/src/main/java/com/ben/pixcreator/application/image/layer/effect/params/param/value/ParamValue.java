@@ -1,67 +1,59 @@
 
 package com.ben.pixcreator.application.image.layer.effect.params.param.value;
 
-public class ParamValue<T>
-{
+import java.io.Serializable;
 
-      protected final T	min;
+public class ParamValue<T> implements Serializable {
 
-      protected final T	max;
-      protected final T	bypass;
+	/**
+	* 
+	*/
+	private static final long serialVersionUID = 1L;
 
-      protected T	value;
+	protected final T min;
 
+	protected final T	max;
+	protected final T	bypass;
 
-      public ParamValue(T min, T max, T bypass)
-      {
+	protected T value;
 
-	    super();
-	    this.min = min;
-	    this.max = max;
-	    this.bypass = bypass;
-      }
+	public ParamValue(T min, T max, T bypass) {
 
+		super();
+		this.min = min;
+		this.max = max;
+		this.bypass = bypass;
+	}
 
-      public ParamValue(T value)
-      {
+	public ParamValue(T value) {
 
-	    min = max = bypass = null;
-	    this.value = value;
-      }
+		min = max = bypass = null;
+		this.value = value;
+	}
 
+	public T getValue() {
 
-      public T getValue()
-      {
+		return value;
+	}
 
-	    return value;
-      }
+	public void setValue(T value) {
 
+		this.value = value;
+	}
 
-      public void setValue(T value)
-      {
+	public T getMin() {
 
-	    this.value = value;
-      }
+		return min;
+	}
 
+	public T getMax() {
 
-      public T getMin()
-      {
+		return max;
+	}
 
-	    return min;
-      }
+	public T getBypass() {
 
-
-      public T getMax()
-      {
-
-	    return max;
-      }
-
-
-      public T getBypass()
-      {
-
-	    return bypass;
-      }
+		return bypass;
+	}
 
 }

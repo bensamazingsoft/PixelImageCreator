@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
@@ -18,78 +19,76 @@ import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.application.file.PixFile;
 import com.ben.pixcreator.application.grouplock.GroupLock;
 import com.ben.pixcreator.application.image.PixImage;
+import com.ben.pixcreator.application.image.effect.Effect;
 import com.ben.pixcreator.application.image.layer.impl.ALayer;
+import com.ben.pixcreator.application.pile.Pile;
 import com.ben.pixcreator.gui.exception.popup.ExceptionPopUp;
 import com.ben.pixcreator.gui.facade.GuiFacade;
 
 import javafx.scene.paint.Color;
 
-public class SaveAction implements IAction
-{
+public class SaveAction implements IAction {
 
-      private final PixImage image;
+	private final PixImage image;
 
+	public SaveAction(PixImage image) {
 
-      public SaveAction(PixImage image)
-      {
+		this.image = image;
+	}
 
-	    this.image = image;
-      }
+	@Override
+	public void execute() throws Exception {
 
+		File file = AppContext.getInstance().getFiles().get(image);
 
-      @Override
-      public void execute() throws Exception
-      {
+		image.setName(file.getName());
 
-	    File file = AppContext.getInstance().getFiles().get(image);
+		PixFile pixFile = getPixFile(file);
 
-	    image.setName(file.getName());
+		try (FileOutputStream fileOut = new FileOutputStream(file);
+				ObjectOutputStream out = new ObjectOutputStream(fileOut);) {
 
-	    PixFile pixFile = getPixFile(file);
+			out.writeObject(pixFile);
 
-	    try (FileOutputStream fileOut = new FileOutputStream(file);
-			ObjectOutputStream out = new ObjectOutputStream(fileOut);)
-	    {
+		} catch (IOException e) {
+			new ExceptionPopUp(e);
+		}
 
-		  out.writeObject(pixFile);
+	}
 
-	    }
-	    catch (IOException e)
-	    {
-		  new ExceptionPopUp(e);
-	    }
+	private PixFile getPixFile(File file) {
 
-      }
+		Set<ColorRGB> colors;
+		Map<UUID, Set<UUID>> locks;
+		Map<UUID, Pile<Effect>> effects;
+		Map<UUID, Boolean> visibility;
 
+		GuiFacade gui = GuiFacade.getInstance();
+		GroupLock groupLock = AppContext.getInstance().getGroupLocks().get(gui.getActiveImage());
 
-      private PixFile getPixFile(File file)
-      {
+		colors = gui.getImagesColors().get(image).stream()
+				.map(prop -> new ColorRGB((Color) prop.get())).collect(toSet());
 
-	    Map<UUID, Set<UUID>> locks;
-	    Map<UUID, Boolean> visibility;
-	    Set<ColorRGB> colors;
+		locks = image.getLayerList().getAllItems().stream()
+				.collect(toMap(
+						ALayer::getUUID,
+						layer -> (Set<UUID>) groupLock.getLockedLayers(layer).stream()
+								.map(ALayer::getUUID)
+								.collect(toSet())));
 
-	    GuiFacade gui = GuiFacade.getInstance();
-	    GroupLock groupLock = AppContext.getInstance().getGroupLocks().get(gui.getActiveImage());
+		effects = AppContext.getInstance().getEffectManager().getImageEffects(image).entrySet().stream()
+				.collect(toMap(
+						entry -> entry.getKey().getUUID(),
+						Entry<ALayer, Pile<Effect>>::getValue));
 
-	    colors = gui.getImagesColors().get(image).stream()
-			.map(prop -> new ColorRGB((Color) prop.get())).collect(toSet());
+		visibility = image.getLayerList().getAllItems().stream()
+				.collect(toMap(
+						ALayer::getUUID,
+						ALayer::isVisible));
 
-	    locks = image.getLayerList().getAllItems().stream()
-			.collect(toMap(
-				    ALayer::getUUID,
-				    layer -> (Set<UUID>) groupLock.getLockedLayers(layer).stream()
-						.map(ALayer::getUUID)
-						.collect(toSet())));
+		PixFile pixFile = new PixFile(image, colors, locks, effects, visibility);
 
-	    visibility = image.getLayerList().getAllItems().stream()
-			.collect(toMap(
-				    ALayer::getUUID,
-				    ALayer::isVisible));
-
-	    PixFile pixFile = new PixFile(image, colors, locks, visibility);
-
-	    return pixFile;
-      }
+		return pixFile;
+	}
 
 }

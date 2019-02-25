@@ -1,40 +1,38 @@
 
 package com.ben.pixcreator.application.image.layer.effect.params;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.ben.pixcreator.application.image.layer.effect.params.param.value.ParamValue;
 
-public class EffectParams
-{
+public class EffectParams implements Serializable {
 
-      protected Map<Param, ParamValue<?>> map = new HashMap<>();
+	/**
+	* 
+	*/
+	private static final long			serialVersionUID	= 1L;
+	protected Map<Param, ParamValue<?>>	map					= new HashMap<>();
 
+	public EffectParams() {
 
-      public EffectParams()
-      {
+		super();
 
-	    super();
+	}
 
-      }
+	public static enum Param {
+		OPACITY, XSIZE, YSIZE;
+	}
 
-      public static enum Param {
-	    OPACITY, XSIZE, YSIZE;
-      }
+	public ParamValue<?> put(Param param, ParamValue<?> value) {
 
+		return map.put(param, value);
+	}
 
-      public ParamValue<?> put(Param param, ParamValue<?> value)
-      {
+	public ParamValue<?> get(Param param) {
 
-	    return map.put(param, value);
-      }
-
-
-      public ParamValue<?> get(Param param)
-      {
-
-	    return map.get(param);
-      }
+		return map.get(param);
+	}
 
 }

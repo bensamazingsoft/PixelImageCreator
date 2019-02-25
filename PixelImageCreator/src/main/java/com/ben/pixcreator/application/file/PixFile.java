@@ -7,6 +7,8 @@ import java.util.UUID;
 
 import com.ben.pixcreator.application.color.rgb.ColorRGB;
 import com.ben.pixcreator.application.image.PixImage;
+import com.ben.pixcreator.application.image.effect.Effect;
+import com.ben.pixcreator.application.pile.Pile;
 
 /**
  * 
@@ -26,13 +28,16 @@ public class PixFile implements Serializable {
 	private Set<ColorRGB>			colors;
 	private Map<UUID, Set<UUID>>	locks;
 	private Map<UUID, Boolean>		visibility;
+	private Map<UUID, Pile<Effect>>	effects;
 
-	public PixFile(PixImage image, Set<ColorRGB> colors, Map<UUID, Set<UUID>> locks, Map<UUID, Boolean> visibility) {
+	public PixFile(PixImage image, Set<ColorRGB> colors, Map<UUID, Set<UUID>> locks, Map<UUID, Pile<Effect>> effects,
+			Map<UUID, Boolean> visibility) {
 		super();
 		this.image = image;
 		this.colors = colors;
 		this.locks = locks;
 		this.visibility = visibility;
+		this.effects = effects;
 	}
 
 	public PixImage getImage() {
@@ -49,6 +54,10 @@ public class PixFile implements Serializable {
 
 	public Map<UUID, Boolean> getVisibility() {
 		return visibility;
+	}
+
+	public Map<UUID, Pile<Effect>> getEffects() {
+		return effects;
 	}
 
 }

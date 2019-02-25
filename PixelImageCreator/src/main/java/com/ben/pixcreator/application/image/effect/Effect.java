@@ -1,6 +1,8 @@
 
 package com.ben.pixcreator.application.image.effect;
 
+import java.io.Serializable;
+
 import com.ben.pixcreator.application.image.layer.effect.EffectDesign;
 import com.ben.pixcreator.application.image.layer.effect.params.EffectParams;
 
@@ -10,33 +12,30 @@ import com.ben.pixcreator.application.image.layer.effect.params.EffectParams;
  * @author ben
  *
  */
-public class Effect
-{
+public class Effect implements Serializable {
 
-      private final EffectDesign effect;
-      private final EffectParams params;
+	/**
+	* 
+	*/
+	private static final long	serialVersionUID	= 1L;
+	private final EffectDesign	effect;
+	private final EffectParams	params;
 
+	public Effect(EffectDesign effect, EffectParams params) {
 
-      public Effect(EffectDesign effect, EffectParams params)
-      {
+		super();
+		this.effect = effect;
+		this.params = params;
+	}
 
-	    super();
-	    this.effect = effect;
-	    this.params = params;
-      }
+	public EffectParams getParams() {
 
+		return params;
+	}
 
-      public EffectParams getParams()
-      {
+	public EffectDesign getEffect() {
 
-	    return params;
-      }
-
-
-      public EffectDesign getEffect()
-      {
-
-	    return effect;
-      }
+		return effect;
+	}
 
 }
