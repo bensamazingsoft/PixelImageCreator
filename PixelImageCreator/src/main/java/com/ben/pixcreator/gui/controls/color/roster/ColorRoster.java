@@ -17,6 +17,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
@@ -51,7 +52,6 @@ public class ColorRoster extends HBox implements Initializable {
 		}
 
 		populate();
-		// toggleGroup.selectToggle(toggleGroup.getToggles().get(0));
 
 		GuiFacade.getInstance().setColorRoster(this);
 
@@ -71,6 +71,11 @@ public class ColorRoster extends HBox implements Initializable {
 
 		}
 
+		this.getChildren().add(plusButton());
+	}
+
+	private Button plusButton() {
+
 		Button butt = new Button("+");
 		butt.setId("rosterPlusButton");
 		butt.setOnAction(Event -> {
@@ -83,9 +88,24 @@ public class ColorRoster extends HBox implements Initializable {
 				colorBoxes = makeColorBoxes(getImage());
 
 				populate();
+
+				toggleGroup.selectToggle(colorBoxOfColor(prop.get()));
 			}
 		});
-		this.getChildren().add(butt);
+		return butt;
+	}
+
+	private Toggle colorBoxOfColor(Color color) {
+
+		for (ColorBox box : colorBoxes) {
+
+			if (box.getColor().equals(color)) {
+				return box;
+			}
+
+		}
+
+		return null;
 	}
 
 	private Set<ColorBox> makeColorBoxes(PixImage image) {
@@ -120,6 +140,13 @@ public class ColorRoster extends HBox implements Initializable {
 		return tempBoxes;
 	}
 
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+
+		setSpacing(5.0);
+
+	}
+
 	public ToggleGroup getToggleGroup() {
 
 		return toggleGroup;
@@ -143,13 +170,6 @@ public class ColorRoster extends HBox implements Initializable {
 	public final void setImage(final PixImage image) {
 
 		this.imageProperty().set(image);
-	}
-
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-
-		setSpacing(5.0);
-
 	}
 
 }

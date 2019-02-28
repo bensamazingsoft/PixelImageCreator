@@ -27,229 +27,171 @@ import javafx.scene.control.MenuBar;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 
-public class PixMenuBar extends MenuBar
-{
+public class PixMenuBar extends MenuBar {
 
-      private static final Logger log = LoggerFactory.getLogger(PixMenuBar.class);
+	private static final Logger log = LoggerFactory.getLogger(PixMenuBar.class);
 
+	public PixMenuBar() {
 
-      public PixMenuBar()
-      {
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n/trad");
 
-	    ResourceBundle bundle = ResourceBundle.getBundle("i18n/trad");
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/PixMenuBar.fxml"), bundle);
+		fxmlLoader.setRoot(this);
+		fxmlLoader.setController(this);
 
-	    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/PixMenuBar.fxml"), bundle);
-	    fxmlLoader.setRoot(this);
-	    fxmlLoader.setController(this);
+		try {
+			fxmlLoader.load();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 
-	    try
-	    {
-		  fxmlLoader.load();
-	    }
-	    catch (IOException e)
-	    {
-		  throw new RuntimeException(e);
-	    }
+	}
 
-      }
+	@FXML
+	private void newAction(final ActionEvent event) {
 
+		handleNewAction();
+	}
 
-      @FXML
-      private void newAction(final ActionEvent event)
-      {
+	private void handleNewAction() {
 
-	    handleNewAction();
-      }
+		try {
 
-
-      private void handleNewAction()
-      {
-
-	    try
-	    {
-
-		  Executor.getInstance().executeAction(new OpenNewImageAction());
-	    }
-	    catch (Exception e)
-	    {
-		  new ExceptionPopUp(e);
-	    }
-
-      }
-
-
-      @FXML
-      private void openAction(final ActionEvent event)
-      {
-
-	    handleOpenAction();
-      }
-
-
-      private void handleOpenAction()
-      {
-
-	    FileChooser fc = new FileChooser();
-	    fc.getExtensionFilters().add(new ExtensionFilter("pix", "*.pix"));
-
-	    File file = fc.showOpenDialog(null);
-
-	    if (null != file)
-	    {
-
-		  if (file.exists())
-		  {
-
-			try
-			{
-			      Executor.getInstance().executeAction(new LoadFileAction(file));
-			}
-			catch (Exception e)
-			{
-			      new ExceptionPopUp(e);
-			}
-
-		  }
-
-	    }
-
-      }
-
-
-      @FXML
-      private void saveAction(ActionEvent event)
-      {
-
-	    handleSaveAction();
-      }
-
-
-      private void handleSaveAction()
-      {
-
-	    PixImage image = GuiFacade.getInstance().getActiveimage();
-
-	    if (!AppContext.getInstance().getFiles().containsKey(image))
-	    {
-		  handleSaveAsAction();
-	    }
-	    else
-	    {
-		  try
-		  {
-			Executor.getInstance().executeAction(new SaveAction(image));
-		  }
-		  catch (Exception e)
-		  {
+			Executor.getInstance().executeAction(new OpenNewImageAction());
+		} catch (Exception e) {
 			new ExceptionPopUp(e);
-		  }
-	    }
+		}
 
-      }
+	}
 
+	@FXML
+	private void openAction(final ActionEvent event) {
 
-      @FXML
-      private void saveAsAction(ActionEvent event)
-      {
+		handleOpenAction();
+	}
 
-	    handleSaveAsAction();
-      }
+	private void handleOpenAction() {
 
+		FileChooser fc = new FileChooser();
+		fc.getExtensionFilters().add(new ExtensionFilter("pix", "*.pix"));
 
-      private void handleSaveAsAction()
-      {
+		File file = fc.showOpenDialog(null);
 
-	    PixImage image = GuiFacade.getInstance().getActiveimage();
+		if (null != file) {
 
-	    FileChooser fc = new FileChooser();
-	    fc.getExtensionFilters().add(new ExtensionFilter("pix", "*.pix"));
+			if (file.exists()) {
 
-	    File file = fc.showSaveDialog(null);
-	    if (null != file)
-	    {
-		  log.debug("saving image to : " + file.toString());
-		  if (null != file)
-		  {
-			AppContext.getInstance().getFiles().put(image, file);
-			handleSaveAction();
-		  }
-	    }
-      }
+				try {
+					Executor.getInstance().executeAction(new LoadFileAction(file));
+				} catch (Exception e) {
+					new ExceptionPopUp(e);
+				}
 
+			}
 
-      @FXML
-      public void cancel(final ActionEvent event)
-      {
+		}
 
-	    handleCancel();
-      }
+	}
 
+	@FXML
+	private void saveAction(ActionEvent event) {
 
-      private void handleCancel()
-      {
+		handleSaveAction();
+	}
 
-	    try
-	    {
-		  Executor.getInstance().cancel();
-		  Executor.getInstance().executeAction(new RefreshTabAction(GuiFacade.getInstance().getActiveTab()));
-	    }
-	    catch (Exception e)
-	    {
-		  new ExceptionPopUp(e);
-	    }
+	private void handleSaveAction() {
 
-      }
+		PixImage image = GuiFacade.getInstance().getActiveimage();
 
+		if (!AppContext.getInstance().getFiles().containsKey(image)) {
+			handleSaveAsAction();
+		} else {
+			try {
+				Executor.getInstance().executeAction(new SaveAction(image));
+			} catch (Exception e) {
+				new ExceptionPopUp(e);
+			}
+		}
 
-      @FXML
-      public void redo(final ActionEvent event)
-      {
+	}
 
-	    handleRedo();
-      }
+	@FXML
+	private void saveAsAction(ActionEvent event) {
 
+		handleSaveAsAction();
+	}
 
-      private void handleRedo()
-      {
+	private void handleSaveAsAction() {
 
-	    try
-	    {
-		  Executor.getInstance().redo();
-		  Executor.getInstance().executeAction(new RefreshTabAction(GuiFacade.getInstance().getActiveTab()));
-	    }
-	    catch (Exception e)
-	    {
-		  new ExceptionPopUp(e);
-	    }
+		PixImage image = GuiFacade.getInstance().getActiveimage();
 
-      }
+		FileChooser fc = new FileChooser();
+		fc.getExtensionFilters().add(new ExtensionFilter("pix", "*.pix"));
 
+		File file = fc.showSaveDialog(null);
+		if (null != file) {
+			log.debug("saving image to : " + file.toString());
+			if (null != file) {
+				AppContext.getInstance().getFiles().put(image, file);
+				handleSaveAction();
+				GuiFacade.getInstance().getActiveTab().setText(file.getName());
+			}
+		}
+	}
 
-      @FXML
-      public void unSelect(ActionEvent event)
-      {
+	@FXML
+	public void cancel(final ActionEvent event) {
 
-	    handleUnSelect();
-      }
+		handleCancel();
+	}
 
+	private void handleCancel() {
 
-      private void handleUnSelect()
-      {
+		try {
+			Executor.getInstance().cancel();
+			Executor.getInstance().executeAction(new RefreshTabAction(GuiFacade.getInstance().getActiveTab()));
+		} catch (Exception e) {
+			new ExceptionPopUp(e);
+		}
 
-	    PixImage activeImage = GuiFacade.getInstance().getActiveimage();
-	    GuiFacade.getInstance().getSelections().remove(activeImage);
-	    PixTab tab = GuiFacade.getInstance().getActiveTab();
+	}
 
-	    try
-	    {
-		  Executor.getInstance().executeAction(new ActionUpdateSelection(activeImage));
-		  Executor.getInstance().executeAction(new RefreshTabAction(tab));
-	    }
-	    catch (Exception e)
-	    {
-		  new ExceptionPopUp(e);
-	    }
+	@FXML
+	public void redo(final ActionEvent event) {
 
-      }
+		handleRedo();
+	}
+
+	private void handleRedo() {
+
+		try {
+			Executor.getInstance().redo();
+			Executor.getInstance().executeAction(new RefreshTabAction(GuiFacade.getInstance().getActiveTab()));
+		} catch (Exception e) {
+			new ExceptionPopUp(e);
+		}
+
+	}
+
+	@FXML
+	public void unSelect(ActionEvent event) {
+
+		handleUnSelect();
+	}
+
+	private void handleUnSelect() {
+
+		PixImage activeImage = GuiFacade.getInstance().getActiveimage();
+		GuiFacade.getInstance().getSelections().remove(activeImage);
+		PixTab tab = GuiFacade.getInstance().getActiveTab();
+
+		try {
+			Executor.getInstance().executeAction(new ActionUpdateSelection(activeImage));
+			Executor.getInstance().executeAction(new RefreshTabAction(tab));
+		} catch (Exception e) {
+			new ExceptionPopUp(e);
+		}
+
+	}
 
 }
