@@ -30,6 +30,7 @@ public class PicLayer extends ALayer
 	    this.imageFile = imageFile;
 	    position = new Coord();
 	    sizeFactor = 1d;
+	    setVisible(true);
       }
 
 
@@ -179,8 +180,17 @@ public class PicLayer extends ALayer
       public ALayer duplicate()
       {
 
-	    // TODO Auto-generated method stub
-	    return null;
+	    PicLayer clone = new PicLayer(this.getImageFile());
+
+	    clone.setVisible(isVisible());
+
+	    clone.setPosition(getPosition());
+
+	    clone.setSizeFactor(getSizeFactor());
+
+	    clone.setZoomFactor(getZoomFactor());
+
+	    return clone;
       }
 
 }

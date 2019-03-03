@@ -176,7 +176,7 @@ public class Pile<T> implements Serializable
 		  items.add(new Pair(++idx, newitem));
 		  for (Pair pair : items)
 		  {
-			if (pair.getIdx() > idx)
+			if (pair.getIdx() >= idx && !pair.getItem().equals(newitem))
 			{
 			      pair.incr();
 			}
@@ -204,7 +204,7 @@ public class Pile<T> implements Serializable
 		  items.add(new Pair(idx, newitem));
 		  for (Pair pair : items)
 		  {
-			if (pair.getIdx() >= idx)
+			if (pair.getIdx() >= idx && !pair.getItem().equals(newitem))
 			{
 			      pair.incr();
 			}
@@ -331,6 +331,14 @@ public class Pile<T> implements Serializable
 		  return Pile.this;
 	    }
 
+
+	    @Override
+	    public String toString()
+	    {
+
+		  return "Pair [idx=" + idx + ", item=" + item + "]";
+	    }
+
       }
 
 
@@ -388,6 +396,14 @@ public class Pile<T> implements Serializable
 	    List<T> list = new ArrayList<T>();
 	    list.addAll(items.stream().map(Pair::getItem).collect(Collectors.toList()));
 	    return list;
+      }
+
+
+      @Override
+      public String toString()
+      {
+
+	    return "Pile [items=" + items + "]";
       }
 
 }

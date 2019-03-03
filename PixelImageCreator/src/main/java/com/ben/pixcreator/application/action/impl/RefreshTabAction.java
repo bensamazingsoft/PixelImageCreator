@@ -13,33 +13,39 @@ import com.ben.pixcreator.gui.facade.GuiFacade;
 
 import javafx.scene.canvas.Canvas;
 
-public class RefreshTabAction implements IAction {
+public class RefreshTabAction implements IAction
+{
 
-	private static final Logger log = LoggerFactory.getLogger(RefreshTabAction.class);
+      private static final Logger log = LoggerFactory.getLogger(RefreshTabAction.class);
 
-	private final PixImage	image;
-	private final Canvas	canvas;
+      private final PixImage	  image;
+      private final Canvas	  canvas;
 
-	public RefreshTabAction(PixTab pxTab) {
 
-		canvas = pxTab.getCanvas();
-		image = pxTab.getImage();
-	}
+      public RefreshTabAction(PixTab pxTab)
+      {
 
-	@Override
-	public void execute() throws Exception {
+	    canvas = pxTab.getCanvas();
+	    image = pxTab.getImage();
+      }
 
-		log.debug("Refresh tab : " + image.toString());
-		canvas.getGraphicsContext2D().clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
-		DrawImageFactory.getDrawImage(image).draw(canvas);
+      @Override
+      public void execute() throws Exception
+      {
 
-		for (ALayer layer : image.getLayerList().getAllItems()) {
+	    log.debug("Refresh tab : " + image.toString());
+	    canvas.getGraphicsContext2D().clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
-			GuiFacade.getInstance().getMiniatureManager().update(layer);
+	    DrawImageFactory.getDrawImage(image).draw(canvas);
 
-		}
+	    for (ALayer layer : image.getLayerList().getAllItems())
+	    {
 
-	}
+		  GuiFacade.getInstance().getMiniatureManager().update(layer);
+
+	    }
+
+      }
 
 }

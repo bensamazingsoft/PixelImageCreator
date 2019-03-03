@@ -17,16 +17,19 @@
 	<right>
 		<VBox fx:id="moveLayerButBox">
 			<Button fx:id="moveLayerUpBut" onAction="#handleMoveLayerUp" />
-			<Button fx:id="moveLayerDownBut" onAction="#handleMoveLayerDown" />
+			<Button fx:id="moveLayerDownBut"
+				onAction="#handleMoveLayerDown" />
 		</VBox>
 	</right>
 
 	<bottom>
 		<ToolBar fx:id="toolBar">
-	
+
 			<Pane HBox.hgrow="ALWAYS" />
-			<Button fx:id="newLayerBut" onAction="#handleNewLayer" />	
-			<Button fx:id="duplicateLayerBut" onAction="#handleDuplicateLayer" />
+			<Button fx:id="newLayerBut" onAction="#handleNewLayer" />
+			<Button fx:id="newPicLayerBut" onAction="#handleNewPicLayer" />
+			<Button fx:id="duplicateLayerBut"
+				onAction="#handleDuplicateLayer" />
 			<Button fx:id="deleteLayerBut" onAction="#handleDeleteLayer" />
 		</ToolBar>
 

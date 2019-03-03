@@ -1,13 +1,20 @@
 
 package com.ben.pixcreator.application.action.impl;
 
+import java.io.File;
+import java.util.Arrays;
+
 import com.ben.pixcreator.application.action.IAction;
 import com.ben.pixcreator.application.action.ICancelable;
 import com.ben.pixcreator.application.image.PixImage;
 import com.ben.pixcreator.application.image.layer.impl.ALayer;
+import com.ben.pixcreator.application.image.layer.impl.PicLayer;
 import com.ben.pixcreator.application.image.layer.impl.PixLayer;
 import com.ben.pixcreator.application.pile.Pile;
 import com.ben.pixcreator.gui.controls.layer.panel.actions.LayerActions;
+
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 
 public class LayerAction implements IAction, ICancelable
 {
@@ -37,6 +44,9 @@ public class LayerAction implements IAction, ICancelable
 	    case ADDNEW:
 		  addNew();
 		  break;
+	    case ADDNEWPIC:
+		  addNewPic();
+		  break;
 	    case DELETE:
 		  delete();
 		  break;
@@ -52,6 +62,24 @@ public class LayerAction implements IAction, ICancelable
 	    default:
 		  break;
 
+	    }
+
+      }
+
+
+      private void addNewPic()
+      {
+
+	    FileChooser fc = new FileChooser();
+	    fc.getExtensionFilters().addAll(Arrays.asList(new ExtensionFilter("pics extensions", Arrays.asList("*.jpg", "*.png", "*.bmp"))));
+
+	    File picfile = fc.showOpenDialog(null);
+	    ;
+
+	    if (null != picfile && picfile.exists())
+	    {
+
+		  layerList.insertOver(layer, new PicLayer(picfile));
 	    }
 
       }
@@ -88,7 +116,7 @@ public class LayerAction implements IAction, ICancelable
       private void addNew()
       {
 
-	    layerList.add(new PixLayer());
+	    layerList.insertOver(layer, new PixLayer());
 
       }
 
