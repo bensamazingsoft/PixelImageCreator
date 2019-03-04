@@ -6,8 +6,11 @@ import org.slf4j.LoggerFactory;
 
 import com.ben.pixcreator.application.color.rgb.ColorRGB;
 import com.ben.pixcreator.application.image.layer.effect.applier.EffectApplier;
+import com.ben.pixcreator.application.image.layer.effect.params.EffectParams;
 import com.ben.pixcreator.application.image.layer.effect.params.impl.OpacityEffectParams;
 import com.ben.pixcreator.application.image.layer.impl.ALayer;
+import com.ben.pixcreator.application.image.layer.impl.OpacityPicLayer;
+import com.ben.pixcreator.application.image.layer.impl.PicLayer;
 import com.ben.pixcreator.application.image.layer.impl.PixLayer;
 
 /**
@@ -16,47 +19,45 @@ import com.ben.pixcreator.application.image.layer.impl.PixLayer;
  * @author ben
  *
  */
-public class OpacityEffectApplier implements EffectApplier
-{
+public class OpacityEffectApplier implements EffectApplier {
 
-      private static final Logger	log = LoggerFactory.getLogger(OpacityEffectApplier.class);
+	private static final Logger log = LoggerFactory.getLogger(OpacityEffectApplier.class);
 
-      private final OpacityEffectParams	param;
+	private final OpacityEffectParams param;
 
+	public OpacityEffectApplier(OpacityEffectParams params) {
 
-      public OpacityEffectApplier(OpacityEffectParams params)
-      {
+		this.param = params;
+	}
 
-	    this.param = params;
-      }
+	@Override
+	public ALayer apply(ALayer source) {
 
+		if (source instanceof PixLayer) {
 
-      @Override
-      public ALayer apply(ALayer source)
-      {
+			PixLayer drawLayer = ((PixLayer) source).duplicate();
 
-	    if (source instanceof PixLayer)
-	    {
+			((PixLayer) source).getGrid().forEach((coord, rgb) -> {
+				drawLayer.getGrid().put(coord, computeNewColor(rgb));
+			});
 
-		  PixLayer drawLayer = ((PixLayer) source).duplicate();
+			return drawLayer;
 
-		  ((PixLayer) source).getGrid().forEach((coord, rgb) -> {
-			drawLayer.getGrid().put(coord, computeNewColor(rgb));
-		  });
+		} else if (source instanceof PicLayer) {
 
-		  return drawLayer;
-	    }
+			return new OpacityPicLayer((PicLayer) source, (double) param.get(EffectParams.Param.OPACITY).getValue());
 
-	    return source;
-      }
+		}
 
+		return source;
+	}
 
-      private ColorRGB computeNewColor(ColorRGB rgb)
-      {
+	private ColorRGB computeNewColor(ColorRGB rgb) {
 
-	    ColorRGB newColor = new ColorRGB(rgb.getRed(), rgb.getGreen(), rgb.getBlue(), rgb.getOpacity() * param.getOpacity());
-	    // log.debug("newColor : " + newColor);
-	    return newColor;
-      }
+		ColorRGB newColor = new ColorRGB(rgb.getRed(), rgb.getGreen(), rgb.getBlue(),
+				rgb.getOpacity() * param.getOpacity());
+		// log.debug("newColor : " + newColor);
+		return newColor;
+	}
 
 }

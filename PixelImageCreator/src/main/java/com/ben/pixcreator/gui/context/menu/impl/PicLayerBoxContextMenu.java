@@ -1,4 +1,3 @@
-
 package com.ben.pixcreator.gui.context.menu.impl;
 
 import com.ben.pixcreator.application.action.impl.AddEffectToLayerAction;
@@ -14,9 +13,9 @@ import com.ben.pixcreator.gui.facade.GuiFacade;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 
-public class PixLayerBoxContextMenu extends ContextMenu {
+public class PicLayerBoxContextMenu extends ContextMenu {
 
-	public PixLayerBoxContextMenu(ALayer layer) {
+	public PicLayerBoxContextMenu(ALayer layer) {
 
 		MenuItem menuItem = new MenuItem();
 

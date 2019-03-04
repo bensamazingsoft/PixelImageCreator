@@ -2,40 +2,35 @@
 package com.ben.pixcreator.gui.context.menu.provider;
 
 import com.ben.pixcreator.application.image.layer.impl.ALayer;
+import com.ben.pixcreator.application.image.layer.impl.PicLayer;
 import com.ben.pixcreator.application.image.layer.impl.PixLayer;
+import com.ben.pixcreator.gui.context.menu.impl.PicLayerBoxContextMenu;
 import com.ben.pixcreator.gui.context.menu.impl.PixLayerBoxContextMenu;
 
 import javafx.scene.control.ContextMenu;
 
-public class LayerBoxContextMenuProvider implements ContextMenuProvider
-{
+public class LayerBoxContextMenuProvider implements ContextMenuProvider {
 
-      @Override
-      public ContextMenu getMenu(Object obj)
-      {
+	@Override
+	public ContextMenu getMenu(Object obj) {
 
-	    if (obj instanceof ALayer)
-	    {
+		if (obj instanceof ALayer) {
 
-		  ALayer layer = (ALayer) obj;
+			ALayer layer = (ALayer) obj;
 
-		  if (layer instanceof PixLayer)
-		  {
-			return new PixLayerBoxContextMenu(layer);
-		  }
-		  else
-		  {
+			if (layer instanceof PixLayer) {
+				return new PixLayerBoxContextMenu(layer);
+			} else if (layer instanceof PicLayer) {
 
-			// TODO PICLAYER case
-			return null;
-		  }
+				return new PicLayerBoxContextMenu(layer);
+			} else {
+				return new ContextMenu();
+			}
 
-	    }
-	    else
-	    {
-		  throw new ClassCastException("not a ALayer");
-	    }
+		} else {
+			throw new ClassCastException("not a ALayer");
+		}
 
-      }
+	}
 
 }
