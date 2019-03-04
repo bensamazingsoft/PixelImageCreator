@@ -75,11 +75,14 @@ public class PicLayer extends ALayer implements Serializable {
 	 */
 	public void draw(Canvas canvas, int xGridResolution, int yGridResolution) {
 
+		int xCellSize = (int) (Math.floor(canvas.getWidth()) / xGridResolution);
+		int yCellSize = (int) (Math.floor(canvas.getHeight()) / yGridResolution);
+
 		canvas.getGraphicsContext2D().drawImage(
 				image,
 				0, 0, image.getWidth() * sizeFactor, image.getHeight() * sizeFactor,
-				position.getX(), // centered
-				position.getY(), // centered
+				position.getX() * xCellSize,
+				position.getY() * yCellSize,
 				image.getWidth() * sizeFactor * zoomFactor.get(),
 				image.getHeight() * sizeFactor * zoomFactor.get());
 
