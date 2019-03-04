@@ -1,196 +1,216 @@
 
 package com.ben.pixcreator.application.image.layer.impl;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
+
+import javax.imageio.ImageIO;
 
 import com.ben.pixcreator.application.image.coords.Coord;
+import com.ben.pixcreator.gui.exception.popup.ExceptionPopUp;
 
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 
-public class PicLayer extends ALayer
-{
+public class PicLayer extends ALayer implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long				serialVersionUID	= 1L;
+	private File							imageFile;
+	private transient Image					image;
+	private Coord							position;
+	private double							sizeFactor;
+	private transient SimpleDoubleProperty	zoomFactor			= new SimpleDoubleProperty();
 
-      /**
-       * 
-       */
-      private static final long	   serialVersionUID = 1L;
-      private File		   imageFile;
-      private Image		   image;
-      private Coord		   position;
-      private double		   sizeFactor;
-      private SimpleDoubleProperty zoomFactor	    = new SimpleDoubleProperty();
+	public PicLayer(File imageFile) {
 
+		super();
+		this.imageFile = imageFile;
+		position = new Coord();
+		sizeFactor = 1d;
+		setVisible(true);
 
-      public PicLayer(File imageFile)
-      {
+		if (imageFile.exists()) {
+			try {
+				image = new Image(
+						new BufferedInputStream(Files.newInputStream(imageFile.toPath(), StandardOpenOption.READ)));
+			} catch (IOException e) {
+				new ExceptionPopUp(e);
+			}
 
-	    super();
-	    this.imageFile = imageFile;
-	    position = new Coord();
-	    sizeFactor = 1d;
-	    setVisible(true);
-      }
+		}
 
+	}
 
-      public void draw(Canvas canvas, int xGridResolution, int yGridResolution)
-      {
+	public PicLayer() {
+		super();
+	}
 
-	    canvas.getGraphicsContext2D().drawImage(image,
-			0, 0, image.getWidth() * sizeFactor, image.getHeight() * sizeFactor,
-			position.getX(), position.getY(),
-			image.getWidth() * sizeFactor * zoomFactor.get(), image.getHeight() * sizeFactor * zoomFactor.get());
+	/*
+	 * public void drawImage(Image img, double sx, double sy, double sw, double
+	 * sh, double dx, double dy, double dw, double dh)
+	 * 
+	 * Draws the specified source rectangle of the given image to the given
+	 * destination rectangle of the Canvas.A null image value or an image still
+	 * in progress will be ignored. This method will be affected by any of the
+	 * global common attributes as specified in the Rendering Attributes Table.
+	 * Parameters: img - the image to be drawn or null. sx - the source
+	 * rectangle's X coordinate position. sy - the source rectangle's Y
+	 * coordinate position. sw - the source rectangle's width. sh - the source
+	 * rectangle's height. dx - the destination rectangle's X coordinate
+	 * position. dy - the destination rectangle's Y coordinate position. dw -
+	 * the destination rectangle's width. dh - the destination rectangle's
+	 * height.
+	 * 
+	 */
+	public void draw(Canvas canvas, int xGridResolution, int yGridResolution) {
 
-      }
+		canvas.getGraphicsContext2D().drawImage(
+				image,
+				0, 0, image.getWidth() * sizeFactor, image.getHeight() * sizeFactor,
+				position.getX(), // centered
+				position.getY(), // centered
+				image.getWidth() * sizeFactor * zoomFactor.get(),
+				image.getHeight() * sizeFactor * zoomFactor.get());
 
+	}
 
-      @Override
-      public String toString()
-      {
+	@Override
+	public String toString() {
 
-	    return "PicLayer [imageFile=" + imageFile + "]";
-      }
+		return "PicLayer [imageFile=" + imageFile + "]";
+	}
 
+	public File getImageFile() {
 
-      public File getImageFile()
-      {
+		return imageFile;
+	}
 
-	    return imageFile;
-      }
+	public void setImageFile(File imageFile) {
 
+		this.imageFile = imageFile;
+	}
 
-      public void setImageFile(File imageFile)
-      {
+	public Image getImage() {
 
-	    this.imageFile = imageFile;
-      }
+		return image;
+	}
 
+	public void setImage(Image image) {
 
-      public Image getImage()
-      {
+		this.image = image;
+	}
 
-	    return image;
-      }
+	public Coord getPosition() {
 
+		return position;
+	}
 
-      public void setImage(Image image)
-      {
+	public void setPosition(Coord position) {
 
-	    this.image = image;
-      }
+		this.position = position;
+	}
 
+	public double getSizeFactor() {
 
-      public Coord getPosition()
-      {
+		return sizeFactor;
+	}
 
-	    return position;
-      }
+	public void setSizeFactor(double sizeFactor) {
 
+		this.sizeFactor = sizeFactor;
+	}
 
-      public void setPosition(Coord position)
-      {
+	public final SimpleDoubleProperty zoomFactorProperty() {
 
-	    this.position = position;
-      }
+		return this.zoomFactor;
+	}
 
+	public final double getZoomFactor() {
 
-      public double getSizeFactor()
-      {
+		return this.zoomFactorProperty().get();
+	}
 
-	    return sizeFactor;
-      }
+	public final void setZoomFactor(final double zoomFactor) {
 
+		this.zoomFactorProperty().set(zoomFactor);
+	}
 
-      public void setSizeFactor(double sizeFactor)
-      {
+	public class Memento extends ALayer.Memento {
 
-	    this.sizeFactor = sizeFactor;
-      }
+		protected Memento(ALayer layer) {
 
+			super(layer);
+			// TODO Auto-generated constructor stub
+		}
 
-      public final SimpleDoubleProperty zoomFactorProperty()
-      {
+		@Override
+		protected void init(ALayer layer) {
+			// TODO Auto-generated method stub
 
-	    return this.zoomFactor;
-      }
+		}
 
+		@Override
+		public void restore() {
+			// TODO Auto-generated method stub
 
-      public final double getZoomFactor()
-      {
+		}
 
-	    return this.zoomFactorProperty().get();
-      }
+	}
 
+	@Override
+	public Memento getMemento() {
 
-      public final void setZoomFactor(final double zoomFactor)
-      {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-	    this.zoomFactorProperty().set(zoomFactor);
-      }
+	@Override
+	public ALayer offset(Coord min) {
 
-      public class Memento extends ALayer.Memento
-      {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-	    protected Memento(ALayer layer)
-	    {
+	@Override
+	public ALayer duplicate() {
 
-		  super(layer);
-		  // TODO Auto-generated constructor stub
-	    }
+		PicLayer clone = new PicLayer();
 
+		clone.setVisible(isVisible());
 
-	    @Override
-	    protected void init(ALayer layer)
-	    {
-		  // TODO Auto-generated method stub
+		clone.setPosition(getPosition());
 
-	    }
+		clone.setSizeFactor(getSizeFactor());
 
+		clone.setZoomFactor(getZoomFactor());
 
-	    @Override
-	    public void restore()
-	    {
-		  // TODO Auto-generated method stub
+		clone.setImage(getImage());
 
-	    }
+		clone.setImageFile(getImageFile());
 
-      }
+		return clone;
+	}
 
+	private void readObject(ObjectInputStream s) throws ClassNotFoundException, IOException {
+		s.defaultReadObject();
+		image = SwingFXUtils.toFXImage(ImageIO.read(s), null);
+		zoomFactor = new SimpleDoubleProperty();
+	}
 
-      @Override
-      public Memento getMemento()
-      {
-
-	    // TODO Auto-generated method stub
-	    return null;
-      }
-
-
-      @Override
-      public ALayer offset(Coord min)
-      {
-
-	    // TODO Auto-generated method stub
-	    return null;
-      }
-
-
-      @Override
-      public ALayer duplicate()
-      {
-
-	    PicLayer clone = new PicLayer(this.getImageFile());
-
-	    clone.setVisible(isVisible());
-
-	    clone.setPosition(getPosition());
-
-	    clone.setSizeFactor(getSizeFactor());
-
-	    clone.setZoomFactor(getZoomFactor());
-
-	    return clone;
-      }
+	private void writeObject(ObjectOutputStream s) throws IOException {
+		s.defaultWriteObject();
+		ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", s);
+	}
 
 }
