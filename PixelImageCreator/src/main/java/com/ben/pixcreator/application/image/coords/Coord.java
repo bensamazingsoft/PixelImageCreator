@@ -87,4 +87,14 @@ public class Coord implements Serializable, Comparable<Coord> {
 		return COMPARATOR.compare(this, oth);
 	}
 
+	/**
+	 * 
+	 * @param min
+	 * @return a new Coord whose coordinates are sums of this and the min coord
+	 */
+	public Coord add(Coord min) {
+
+		return new Coord(getX() + min.getX(), getY() + min.getY());
+	}
+
 }

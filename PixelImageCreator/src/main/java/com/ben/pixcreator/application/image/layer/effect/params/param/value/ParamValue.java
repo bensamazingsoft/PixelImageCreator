@@ -56,4 +56,9 @@ public class ParamValue<T> implements Serializable {
 		return bypass;
 	}
 
+	@Override
+	public String toString() {
+		return "ParamValue [value=" + value + "]";
+	}
+
 }

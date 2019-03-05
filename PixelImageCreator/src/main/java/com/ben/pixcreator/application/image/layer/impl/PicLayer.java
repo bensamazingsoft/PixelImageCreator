@@ -29,7 +29,8 @@ public class PicLayer extends ALayer implements Serializable {
 	private File							imageFile;
 	private transient Image					image;
 	private Coord							position;
-	private double							sizeFactor;
+	private double							sizeFactorX;
+	private double							sizeFactorY;
 	private transient SimpleDoubleProperty	zoomFactor			= new SimpleDoubleProperty();
 
 	public PicLayer(File imageFile) {
@@ -37,7 +38,8 @@ public class PicLayer extends ALayer implements Serializable {
 		super();
 		this.imageFile = imageFile;
 		position = new Coord();
-		sizeFactor = 1d;
+		sizeFactorX = 100d;
+		sizeFactorY = 100d;
 		setVisible(true);
 
 		if (imageFile.exists()) {
@@ -80,11 +82,11 @@ public class PicLayer extends ALayer implements Serializable {
 
 		canvas.getGraphicsContext2D().drawImage(
 				image,
-				0, 0, image.getWidth() * sizeFactor, image.getHeight() * sizeFactor,
+				0, 0, image.getWidth(), image.getHeight(),
 				position.getX() * xCellSize,
 				position.getY() * yCellSize,
-				image.getWidth() * sizeFactor * zoomFactor.get(),
-				image.getHeight() * sizeFactor * zoomFactor.get());
+				image.getWidth() * (sizeFactorX / 100) * zoomFactor.get(),
+				image.getHeight() * (sizeFactorY / 100) * zoomFactor.get());
 
 	}
 
@@ -124,16 +126,6 @@ public class PicLayer extends ALayer implements Serializable {
 		this.position = position;
 	}
 
-	public double getSizeFactor() {
-
-		return sizeFactor;
-	}
-
-	public void setSizeFactor(double sizeFactor) {
-
-		this.sizeFactor = sizeFactor;
-	}
-
 	public final SimpleDoubleProperty zoomFactorProperty() {
 
 		return this.zoomFactor;
@@ -151,21 +143,22 @@ public class PicLayer extends ALayer implements Serializable {
 
 	public class Memento extends ALayer.Memento {
 
+		protected Coord pos;
+
 		protected Memento(ALayer layer) {
 
 			super(layer);
-			// TODO Auto-generated constructor stub
 		}
 
 		@Override
 		protected void init(ALayer layer) {
-			// TODO Auto-generated method stub
+			pos = ((PicLayer) layer).getPosition();
 
 		}
 
 		@Override
 		public void restore() {
-			// TODO Auto-generated method stub
+			((PicLayer) layer).setPosition(pos);
 
 		}
 
@@ -174,15 +167,15 @@ public class PicLayer extends ALayer implements Serializable {
 	@Override
 	public Memento getMemento() {
 
-		// TODO Auto-generated method stub
-		return null;
+		return new PicLayer.Memento(this);
 	}
 
 	@Override
 	public ALayer offset(Coord min) {
 
-		// TODO Auto-generated method stub
-		return null;
+		setPosition(getPosition().add(min));
+
+		return this;
 	}
 
 	@Override
@@ -194,7 +187,9 @@ public class PicLayer extends ALayer implements Serializable {
 
 		clone.setPosition(getPosition());
 
-		clone.setSizeFactor(getSizeFactor());
+		clone.setSizeFactorX(getSizeFactorX());
+
+		clone.setSizeFactorY(getSizeFactorY());
 
 		clone.setZoomFactor(getZoomFactor());
 
@@ -214,6 +209,22 @@ public class PicLayer extends ALayer implements Serializable {
 	private void writeObject(ObjectOutputStream s) throws IOException {
 		s.defaultWriteObject();
 		ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", s);
+	}
+
+	public double getSizeFactorX() {
+		return sizeFactorX;
+	}
+
+	public void setSizeFactorX(double sizeFactorX) {
+		this.sizeFactorX = sizeFactorX;
+	}
+
+	public double getSizeFactorY() {
+		return sizeFactorY;
+	}
+
+	public void setSizeFactorY(double sizeFactorY) {
+		this.sizeFactorY = sizeFactorY;
 	}
 
 }

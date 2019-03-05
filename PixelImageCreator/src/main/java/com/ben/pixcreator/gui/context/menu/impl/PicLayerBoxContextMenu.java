@@ -5,7 +5,9 @@ import com.ben.pixcreator.application.action.impl.RefreshTabAction;
 import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.application.executor.Executor;
 import com.ben.pixcreator.application.image.layer.effect.EffectDesign;
+import com.ben.pixcreator.application.image.layer.effect.params.EffectParams;
 import com.ben.pixcreator.application.image.layer.effect.params.impl.OpacityEffectParams;
+import com.ben.pixcreator.application.image.layer.effect.params.impl.SizeEffectParams;
 import com.ben.pixcreator.application.image.layer.impl.ALayer;
 import com.ben.pixcreator.gui.exception.popup.ExceptionPopUp;
 import com.ben.pixcreator.gui.facade.GuiFacade;
@@ -17,16 +19,28 @@ public class PicLayerBoxContextMenu extends ContextMenu {
 
 	public PicLayerBoxContextMenu(ALayer layer) {
 
-		MenuItem menuItem = new MenuItem();
+		this.getItems().add(
+				menuItem(layer, "pixLayerBoxContextMenuAddOpacity", EffectDesign.OPACITY, new OpacityEffectParams()));
+		this.getItems()
+				.add(menuItem(layer, "layerBoxContextMenuAddEnlarge", EffectDesign.ENLARGE,
+						new SizeEffectParams(100, 300, 100)));
+		this.getItems()
+				.add(menuItem(layer, "layerBoxContextMenuAddShrink", EffectDesign.SHRINK,
+						new SizeEffectParams(0, 100, 100)));
+	}
 
-		menuItem.setText(AppContext.getInstance().getBundle().getString("pixLayerBoxContextMenuAddOpacity"));
+	private MenuItem menuItem(ALayer layer, String i18nParam, EffectDesign fxDesign, EffectParams params) {
 
-		menuItem.setOnAction(event -> {
+		MenuItem fxMenuItem = new MenuItem();
+
+		fxMenuItem.setText(AppContext.getInstance().getBundle().getString(i18nParam));
+
+		fxMenuItem.setOnAction(event -> {
 
 			try {
 
 				Executor.getInstance().executeAction(
-						new AddEffectToLayerAction(EffectDesign.OPACITY, new OpacityEffectParams(), layer));
+						new AddEffectToLayerAction(fxDesign, params, layer));
 
 				Executor.getInstance().executeAction(new RefreshTabAction(GuiFacade.getInstance().getActiveTab()));
 
@@ -35,7 +49,7 @@ public class PicLayerBoxContextMenu extends ContextMenu {
 			}
 		});
 
-		this.getItems().add(menuItem);
+		return fxMenuItem;
 
 	}
 

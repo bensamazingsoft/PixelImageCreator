@@ -18,14 +18,16 @@ import com.ben.pixcreator.gui.facade.GuiFacade;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 
-public class EffectPileViewItem extends HBox {
+public class EffectPileViewItem extends VBox {
 
 	private final String IMAGEPATH = "images/gui/buttons/effectItem/";
 
@@ -35,24 +37,25 @@ public class EffectPileViewItem extends HBox {
 			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "bypassUnSelected.png"));
 	final private ImageView	bypassButImg		= new ImageView();
 
-	ToggleButton	bypassBut	= new ToggleButton();
-	StackPane		content		= new StackPane();
-	Button			deleteBut	= new Button("X");
+	private Label			title		= new Label();
+	private HBox			container	= new HBox();
+	private ToggleButton	bypassBut	= new ToggleButton();
+	private StackPane		content		= new StackPane();
+	private Button			deleteBut	= new Button("X");
 
 	private SimpleBooleanProperty bypass = new SimpleBooleanProperty();
 
 	public EffectPileViewItem(Effect fx) {
 
-		setBypass(false);
+		IEffectPileViewItemControl control = EffectPileViewItemControlFactory.getControl(fx);
 
+		title.setText(EffectPileViewItemControlFactory.getTitle(fx));
+
+		setBypass(false);
 		bypassBut.setGraphic(bypassButImg);
 		bypassButImg.imageProperty()
 				.bind(Bindings.when(bypass).then(bypassSelected).otherwise(bypassUnSelected));
-		// bypassBut.selectedProperty().bindBidirectional(bypass);
 		bypassBut.setOnAction(event -> setBypass(!isBypass()));
-
-		IEffectPileViewItemControl control = EffectPileViewItemControlFactory.getControl(fx);
-		content.getChildren().add(control.node());
 
 		bypass.addListener((obs, oldVal, newVal) -> {
 			if (newVal) {
@@ -84,11 +87,16 @@ public class EffectPileViewItem extends HBox {
 
 		});
 
-		getChildren().add(bypassBut);
-		getChildren().add(new Separator());
-		getChildren().add(content);
-		getChildren().add(new Separator());
-		getChildren().add(deleteBut);
+		content.getChildren().add(control.node());
+
+		container.getChildren().add(bypassBut);
+		container.getChildren().add(new Separator());
+		container.getChildren().add(content);
+		container.getChildren().add(new Separator());
+		container.getChildren().add(deleteBut);
+
+		getChildren().add(new StackPane(title));
+		getChildren().add(container);
 
 	}
 

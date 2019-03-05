@@ -38,4 +38,9 @@ public class Effect implements Serializable {
 		return effect;
 	}
 
+	@Override
+	public String toString() {
+		return "Effect [effect=" + effect + ", params=" + params + "]";
+	}
+
 }
