@@ -1,11 +1,10 @@
 package com.ben.pixcreator.application.image.layer.effect.applier.impl;
 
-import com.ben.pixcreator.application.image.layer.effect.applier.EffectApplier;
+import com.ben.pixcreator.application.image.layer.effect.applier.PicEffectApplier;
 import com.ben.pixcreator.application.image.layer.effect.params.impl.SizeEffectParams;
-import com.ben.pixcreator.application.image.layer.impl.ALayer;
 import com.ben.pixcreator.application.image.layer.impl.PicLayer;
 
-public class SizeEffectApplier implements EffectApplier {
+public class SizeEffectApplier implements PicEffectApplier {
 
 	private final SizeEffectParams params;
 
@@ -14,20 +13,15 @@ public class SizeEffectApplier implements EffectApplier {
 	}
 
 	@Override
-	public ALayer apply(ALayer source) {
+	public PicEffectLayer apply(PicLayer source) {
 
-		if (source instanceof PicLayer) {
+		PicEffectLayer pic = new PicEffectLayer(source);
 
-			PicLayer pic = (PicLayer) source.duplicate();
+		pic.setSizeFactorX(params.getX());
+		pic.setSizeFactorY(params.getY());
 
-			pic.setSizeFactorX(params.getX());
-			pic.setSizeFactorY(params.getY());
+		return pic;
 
-			return pic;
-
-		}
-
-		return source;
 	}
 
 	@Override

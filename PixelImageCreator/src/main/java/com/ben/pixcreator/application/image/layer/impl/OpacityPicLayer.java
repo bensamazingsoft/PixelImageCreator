@@ -1,21 +1,18 @@
 package com.ben.pixcreator.application.image.layer.impl;
 
-import com.ben.pixcreator.application.image.coords.Coord;
-
 import javafx.scene.canvas.Canvas;
 
-public class OpacityPicLayer extends ALayer {
+public class OpacityPicLayer extends PicLayer {
 
 	/**
 	 * 
 	 */
 	private static final long	serialVersionUID	= 1L;
 	private final PicLayer		picLayer;
-	private final double		opacity;
 
 	public OpacityPicLayer(PicLayer source, double opacity) {
 		this.picLayer = source;
-		this.opacity = opacity;
+		this.opacity = opacity * getOpacity();
 	}
 
 	@Override
@@ -28,24 +25,6 @@ public class OpacityPicLayer extends ALayer {
 		picLayer.draw(canvas, xGridResolution, yGridResolution);
 
 		canvas.getGraphicsContext2D().setGlobalAlpha(op);
-	}
-
-	@Override
-	public Memento getMemento() {
-
-		return picLayer.getMemento();
-	}
-
-	@Override
-	public ALayer duplicate() {
-
-		return new OpacityPicLayer(picLayer, opacity);
-	}
-
-	@Override
-	public ALayer offset(Coord min) {
-
-		return new OpacityPicLayer((PicLayer) picLayer.offset(min), opacity);
 	}
 
 }

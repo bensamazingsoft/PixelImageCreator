@@ -2,20 +2,20 @@
 package com.ben.pixcreator.application.image.layer.effect.applier.factory;
 
 import com.ben.pixcreator.application.image.effect.Effect;
-import com.ben.pixcreator.application.image.layer.effect.applier.EffectApplier;
-import com.ben.pixcreator.application.image.layer.effect.applier.impl.OpacityEffectApplier;
+import com.ben.pixcreator.application.image.layer.effect.applier.PicEffectApplier;
+import com.ben.pixcreator.application.image.layer.effect.applier.impl.PicOpacityEffectApplier;
 import com.ben.pixcreator.application.image.layer.effect.applier.impl.SizeEffectApplier;
 import com.ben.pixcreator.application.image.layer.effect.params.impl.OpacityEffectParams;
 import com.ben.pixcreator.application.image.layer.effect.params.impl.SizeEffectParams;
 
-public class EffectApplierFactory {
+public class PicEffectApplierFactory {
 
-	public static EffectApplier getEffectApplier(Effect effect) {
+	public static PicEffectApplier getEffectApplier(Effect effect) {
 
 		switch (effect.getEffect()) {
 		case OPACITY:
 
-			return new OpacityEffectApplier((OpacityEffectParams) effect.getParams());
+			return new PicOpacityEffectApplier((OpacityEffectParams) effect.getParams());
 
 		case ENLARGE:
 
