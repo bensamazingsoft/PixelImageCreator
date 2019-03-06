@@ -25,13 +25,12 @@ public class PicLayer extends ALayer implements Serializable {
 	/**
 	 * 
 	 */
-	private static final long				serialVersionUID	= 1L;
-	private File							imageFile;
-	private transient Image					image;
-	private Coord							position;
-	private double							sizeFactorX;
-	private double							sizeFactorY;
-	private transient SimpleDoubleProperty	zoomFactor			= new SimpleDoubleProperty();
+	private static final long	serialVersionUID	= 1L;
+	private File				imageFile;
+	private transient Image		image;
+	private Coord				position;
+
+	private transient SimpleDoubleProperty zoomFactor = new SimpleDoubleProperty();
 
 	public PicLayer(File imageFile) {
 

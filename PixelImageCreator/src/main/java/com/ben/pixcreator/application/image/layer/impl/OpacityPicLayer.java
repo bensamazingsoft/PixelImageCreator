@@ -11,7 +11,6 @@ public class OpacityPicLayer extends ALayer {
 	 */
 	private static final long	serialVersionUID	= 1L;
 	private final PicLayer		picLayer;
-	private final double		opacity;
 
 	public OpacityPicLayer(PicLayer source, double opacity) {
 		this.picLayer = source;

@@ -11,119 +11,119 @@ import com.ben.pixcreator.application.image.layer.ILayer;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.canvas.Canvas;
 
-public abstract class ALayer implements ILayer, Serializable
-{
+public abstract class ALayer implements ILayer, Serializable {
 
-      /**
-         * 
-         */
-      private static final long			serialVersionUID = 1L;
+	/**
+	   * 
+	   */
+	private static final long serialVersionUID = 1L;
 
-      protected transient SimpleBooleanProperty	visible		 = new SimpleBooleanProperty();
-      protected final UUID			uuid;
+	protected transient SimpleBooleanProperty	visible	= new SimpleBooleanProperty();
+	protected final UUID						uuid;
 
+	protected double	sizeFactorX	= 100d;
+	protected double	sizeFactorY	= 100d;
+	protected double	opacity		= 1d;
 
-      public ALayer()
-      {
+	public ALayer() {
 
-	    super();
-	    this.uuid = UUID.randomUUID();
-	    // setVisible(true);
-      }
+		super();
+		this.uuid = UUID.randomUUID();
+		// setVisible(true);
+	}
 
+	@Override
+	public void draw(Canvas canvas, int xGridResolution, int yGridResolution) {
 
-      @Override
-      public void draw(Canvas canvas, int xGridResolution, int yGridResolution)
-      {
+	}
 
-      }
+	public abstract class Memento {
 
-      public abstract class Memento
-      {
+		protected ALayer layer;
 
-	    protected ALayer layer;
+		protected Memento(ALayer layer) {
 
+			this.layer = layer;
 
-	    protected Memento(ALayer layer)
-	    {
+			init(layer);
+		}
 
-		  this.layer = layer;
+		protected abstract void init(ALayer layer);
 
-		  init(layer);
-	    }
+		public abstract void restore();
 
+	}
 
-	    protected abstract void init(ALayer layer);
+	public abstract Memento getMemento();
 
+	public final SimpleBooleanProperty visibleProperty() {
 
-	    public abstract void restore();
+		return this.visible;
+	}
 
-      }
+	public final boolean isVisible() {
 
+		return this.visibleProperty().get();
+	}
 
-      public abstract Memento getMemento();
+	public final void setVisible(final boolean visible) {
 
+		this.visibleProperty().set(visible);
+	}
 
-      public final SimpleBooleanProperty visibleProperty()
-      {
+	@Override
+	public boolean equals(Object obj) {
 
-	    return this.visible;
-      }
+		if (obj instanceof ALayer) {
+			return this.getUUID().equals(((ALayer) obj).getUUID());
+		}
+		return false;
+	}
 
+	@Override
+	public int hashCode() {
 
-      public final boolean isVisible()
-      {
+		return getUUID().hashCode();
+	}
 
-	    return this.visibleProperty().get();
-      }
+	public abstract ALayer duplicate();
 
+	public abstract ALayer offset(Coord min);
 
-      public final void setVisible(final boolean visible)
-      {
+	public UUID getUUID() {
 
-	    this.visibleProperty().set(visible);
-      }
+		return uuid;
+	}
 
+	private void readObject(java.io.ObjectInputStream in)
+			throws IOException, ClassNotFoundException {
 
-      @Override
-      public boolean equals(Object obj)
-      {
+		in.defaultReadObject();
+		visible = new SimpleBooleanProperty();
+	}
 
-	    if (obj instanceof ALayer)
-	    {
-		  return this.getUUID().equals(((ALayer) obj).getUUID());
-	    }
-	    return false;
-      }
+	public double getSizeFactorX() {
+		return sizeFactorX;
+	}
 
+	public void setSizeFactorX(double sizeFactorX) {
+		this.sizeFactorX = sizeFactorX;
+	}
 
-      @Override
-      public int hashCode()
-      {
+	public double getSizeFactorY() {
+		return sizeFactorY;
+	}
 
-	    return getUUID().hashCode();
-      }
+	public void setSizeFactorY(double sizeFactorY) {
+		this.sizeFactorY = sizeFactorY;
+	}
 
+	public double getOpacity() {
+		return opacity;
+	}
 
-      public abstract ALayer duplicate();
-
-
-      public abstract ALayer offset(Coord min);
-
-
-      public UUID getUUID()
-      {
-
-	    return uuid;
-      }
-
-
-      private void readObject(java.io.ObjectInputStream in)
-		  throws IOException, ClassNotFoundException
-      {
-
-	    in.defaultReadObject();
-	    visible = new SimpleBooleanProperty();
-      }
+	public void setOpacity(double opacity) {
+		this.opacity = opacity;
+	}
 
 }
