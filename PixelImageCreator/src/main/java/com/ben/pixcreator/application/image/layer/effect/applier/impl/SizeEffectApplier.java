@@ -30,4 +30,9 @@ public class SizeEffectApplier implements EffectApplier {
 		return source;
 	}
 
+	@Override
+	public String toString() {
+		return "SizeEffectApplier [params=" + params + "]";
+	}
+
 }

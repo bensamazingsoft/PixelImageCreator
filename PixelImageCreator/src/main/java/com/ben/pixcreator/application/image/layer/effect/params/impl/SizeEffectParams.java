@@ -65,4 +65,9 @@ public class SizeEffectParams extends EffectParams {
 		return lockRatio.getValue();
 
 	}
+
+	@Override
+	public String toString() {
+		return "SizeEffectParams [xParam=" + xParam + ", yParam=" + yParam + ", lockRatio=" + lockRatio + "]";
+	}
 }
