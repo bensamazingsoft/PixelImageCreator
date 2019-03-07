@@ -18,6 +18,7 @@ import com.ben.pixcreator.gui.exception.popup.ExceptionPopUp;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
 public class PicLayer extends ALayer implements Serializable {
@@ -25,13 +26,12 @@ public class PicLayer extends ALayer implements Serializable {
 	/**
 	 * 
 	 */
-	private static final long				serialVersionUID	= 1L;
-	private File							imageFile;
-	private transient Image					image;
-	private Coord							position;
-	private double							sizeFactorX;
-	private double							sizeFactorY;
-	private transient SimpleDoubleProperty	zoomFactor			= new SimpleDoubleProperty();
+	private static final long	serialVersionUID	= 1L;
+	private File				imageFile;
+	private transient Image		image;
+	private Coord				position;
+
+	private transient SimpleDoubleProperty zoomFactor = new SimpleDoubleProperty();
 
 	public PicLayer(File imageFile) {
 
@@ -80,14 +80,18 @@ public class PicLayer extends ALayer implements Serializable {
 		int xCellSize = (int) (Math.floor(canvas.getWidth()) / xGridResolution);
 		int yCellSize = (int) (Math.floor(canvas.getHeight()) / yGridResolution);
 
-		canvas.getGraphicsContext2D().drawImage(
+		GraphicsContext graphic = canvas.getGraphicsContext2D();
+		double baseOp = graphic.getGlobalAlpha();
+
+		graphic.setGlobalAlpha(getOpacity());
+		graphic.drawImage(
 				image,
 				0, 0, image.getWidth(), image.getHeight(),
 				position.getX() * xCellSize,
 				position.getY() * yCellSize,
 				image.getWidth() * (sizeFactorX / 100) * zoomFactor.get(),
 				image.getHeight() * (sizeFactorY / 100) * zoomFactor.get());
-
+		graphic.setGlobalAlpha(baseOp);
 	}
 
 	@Override
@@ -196,6 +200,8 @@ public class PicLayer extends ALayer implements Serializable {
 		clone.setImage(getImage());
 
 		clone.setImageFile(getImageFile());
+
+		clone.setOpacity(getOpacity());
 
 		return clone;
 	}
