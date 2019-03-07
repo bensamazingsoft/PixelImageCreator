@@ -32,6 +32,12 @@
 					accelerator="Shortcut+d" />
 			</items>
 		</Menu>
+		
+		<Menu Text="%action">
+			<items>
+				<MenuItem Text="%pixellate" onAction="#pixellateAction"/>
+			</items>	
+		</Menu>		
 
 	</menus>
 

@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import com.ben.pixcreator.application.action.impl.ActionUpdateSelection;
 import com.ben.pixcreator.application.action.impl.LoadFileAction;
 import com.ben.pixcreator.application.action.impl.OpenNewImageAction;
+import com.ben.pixcreator.application.action.impl.PixellateAction;
 import com.ben.pixcreator.application.action.impl.RefreshTabAction;
 import com.ben.pixcreator.application.action.impl.SaveAction;
 import com.ben.pixcreator.application.context.AppContext;
@@ -187,6 +188,26 @@ public class PixMenuBar extends MenuBar {
 
 		try {
 			Executor.getInstance().executeAction(new ActionUpdateSelection(activeImage));
+			Executor.getInstance().executeAction(new RefreshTabAction(tab));
+		} catch (Exception e) {
+			new ExceptionPopUp(e);
+		}
+
+	}
+
+	@FXML
+	private void pixellateAction(ActionEvent event) {
+		handlePixellateAction();
+	}
+
+	private void handlePixellateAction() {
+
+		PixImage activeImage = GuiFacade.getInstance().getActiveimage();
+		GuiFacade.getInstance().getSelections().remove(activeImage);
+		PixTab tab = GuiFacade.getInstance().getActiveTab();
+
+		try {
+			Executor.getInstance().executeAction(new PixellateAction(activeImage));
 			Executor.getInstance().executeAction(new RefreshTabAction(tab));
 		} catch (Exception e) {
 			new ExceptionPopUp(e);
