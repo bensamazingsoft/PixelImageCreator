@@ -6,6 +6,7 @@ import com.ben.pixcreator.application.image.layer.effect.exception.EffectExcepti
 import com.ben.pixcreator.application.image.layer.impl.ALayer;
 import com.ben.pixcreator.application.image.layer.modifier.IModifier;
 import com.ben.pixcreator.application.image.layer.modifier.impl.OpacityModifier;
+import com.ben.pixcreator.application.image.layer.modifier.impl.SizeModifier;
 
 public class EffectLayerFactory {
 
@@ -14,12 +15,17 @@ public class EffectLayerFactory {
 		switch (effect.getEffect()) {
 
 		case OPACITY:
-			IModifier modifier = new OpacityModifier(layer, effect);
-			return modifier.modify(layer);
+			IModifier opModifier = new OpacityModifier(layer, effect);
+			return opModifier.modify(layer);
+
 		case ENLARGE:
-			break;
+			IModifier sizeModifierEnlarge = new SizeModifier(layer, effect);
+			return sizeModifierEnlarge.modify(layer);
+
 		case SHRINK:
-			break;
+			IModifier sizeModifierShrink = new SizeModifier(layer, effect);
+			return sizeModifierShrink.modify(layer);
+
 		default:
 			break;
 
