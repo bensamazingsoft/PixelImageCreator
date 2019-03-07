@@ -2,27 +2,30 @@
 package com.ben.pixcreator.application.image.layer.effect.factory;
 
 import com.ben.pixcreator.application.image.effect.Effect;
-import com.ben.pixcreator.application.image.layer.effect.EffectLayer;
+import com.ben.pixcreator.application.image.layer.effect.exception.EffectException;
 import com.ben.pixcreator.application.image.layer.impl.ALayer;
+import com.ben.pixcreator.application.image.layer.modifier.IModifier;
+import com.ben.pixcreator.application.image.layer.modifier.impl.OpacityModifier;
 
 public class EffectLayerFactory {
 
-	public static ALayer getFXLayer(Effect effect, ALayer sourceLayer) {
+	public static ALayer getFXLayer(Effect effect, ALayer layer) throws EffectException {
 
 		switch (effect.getEffect()) {
 
 		case OPACITY:
-			return new EffectLayer(sourceLayer, effect);
+			IModifier modifier = new OpacityModifier(layer, effect);
+			return modifier.modify(layer);
 		case ENLARGE:
-			return new EffectLayer(sourceLayer, effect);
+			break;
 		case SHRINK:
-			return new EffectLayer(sourceLayer, effect);
+			break;
 		default:
 			break;
 
 		}
 
-		return sourceLayer;
+		return layer;
 	}
 
 }

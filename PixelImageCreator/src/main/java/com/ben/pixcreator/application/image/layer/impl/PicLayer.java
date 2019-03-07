@@ -18,6 +18,7 @@ import com.ben.pixcreator.gui.exception.popup.ExceptionPopUp;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
 public class PicLayer extends ALayer implements Serializable {
@@ -25,13 +26,12 @@ public class PicLayer extends ALayer implements Serializable {
 	/**
 	 * 
 	 */
-	private static final long				serialVersionUID	= 1L;
-	private File							imageFile;
-	private transient Image					image;
-	private Coord							position;
-	private double							sizeFactorX;
-	private double							sizeFactorY;
-	private transient SimpleDoubleProperty	zoomFactor			= new SimpleDoubleProperty();
+	private static final long	serialVersionUID	= 1L;
+	private File				imageFile;
+	private transient Image		image;
+	private Coord				position;
+
+	private transient SimpleDoubleProperty zoomFactor = new SimpleDoubleProperty();
 
 	public PicLayer(File imageFile) {
 
@@ -80,13 +80,19 @@ public class PicLayer extends ALayer implements Serializable {
 		int xCellSize = (int) (Math.floor(canvas.getWidth()) / xGridResolution);
 		int yCellSize = (int) (Math.floor(canvas.getHeight()) / yGridResolution);
 
-		canvas.getGraphicsContext2D().drawImage(
+		GraphicsContext graphic = canvas.getGraphicsContext2D();
+
+		graphic.setGlobalAlpha(getOpacity());
+
+		graphic.drawImage(
 				image,
 				0, 0, image.getWidth(), image.getHeight(),
 				position.getX() * xCellSize,
 				position.getY() * yCellSize,
 				image.getWidth() * (sizeFactorX / 100) * zoomFactor.get(),
 				image.getHeight() * (sizeFactorY / 100) * zoomFactor.get());
+
+		graphic.setGlobalAlpha(1.0);
 
 	}
 
@@ -197,6 +203,8 @@ public class PicLayer extends ALayer implements Serializable {
 
 		clone.setImageFile(getImageFile());
 
+		clone.setOpacity(getOpacity());
+
 		return clone;
 	}
 
@@ -209,22 +217,6 @@ public class PicLayer extends ALayer implements Serializable {
 	private void writeObject(ObjectOutputStream s) throws IOException {
 		s.defaultWriteObject();
 		ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", s);
-	}
-
-	public double getSizeFactorX() {
-		return sizeFactorX;
-	}
-
-	public void setSizeFactorX(double sizeFactorX) {
-		this.sizeFactorX = sizeFactorX;
-	}
-
-	public double getSizeFactorY() {
-		return sizeFactorY;
-	}
-
-	public void setSizeFactorY(double sizeFactorY) {
-		this.sizeFactorY = sizeFactorY;
 	}
 
 }

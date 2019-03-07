@@ -75,7 +75,7 @@ public class EffectPileViewItem extends VBox {
 					.collect(Collectors.toSet());
 
 			for (Pile<Effect> pile : pool) {
-				pile.removeOfitem(fx);
+				pile.deleteOfitem(fx);
 			}
 
 			try {

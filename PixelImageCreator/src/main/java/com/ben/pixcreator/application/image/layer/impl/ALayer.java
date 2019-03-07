@@ -11,119 +11,118 @@ import com.ben.pixcreator.application.image.layer.ILayer;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.canvas.Canvas;
 
-public abstract class ALayer implements ILayer, Serializable
-{
+public abstract class ALayer implements ILayer, Serializable {
 
-      /**
-         * 
-         */
-      private static final long			serialVersionUID = 1L;
+	/**
+	   * 
+	   */
+	private static final long serialVersionUID = 1L;
 
-      protected transient SimpleBooleanProperty	visible		 = new SimpleBooleanProperty();
-      protected final UUID			uuid;
+	protected transient SimpleBooleanProperty	visible	= new SimpleBooleanProperty();
+	protected final UUID						uuid;
+	protected double							opacity	= 1d;
+	protected double							sizeFactorX;
+	protected double							sizeFactorY;
 
+	public ALayer() {
 
-      public ALayer()
-      {
+		super();
+		this.uuid = UUID.randomUUID();
+		// setVisible(true);
+	}
 
-	    super();
-	    this.uuid = UUID.randomUUID();
-	    // setVisible(true);
-      }
+	@Override
+	public void draw(Canvas canvas, int xGridResolution, int yGridResolution) {
 
+	}
 
-      @Override
-      public void draw(Canvas canvas, int xGridResolution, int yGridResolution)
-      {
+	public abstract class Memento {
 
-      }
+		protected ALayer layer;
 
-      public abstract class Memento
-      {
+		protected Memento(ALayer layer) {
 
-	    protected ALayer layer;
+			this.layer = layer;
 
+			init(layer);
+		}
 
-	    protected Memento(ALayer layer)
-	    {
+		protected abstract void init(ALayer layer);
 
-		  this.layer = layer;
+		public abstract void restore();
 
-		  init(layer);
-	    }
+	}
 
+	public abstract Memento getMemento();
 
-	    protected abstract void init(ALayer layer);
+	public final SimpleBooleanProperty visibleProperty() {
 
+		return this.visible;
+	}
 
-	    public abstract void restore();
+	public final boolean isVisible() {
 
-      }
+		return this.visibleProperty().get();
+	}
 
+	public final void setVisible(final boolean visible) {
 
-      public abstract Memento getMemento();
+		this.visibleProperty().set(visible);
+	}
 
+	@Override
+	public boolean equals(Object obj) {
 
-      public final SimpleBooleanProperty visibleProperty()
-      {
+		if (obj instanceof ALayer) {
+			return this.getUUID().equals(((ALayer) obj).getUUID());
+		}
+		return false;
+	}
 
-	    return this.visible;
-      }
+	@Override
+	public int hashCode() {
 
+		return getUUID().hashCode();
+	}
 
-      public final boolean isVisible()
-      {
+	public abstract ALayer duplicate();
 
-	    return this.visibleProperty().get();
-      }
+	public abstract ALayer offset(Coord min);
 
+	public UUID getUUID() {
 
-      public final void setVisible(final boolean visible)
-      {
+		return uuid;
+	}
 
-	    this.visibleProperty().set(visible);
-      }
+	private void readObject(java.io.ObjectInputStream in)
+			throws IOException, ClassNotFoundException {
 
+		in.defaultReadObject();
+		visible = new SimpleBooleanProperty();
+	}
 
-      @Override
-      public boolean equals(Object obj)
-      {
+	public double getOpacity() {
+		return opacity;
+	}
 
-	    if (obj instanceof ALayer)
-	    {
-		  return this.getUUID().equals(((ALayer) obj).getUUID());
-	    }
-	    return false;
-      }
+	public void setOpacity(double opacity) {
+		this.opacity = opacity;
+	}
 
+	public double getSizeFactorX() {
+		return sizeFactorX;
+	}
 
-      @Override
-      public int hashCode()
-      {
+	public void setSizeFactorX(double sizeFactorX) {
+		this.sizeFactorX = sizeFactorX;
+	}
 
-	    return getUUID().hashCode();
-      }
+	public double getSizeFactorY() {
+		return sizeFactorY;
+	}
 
-
-      public abstract ALayer duplicate();
-
-
-      public abstract ALayer offset(Coord min);
-
-
-      public UUID getUUID()
-      {
-
-	    return uuid;
-      }
-
-
-      private void readObject(java.io.ObjectInputStream in)
-		  throws IOException, ClassNotFoundException
-      {
-
-	    in.defaultReadObject();
-	    visible = new SimpleBooleanProperty();
-      }
+	public void setSizeFactorY(double sizeFactorY) {
+		this.sizeFactorY = sizeFactorY;
+	}
 
 }
