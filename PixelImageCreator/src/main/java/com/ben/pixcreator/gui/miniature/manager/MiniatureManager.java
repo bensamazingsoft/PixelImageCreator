@@ -16,154 +16,178 @@ import com.ben.pixcreator.application.image.layer.impl.PixLayer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
-public class MiniatureManager {
+public class MiniatureManager
+{
 
-	private static final Logger log = LoggerFactory.getLogger(MiniatureManager.class);
+      private static final Logger log	     = LoggerFactory.getLogger(MiniatureManager.class);
 
-	private static double MINIATUREHEIGHT;
+      private static double	  MINIATUREHEIGHT;
 
-	private static double MINIATUREWIDTH;
+      private static double	  MINIATUREWIDTH;
 
-	private Map<ALayer, Canvas> miniatures = new HashMap<>();
+      private Map<ALayer, Canvas> miniatures = new HashMap<>();
 
-	public void addMiniature(ALayer layer, Canvas canvas) {
 
-		MINIATUREHEIGHT = Integer.valueOf(AppContext.getInstance().propertyContext().get("miniatureWH"));
-		MINIATUREWIDTH = Integer.valueOf(AppContext.getInstance().propertyContext().get("miniatureWH"));
+      public void addMiniature(ALayer layer, Canvas canvas)
+      {
 
-		miniatures.put(layer, canvas);
+	    MINIATUREHEIGHT = Integer.valueOf(AppContext.getInstance().propertyContext().get("miniatureWH"));
+	    MINIATUREWIDTH = Integer.valueOf(AppContext.getInstance().propertyContext().get("miniatureWH"));
 
-	}
+	    miniatures.put(layer, canvas);
 
-	public void update(ALayer layer) {
+      }
 
-		Canvas canvas = miniatures.get(layer);
 
-		canvas.setHeight(MINIATUREHEIGHT);
-		canvas.setWidth(MINIATUREWIDTH);
+      public void update(ALayer layer)
+      {
 
-		canvas.getGraphicsContext2D().setFill(Color.WHITE);
-		canvas.getGraphicsContext2D().fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+	    Canvas canvas = miniatures.get(layer);
 
-		if (miniatures.containsKey(layer)) {
+	    canvas.setHeight(MINIATUREHEIGHT);
+	    canvas.setWidth(MINIATUREWIDTH);
 
-			int xGridResolution = 0;
-			int yGridResolution = 0;
+	    canvas.getGraphicsContext2D().setFill(Color.WHITE);
+	    canvas.getGraphicsContext2D().fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
-			if (layer instanceof PixLayer) {
+	    if (miniatures.containsKey(layer))
+	    {
 
-				int minX = ((PixLayer) layer).getGrid().keySet().stream()
-						.mapToInt(Coord::getX)
-						.min()
-						.orElse(0);
-				// log.debug("minX : " + minX);
-				int maxX = ((PixLayer) layer).getGrid().keySet().stream()
-						.mapToInt(Coord::getX)
-						.max()
-						.orElse(0);
-				// log.debug("maxX : " + maxX);
-				int minY = ((PixLayer) layer).getGrid().keySet().stream()
-						.mapToInt(Coord::getY)
-						.min()
-						.orElse(0);
-				// log.debug("minY : " + minY);
-				int maxY = ((PixLayer) layer).getGrid().keySet().stream()
-						.mapToInt(Coord::getY)
-						.max()
-						.orElse(0);
-				// log.debug("maxY : " + maxY);
+		  int xGridResolution = 0;
+		  int yGridResolution = 0;
 
-				xGridResolution = maxX - minX + 1;
-				yGridResolution = maxY - minY + 1;
+		  if (layer instanceof PixLayer)
+		  {
 
-				layer = ((PixLayer) layer).duplicate().offset(new Coord(minX, minY));
+			int minX = ((PixLayer) layer).getGrid().keySet().stream()
+				    .mapToInt(Coord::getX)
+				    .min()
+				    .orElse(0);
+			// log.debug("minX : " + minX);
+			int maxX = ((PixLayer) layer).getGrid().keySet().stream()
+				    .mapToInt(Coord::getX)
+				    .max()
+				    .orElse(0);
+			// log.debug("maxX : " + maxX);
+			int minY = ((PixLayer) layer).getGrid().keySet().stream()
+				    .mapToInt(Coord::getY)
+				    .min()
+				    .orElse(0);
+			// log.debug("minY : " + minY);
+			int maxY = ((PixLayer) layer).getGrid().keySet().stream()
+				    .mapToInt(Coord::getY)
+				    .max()
+				    .orElse(0);
+			// log.debug("maxY : " + maxY);
 
-				if (xGridResolution != yGridResolution) {
-					adaptPixCanvasRatio(canvas, xGridResolution, yGridResolution);
-				}
+			xGridResolution = maxX - minX + 1;
+			yGridResolution = maxY - minY + 1;
 
-			} else if (layer instanceof PicLayer) {
+			layer = ((PixLayer) layer).duplicate().offset(new Coord(minX, minY));
 
-				final PicLayer picLayer = (PicLayer) layer;
-				final double width = picLayer.getImage().getWidth();
-				final double height = picLayer.getImage().getHeight();
-
-				// adaptPicCanvasRatio(canvas, width, height);
-
-				layer = makeDrawPicLayer((PicLayer) picLayer.duplicate(), canvas);
-
+			if (xGridResolution != yGridResolution)
+			{
+			      adaptPixCanvasRatio(canvas, xGridResolution, yGridResolution);
 			}
 
-			layer.draw(canvas, xGridResolution, yGridResolution);
+		  }
+		  else if (layer instanceof PicLayer)
+		  {
 
-		}
+			final PicLayer picLayer = (PicLayer) layer;
+			final double width = picLayer.getImage().getWidth();
+			final double height = picLayer.getImage().getHeight();
 
-	}
+			// adaptPicCanvasRatio(canvas, width, height);
 
-	private PicLayer makeDrawPicLayer(PicLayer duplicate, Canvas canvas) {
+			layer = makeDrawPicLayer((PicLayer) picLayer.duplicate(), canvas);
 
-		final double imageWidth = duplicate.getImage().getWidth();
-		final double imageHeight = duplicate.getImage().getHeight();
+		  }
 
-		if (imageWidth > canvas.getWidth() || imageHeight > canvas.getHeight()) {
+		  layer.draw(canvas, xGridResolution, yGridResolution);
 
-			double max = Math.max(imageHeight, imageWidth);
-			double factor = 1.0;
+	    }
 
-			if (max == imageHeight) {
+      }
 
-				factor = canvas.getHeight() / imageHeight;
 
-			}
+      private PicLayer makeDrawPicLayer(PicLayer duplicate, Canvas canvas)
+      {
 
-			if (max == imageWidth) {
+	    duplicate.setPosition(new Coord(0, 0));
+	    duplicate.setSizeFactorX(100);
+	    duplicate.setSizeFactorY(100);
+	    duplicate.setZoomFactor(1.0);
 
-				factor = canvas.getWidth() / imageWidth;
-			}
+	    final double imageWidth = duplicate.getImage().getWidth();
+	    final double imageHeight = duplicate.getImage().getHeight();
 
-			duplicate.setSizeFactorY(duplicate.getSizeFactorY() * factor);
-			duplicate.setSizeFactorX(duplicate.getSizeFactorX() * factor);
+	    if (imageWidth > canvas.getWidth() || imageHeight > canvas.getHeight())
+	    {
 
-		}
+		  double max = Math.max(imageHeight, imageWidth);
+		  double factor = 1.0;
 
-		return duplicate;
-	}
+		  if (max == imageHeight)
+		  {
 
-	// private void adaptPicCanvasRatio(Canvas canvas, double width, double
-	// height) {
-	//
-	// if (width > height) {
-	// double factor = height / width;
-	// canvas.setHeight(canvas.getHeight() * factor);
-	// }
-	//
-	// if (height > width) {
-	// double factorH = width / height;
-	// canvas.setWidth(canvas.getWidth() / factorH);
-	// }
-	//
-	// }
+			factor = canvas.getHeight() / imageHeight;
 
-	private void adaptPixCanvasRatio(Canvas canvas, int xGridResolution, int yGridResolution) {
+		  }
 
-		if (xGridResolution > yGridResolution) {
+		  if (max == imageWidth)
+		  {
 
-			double factorX = (double) yGridResolution / (double) xGridResolution;
-			// log.debug("factorX : " + factorX);
-			canvas.setHeight(canvas.getHeight() * factorX);
-			// log.debug("new canvas size : " + canvas.getWidth() + "X" +
-			// canvas.getHeight());
+			factor = canvas.getWidth() / imageWidth;
+		  }
 
-		}
+		  duplicate.setSizeFactorY(duplicate.getSizeFactorY() * factor);
+		  duplicate.setSizeFactorX(duplicate.getSizeFactorX() * factor);
 
-		if (xGridResolution < yGridResolution) {
+	    }
 
-			double factorY = (double) xGridResolution / (double) yGridResolution;
-			// log.debug("factorY : " + factorY);
-			canvas.setWidth(canvas.getWidth() * factorY);
-			// log.debug("new canvas size : " + canvas.getWidth() + "X" +
-			// canvas.getHeight());
-		}
-	}
+	    return duplicate;
+      }
+
+
+      // private void adaptPicCanvasRatio(Canvas canvas, double width, double
+      // height) {
+      //
+      // if (width > height) {
+      // double factor = height / width;
+      // canvas.setHeight(canvas.getHeight() * factor);
+      // }
+      //
+      // if (height > width) {
+      // double factorH = width / height;
+      // canvas.setWidth(canvas.getWidth() / factorH);
+      // }
+      //
+      // }
+
+      private void adaptPixCanvasRatio(Canvas canvas, int xGridResolution, int yGridResolution)
+      {
+
+	    if (xGridResolution > yGridResolution)
+	    {
+
+		  double factorX = (double) yGridResolution / (double) xGridResolution;
+		  // log.debug("factorX : " + factorX);
+		  canvas.setHeight(canvas.getHeight() * factorX);
+		  // log.debug("new canvas size : " + canvas.getWidth() + "X" +
+		  // canvas.getHeight());
+
+	    }
+
+	    if (xGridResolution < yGridResolution)
+	    {
+
+		  double factorY = (double) xGridResolution / (double) yGridResolution;
+		  // log.debug("factorY : " + factorY);
+		  canvas.setWidth(canvas.getWidth() * factorY);
+		  // log.debug("new canvas size : " + canvas.getWidth() + "X" +
+		  // canvas.getHeight());
+	    }
+      }
 
 }
