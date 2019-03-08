@@ -19,6 +19,8 @@ import javafx.stage.FileChooser.ExtensionFilter;
 
 public class LayerAction implements IAction, ICancelable {
 
+	final GuiFacade gui = GuiFacade.getInstance();
+
 	private final Pile<ALayer>	layerList;
 	private final ALayer		layer;
 	private final LayerActions	action;
@@ -77,29 +79,34 @@ public class LayerAction implements IAction, ICancelable {
 			layerList.insertOver(layer, picLayer);
 
 			picLayer.zoomFactorProperty()
-					.bindBidirectional(GuiFacade.getInstance().getActiveTab().zoomFactorAdjustedProperty());
+					.bindBidirectional(gui.getActiveTab().zoomFactorAdjustedProperty());
 
 		}
 
 	}
 
 	private void moveUp() {
-		// TODO Auto-generated method stub
+
+		layerList.moveUp(layer);
 
 	}
 
 	private void moveDown() {
-		// TODO Auto-generated method stub
+
+		layerList.moveDown(layer);
 
 	}
 
 	private void duplicate() {
-		// TODO Auto-generated method stub
+
+		ALayer dup = layer.duplicate();
+
+		layerList.insertUnder(layer, dup);
 
 	}
 
 	private void delete() {
-		// TODO Auto-generated method stub
+		layerList.deleteOfitem(layer);
 
 	}
 

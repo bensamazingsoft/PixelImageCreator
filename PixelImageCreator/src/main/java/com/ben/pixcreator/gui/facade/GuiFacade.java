@@ -17,6 +17,7 @@ import com.ben.pixcreator.application.selection.Selection;
 import com.ben.pixcreator.application.tools.PixTool;
 import com.ben.pixcreator.gui.controls.color.box.ColorBox;
 import com.ben.pixcreator.gui.controls.color.roster.ColorRoster;
+import com.ben.pixcreator.gui.controls.layer.box.LayerBox;
 import com.ben.pixcreator.gui.controls.layer.panel.LayerPanel;
 import com.ben.pixcreator.gui.controls.menu.bar.PixMenuBar;
 import com.ben.pixcreator.gui.controls.tab.PixTab;
@@ -251,6 +252,22 @@ public class GuiFacade {
 
 	public final void setBackgroundColor(final Color backgroundColor) {
 		this.backgroundColorProperty().set(backgroundColor);
+	}
+
+	/**
+	 * selects the layer in the layer panel if it exists in the panel.
+	 * 
+	 * @param layer
+	 */
+	public void selectLayer(ALayer layer) {
+
+		for (Toggle tog : layerPanel.getTogglegroup().getToggles()) {
+			LayerBox box = (LayerBox) tog;
+
+			if (box.getLayer().equals(layer)) {
+				layerPanel.getTogglegroup().selectToggle(box);
+			}
+		}
 	}
 
 }

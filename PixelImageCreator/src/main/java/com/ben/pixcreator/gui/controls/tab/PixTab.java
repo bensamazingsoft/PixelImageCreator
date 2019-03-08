@@ -145,7 +145,7 @@ public class PixTab extends Tab implements Initializable {
 
 			setZoomFactorAdjusted((double) resultX / (double) getImage().getxSize());
 
-			log.debug("ZoomFactorAdjusted = " + getZoomFactorAdjusted());
+			// log.debug("ZoomFactorAdjusted = " + getZoomFactorAdjusted());
 
 			canvas.setWidth(resultX);
 			canvas.setHeight(resultY);
@@ -246,7 +246,7 @@ public class PixTab extends Tab implements Initializable {
 
 		x += step;
 		zoomFactor.set(logistic.value(x));
-		log.debug("zoom in : X = " + x + " factor = " + zoomFactor.get());
+		// log.debug("zoom in : X = " + x + " factor = " + zoomFactor.get());
 
 		double newCenterX = centerPosX * zoomFactor.get() / (zoomFactor.get()
 				- 1);
@@ -276,7 +276,7 @@ public class PixTab extends Tab implements Initializable {
 
 		x -= step;
 		zoomFactor.set(logistic.value(x));
-		log.debug("zoom out : X = " + x + " factor = " + zoomFactor.get());
+		// log.debug("zoom out : X = " + x + " factor = " + zoomFactor.get());
 
 		double newCenterX = centerPosX * zoomFactor.get() / (zoomFactor.get()
 				+ 1);

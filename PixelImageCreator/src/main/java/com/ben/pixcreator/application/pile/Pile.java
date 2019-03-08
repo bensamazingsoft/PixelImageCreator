@@ -114,9 +114,9 @@ public class Pile<T> implements Serializable {
 	 */
 	public int moveUp(T item) {
 
-		if (getIdx(item) > -1) {
-			getPair(getIdx(item)).decr();
-			getPair(item).incr();
+		if (getIdx(item) > -1 && getIdx(item) < (items.size() - 1)) {
+			getPairOfIdx(getIdx(item) + 1).decr();
+			getPairOfItem(item).incr();
 
 			return getIdx(item);
 
@@ -135,8 +135,8 @@ public class Pile<T> implements Serializable {
 	public int moveDown(T item) {
 
 		if (getIdx(item) > 0) {
-			getPair(getIdx(item)).incr();
-			getPair(item).decr();
+			getPairOfIdx(getIdx(item) - 1).incr();
+			getPairOfItem(item).decr();
 		}
 		return -1;
 	}
@@ -293,7 +293,7 @@ public class Pile<T> implements Serializable {
 
 	}
 
-	private Pair getPair(int idx) {
+	private Pair getPairOfIdx(int idx) {
 
 		for (Pair pair : items) {
 			if (pair.getIdx() == idx) {
@@ -303,7 +303,7 @@ public class Pile<T> implements Serializable {
 		return null;
 	}
 
-	private Pair getPair(T item) {
+	private Pair getPairOfItem(T item) {
 
 		for (Pair pair : items) {
 			if (pair.getItem().equals(item)) {
