@@ -207,7 +207,8 @@ public class PixMenuBar extends MenuBar {
 		PixTab tab = GuiFacade.getInstance().getActiveTab();
 
 		try {
-			Executor.getInstance().executeAction(new PixellateAction(activeImage));
+			Executor.getInstance().executeAction(new PixellateAction(tab, activeImage));
+			GuiFacade.getInstance().getLayerPanel().populate();
 			Executor.getInstance().executeAction(new RefreshTabAction(tab));
 		} catch (Exception e) {
 			new ExceptionPopUp(e);

@@ -121,4 +121,8 @@ public class PropertiesContext {
 		return getColor(properties.getProperty("selectionColor"));
 	}
 
+	public Color getBackgroundColor() {
+		return getColor(properties.getProperty("backgroundColor"));
+	}
+
 }
