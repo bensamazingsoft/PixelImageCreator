@@ -216,4 +216,14 @@ public class PixMenuBar extends MenuBar {
 
 	}
 
+	@FXML
+	public void extractAction(ActionEvent event) {
+		handleExtractAction();
+	}
+
+	private void handleExtractAction() {
+		// TODO Auto-generated method stub
+
+	}
+
 }

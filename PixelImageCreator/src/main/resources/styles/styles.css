@@ -10,9 +10,9 @@
 }
 
 .layerbox {
-	-fx-background-color:lightgray;
+	-fx-border-color:gray;
 }
 
 .colorbox{
-	-fx-background-color:lightgray;
+	-fx-border-color:gray;
 }

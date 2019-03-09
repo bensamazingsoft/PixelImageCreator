@@ -191,7 +191,7 @@ public class LayerBox extends VBox implements Initializable, Toggle {
 			if (newVal) {
 				setStyle("-fx-background-color:" + AppContext.getInstance().propertyContext().get("selectColor1"));
 			} else {
-				setStyle("-fx-background-color:gray");
+				setStyle("-fx-background-color:" + AppContext.getInstance().propertyContext().get("selectColor2"));
 			}
 		});
 

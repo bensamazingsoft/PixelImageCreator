@@ -28,161 +28,128 @@ import javafx.scene.paint.Color;
  * has a color builder method
  *
  */
-public class ColorBox extends VBox implements Toggle, Initializable
-{
+public class ColorBox extends VBox implements Toggle, Initializable {
 
-      @FXML
-      ColorPicker				colorPicker;
+	@FXML
+	ColorPicker colorPicker;
 
-      @FXML
-      Label					label;
+	@FXML
+	Label label;
 
-      private SimpleBooleanProperty		selected    = new SimpleBooleanProperty();
-      private SimpleObjectProperty<ToggleGroup>	toggleGroup = new SimpleObjectProperty<>();
-      private ObjectProperty<Color>		color	    = new SimpleObjectProperty<>();
+	private SimpleBooleanProperty				selected	= new SimpleBooleanProperty();
+	private SimpleObjectProperty<ToggleGroup>	toggleGroup	= new SimpleObjectProperty<>();
+	private ObjectProperty<Color>				color		= new SimpleObjectProperty<>();
 
+	public ColorBox() {
 
-      public ColorBox()
-      {
+		super();
+		getStylesheets().add("/styles/styles.css");
+		getStyleClass().add("colorbox");
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n/trad");
 
-	    super();
-	    getStylesheets().add("/styles/styles.css");
-	    getStyleClass().add("color"
-			+ "box");
-	    ResourceBundle bundle = ResourceBundle.getBundle("i18n/trad");
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/ColorBox.fxml"), bundle);
+		fxmlLoader.setRoot(this);
+		fxmlLoader.setController(this);
 
-	    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/ColorBox.fxml"), bundle);
-	    fxmlLoader.setRoot(this);
-	    fxmlLoader.setController(this);
+		try {
+			fxmlLoader.load();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 
-	    try
-	    {
-		  fxmlLoader.load();
-	    }
-	    catch (IOException e)
-	    {
-		  throw new RuntimeException(e);
-	    }
+	}
 
-      }
+	// builder
+	public ColorBox color(Color color) {
 
+		setColor(color);
 
-      // builder
-      public ColorBox color(Color color)
-      {
+		return this;
 
-	    setColor(color);
+	}
 
-	    return this;
+	@Override
+	public void initialize(URL arg0, ResourceBundle bundle) {
 
-      }
+		setAlignment(Pos.CENTER);
 
+		label.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+			toggleGroup.get().selectToggle(this);
+		});
 
-      @Override
-      public void initialize(URL arg0, ResourceBundle bundle)
-      {
+		colorPicker.valueProperty().bindBidirectional(color);
 
-	    setAlignment(Pos.CENTER);
+		// added so activecolor is changed while this is selected and
+		// colorpicker color is changed
+		color.addListener((obs, oldVal, newVal) -> {
+			if (null != toggleGroup.get() && toggleGroup.get().getSelectedToggle() == this) {
+				GuiFacade.getInstance().setActiveColor(newVal);
+			}
+		});
 
-	    label.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-		  toggleGroup.get().selectToggle(this);
-	    });
+		selected.addListener((obs, oldVal, newVal) -> {
+			if (newVal) {
+				setStyle("-fx-background-color:" + AppContext.getInstance().propertyContext().get("selectColor1"));
+			} else {
+				setStyle("-fx-background-" + AppContext.getInstance().propertyContext().get("selectColor2"));
+			}
+		});
 
-	    colorPicker.valueProperty().bindBidirectional(color);
+	}
 
-	    // added so activecolor is changed while this is selected and
-	    // colorpicker color is changed
-	    color.addListener((obs, oldVal, newVal) -> {
-		  if (null != toggleGroup.get() && toggleGroup.get().getSelectedToggle() == this)
-		  {
-			GuiFacade.getInstance().setActiveColor(newVal);
-		  }
-	    });
+	@Override
+	public ToggleGroup getToggleGroup() {
 
-	    selected.addListener((obs, oldVal, newVal) -> {
-		  if (newVal)
-		  {
-			setStyle("-fx-background-color:" + AppContext.getInstance().propertyContext().get("selectColor1"));
-		  }
-		  else
-		  {
-			setStyle("-fx-background-color:gray");
-		  }
-	    });
+		return toggleGroup.get();
+	}
 
-      }
+	@Override
+	public boolean isSelected() {
 
+		return selected.get();
+	}
 
-      @Override
-      public ToggleGroup getToggleGroup()
-      {
+	@Override
+	public BooleanProperty selectedProperty() {
 
-	    return toggleGroup.get();
-      }
+		return selected;
+	}
 
+	@Override
+	public void setSelected(boolean arg0) {
 
-      @Override
-      public boolean isSelected()
-      {
+		selected.set(arg0);
 
-	    return selected.get();
-      }
+	}
 
+	@Override
+	public void setToggleGroup(ToggleGroup arg0) {
 
-      @Override
-      public BooleanProperty selectedProperty()
-      {
+		toggleGroup.set(arg0);
+		toggleGroup.get().getToggles().add(this);
+		toggleGroup.get().selectToggle(this);
 
-	    return selected;
-      }
+	}
 
+	@Override
+	public ObjectProperty<ToggleGroup> toggleGroupProperty() {
 
-      @Override
-      public void setSelected(boolean arg0)
-      {
+		return toggleGroup;
+	}
 
-	    selected.set(arg0);
+	public final ObjectProperty<Color> colorProperty() {
 
-      }
+		return this.color;
+	}
 
+	public final Color getColor() {
 
-      @Override
-      public void setToggleGroup(ToggleGroup arg0)
-      {
+		return this.colorProperty().get();
+	}
 
-	    toggleGroup.set(arg0);
-	    toggleGroup.get().getToggles().add(this);
-	    toggleGroup.get().selectToggle(this);
+	public final void setColor(final Color color) {
 
-      }
-
-
-      @Override
-      public ObjectProperty<ToggleGroup> toggleGroupProperty()
-      {
-
-	    return toggleGroup;
-      }
-
-
-      public final ObjectProperty<Color> colorProperty()
-      {
-
-	    return this.color;
-      }
-
-
-      public final Color getColor()
-      {
-
-	    return this.colorProperty().get();
-      }
-
-
-      public final void setColor(final Color color)
-      {
-
-	    this.colorProperty().set(color);
-      }
+		this.colorProperty().set(color);
+	}
 
 }

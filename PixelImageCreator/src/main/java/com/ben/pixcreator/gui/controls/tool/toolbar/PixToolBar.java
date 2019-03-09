@@ -24,341 +24,305 @@ import javafx.scene.control.ToolBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-public class PixToolBar extends ToolBar implements Initializable
-{
-
-      private final String    IMAGEPATH		    = "images/gui/buttons/tools/";
-
-      @FXML
-      private ToggleGroup     toggleGroup;
-
-      @FXML
-      private ToggleButton    selectBut;
-
-      @FXML
-      private ToggleButton    drawBut;
-
-      @FXML
-      private ToggleButton    pickBut;
-
-      @FXML
-      private ToggleButton    moveBut;
-
-      @FXML
-      private ToggleButton    panBut;
-
-      @FXML
-      private ToggleButton    resizeBut;
-
-      @FXML
-      private ToggleButton    zoomInBut;
+public class PixToolBar extends ToolBar implements Initializable {
+
+	private final String IMAGEPATH = "images/gui/buttons/tools/";
+
+	@FXML
+	private ToggleGroup toggleGroup;
+
+	@FXML
+	private ToggleButton selectBut;
+
+	@FXML
+	private ToggleButton drawBut;
+
+	@FXML
+	private ToggleButton pickBut;
+
+	@FXML
+	private ToggleButton moveBut;
+
+	@FXML
+	private ToggleButton panBut;
+
+	// @FXML
+	// private ToggleButton resizeBut;
+	//
+	// @FXML
+	// private ToggleButton zoomInBut;
+	//
+	// @FXML
+	// private ToggleButton zoomOutBut;
+
+	@FXML
+	private ToggleButton showGridBut;
+
+	// get images
+	final private Image		selectButSelected	= new Image(
+			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "selectButSelected.png"));
+	final private Image		selectButUnSelected	= new Image(
+			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "selectButUnSelected.png"));
+	final private ImageView	selectButImg		= new ImageView();
+
+	final private Image		drawButSelected		= new Image(
+			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "drawButSelected.png"));
+	final private Image		drawButUnSelected	= new Image(
+			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "drawButUnSelected.png"));
+	final private ImageView	drawButImg			= new ImageView();
+
+	final private Image		pickButSelected		= new Image(
+			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "pickButSelected.png"));
+	final private Image		pickButUnSelected	= new Image(
+			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "pickButUnSelected.png"));
+	final private ImageView	pickButImg			= new ImageView();
+
+	final private Image		moveButSelected		= new Image(
+			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "moveButSelected.png"));
+	final private Image		moveButUnSelected	= new Image(
+			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "moveButUnSelected.png"));
+	final private ImageView	moveButImg			= new ImageView();
+
+	final private Image		panButSelected		= new Image(
+			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "panButSelected.png"));
+	final private Image		panButUnSelected	= new Image(
+			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "panButUnSelected.png"));
+	final private ImageView	panButImg			= new ImageView();
+
+	// final private Image resizeButSelected = new Image(
+	// getClass().getClassLoader().getResourceAsStream(IMAGEPATH +
+	// "resizeButSelected.png"));
+	// final private Image resizeButUnSelected = new Image(
+	// getClass().getClassLoader().getResourceAsStream(IMAGEPATH +
+	// "resizeButUnSelected.png"));
+	// final private ImageView resizeButImg = new ImageView();
+	//
+	// final private Image zoomInButSelected = new Image(
+	// getClass().getClassLoader().getResourceAsStream(IMAGEPATH +
+	// "zoomInButSelected.png"));
+	// final private Image zoomInButUnSelected = new Image(
+	// getClass().getClassLoader().getResourceAsStream(IMAGEPATH +
+	// "zoomInButUnSelected.png"));
+	// final private ImageView zoomInButImg = new ImageView();
+	//
+	// final private Image zoomOutButSelected = new Image(
+	// getClass().getClassLoader().getResourceAsStream(IMAGEPATH +
+	// "zoomOutButSelected.png"));
+	// final private Image zoomOutButUnSelected = new Image(
+	// getClass().getClassLoader().getResourceAsStream(IMAGEPATH +
+	// "zoomOutButUnSelected.png"));
+	// final private ImageView zoomOutButImg = new ImageView();
 
-      @FXML
-      private ToggleButton    zoomOutBut;
+	final private Image		showGridButSelected		= new Image(
+			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "showGridButSelected.png"));
+	final private Image		showGridButUnSelected	= new Image(
+			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "showGridButUnSelected.png"));
+	final private ImageView	showGridButImg			= new ImageView();
 
-      @FXML
-      private ToggleButton    showGridBut;
+	public PixToolBar() {
 
-      // get images
-      final private Image     selectButSelected	    = new Image(
-		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "selectButSelected.png"));
-      final private Image     selectButUnSelected   = new Image(
-		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "selectButUnSelected.png"));
-      final private ImageView selectButImg	    = new ImageView();
+		toggleGroup = new ToggleGroup();
+
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n/trad");
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/PixToolBar.fxml"), bundle);
+		fxmlLoader.setRoot(this);
+		fxmlLoader.setController(this);
 
-      final private Image     drawButSelected	    = new Image(
-		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "drawButSelected.png"));
-      final private Image     drawButUnSelected	    = new Image(
-		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "drawButUnSelected.png"));
-      final private ImageView drawButImg	    = new ImageView();
+		try {
+			fxmlLoader.load();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 
-      final private Image     pickButSelected	    = new Image(
-		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "pickButSelected.png"));
-      final private Image     pickButUnSelected	    = new Image(
-		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "pickButUnSelected.png"));
-      final private ImageView pickButImg	    = new ImageView();
+		GuiFacade.getInstance().setPixToolBar(this);
+		GuiFacade.getInstance().toggleToolTo(AppContext.getInstance().getCurrTool());
+	}
 
-      final private Image     moveButSelected	    = new Image(
-		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "moveButSelected.png"));
-      final private Image     moveButUnSelected	    = new Image(
-		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "moveButUnSelected.png"));
-      final private ImageView moveButImg	    = new ImageView();
+	@FXML
+	private void toggleSelect(ActionEvent event) {
 
-      final private Image     panButSelected	    = new Image(
-		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "panButSelected.png"));
-      final private Image     panButUnSelected	    = new Image(
-		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "panButUnSelected.png"));
-      final private ImageView panButImg		    = new ImageView();
+		handleToggle();
+	}
 
-      final private Image     resizeButSelected	    = new Image(
-		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "resizeButSelected.png"));
-      final private Image     resizeButUnSelected   = new Image(
-		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "resizeButUnSelected.png"));
-      final private ImageView resizeButImg	    = new ImageView();
+	@FXML
+	private void toggleDraw(ActionEvent event) {
 
-      final private Image     zoomInButSelected	    = new Image(
-		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "zoomInButSelected.png"));
-      final private Image     zoomInButUnSelected   = new Image(
-		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "zoomInButUnSelected.png"));
-      final private ImageView zoomInButImg	    = new ImageView();
+		handleToggle();
 
-      final private Image     zoomOutButSelected    = new Image(
-		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "zoomOutButSelected.png"));
-      final private Image     zoomOutButUnSelected  = new Image(
-		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "zoomOutButUnSelected.png"));
-      final private ImageView zoomOutButImg	    = new ImageView();
+	}
 
-      final private Image     showGridButSelected   = new Image(
-		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "showGridButSelected.png"));
-      final private Image     showGridButUnSelected = new Image(
-		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "showGridButUnSelected.png"));
-      final private ImageView showGridButImg	    = new ImageView();
+	@FXML
+	private void togglePick(ActionEvent event) {
 
+		handleToggle();
+	}
 
-      public PixToolBar()
-      {
+	@FXML
+	private void toggleMove(ActionEvent event) {
 
-	    toggleGroup = new ToggleGroup();
+		handleToggle();
+	}
 
-	    ResourceBundle bundle = ResourceBundle.getBundle("i18n/trad");
-	    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/PixToolBar.fxml"), bundle);
-	    fxmlLoader.setRoot(this);
-	    fxmlLoader.setController(this);
+	@FXML
+	private void togglePan(ActionEvent event) {
 
-	    try
-	    {
-		  fxmlLoader.load();
-	    }
-	    catch (IOException e)
-	    {
-		  throw new RuntimeException(e);
-	    }
+		handleToggle();
+	}
 
-	    GuiFacade.getInstance().setPixToolBar(this);
-	    GuiFacade.getInstance().toggleToolTo(AppContext.getInstance().getCurrTool());
-      }
+	@FXML
+	private void toggleResize(ActionEvent event) {
 
+		handleToggle();
+	}
 
-      @FXML
-      private void toggleSelect(ActionEvent event)
-      {
-
-	    handleToggle();
-      }
-
-
-      @FXML
-      private void toggleDraw(ActionEvent event)
-      {
-
-	    handleToggle();
-
-      }
-
-
-      @FXML
-      private void togglePick(ActionEvent event)
-      {
-
-	    handleToggle();
-      }
-
-
-      @FXML
-      private void toggleMove(ActionEvent event)
-      {
-
-	    handleToggle();
-      }
-
-
-      @FXML
-      private void togglePan(ActionEvent event)
-      {
-
-	    handleToggle();
-      }
-
-
-      @FXML
-      private void toggleResize(ActionEvent event)
-      {
-
-	    handleToggle();
-      }
-
-
-      @FXML
-      private void toggleZoomIn(ActionEvent event)
-      {
-
-	    handleToggle();
-      }
-
-
-      @FXML
-      private void toggleZoomOut(ActionEvent event)
-      {
-
-	    handleToggle();
-      }
-
-
-      private void handleToggle()
-      {
-
-	    // handle tool toggle action with gui facade
-	    GuiFacade guiFacade = GuiFacade.getInstance();
-
-	    guiFacade.toggleToolTo((PixTool) toggleGroup.getSelectedToggle().getUserData());
-
-      }
-
-
-      @FXML
-      private void toggleShowGrid(ActionEvent event)
-      {
-
-	    handleToggleShowGrid();
-      }
-
-
-      private void handleToggleShowGrid()
-      {
-
-	    if (null != GuiFacade.getInstance().getActiveimage())
-	    {
-		  try
-		  {
-			Executor.getInstance().executeAction(new RefreshAllTabsAction());
-		  }
-		  catch (Exception e)
-		  {
-			new ExceptionPopUp(e);
-		  }
-	    }
-
-      }
-
-
-      @Override
-      public void initialize(URL arg0, ResourceBundle arg1)
-      {
-
-	    selectBut.setGraphic(selectButImg);
-	    selectBut.setUserData(PixTool.SELECT);
-	    selectButImg.imageProperty().bind(
-			Bindings.when(selectBut.selectedProperty()).then(selectButSelected).otherwise(selectButUnSelected));
-	    selectBut.addEventFilter(Event.ANY, event -> {
-		  if (AppContext.getInstance().getCurrTool() == PixTool.SELECT)
-		  {
-			event.consume();
-		  }
-	    });
-
-	    drawBut.setGraphic(drawButImg);
-	    drawBut.setUserData(PixTool.DRAW);
-	    drawButImg.imageProperty()
-			.bind(Bindings.when(drawBut.selectedProperty()).then(drawButSelected).otherwise(drawButUnSelected));
-	    drawBut.addEventFilter(Event.ANY, event -> {
-		  if (AppContext.getInstance().getCurrTool() == PixTool.DRAW)
-		  {
-			event.consume();
-		  }
-	    });
-
-	    pickBut.setGraphic(pickButImg);
-	    pickBut.setUserData(PixTool.PICK);
-	    pickButImg.imageProperty()
-			.bind(Bindings.when(pickBut.selectedProperty()).then(pickButSelected).otherwise(pickButUnSelected));
-
-	    pickBut.addEventFilter(Event.ANY, event -> {
-		  if (AppContext.getInstance().getCurrTool() == PixTool.PICK)
-		  {
-			event.consume();
-		  }
-	    });
-
-	    moveBut.setGraphic(moveButImg);
-	    moveBut.setUserData(PixTool.MOVE);
-	    moveButImg.imageProperty()
-			.bind(Bindings.when(moveBut.selectedProperty()).then(moveButSelected).otherwise(moveButUnSelected));
-
-	    moveBut.addEventFilter(Event.ANY, event -> {
-		  if (AppContext.getInstance().getCurrTool() == PixTool.MOVE)
-		  {
-			event.consume();
-		  }
-	    });
-
-	    panBut.setGraphic(panButImg);
-	    panBut.setUserData(PixTool.PAN);
-	    panButImg.imageProperty()
-			.bind(Bindings.when(panBut.selectedProperty()).then(panButSelected).otherwise(panButUnSelected));
-
-	    panBut.addEventFilter(Event.ANY, event -> {
-		  if (AppContext.getInstance().getCurrTool() == PixTool.PAN)
-		  {
-			event.consume();
-		  }
-	    });
-
-	    resizeBut.setGraphic(resizeButImg);
-	    resizeBut.setUserData(PixTool.RESIZE);
-	    resizeButImg.imageProperty().bind(
-			Bindings.when(resizeBut.selectedProperty()).then(resizeButSelected).otherwise(resizeButUnSelected));
-
-	    resizeBut.addEventFilter(Event.ANY, event -> {
-		  if (AppContext.getInstance().getCurrTool() == PixTool.RESIZE)
-		  {
-			event.consume();
-		  }
-	    });
-
-	    zoomInBut.setGraphic(zoomInButImg);
-	    zoomInBut.setUserData(PixTool.ZOOMIN);
-	    zoomInButImg.imageProperty().bind(
-			Bindings.when(zoomInBut.selectedProperty()).then(zoomInButSelected).otherwise(zoomInButUnSelected));
-
-	    zoomInBut.addEventFilter(Event.ANY, event -> {
-		  if (AppContext.getInstance().getCurrTool() == PixTool.ZOOMIN)
-		  {
-			event.consume();
-		  }
-	    });
-
-	    zoomOutBut.setGraphic(zoomOutButImg);
-	    zoomOutBut.setUserData(PixTool.ZOOMOUT);
-	    zoomOutButImg.imageProperty().bind(
-			Bindings.when(zoomOutBut.selectedProperty()).then(zoomOutButSelected).otherwise(zoomOutButUnSelected));
-
-	    zoomOutBut.addEventFilter(Event.ANY, event -> {
-		  if (AppContext.getInstance().getCurrTool() == PixTool.ZOOMOUT)
-		  {
-			event.consume();
-		  }
-	    });
-
-	    showGridBut.setGraphic(showGridButImg);
-	    showGridButImg.imageProperty().bind(
-			Bindings.when(showGridBut.selectedProperty()).then(showGridButSelected).otherwise(showGridButUnSelected));
-
-	    showGridBut.selectedProperty().bindBidirectional(GuiFacade.getInstance().showGridProperty());
-
-      }
-
-
-      public ToggleGroup getToggleGroup()
-      {
-
-	    return toggleGroup;
-      }
-
-
-      public void setToggleGroup(ToggleGroup toggleGroup)
-      {
-
-	    this.toggleGroup = toggleGroup;
-      }
+	@FXML
+	private void toggleZoomIn(ActionEvent event) {
+
+		handleToggle();
+	}
+
+	@FXML
+	private void toggleZoomOut(ActionEvent event) {
+
+		handleToggle();
+	}
+
+	private void handleToggle() {
+
+		// handle tool toggle action with gui facade
+		GuiFacade guiFacade = GuiFacade.getInstance();
+
+		guiFacade.toggleToolTo((PixTool) toggleGroup.getSelectedToggle().getUserData());
+
+	}
+
+	@FXML
+	private void toggleShowGrid(ActionEvent event) {
+
+		handleToggleShowGrid();
+	}
+
+	private void handleToggleShowGrid() {
+
+		if (null != GuiFacade.getInstance().getActiveimage()) {
+			try {
+				Executor.getInstance().executeAction(new RefreshAllTabsAction());
+			} catch (Exception e) {
+				new ExceptionPopUp(e);
+			}
+		}
+
+	}
+
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
+
+		selectBut.setGraphic(selectButImg);
+		selectBut.setUserData(PixTool.SELECT);
+		selectButImg.imageProperty().bind(
+				Bindings.when(selectBut.selectedProperty()).then(selectButSelected).otherwise(selectButUnSelected));
+		selectBut.addEventFilter(Event.ANY, event -> {
+			if (AppContext.getInstance().getCurrTool() == PixTool.SELECT) {
+				event.consume();
+			}
+		});
+
+		drawBut.setGraphic(drawButImg);
+		drawBut.setUserData(PixTool.DRAW);
+		drawButImg.imageProperty()
+				.bind(Bindings.when(drawBut.selectedProperty()).then(drawButSelected).otherwise(drawButUnSelected));
+		drawBut.addEventFilter(Event.ANY, event -> {
+			if (AppContext.getInstance().getCurrTool() == PixTool.DRAW) {
+				event.consume();
+			}
+		});
+
+		pickBut.setGraphic(pickButImg);
+		pickBut.setUserData(PixTool.PICK);
+		pickButImg.imageProperty()
+				.bind(Bindings.when(pickBut.selectedProperty()).then(pickButSelected).otherwise(pickButUnSelected));
+
+		pickBut.addEventFilter(Event.ANY, event -> {
+			if (AppContext.getInstance().getCurrTool() == PixTool.PICK) {
+				event.consume();
+			}
+		});
+
+		moveBut.setGraphic(moveButImg);
+		moveBut.setUserData(PixTool.MOVE);
+		moveButImg.imageProperty()
+				.bind(Bindings.when(moveBut.selectedProperty()).then(moveButSelected).otherwise(moveButUnSelected));
+
+		moveBut.addEventFilter(Event.ANY, event -> {
+			if (AppContext.getInstance().getCurrTool() == PixTool.MOVE) {
+				event.consume();
+			}
+		});
+
+		panBut.setGraphic(panButImg);
+		panBut.setUserData(PixTool.PAN);
+		panButImg.imageProperty()
+				.bind(Bindings.when(panBut.selectedProperty()).then(panButSelected).otherwise(panButUnSelected));
+
+		panBut.addEventFilter(Event.ANY, event -> {
+			if (AppContext.getInstance().getCurrTool() == PixTool.PAN) {
+				event.consume();
+			}
+		});
+
+		// resizeBut.setGraphic(resizeButImg);
+		// resizeBut.setUserData(PixTool.RESIZE);
+		// resizeButImg.imageProperty().bind(
+		// Bindings.when(resizeBut.selectedProperty()).then(resizeButSelected).otherwise(resizeButUnSelected));
+		//
+		// resizeBut.addEventFilter(Event.ANY, event -> {
+		// if (AppContext.getInstance().getCurrTool() == PixTool.RESIZE)
+		// {
+		// event.consume();
+		// }
+		// });
+		//
+		// zoomInBut.setGraphic(zoomInButImg);
+		// zoomInBut.setUserData(PixTool.ZOOMIN);
+		// zoomInButImg.imageProperty().bind(
+		// Bindings.when(zoomInBut.selectedProperty()).then(zoomInButSelected).otherwise(zoomInButUnSelected));
+		//
+		// zoomInBut.addEventFilter(Event.ANY, event -> {
+		// if (AppContext.getInstance().getCurrTool() == PixTool.ZOOMIN)
+		// {
+		// event.consume();
+		// }
+		// });
+		//
+		// zoomOutBut.setGraphic(zoomOutButImg);
+		// zoomOutBut.setUserData(PixTool.ZOOMOUT);
+		// zoomOutButImg.imageProperty().bind(
+		// Bindings.when(zoomOutBut.selectedProperty()).then(zoomOutButSelected).otherwise(zoomOutButUnSelected));
+		//
+		// zoomOutBut.addEventFilter(Event.ANY, event -> {
+		// if (AppContext.getInstance().getCurrTool() == PixTool.ZOOMOUT)
+		// {
+		// event.consume();
+		// }
+		// });
+
+		showGridBut.setGraphic(showGridButImg);
+		showGridButImg.imageProperty().bind(
+				Bindings.when(showGridBut.selectedProperty()).then(showGridButSelected)
+						.otherwise(showGridButUnSelected));
+
+		showGridBut.selectedProperty().bindBidirectional(GuiFacade.getInstance().showGridProperty());
+
+	}
+
+	public ToggleGroup getToggleGroup() {
+
+		return toggleGroup;
+	}
+
+	public void setToggleGroup(ToggleGroup toggleGroup) {
+
+		this.toggleGroup = toggleGroup;
+	}
 
 }

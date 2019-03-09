@@ -23,12 +23,12 @@
 		onAction="#toggleMove" />
 	<ToggleButton fx:id="panBut" toggleGroup="$toggleGroup"
 		onAction="#togglePan" />
-	<ToggleButton fx:id="resizeBut" toggleGroup="$toggleGroup"
-		onAction="#toggleResize" />
-	<ToggleButton fx:id="zoomInBut" toggleGroup="$toggleGroup"
-		onAction="#toggleZoomIn" />
-	<ToggleButton fx:id="zoomOutBut"
-		toggleGroup="$toggleGroup" onAction="#toggleZoomOut" />
+<!-- 	<ToggleButton fx:id="resizeBut" toggleGroup="$toggleGroup" -->
+<!-- 		onAction="#toggleResize" /> -->
+<!-- 	<ToggleButton fx:id="zoomInBut" toggleGroup="$toggleGroup" -->
+<!-- 		onAction="#toggleZoomIn" /> -->
+<!-- 	<ToggleButton fx:id="zoomOutBut" -->
+<!-- 		toggleGroup="$toggleGroup" onAction="#toggleZoomOut" /> -->
 
 	<Separator />
 	<ToggleButton fx:id="showGridBut"

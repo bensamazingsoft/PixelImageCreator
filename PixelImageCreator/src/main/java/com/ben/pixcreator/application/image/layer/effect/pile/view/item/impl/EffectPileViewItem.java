@@ -13,7 +13,6 @@ import com.ben.pixcreator.application.image.effect.Effect;
 import com.ben.pixcreator.application.image.layer.effect.pile.view.item.control.IEffectPileViewItemControl;
 import com.ben.pixcreator.application.pile.Pile;
 import com.ben.pixcreator.gui.exception.popup.ExceptionPopUp;
-import com.ben.pixcreator.gui.facade.GuiFacade;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -79,7 +78,7 @@ public class EffectPileViewItem extends VBox {
 			}
 
 			try {
-				GuiFacade.getInstance().getLayerPanel().populate();
+				// GuiFacade.getInstance().getLayerPanel().populate();
 				Executor.getInstance().executeAction(new RefreshAllTabsAction());
 			} catch (Exception e) {
 				new ExceptionPopUp(e);

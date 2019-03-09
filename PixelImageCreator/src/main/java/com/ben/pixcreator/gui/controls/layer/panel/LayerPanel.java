@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.ben.pixcreator.application.action.impl.LayerAction;
 import com.ben.pixcreator.application.action.impl.RefreshTabAction;
 import com.ben.pixcreator.application.context.AppContext;
@@ -17,7 +20,10 @@ import com.ben.pixcreator.gui.controls.layer.panel.actions.LayerActions;
 import com.ben.pixcreator.gui.exception.popup.ExceptionPopUp;
 import com.ben.pixcreator.gui.facade.GuiFacade;
 
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -251,6 +257,8 @@ public class LayerPanel extends BorderPane implements Initializable {
 			activeLayer.set(layer);
 		});
 
+		togglegroup.getToggles().addListener(new TogListChangeListener());
+
 		for (int i = 0; i < getImage().getLayerList().getItems().size(); i++) {
 
 			ALayer layer = getImage().getLayerList().getItem(i);
@@ -306,4 +314,21 @@ public class LayerPanel extends BorderPane implements Initializable {
 		this.activeLayerProperty().set(activeLayer);
 	}
 
+	public class TogListChangeListener implements ListChangeListener<LayerBox>, InvalidationListener {
+
+		private final Logger log = LoggerFactory.getLogger(LayerPanel.TogListChangeListener.class);
+
+		@Override
+		public void onChanged(javafx.collections.ListChangeListener.Change<? extends LayerBox> arg0) {
+			log.debug("populated by listener");
+			populate();
+
+		}
+
+		@Override
+		public void invalidated(Observable observable) {
+
+		}
+
+	}
 }

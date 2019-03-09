@@ -15,7 +15,7 @@
 	</center>
 
 	<right>
-		<VBox fx:id="moveLayerButBox">
+		<VBox fx:id="moveLayerButBox" alignment="center">
 			<Button fx:id="moveLayerUpBut" onAction="#handleMoveLayerUp" />
 			<Button fx:id="moveLayerDownBut"
 				onAction="#handleMoveLayerDown" />
