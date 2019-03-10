@@ -39,6 +39,7 @@ public class PileView extends VBox
 	    setExpand(true);
 
 	    titleLabel.setText(displayTitle);
+	    titleLabel.getStyleClass().add("pileViewTitle");
 	    expandBut.selectedProperty().bindBidirectional(expand);
 	    expandBut.textProperty().bind(Bindings.when(expandProperty()).then("-").otherwise("+"));
 	    expandBut.setOnAction(event -> {
