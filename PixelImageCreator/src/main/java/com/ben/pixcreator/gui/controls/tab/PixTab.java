@@ -25,6 +25,8 @@ import com.ben.pixcreator.gui.facade.GuiFacade;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -53,6 +55,7 @@ import javafx.scene.layout.StackPane;
  */
 public class PixTab extends Tab implements Initializable {
 
+	@SuppressWarnings("unused")
 	private static final Logger log = LoggerFactory.getLogger(PixTab.class);
 
 	// private final String IMAGEPATH = "images/gui/buttons/tab/";
@@ -123,40 +126,7 @@ public class PixTab extends Tab implements Initializable {
 		scrollPane.addEventFilter(ScrollEvent.ANY, new ZoomControl());
 
 		bindPicLayersZoomFactor();
-		zoomFactor.addListener((obs, oldVal, newVal) -> {
-
-			int resultX = (int) (getImage().getxSize() * (double) newVal);
-			int xGridRes = getImage().getxGridResolution();
-
-			while (resultX % xGridRes != 0) {
-
-				resultX--;
-
-			}
-
-			int resultY = (int) (getImage().getySize() * (double) newVal);
-			int yGridRes = getImage().getyGridResolution();
-
-			while (resultY % yGridRes != 0) {
-
-				resultY--;
-
-			}
-
-			setZoomFactorAdjusted((double) resultX / (double) getImage().getxSize());
-
-			// log.debug("ZoomFactorAdjusted = " + getZoomFactorAdjusted());
-
-			canvas.setWidth(resultX);
-			canvas.setHeight(resultY);
-
-			try {
-				Executor.getInstance().executeAction(new RefreshTabAction(this));
-			} catch (Exception e) {
-				new ExceptionPopUp(e);
-			}
-
-		});
+		zoomFactor.addListener(new ZoomListener(this));
 
 		setZoomFactorAdjusted(getZoomFactor());
 
@@ -167,6 +137,7 @@ public class PixTab extends Tab implements Initializable {
 
 		scrollPane.setFitToWidth(true);
 		scrollPane.setFitToHeight(true);
+
 	}
 
 	private class MouseManager implements EventHandler<MouseEvent> {
@@ -292,6 +263,56 @@ public class PixTab extends Tab implements Initializable {
 
 	}
 
+	class ZoomListener implements ChangeListener<Number> {
+
+		private PixTab tab;
+
+		public ZoomListener(PixTab tab) {
+			super();
+			this.tab = tab;
+		}
+
+		@Override
+		public void changed(ObservableValue<? extends Number> observable, Number oldVal, Number newVal) {
+			{
+
+				int resultX = (int) (getImage().getxSize() * (double) newVal);
+				int xGridRes = getImage().getxGridResolution();
+
+				while (resultX % xGridRes != 0) {
+
+					resultX--;
+
+				}
+
+				int resultY = (int) (getImage().getySize() * (double) newVal);
+				int yGridRes = getImage().getyGridResolution();
+
+				while (resultY % yGridRes != 0) {
+
+					resultY--;
+
+				}
+
+				setZoomFactorAdjusted((double) resultX / (double) getImage().getxSize());
+
+				// log.debug("ZoomFactorAdjusted = " + getZoomFactorAdjusted());
+
+				canvas.setWidth(resultX);
+				canvas.setHeight(resultY);
+
+				try {
+					Executor.getInstance().executeAction(new RefreshTabAction(tab));
+				} catch (Exception e) {
+					new ExceptionPopUp(e);
+				}
+
+			}
+
+		}
+
+	}
+
 	public Canvas getCanvas() {
 
 		return canvas;
@@ -339,4 +360,16 @@ public class PixTab extends Tab implements Initializable {
 		this.zoomFactorAdjustedProperty().set(zoomFactorAdjusted);
 	}
 
+	/**
+	 * enables or disables the pan mode
+	 * 
+	 * @param b
+	 */
+	public void togglePanMode() {
+
+		canvas.setMouseTransparent(!canvas.isMouseTransparent());
+
+		scrollPane.setPannable(!scrollPane.isPannable());
+
+	}
 }

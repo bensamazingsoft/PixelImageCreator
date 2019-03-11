@@ -25,6 +25,7 @@ public class PixImage implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	@SuppressWarnings("unused")
 	private static final Logger log = LoggerFactory.getLogger(PixImage.class);
 
 	// TODO manage the 'changed' state : do you save on close ? is there a '*'

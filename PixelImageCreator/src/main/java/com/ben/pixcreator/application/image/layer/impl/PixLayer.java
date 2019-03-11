@@ -20,6 +20,7 @@ public class PixLayer extends ALayer {
 	 * 
 	 */
 
+	@SuppressWarnings("unused")
 	private static final Logger		log					= LoggerFactory.getLogger(PixLayer.class);
 	private static final long		serialVersionUID	= 1L;
 	private Map<Coord, ColorRGB>	grid;

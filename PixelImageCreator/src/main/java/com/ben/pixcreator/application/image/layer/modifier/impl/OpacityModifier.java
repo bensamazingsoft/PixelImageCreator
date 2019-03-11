@@ -9,14 +9,12 @@ import com.ben.pixcreator.application.image.layer.modifier.IModifier;
 
 public class OpacityModifier implements IModifier {
 
-	private Effect	fx;
-	private ALayer	layer;
+	private Effect fx;
 
-	public OpacityModifier(ALayer layer, Effect fx) {
+	public OpacityModifier(Effect fx) {
 
 		super();
 		this.fx = fx;
-		this.layer = layer;
 	}
 
 	@Override

@@ -11,15 +11,18 @@ import com.ben.pixcreator.application.action.impl.OpenNewImageAction;
 import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.application.executor.Executor;
 import com.ben.pixcreator.gui.exception.popup.ExceptionPopUp;
+import com.ben.pixcreator.gui.keyhandler.KeyHandler;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 public class MainApp extends Application {
 
+	@SuppressWarnings("unused")
 	private static final Logger log = LoggerFactory.getLogger(MainApp.class);
 
 	public static void main(String[] args) throws Exception {
@@ -41,6 +44,7 @@ public class MainApp extends Application {
 		// log.debug("Showing JFX scene");
 		Scene scene = new Scene(rootNode, 1200, 800);
 		scene.getStylesheets().add("/styles/styles.css");
+		scene.addEventFilter(KeyEvent.ANY, new KeyHandler());
 
 		stage.setOnCloseRequest((Event) -> handleClose());
 		stage.setTitle(bundle.getString("appTitle"));

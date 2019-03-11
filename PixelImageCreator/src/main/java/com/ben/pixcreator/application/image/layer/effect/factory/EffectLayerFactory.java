@@ -15,15 +15,15 @@ public class EffectLayerFactory {
 		switch (effect.getEffect()) {
 
 		case OPACITY:
-			IModifier opModifier = new OpacityModifier(layer, effect);
+			IModifier opModifier = new OpacityModifier(effect);
 			return opModifier.modify(layer);
 
 		case ENLARGE:
-			IModifier sizeModifierEnlarge = new SizeModifier(layer, effect);
+			IModifier sizeModifierEnlarge = new SizeModifier(effect);
 			return sizeModifierEnlarge.modify(layer);
 
 		case SHRINK:
-			IModifier sizeModifierShrink = new SizeModifier(layer, effect);
+			IModifier sizeModifierShrink = new SizeModifier(effect);
 			return sizeModifierShrink.modify(layer);
 
 		default:

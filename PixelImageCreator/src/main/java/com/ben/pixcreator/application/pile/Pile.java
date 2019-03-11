@@ -258,6 +258,7 @@ public class Pile<T> implements Serializable {
 			return result;
 		}
 
+		@SuppressWarnings("unchecked")
 		@Override
 		public boolean equals(Object obj) {
 

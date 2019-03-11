@@ -14,7 +14,6 @@ import com.ben.pixcreator.gui.facade.GuiFacade;
 
 import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -23,6 +22,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.ToolBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 
 public class PixToolBar extends ToolBar implements Initializable {
 
@@ -45,15 +45,6 @@ public class PixToolBar extends ToolBar implements Initializable {
 
 	@FXML
 	private ToggleButton panBut;
-
-	// @FXML
-	// private ToggleButton resizeBut;
-	//
-	// @FXML
-	// private ToggleButton zoomInBut;
-	//
-	// @FXML
-	// private ToggleButton zoomOutBut;
 
 	@FXML
 	private ToggleButton showGridBut;
@@ -88,30 +79,6 @@ public class PixToolBar extends ToolBar implements Initializable {
 	final private Image		panButUnSelected	= new Image(
 			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "panButUnSelected.png"));
 	final private ImageView	panButImg			= new ImageView();
-
-	// final private Image resizeButSelected = new Image(
-	// getClass().getClassLoader().getResourceAsStream(IMAGEPATH +
-	// "resizeButSelected.png"));
-	// final private Image resizeButUnSelected = new Image(
-	// getClass().getClassLoader().getResourceAsStream(IMAGEPATH +
-	// "resizeButUnSelected.png"));
-	// final private ImageView resizeButImg = new ImageView();
-	//
-	// final private Image zoomInButSelected = new Image(
-	// getClass().getClassLoader().getResourceAsStream(IMAGEPATH +
-	// "zoomInButSelected.png"));
-	// final private Image zoomInButUnSelected = new Image(
-	// getClass().getClassLoader().getResourceAsStream(IMAGEPATH +
-	// "zoomInButUnSelected.png"));
-	// final private ImageView zoomInButImg = new ImageView();
-	//
-	// final private Image zoomOutButSelected = new Image(
-	// getClass().getClassLoader().getResourceAsStream(IMAGEPATH +
-	// "zoomOutButSelected.png"));
-	// final private Image zoomOutButUnSelected = new Image(
-	// getClass().getClassLoader().getResourceAsStream(IMAGEPATH +
-	// "zoomOutButUnSelected.png"));
-	// final private ImageView zoomOutButImg = new ImageView();
 
 	final private Image		showGridButSelected		= new Image(
 			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "showGridButSelected.png"));
@@ -221,7 +188,8 @@ public class PixToolBar extends ToolBar implements Initializable {
 		selectBut.setUserData(PixTool.SELECT);
 		selectButImg.imageProperty().bind(
 				Bindings.when(selectBut.selectedProperty()).then(selectButSelected).otherwise(selectButUnSelected));
-		selectBut.addEventFilter(Event.ANY, event -> {
+
+		selectBut.addEventFilter(MouseEvent.ANY, event -> {
 			if (AppContext.getInstance().getCurrTool() == PixTool.SELECT) {
 				event.consume();
 			}
@@ -231,7 +199,8 @@ public class PixToolBar extends ToolBar implements Initializable {
 		drawBut.setUserData(PixTool.DRAW);
 		drawButImg.imageProperty()
 				.bind(Bindings.when(drawBut.selectedProperty()).then(drawButSelected).otherwise(drawButUnSelected));
-		drawBut.addEventFilter(Event.ANY, event -> {
+
+		drawBut.addEventFilter(MouseEvent.ANY, event -> {
 			if (AppContext.getInstance().getCurrTool() == PixTool.DRAW) {
 				event.consume();
 			}
@@ -242,7 +211,7 @@ public class PixToolBar extends ToolBar implements Initializable {
 		pickButImg.imageProperty()
 				.bind(Bindings.when(pickBut.selectedProperty()).then(pickButSelected).otherwise(pickButUnSelected));
 
-		pickBut.addEventFilter(Event.ANY, event -> {
+		pickBut.addEventFilter(MouseEvent.ANY, event -> {
 			if (AppContext.getInstance().getCurrTool() == PixTool.PICK) {
 				event.consume();
 			}
@@ -253,7 +222,7 @@ public class PixToolBar extends ToolBar implements Initializable {
 		moveButImg.imageProperty()
 				.bind(Bindings.when(moveBut.selectedProperty()).then(moveButSelected).otherwise(moveButUnSelected));
 
-		moveBut.addEventFilter(Event.ANY, event -> {
+		moveBut.addEventFilter(MouseEvent.ANY, event -> {
 			if (AppContext.getInstance().getCurrTool() == PixTool.MOVE) {
 				event.consume();
 			}
@@ -264,47 +233,11 @@ public class PixToolBar extends ToolBar implements Initializable {
 		panButImg.imageProperty()
 				.bind(Bindings.when(panBut.selectedProperty()).then(panButSelected).otherwise(panButUnSelected));
 
-		panBut.addEventFilter(Event.ANY, event -> {
+		panBut.addEventFilter(MouseEvent.ANY, event -> {
 			if (AppContext.getInstance().getCurrTool() == PixTool.PAN) {
 				event.consume();
 			}
 		});
-
-		// resizeBut.setGraphic(resizeButImg);
-		// resizeBut.setUserData(PixTool.RESIZE);
-		// resizeButImg.imageProperty().bind(
-		// Bindings.when(resizeBut.selectedProperty()).then(resizeButSelected).otherwise(resizeButUnSelected));
-		//
-		// resizeBut.addEventFilter(Event.ANY, event -> {
-		// if (AppContext.getInstance().getCurrTool() == PixTool.RESIZE)
-		// {
-		// event.consume();
-		// }
-		// });
-		//
-		// zoomInBut.setGraphic(zoomInButImg);
-		// zoomInBut.setUserData(PixTool.ZOOMIN);
-		// zoomInButImg.imageProperty().bind(
-		// Bindings.when(zoomInBut.selectedProperty()).then(zoomInButSelected).otherwise(zoomInButUnSelected));
-		//
-		// zoomInBut.addEventFilter(Event.ANY, event -> {
-		// if (AppContext.getInstance().getCurrTool() == PixTool.ZOOMIN)
-		// {
-		// event.consume();
-		// }
-		// });
-		//
-		// zoomOutBut.setGraphic(zoomOutButImg);
-		// zoomOutBut.setUserData(PixTool.ZOOMOUT);
-		// zoomOutButImg.imageProperty().bind(
-		// Bindings.when(zoomOutBut.selectedProperty()).then(zoomOutButSelected).otherwise(zoomOutButUnSelected));
-		//
-		// zoomOutBut.addEventFilter(Event.ANY, event -> {
-		// if (AppContext.getInstance().getCurrTool() == PixTool.ZOOMOUT)
-		// {
-		// event.consume();
-		// }
-		// });
 
 		showGridBut.setGraphic(showGridButImg);
 		showGridButImg.imageProperty().bind(

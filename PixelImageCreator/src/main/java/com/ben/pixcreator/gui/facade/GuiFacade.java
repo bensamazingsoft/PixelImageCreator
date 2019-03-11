@@ -35,16 +35,19 @@ import javafx.scene.paint.Color;
 
 public class GuiFacade {
 
+	@SuppressWarnings("unused")
 	private static final Logger log = LoggerFactory.getLogger(GuiFacade.class);
 
 	private static GuiFacade instance;
 
 	private Scene scene;
 
+	@SuppressWarnings("unused")
 	private PixMenuBar	pixMenuBar;
 	private PixToolBar	pixToolBar;
 	private PixTabPane	pixTabPane;
 	private LayerPanel	layerPanel;
+	@SuppressWarnings("unused")
 	private ColorRoster	colorRoster;
 
 	private Map<PixImage, Set<SimpleObjectProperty<Color>>>	imagesColors;

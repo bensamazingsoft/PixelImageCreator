@@ -17,6 +17,7 @@ import javafx.scene.input.MouseEvent;
 
 public class SelectActionFactory implements IActionFactory {
 
+	@SuppressWarnings("unused")
 	private static final Logger log = LoggerFactory.getLogger(SelectActionFactory.class);
 
 	@Override

@@ -15,6 +15,7 @@ import javafx.scene.canvas.Canvas;
 
 public class RefreshTabAction implements IAction {
 
+	@SuppressWarnings("unused")
 	private static final Logger log = LoggerFactory.getLogger(RefreshTabAction.class);
 
 	private final PixImage	image;

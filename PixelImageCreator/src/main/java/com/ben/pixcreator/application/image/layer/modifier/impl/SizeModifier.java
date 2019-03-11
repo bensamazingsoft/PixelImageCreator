@@ -9,12 +9,10 @@ import com.ben.pixcreator.application.image.layer.modifier.IModifier;
 
 public class SizeModifier implements IModifier {
 
-	private ALayer	layer;
-	private Effect	effect;
+	private Effect effect;
 
-	public SizeModifier(ALayer layer, Effect effect) {
+	public SizeModifier(Effect effect) {
 		this.effect = effect;
-		this.layer = layer;
 	}
 
 	@Override
