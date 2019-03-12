@@ -359,12 +359,11 @@ public class PixMenuBar extends MenuBar {
 			final Executor exec = Executor.getInstance();
 			exec.startOperation();
 
-			PixImage activeImage = gui.getActiveimage();
-
-			gui.getClipboard().forEach((k, v) -> {
+			gui.getClipboard().forEach((coord, colorRGB) -> {
 
 				try {
-					exec.continueOperation(new ActionChangeCellColor(activeImage, pixLayer, k, v.getColor()));
+					exec.continueOperation(
+							new ActionChangeCellColor(gui.getActiveimage(), pixLayer, coord, colorRGB.getFxColor()));
 				} catch (Exception e) {
 					exec.endOperation();
 					new ExceptionPopUp(e);

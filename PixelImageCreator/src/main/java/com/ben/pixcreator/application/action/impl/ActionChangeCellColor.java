@@ -37,7 +37,7 @@ public class ActionChangeCellColor implements IAction, ICancelable {
 		this.newCell = !layer.getGrid().containsKey(coord);
 
 		if (!newCell) {
-			prevColor = layer.getGrid().get(coord).getColor();
+			prevColor = layer.getGrid().get(coord).getFxColor();
 		}
 
 	}

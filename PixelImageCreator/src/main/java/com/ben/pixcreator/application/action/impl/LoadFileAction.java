@@ -94,7 +94,7 @@ public class LoadFileAction implements IAction {
 
 		// set image colors in the gui facade map (checked when a tab is opened)
 		Set<ColorRGB> colors = pixFile.getColors();
-		gui.getImagesColors().put(image, colors.stream().map(ColorRGB::getColorProperty).collect(toSet()));
+		gui.getImagesColors().put(image, colors.stream().map(ColorRGB::getFxColorProperty).collect(toSet()));
 
 		// set file path in files context map
 		AppContext.getInstance().getFiles().put(image, file);

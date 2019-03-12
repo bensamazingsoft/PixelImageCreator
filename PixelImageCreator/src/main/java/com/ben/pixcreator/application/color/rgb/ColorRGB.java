@@ -54,7 +54,7 @@ public class ColorRGB implements Serializable {
 	/**
 	 * @return the javafx.scene.paint.Color represented by this 'rgb' map values
 	 */
-	public Color getColor() {
+	public Color getFxColor() {
 
 		return Color.rgb(rgb.get(RED).intValue(), rgb.get(GREEN).intValue(), rgb.get(BLUE).intValue(),
 				rgb.get(OPACITY));
@@ -64,10 +64,10 @@ public class ColorRGB implements Serializable {
 	 * @return a javafx.beans.property.SimpleObjectProperty holding a
 	 *         javafx.scene.paint.Color represented by this 'rgb' map values
 	 */
-	public SimpleObjectProperty<Color> getColorProperty() {
+	public SimpleObjectProperty<Color> getFxColorProperty() {
 
 		SimpleObjectProperty<Color> prop = new SimpleObjectProperty<>();
-		prop.set(getColor());
+		prop.set(getFxColor());
 
 		return prop;
 	}

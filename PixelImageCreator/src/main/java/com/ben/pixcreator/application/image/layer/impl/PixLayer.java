@@ -76,7 +76,7 @@ public class PixLayer extends ALayer {
 
 		for (Coord cell : getGrid().keySet()) {
 
-			graphic.setFill(getGrid().get(cell).getColor());
+			graphic.setFill(getGrid().get(cell).getFxColor());
 
 			graphic.fillRect(xCellSize * cell.getX(), yCellSize * cell.getY(), xCellSize, yCellSize);
 

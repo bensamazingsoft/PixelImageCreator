@@ -24,6 +24,9 @@ import com.ben.pixcreator.gui.facade.GuiFacade;
  */
 public class Executor {
 
+	// TODO needs an abortOperation method that would cancel already done
+	// actions and end the operation
+
 	private static Executor instance;
 
 	private static final Logger logger = LoggerFactory.getLogger(Executor.class);

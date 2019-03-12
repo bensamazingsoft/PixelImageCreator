@@ -49,7 +49,7 @@ public class PixellateAction implements IAction {
 				ColorRGB average = pickCellCenterPixelColor(reader, x, y, xCellSize, yCellSize);
 
 				// exclude BG color
-				if (!average.getColor().equals(gui.getBackgroundColor())) {
+				if (!average.getFxColor().equals(gui.getBackgroundColor())) {
 					grid.put(new Coord(x / xCellSize, y / yCellSize), average);
 				}
 

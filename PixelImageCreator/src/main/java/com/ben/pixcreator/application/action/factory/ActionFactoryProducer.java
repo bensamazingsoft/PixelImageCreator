@@ -3,6 +3,7 @@ package com.ben.pixcreator.application.action.factory;
 
 import com.ben.pixcreator.application.action.factory.impl.DrawActionFactory;
 import com.ben.pixcreator.application.action.factory.impl.MoveActionFactory;
+import com.ben.pixcreator.application.action.factory.impl.PickActionFactory;
 import com.ben.pixcreator.application.action.factory.impl.SelectActionFactory;
 import com.ben.pixcreator.application.image.layer.impl.PixLayer;
 import com.ben.pixcreator.application.tools.PixTool;
@@ -22,7 +23,7 @@ public class ActionFactoryProducer {
 		case PAN:
 			break;
 		case PICK:
-			break;
+			return new PickActionFactory();
 		case RESIZE:
 			break;
 		case SELECT:

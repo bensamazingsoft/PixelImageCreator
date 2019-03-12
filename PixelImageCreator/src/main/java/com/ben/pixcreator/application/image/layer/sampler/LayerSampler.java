@@ -46,7 +46,7 @@ public class LayerSampler {
 					for (int j = 0; j < yDivFactor; j++) {
 						// if it "exists" in the layer grid
 						if (null != pixLayer.getGrid().get(new Coord(x + i, y + j))) {
-							colors.add(pixLayer.getGrid().get(new Coord(x + i, y + j)).getColor());
+							colors.add(pixLayer.getGrid().get(new Coord(x + i, y + j)).getFxColor());
 						}
 					}
 				}
@@ -68,7 +68,7 @@ public class LayerSampler {
 		for (Coord coord : pixLayer.getGrid().keySet()) {
 
 			resultLayer.getGrid()
-					.putAll(multCell(coord, pixLayer.getGrid().get(coord).getColor(), xMultFactor, yMultFactor));
+					.putAll(multCell(coord, pixLayer.getGrid().get(coord).getFxColor(), xMultFactor, yMultFactor));
 
 		}
 
