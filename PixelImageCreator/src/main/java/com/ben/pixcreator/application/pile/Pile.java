@@ -26,7 +26,7 @@ public class Pile<T> implements Serializable {
 
 	/**
 	 * @param idx
-	 * @return the index of the item or null.
+	 * @return the item or null.
 	 */
 	public T getItem(int idx) {
 

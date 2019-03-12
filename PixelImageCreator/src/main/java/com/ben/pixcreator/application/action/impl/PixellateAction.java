@@ -10,6 +10,7 @@ import com.ben.pixcreator.application.executor.Executor;
 import com.ben.pixcreator.application.image.PixImage;
 import com.ben.pixcreator.application.image.coords.Coord;
 import com.ben.pixcreator.application.image.layer.impl.PixLayer;
+import com.ben.pixcreator.application.selection.Selection;
 import com.ben.pixcreator.gui.controls.tab.PixTab;
 import com.ben.pixcreator.gui.facade.GuiFacade;
 
@@ -63,7 +64,10 @@ public class PixellateAction implements IAction {
 
 		// deactivate grid lest it pollutes the color averaging
 		boolean showGrid = gui.isShowGrid();
+		Selection selection = GuiFacade.getInstance().getSelections().computeIfAbsent(image,
+				img -> new Selection());
 
+		gui.getSelections().remove(image);
 		gui.setShowGrid(false);
 
 		Executor.getInstance().executeAction(new RefreshTabAction(tab));
@@ -71,6 +75,7 @@ public class PixellateAction implements IAction {
 		WritableImage snap = canvas.snapshot(null, null);
 
 		gui.setShowGrid(showGrid);
+		gui.getSelections().put(image, selection);
 
 		return snap;
 	}

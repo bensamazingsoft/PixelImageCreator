@@ -30,13 +30,14 @@
 			<items>
 				<MenuItem text="%deselectionner" onAction="#unSelect"
 					accelerator="Shortcut+d" />
+				<MenuItem Text="%extract" onAction="#extractAction"/>
 			</items>
 		</Menu>
 		
 		<Menu Text="%action">
 			<items>
 				<MenuItem Text="%pixellate" onAction="#pixellateAction"/>
-						<MenuItem Text="%extract" onAction="#extractAction"/>
+
 			</items>	
 		</Menu>		
 

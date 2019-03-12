@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ben.pixcreator.application.action.IAction;
+import com.ben.pixcreator.application.executor.Executor;
 import com.ben.pixcreator.application.image.PixImage;
 import com.ben.pixcreator.application.image.draw.factory.DrawImageFactory;
 import com.ben.pixcreator.application.image.layer.impl.ALayer;
@@ -33,6 +34,7 @@ public class RefreshTabAction implements IAction {
 		// log.debug("Refresh tab : " + image.toString());
 		canvas.getGraphicsContext2D().clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
+		Executor.getInstance().executeAction(new ActionUpdateSelection(image));
 		DrawImageFactory.getDrawImage(image).draw(canvas);
 
 		for (ALayer layer : image.getLayerList().getAllItems()) {

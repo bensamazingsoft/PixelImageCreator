@@ -38,7 +38,9 @@ public class SelectActionFactory implements IActionFactory {
 							GuiFacade.getInstance().getSelections().put(GuiFacade.getInstance().getActiveImage(),
 									new Selection(eventCoord((MouseEvent) event), eventCoord((MouseEvent) event)));
 
-							return new ActionUpdateSelection(GuiFacade.getInstance().getActiveImage());
+							// return new
+							// ActionUpdateSelection(GuiFacade.getInstance().getActiveImage());
+							return null;
 
 						}
 
