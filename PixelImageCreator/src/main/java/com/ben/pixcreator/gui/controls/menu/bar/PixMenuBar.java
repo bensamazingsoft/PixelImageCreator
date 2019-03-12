@@ -12,6 +12,8 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ben.pixcreator.application.action.impl.ActionChangeCellColor;
+import com.ben.pixcreator.application.action.impl.ActionDeleteCell;
 import com.ben.pixcreator.application.action.impl.LoadFileAction;
 import com.ben.pixcreator.application.action.impl.OpenNewImageAction;
 import com.ben.pixcreator.application.action.impl.PixellateAction;
@@ -263,6 +265,121 @@ public class PixMenuBar extends MenuBar {
 			new ExceptionPopUp(e);
 		}
 
+	}
+
+	@FXML
+	public void copy() {
+		handleCopy();
+	}
+
+	private void handleCopy() {
+
+		final GuiFacade gui = GuiFacade.getInstance();
+		PixImage activeImage = gui.getActiveimage();
+		Selection selection = gui.getSelections().computeIfAbsent(activeImage,
+				img -> new Selection());
+
+		if (!selection.getCoords().isEmpty()) {
+			ALayer activeLayer = gui.getActiveLayer();
+			if (activeLayer instanceof PixLayer) {
+
+				PixLayer pixLayer = (PixLayer) activeLayer;
+
+				Map<Coord, ColorRGB> clipboard = pixLayer.getGrid().entrySet().stream()
+						.filter(entry -> selection.getCoords().contains(entry.getKey()))
+						.collect(Collectors.toMap(Entry::getKey, Entry::getValue));
+
+				gui.setClipboard(clipboard);
+			}
+			gui.getSelections().remove(activeImage);
+
+			try {
+				Executor.getInstance().executeAction(new RefreshTabAction(gui.getActiveTab()));
+			} catch (Exception e) {
+				new ExceptionPopUp(e);
+			}
+		}
+
+	}
+
+	@FXML
+	public void cut() {
+		handleCut();
+	}
+
+	private void handleCut() {
+
+		final GuiFacade gui = GuiFacade.getInstance();
+
+		handleCopy();
+
+		if (!gui.getClipboard().isEmpty() && gui.getActiveLayer() instanceof PixLayer) {
+
+			PixImage activeImage = gui.getActiveimage();
+
+			PixLayer pixLayer = (PixLayer) gui.getActiveLayer();
+
+			final Executor exec = Executor.getInstance();
+			exec.startOperation();
+
+			gui.getClipboard().forEach((k, v) -> {
+
+				try {
+					exec.continueOperation(new ActionDeleteCell(activeImage, pixLayer, k));
+				} catch (Exception e) {
+					exec.endOperation();
+					new ExceptionPopUp(e);
+				}
+
+			});
+
+			exec.endOperation();
+
+		}
+		try {
+			Executor.getInstance().executeAction(new RefreshTabAction(gui.getActiveTab()));
+		} catch (Exception e) {
+			new ExceptionPopUp(e);
+		}
+	}
+
+	@FXML
+	public void paste() {
+		handlePaste();
+	}
+
+	private void handlePaste() {
+
+		final GuiFacade gui = GuiFacade.getInstance();
+
+		if (!gui.getClipboard().isEmpty() && gui.getActiveLayer() instanceof PixLayer) {
+
+			PixLayer pixLayer = (PixLayer) gui.getActiveLayer();
+
+			final Executor exec = Executor.getInstance();
+			exec.startOperation();
+
+			PixImage activeImage = gui.getActiveimage();
+
+			gui.getClipboard().forEach((k, v) -> {
+
+				try {
+					exec.continueOperation(new ActionChangeCellColor(activeImage, pixLayer, k, v.getColor()));
+				} catch (Exception e) {
+					exec.endOperation();
+					new ExceptionPopUp(e);
+				}
+
+			});
+
+			exec.endOperation();
+
+		}
+		try {
+			Executor.getInstance().executeAction(new RefreshTabAction(gui.getActiveTab()));
+		} catch (Exception e) {
+			new ExceptionPopUp(e);
+		}
 	}
 
 }

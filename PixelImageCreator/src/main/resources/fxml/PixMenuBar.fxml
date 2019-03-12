@@ -2,6 +2,7 @@
 
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.control.SeparatorMenuItem?>
 
 <fx:root type="javafx.scene.control.MenuBar" xmlns:fx="http://javafx.com/fxml">
 
@@ -12,9 +13,8 @@
 					accelerator="Shortcut+n" />
 				<MenuItem text="%ouvrir" onAction="#openAction"
 					accelerator="Shortcut+o" />
-									<MenuItem text="%save" onAction="#saveAction"
-					accelerator="Shortcut+s" />
-									<MenuItem text="%saveAs" onAction="#saveAsAction"
+				<MenuItem text="%save" onAction="#saveAction" accelerator="Shortcut+s" />
+				<MenuItem text="%saveAs" onAction="#saveAsAction"
 					accelerator="Shortcut+Shift+s" />
 			</items>
 		</Menu>
@@ -30,16 +30,21 @@
 			<items>
 				<MenuItem text="%deselectionner" onAction="#unSelect"
 					accelerator="Shortcut+d" />
-				<MenuItem Text="%extract" onAction="#extractAction"/>
+				<MenuItem Text="%extract" onAction="#extractAction" />
+				<SeparatorMenuItem />
+				<MenuItem text="%copy" onAction="#copy" accelerator="Shortcut+c" />
+				<MenuItem text="%cut" onAction="#cut" accelerator="Shortcut+x" />
+				<MenuItem text="%paste" onAction="#paste" accelerator="Shortcut+v" />
+
 			</items>
 		</Menu>
-		
+
 		<Menu Text="%action">
 			<items>
-				<MenuItem Text="%pixellate" onAction="#pixellateAction"/>
+				<MenuItem Text="%pixellate" onAction="#pixellateAction" />
 
-			</items>	
-		</Menu>		
+			</items>
+		</Menu>
 
 	</menus>
 

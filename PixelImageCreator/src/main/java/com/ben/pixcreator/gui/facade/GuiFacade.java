@@ -10,8 +10,10 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ben.pixcreator.application.color.rgb.ColorRGB;
 import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.application.image.PixImage;
+import com.ben.pixcreator.application.image.coords.Coord;
 import com.ben.pixcreator.application.image.layer.impl.ALayer;
 import com.ben.pixcreator.application.selection.Selection;
 import com.ben.pixcreator.application.tools.PixTool;
@@ -54,6 +56,7 @@ public class GuiFacade {
 	private Map<PixImage, Selection>						selections;
 	private SimpleObjectProperty<Color>						activeColor		= new SimpleObjectProperty<>();
 	private SimpleObjectProperty<Color>						backgroundColor	= new SimpleObjectProperty<>();
+	private Map<Coord, ColorRGB>							clipboard		= new HashMap<>();
 
 	private SimpleObjectProperty<PixImage>	activeImage	= new SimpleObjectProperty<>();
 	private SimpleBooleanProperty			showGrid	= new SimpleBooleanProperty();
@@ -271,6 +274,14 @@ public class GuiFacade {
 				layerPanel.getTogglegroup().selectToggle(box);
 			}
 		}
+	}
+
+	public Map<Coord, ColorRGB> getClipboard() {
+		return clipboard;
+	}
+
+	public void setClipboard(Map<Coord, ColorRGB> clipboard) {
+		this.clipboard = clipboard;
 	}
 
 }
