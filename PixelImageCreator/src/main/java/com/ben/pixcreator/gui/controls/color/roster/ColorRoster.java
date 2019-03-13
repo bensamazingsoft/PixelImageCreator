@@ -29,14 +29,16 @@ public class ColorRoster extends HBox implements Initializable {
 	private Set<ColorBox>					colorBoxes	= new HashSet<>();
 	private SimpleObjectProperty<PixImage>	image;
 
+	/**
+	 * encapsulates a PixImage color roster.
+	 */
 	public ColorRoster() {
 
 		super();
 
 		image = new SimpleObjectProperty<>();
 		image.addListener((obs, oldVal, newVal) -> {
-			colorBoxes = makeColorBoxes(newVal);
-			populate();
+			reload(newVal);
 		});
 
 		ResourceBundle bundle = ResourceBundle.getBundle("i18n/trad");
@@ -55,6 +57,16 @@ public class ColorRoster extends HBox implements Initializable {
 
 		GuiFacade.getInstance().setColorRoster(this);
 
+	}
+
+	/**
+	 * reloads the image colors.
+	 * 
+	 * @param image
+	 */
+	public void reload(PixImage image) {
+		colorBoxes = makeColorBoxes(image);
+		populate();
 	}
 
 	private void populate() {
@@ -85,14 +97,29 @@ public class ColorRoster extends HBox implements Initializable {
 				prop.set(Color.BLACK);
 				GuiFacade.getInstance().getImagesColors().get(getImage()).add(prop);
 
-				colorBoxes = makeColorBoxes(getImage());
-
-				populate();
-
-				toggleGroup.selectToggle(colorBoxOfColor(prop.get()));
+				addColorToRoster(prop);
 			}
 		});
 		return butt;
+	}
+
+	private void addColorToRoster(SimpleObjectProperty<Color> prop) {
+
+		colorBoxes = makeColorBoxes(getImage());
+
+		populate();
+
+		selectColor(prop.get());
+
+	}
+
+	/**
+	 * selects the colorbox holding the color property.
+	 * 
+	 * @param prop
+	 */
+	public void selectColor(Color color) {
+		toggleGroup.selectToggle(colorBoxOfColor(color));
 	}
 
 	private Toggle colorBoxOfColor(Color color) {

@@ -284,4 +284,8 @@ public class GuiFacade {
 		this.clipboard = clipboard;
 	}
 
+	public ColorRoster getColorRoster() {
+		return colorRoster;
+	}
+
 }
