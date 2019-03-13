@@ -6,21 +6,27 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import com.ben.pixcreator.application.context.AppContext;
+import com.ben.pixcreator.gui.controls.color.roster.ColorRoster;
 import com.ben.pixcreator.gui.facade.GuiFacade;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
@@ -36,13 +42,25 @@ public class ColorBox extends VBox implements Toggle, Initializable {
 	@FXML
 	Label label;
 
+	@FXML
+	Button closeBt;
+
 	private SimpleBooleanProperty				selected	= new SimpleBooleanProperty();
 	private SimpleObjectProperty<ToggleGroup>	toggleGroup	= new SimpleObjectProperty<>();
-	private ObjectProperty<Color>				color		= new SimpleObjectProperty<>();
+	private SimpleObjectProperty<Color>			color		= new SimpleObjectProperty<>();
 
-	public ColorBox() {
+	private ColorRoster roster;
 
+	@FXML
+	private HBox topContainer;
+
+	@FXML
+	private StackPane topStack;
+
+	public ColorBox(SimpleObjectProperty<Color> color, ColorRoster roster) {
 		super();
+		this.roster = roster;
+		this.color = color;
 		getStylesheets().add("/styles/styles.css");
 		getStyleClass().add("colorbox");
 		ResourceBundle bundle = ResourceBundle.getBundle("i18n/trad");
@@ -71,6 +89,8 @@ public class ColorBox extends VBox implements Toggle, Initializable {
 	@Override
 	public void initialize(URL arg0, ResourceBundle bundle) {
 
+		HBox.setHgrow(topStack, Priority.ALWAYS);
+
 		setAlignment(Pos.CENTER);
 
 		label.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
@@ -95,6 +115,11 @@ public class ColorBox extends VBox implements Toggle, Initializable {
 			}
 		});
 
+	}
+
+	@FXML
+	public void close(ActionEvent event) {
+		roster.remove(this);
 	}
 
 	@Override
@@ -137,7 +162,7 @@ public class ColorBox extends VBox implements Toggle, Initializable {
 		return toggleGroup;
 	}
 
-	public final ObjectProperty<Color> colorProperty() {
+	public final SimpleObjectProperty<Color> colorProperty() {
 
 		return this.color;
 	}
