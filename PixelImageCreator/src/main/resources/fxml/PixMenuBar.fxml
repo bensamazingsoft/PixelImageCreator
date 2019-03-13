@@ -3,6 +3,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.MenuItem?>
 
 <fx:root type="javafx.scene.control.MenuBar" xmlns:fx="http://javafx.com/fxml">
 
@@ -40,10 +41,12 @@
 		</Menu>
 
 		<Menu Text="%action">
-			<items>
-				<MenuItem Text="%pixellate" onAction="#pixellateAction" />
-
-			</items>
+			<Menu Text="%pixellate">
+				<items>
+						<MenuItem text="%average" onAction="#averagePixellateAction"/>
+							<MenuItem text="%centerPick" onAction="#centerPickPixellateAction"/>
+				</items>
+			</Menu>
 		</Menu>
 
 	</menus>
