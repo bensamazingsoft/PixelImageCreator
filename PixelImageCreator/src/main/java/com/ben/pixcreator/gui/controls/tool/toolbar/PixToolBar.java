@@ -43,8 +43,8 @@ public class PixToolBar extends ToolBar implements Initializable {
 	@FXML
 	private ToggleButton moveBut;
 
-	@FXML
-	private ToggleButton panBut;
+	// @FXML
+	// private ToggleButton panBut;
 
 	@FXML
 	private ToggleButton showGridBut;
@@ -74,11 +74,13 @@ public class PixToolBar extends ToolBar implements Initializable {
 			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "moveButUnSelected.png"));
 	final private ImageView	moveButImg			= new ImageView();
 
-	final private Image		panButSelected		= new Image(
-			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "panButSelected.png"));
-	final private Image		panButUnSelected	= new Image(
-			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "panButUnSelected.png"));
-	final private ImageView	panButImg			= new ImageView();
+	// final private Image panButSelected = new Image(
+	// getClass().getClassLoader().getResourceAsStream(IMAGEPATH +
+	// "panButSelected.png"));
+	// final private Image panButUnSelected = new Image(
+	// getClass().getClassLoader().getResourceAsStream(IMAGEPATH +
+	// "panButUnSelected.png"));
+	// final private ImageView panButImg = new ImageView();
 
 	final private Image		showGridButSelected		= new Image(
 			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "showGridButSelected.png"));
@@ -228,16 +230,16 @@ public class PixToolBar extends ToolBar implements Initializable {
 			}
 		});
 
-		panBut.setGraphic(panButImg);
-		panBut.setUserData(PixTool.PAN);
-		panButImg.imageProperty()
-				.bind(Bindings.when(panBut.selectedProperty()).then(panButSelected).otherwise(panButUnSelected));
-
-		panBut.addEventFilter(MouseEvent.ANY, event -> {
-			if (AppContext.getInstance().getCurrTool() == PixTool.PAN) {
-				event.consume();
-			}
-		});
+		// panBut.setGraphic(panButImg);
+		// panBut.setUserData(PixTool.PAN);
+		// panButImg.imageProperty()
+		// .bind(Bindings.when(panBut.selectedProperty()).then(panButSelected).otherwise(panButUnSelected));
+		//
+		// panBut.addEventFilter(MouseEvent.ANY, event -> {
+		// if (AppContext.getInstance().getCurrTool() == PixTool.PAN) {
+		// event.consume();
+		// }
+		// });
 
 		showGridBut.setGraphic(showGridButImg);
 		showGridButImg.imageProperty().bind(

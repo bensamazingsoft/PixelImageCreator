@@ -18,131 +18,114 @@ import com.ben.pixcreator.gui.facade.GuiFacade;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 
-public class LayerAction implements IAction, ICancelable
-{
+public class LayerAction implements IAction, ICancelable {
 
-      final GuiFacade		 gui = GuiFacade.getInstance();
+	final AppContext	ctx	= AppContext.getInstance();
+	final GuiFacade		gui	= GuiFacade.getInstance();
 
-      private final Pile<ALayer> layerList;
-      private final ALayer	 layer;
-      private final LayerActions action;
+	private final Pile<ALayer>	layerList;
+	private final ALayer		layer;
+	private final LayerActions	action;
 
+	public LayerAction(PixImage image, ALayer layer, LayerActions action) {
 
-      public LayerAction(PixImage image, ALayer layer, LayerActions action)
-      {
+		super();
+		this.layerList = image.getLayerList();
+		this.layer = layer;
+		this.action = action;
+	}
 
-	    super();
-	    this.layerList = image.getLayerList();
-	    this.layer = layer;
-	    this.action = action;
-      }
+	@Override
+	public void execute() throws Exception {
 
+		switch (action) {
+		case ADDNEW:
+			addNew();
+			break;
+		case ADDNEWPIC:
+			addNewPic();
+			break;
+		case DELETE:
+			delete();
+			break;
+		case DUPLICATE:
+			duplicate();
+			break;
+		case MOVEDOWN:
+			moveDown();
+			break;
+		case MOVEUP:
+			moveUp();
+			break;
+		default:
+			break;
 
-      @Override
-      public void execute() throws Exception
-      {
-	    // TODO unlock layer if locked & delete layer from image layerList
+		}
 
-	    switch (action)
-	    {
-	    case ADDNEW:
-		  addNew();
-		  break;
-	    case ADDNEWPIC:
-		  addNewPic();
-		  break;
-	    case DELETE:
-		  delete();
-		  break;
-	    case DUPLICATE:
-		  duplicate();
-		  break;
-	    case MOVEDOWN:
-		  moveDown();
-		  break;
-	    case MOVEUP:
-		  moveUp();
-		  break;
-	    default:
-		  break;
+	}
 
-	    }
+	private void addNewPic() {
 
-      }
+		FileChooser fc = new FileChooser();
+		fc.getExtensionFilters().addAll(
+				Arrays.asList(new ExtensionFilter("pics extensions", Arrays.asList("*.jpg", "*.png", "*.bmp"))));
 
+		File picfile = fc.showOpenDialog(null);
+		;
 
-      private void addNewPic()
-      {
+		if (null != picfile && picfile.exists()) {
 
-	    FileChooser fc = new FileChooser();
-	    fc.getExtensionFilters().addAll(
-			Arrays.asList(new ExtensionFilter("pics extensions", Arrays.asList("*.jpg", "*.png", "*.bmp"))));
+			PicLayer picLayer = new PicLayer(picfile);
 
-	    File picfile = fc.showOpenDialog(null);
-	    ;
+			layerList.insertOver(layer, picLayer);
 
-	    if (null != picfile && picfile.exists())
-	    {
+			picLayer.zoomFactorProperty()
+					.bindBidirectional(gui.getActiveTab().zoomFactorAdjustedProperty());
 
-		  PicLayer picLayer = new PicLayer(picfile);
+		}
 
-		  layerList.insertOver(layer, picLayer);
+	}
 
-		  picLayer.zoomFactorProperty()
-			      .bindBidirectional(gui.getActiveTab().zoomFactorAdjustedProperty());
+	private void moveUp() {
 
-	    }
+		layerList.moveUp(layer);
 
-      }
+	}
 
+	private void moveDown() {
 
-      private void moveUp()
-      {
+		layerList.moveDown(layer);
 
-	    layerList.moveUp(layer);
+	}
 
-      }
+	private void duplicate() {
 
+		ALayer dup = layer.duplicate();
 
-      private void moveDown()
-      {
+		layerList.insertUnder(layer, dup);
 
-	    layerList.moveDown(layer);
+	}
 
-      }
+	private void delete() {
 
+		ctx.getGroupLocks().get(gui.getActiveimage()).unlock(layer);
 
-      private void duplicate()
-      {
+		ctx.getEffectManager().getImageEffects(gui.getActiveimage())
+				.remove(gui.getActiveLayer());
 
-	    ALayer dup = layer.duplicate();
+		layerList.deleteOfitem(layer);
 
-	    layerList.insertUnder(layer, dup);
+	}
 
-      }
+	private void addNew() {
 
+		layerList.insertOver(layer, new PixLayer());
 
-      private void delete()
-      {
+	}
 
-	    AppContext.getInstance().getEffectManager().getImageEffects(GuiFacade.getInstance().getActiveimage()).remove(GuiFacade.getInstance().getActiveLayer());
-	    layerList.deleteOfitem(layer);
+	@Override
+	public void cancel() throws Exception {
 
-      }
-
-
-      private void addNew()
-      {
-
-	    layerList.insertOver(layer, new PixLayer());
-
-      }
-
-
-      @Override
-      public void cancel() throws Exception
-      {
-
-      }
+	}
 
 }

@@ -7,6 +7,9 @@ import java.util.HashSet;
 import java.util.ResourceBundle;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.application.context.PropertiesContext;
 import com.ben.pixcreator.application.image.PixImage;
@@ -24,19 +27,23 @@ import javafx.scene.paint.Color;
 
 public class ColorRoster extends HBox implements Initializable {
 
+	private static final Logger log = LoggerFactory.getLogger(ColorRoster.class);
+
 	private ToggleGroup toggleGroup = new ToggleGroup();
 
 	private Set<ColorBox>					colorBoxes	= new HashSet<>();
-	private SimpleObjectProperty<PixImage>	image;
+	private SimpleObjectProperty<PixImage>	imageProp;
 
+	/**
+	 * encapsulates a PixImage color roster.
+	 */
 	public ColorRoster() {
 
 		super();
 
-		image = new SimpleObjectProperty<>();
-		image.addListener((obs, oldVal, newVal) -> {
-			colorBoxes = makeColorBoxes(newVal);
-			populate();
+		imageProp = new SimpleObjectProperty<>();
+		imageProp.addListener((obs, oldVal, newVal) -> {
+			reload(newVal);
 		});
 
 		ResourceBundle bundle = ResourceBundle.getBundle("i18n/trad");
@@ -55,6 +62,16 @@ public class ColorRoster extends HBox implements Initializable {
 
 		GuiFacade.getInstance().setColorRoster(this);
 
+	}
+
+	/**
+	 * reloads the image colors.
+	 * 
+	 * @param image
+	 */
+	public void reload(PixImage image) {
+		colorBoxes = makeColorBoxes(image);
+		populate();
 	}
 
 	private void populate() {
@@ -80,19 +97,34 @@ public class ColorRoster extends HBox implements Initializable {
 		butt.setId("rosterPlusButton");
 		butt.setOnAction(Event -> {
 
-			if (null != image.get()) {
+			if (null != imageProp.get()) {
 				SimpleObjectProperty<Color> prop = new SimpleObjectProperty<Color>();
 				prop.set(Color.BLACK);
 				GuiFacade.getInstance().getImagesColors().get(getImage()).add(prop);
 
-				colorBoxes = makeColorBoxes(getImage());
-
-				populate();
-
-				toggleGroup.selectToggle(colorBoxOfColor(prop.get()));
+				addColorToRoster(prop);
 			}
 		});
 		return butt;
+	}
+
+	private void addColorToRoster(SimpleObjectProperty<Color> prop) {
+
+		colorBoxes = makeColorBoxes(getImage());
+
+		populate();
+
+		selectColor(prop.get());
+
+	}
+
+	/**
+	 * selects the colorbox holding the color property.
+	 * 
+	 * @param prop
+	 */
+	public void selectColor(Color color) {
+		toggleGroup.selectToggle(colorBoxOfColor(color));
 	}
 
 	private Toggle colorBoxOfColor(Color color) {
@@ -115,11 +147,11 @@ public class ColorRoster extends HBox implements Initializable {
 
 		for (SimpleObjectProperty<Color> prop : colorProps) {
 
-			ColorBox box = new ColorBox().color(prop.get());
+			ColorBox box = new ColorBox(prop, this).color(prop.get());
 			tempBoxes.add(box);
 			box.setToggleGroup(toggleGroup);
 
-			prop.bindBidirectional(box.colorProperty());
+			// prop.bindBidirectional(box.colorProperty());
 
 		}
 
@@ -132,7 +164,7 @@ public class ColorRoster extends HBox implements Initializable {
 		Set<ColorBox> tempBoxes = new HashSet<>();
 		for (Color col : propertyContext.getStartRosterColors()) {
 
-			ColorBox box = new ColorBox().color(col);
+			ColorBox box = new ColorBox(new SimpleObjectProperty<Color>(col), this);
 			box.setToggleGroup(toggleGroup);
 			tempBoxes.add(box);
 
@@ -159,7 +191,7 @@ public class ColorRoster extends HBox implements Initializable {
 
 	public final SimpleObjectProperty<PixImage> imageProperty() {
 
-		return this.image;
+		return this.imageProp;
 	}
 
 	public final PixImage getImage() {
@@ -170,6 +202,22 @@ public class ColorRoster extends HBox implements Initializable {
 	public final void setImage(final PixImage image) {
 
 		this.imageProperty().set(image);
+	}
+
+	public void remove(ColorBox colorBox) {
+
+		final Set<SimpleObjectProperty<Color>> imageColors = GuiFacade.getInstance().getImagesColors().get(getImage());
+		final SimpleObjectProperty<Color> colorProperty = colorBox.colorProperty();
+
+		for (SimpleObjectProperty<Color> prop : imageColors) {
+
+			log.debug("prop.equals(colorProperty) : " + prop.equals(colorProperty));
+
+		}
+		log.debug("imageColors.remove(colorProperty) " + imageColors.remove(colorProperty));
+
+		reload(imageProp.get());
+
 	}
 
 }

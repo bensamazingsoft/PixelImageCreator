@@ -21,8 +21,8 @@
 		onAction="#togglePick" />
 	<ToggleButton fx:id="moveBut" toggleGroup="$toggleGroup"
 		onAction="#toggleMove" />
-	<ToggleButton fx:id="panBut" toggleGroup="$toggleGroup"
-		onAction="#togglePan" />
+<!-- 	<ToggleButton fx:id="panBut" toggleGroup="$toggleGroup" -->
+<!-- 		onAction="#togglePan" /> -->
 <!-- 	<ToggleButton fx:id="resizeBut" toggleGroup="$toggleGroup" -->
 <!-- 		onAction="#toggleResize" /> -->
 <!-- 	<ToggleButton fx:id="zoomInBut" toggleGroup="$toggleGroup" -->

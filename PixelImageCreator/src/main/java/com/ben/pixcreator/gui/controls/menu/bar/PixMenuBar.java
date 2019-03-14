@@ -208,27 +208,6 @@ public class PixMenuBar extends MenuBar {
 	}
 
 	@FXML
-	private void pixellateAction(ActionEvent event) {
-		handlePixellateAction();
-	}
-
-	private void handlePixellateAction() {
-
-		PixImage activeImage = GuiFacade.getInstance().getActiveimage();
-		// GuiFacade.getInstance().getSelections().remove(activeImage);
-		PixTab tab = GuiFacade.getInstance().getActiveTab();
-
-		try {
-			Executor.getInstance().executeAction(new PixellateAction(tab, activeImage));
-			GuiFacade.getInstance().getLayerPanel().populate();
-			Executor.getInstance().executeAction(new RefreshTabAction(tab));
-		} catch (Exception e) {
-			new ExceptionPopUp(e);
-		}
-
-	}
-
-	@FXML
 	public void extractAction(ActionEvent event) {
 		handleExtractAction();
 	}
@@ -242,7 +221,8 @@ public class PixMenuBar extends MenuBar {
 
 		try {
 
-			Executor.getInstance().executeAction(new PixellateAction(tab, activeImage));
+			Executor.getInstance()
+					.executeAction(new PixellateAction(PixellateAction.actionType.CENTERPICK, tab, activeImage));
 
 			final Pile<ALayer> layerList = activeImage.getLayerList();
 			ALayer newLayer = layerList.getItem(layerList.getAllItems().size() - 1);
@@ -381,4 +361,29 @@ public class PixMenuBar extends MenuBar {
 		}
 	}
 
+	private void handlePixellateAction(PixellateAction.actionType type) {
+
+		PixImage activeImage = GuiFacade.getInstance().getActiveimage();
+		// GuiFacade.getInstance().getSelections().remove(activeImage);
+		PixTab tab = GuiFacade.getInstance().getActiveTab();
+
+		try {
+			Executor.getInstance().executeAction(new PixellateAction(type, tab, activeImage));
+			GuiFacade.getInstance().getLayerPanel().populate();
+			Executor.getInstance().executeAction(new RefreshTabAction(tab));
+		} catch (Exception e) {
+			new ExceptionPopUp(e);
+		}
+
+	}
+
+	@FXML
+	private void centerPickPixellateAction(ActionEvent event) {
+		handlePixellateAction(PixellateAction.actionType.CENTERPICK);
+	}
+
+	@FXML
+	private void averagePixellateAction(ActionEvent event) {
+		handlePixellateAction(PixellateAction.actionType.AVERAGE);
+	}
 }

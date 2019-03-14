@@ -4,11 +4,19 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.ColorPicker?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 
 <fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml">
 	
-	<Label fx:id="label" text="%use"/>
-<ColorPicker fx:id="colorPicker"/>
+	<HBox fx:id="topContainer">
+		<StackPane fx:id="topStack">
+			<Label fx:id="label" text="%use"/>
+		</StackPane>
+		<Button fx:id="closeBt" text="X" onAction="#close"/> 
+	</HBox>
+	 
+	<ColorPicker fx:id="colorPicker"/>
 
 
 </fx:root>

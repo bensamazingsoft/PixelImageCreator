@@ -20,8 +20,8 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 			// log.debug("KEY_PRESSED -> event.getCode() : " + event.getCode());
 			GuiFacade.getInstance().getActiveTab().togglePanMode();
 
+			event.consume();
 		}
-		event.consume();
 	}
 
 }

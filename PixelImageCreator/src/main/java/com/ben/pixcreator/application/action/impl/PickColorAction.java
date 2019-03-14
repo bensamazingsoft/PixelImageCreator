@@ -1,8 +1,13 @@
 package com.ben.pixcreator.application.action.impl;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import com.ben.pixcreator.application.action.IAction;
 import com.ben.pixcreator.gui.controls.tab.PixTab;
+import com.ben.pixcreator.gui.facade.GuiFacade;
 
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritableImage;
@@ -22,11 +27,35 @@ public class PickColorAction implements IAction {
 	@Override
 	public void execute() throws Exception {
 
-		Color color = readColor();
+		Color color = readColorFromEventCoordinates();
+
+		final GuiFacade gui = GuiFacade.getInstance();
+		Set<Color> colors = gui.getImagesColors().get(gui.getActiveImage()).stream()
+				.map(prop -> prop.get())
+				.collect(Collectors.toSet());
+
+		if (!colors.contains(color)) {
+
+			addColorToImageColorsAndReloadRoster(color, gui);
+
+		}
+
+		gui.getColorRoster().selectColor(color);
 
 	}
 
-	private Color readColor() {
+	private void addColorToImageColorsAndReloadRoster(Color color, final GuiFacade gui) {
+
+		SimpleObjectProperty<Color> prop = new SimpleObjectProperty<>();
+		prop.set(color);
+
+		gui.getImagesColors().get(gui.getActiveImage()).add(prop);
+
+		gui.getColorRoster().reload(gui.getActiveImage());
+
+	}
+
+	private Color readColorFromEventCoordinates() {
 
 		Canvas canvas = tab.getCanvas();
 
