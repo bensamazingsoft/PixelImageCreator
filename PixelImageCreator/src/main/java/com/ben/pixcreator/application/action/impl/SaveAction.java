@@ -50,6 +50,14 @@ public class SaveAction implements IAction {
 
 			out.writeObject(pixFile);
 
+			GuiFacade gui = GuiFacade.getInstance();
+			final Pile<String> recentFiles = gui.getRecentFiles();
+			if (recentFiles.getAllItems().contains(file.toString())) {
+				recentFiles.removeOfitem(file.toString());
+			}
+			recentFiles.add(file.toString());
+			gui.getPixMenuBar().loadRecentFiles();
+
 		} catch (IOException e) {
 			new ExceptionPopUp(e);
 		}

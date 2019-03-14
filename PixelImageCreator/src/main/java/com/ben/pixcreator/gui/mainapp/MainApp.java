@@ -1,13 +1,14 @@
 
 package com.ben.pixcreator.gui.mainapp;
 
-import java.io.IOException;
 import java.util.ResourceBundle;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ben.pixcreator.application.action.impl.LoadRecentFilesAction;
 import com.ben.pixcreator.application.action.impl.OpenNewImageAction;
+import com.ben.pixcreator.application.action.impl.SaveRecentFilesAction;
 import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.application.executor.Executor;
 import com.ben.pixcreator.gui.exception.popup.ExceptionPopUp;
@@ -52,6 +53,7 @@ public class MainApp extends Application {
 		stage.show();
 
 		Executor.getInstance().executeAction(new OpenNewImageAction());
+		Executor.getInstance().executeAction(new LoadRecentFilesAction());
 
 	}
 
@@ -59,7 +61,8 @@ public class MainApp extends Application {
 
 		try {
 			AppContext.getInstance().propertyContext().save();
-		} catch (IOException e) {
+			Executor.getInstance().executeAction(new SaveRecentFilesAction());
+		} catch (Exception e) {
 			new ExceptionPopUp(e);
 		}
 	}

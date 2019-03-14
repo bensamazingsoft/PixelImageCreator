@@ -3,6 +3,7 @@ package com.ben.pixcreator.gui.controls.menu.bar;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -35,13 +36,19 @@ import com.ben.pixcreator.gui.facade.GuiFacade;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 
-public class PixMenuBar extends MenuBar {
+public class PixMenuBar extends MenuBar implements Initializable {
 
 	private static final Logger log = LoggerFactory.getLogger(PixMenuBar.class);
+
+	@FXML
+	Menu fileMenu;
 
 	public PixMenuBar() {
 
@@ -385,5 +392,56 @@ public class PixMenuBar extends MenuBar {
 	@FXML
 	private void averagePixellateAction(ActionEvent event) {
 		handlePixellateAction(PixellateAction.actionType.AVERAGE);
+	}
+
+	public Pile<String> getRecentFiles() {
+		return GuiFacade.getInstance().getRecentFiles();
+	}
+
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+
+		GuiFacade.getInstance().setPixMenuBar(this);
+
+		// loadRecentFiles();
+
+	}
+
+	public void loadRecentFiles() {
+
+		fileMenu.getItems().clear();
+
+		if (!getRecentFiles().isEmpty()) {
+
+			int count = 0;
+			for (int i = getRecentFiles().getAllItems().size() - 1; i >= 0; i--) {
+
+				File file = new File(getRecentFiles().getItem(i));
+				if (file.exists()) {
+					fileMenu.getItems().add(menuItem(count++, file));
+				}
+
+			}
+
+		}
+	}
+
+	private MenuItem menuItem(int i, File file) {
+
+		MenuItem item = new MenuItem();
+
+		item.setText(i + "-" + file.getName());
+
+		item.setOnAction(event -> {
+
+			try {
+				Executor.getInstance().executeAction(new LoadFileAction(file));
+			} catch (Exception e) {
+				new ExceptionPopUp(e);
+			}
+
+		});
+
+		return item;
 	}
 }

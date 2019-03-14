@@ -15,6 +15,7 @@ import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.application.image.PixImage;
 import com.ben.pixcreator.application.image.coords.Coord;
 import com.ben.pixcreator.application.image.layer.impl.ALayer;
+import com.ben.pixcreator.application.pile.Pile;
 import com.ben.pixcreator.application.selection.Selection;
 import com.ben.pixcreator.application.tools.PixTool;
 import com.ben.pixcreator.gui.controls.color.box.ColorBox;
@@ -44,7 +45,6 @@ public class GuiFacade {
 
 	private Scene scene;
 
-	@SuppressWarnings("unused")
 	private PixMenuBar	pixMenuBar;
 	private PixToolBar	pixToolBar;
 	private PixTabPane	pixTabPane;
@@ -62,6 +62,8 @@ public class GuiFacade {
 	private SimpleBooleanProperty			showGrid	= new SimpleBooleanProperty();
 
 	private MiniatureManager miniatureManager;
+
+	private Pile<String> recentFiles = new Pile<>();
 
 	private GuiFacade() {
 
@@ -286,6 +288,22 @@ public class GuiFacade {
 
 	public ColorRoster getColorRoster() {
 		return colorRoster;
+	}
+
+	public Pile<String> getRecentFiles() {
+		return recentFiles;
+	}
+
+	public void setRecentFiles(Pile<String> recentFiles) {
+		this.recentFiles = recentFiles;
+	}
+
+	public PixMenuBar getPixMenuBar() {
+		return pixMenuBar;
+	}
+
+	public void setPixMenuBar(PixMenuBar pixMenuBar) {
+		this.pixMenuBar = pixMenuBar;
 	}
 
 }

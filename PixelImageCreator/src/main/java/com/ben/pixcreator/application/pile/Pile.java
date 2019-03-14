@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
  */
 public class Pile<T> implements Serializable {
 
+	// TODO impl max size parameters
 	/**
 	 * 
 	 */

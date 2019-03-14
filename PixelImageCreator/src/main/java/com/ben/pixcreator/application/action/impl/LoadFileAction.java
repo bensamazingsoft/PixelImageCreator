@@ -24,7 +24,6 @@ import com.ben.pixcreator.application.image.PixImage;
 import com.ben.pixcreator.application.image.effect.Effect;
 import com.ben.pixcreator.application.image.layer.impl.ALayer;
 import com.ben.pixcreator.application.pile.Pile;
-import com.ben.pixcreator.gui.exception.popup.ExceptionPopUp;
 import com.ben.pixcreator.gui.facade.GuiFacade;
 
 public class LoadFileAction implements IAction {
@@ -48,8 +47,16 @@ public class LoadFileAction implements IAction {
 
 			Executor.getInstance().executeAction(new OpenTabAction(image));
 
+			final GuiFacade gui = GuiFacade.getInstance();
+			final Pile<String> recentFiles = gui.getRecentFiles();
+			if (recentFiles.getAllItems().contains(file.toString())) {
+				recentFiles.removeOfitem(file.toString());
+			}
+			recentFiles.add(file.toString());
+			gui.getPixMenuBar().loadRecentFiles();
+
 		} catch (IOException e) {
-			new ExceptionPopUp(e);
+			throw new Exception(e);
 		}
 
 	}

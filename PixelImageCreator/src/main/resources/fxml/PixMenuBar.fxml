@@ -8,7 +8,7 @@
 <fx:root type="javafx.scene.control.MenuBar" xmlns:fx="http://javafx.com/fxml">
 
 	<menus>
-		<Menu text="%fichier">
+		<Menu text="%fichier" >
 			<items>
 				<MenuItem text="%nouveau" onAction="#newAction"
 					accelerator="Shortcut+n" />
@@ -17,6 +17,8 @@
 				<MenuItem text="%save" onAction="#saveAction" accelerator="Shortcut+s" />
 				<MenuItem text="%saveAs" onAction="#saveAsAction"
 					accelerator="Shortcut+Shift+s" />
+					<SeparatorMenuItem />
+					<Menu text="%recentFiles" fx:id="fileMenu"/>
 			</items>
 		</Menu>
 
