@@ -9,6 +9,8 @@ import com.ben.pixcreator.application.action.impl.RefreshAllTabsAction;
 import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.application.executor.Executor;
 import com.ben.pixcreator.application.tools.PixTool;
+import com.ben.pixcreator.gui.cursor.factory.CanvasCursorFactory;
+import com.ben.pixcreator.gui.cursor.factory.CursorFactory;
 import com.ben.pixcreator.gui.exception.popup.ExceptionPopUp;
 import com.ben.pixcreator.gui.facade.GuiFacade;
 
@@ -17,6 +19,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.ToolBar;
@@ -191,8 +194,9 @@ public class PixToolBar extends ToolBar implements Initializable {
 		selectButImg.imageProperty().bind(
 				Bindings.when(selectBut.selectedProperty()).then(selectButSelected).otherwise(selectButUnSelected));
 
-		selectBut.addEventFilter(MouseEvent.ANY, event -> {
+		selectBut.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
 			if (AppContext.getInstance().getCurrTool() == PixTool.SELECT) {
+				changeCursor();
 				event.consume();
 			}
 		});
@@ -202,8 +206,9 @@ public class PixToolBar extends ToolBar implements Initializable {
 		drawButImg.imageProperty()
 				.bind(Bindings.when(drawBut.selectedProperty()).then(drawButSelected).otherwise(drawButUnSelected));
 
-		drawBut.addEventFilter(MouseEvent.ANY, event -> {
+		drawBut.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
 			if (AppContext.getInstance().getCurrTool() == PixTool.DRAW) {
+				changeCursor();
 				event.consume();
 			}
 		});
@@ -213,8 +218,9 @@ public class PixToolBar extends ToolBar implements Initializable {
 		pickButImg.imageProperty()
 				.bind(Bindings.when(pickBut.selectedProperty()).then(pickButSelected).otherwise(pickButUnSelected));
 
-		pickBut.addEventFilter(MouseEvent.ANY, event -> {
+		pickBut.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
 			if (AppContext.getInstance().getCurrTool() == PixTool.PICK) {
+				changeCursor();
 				event.consume();
 			}
 		});
@@ -224,22 +230,12 @@ public class PixToolBar extends ToolBar implements Initializable {
 		moveButImg.imageProperty()
 				.bind(Bindings.when(moveBut.selectedProperty()).then(moveButSelected).otherwise(moveButUnSelected));
 
-		moveBut.addEventFilter(MouseEvent.ANY, event -> {
+		moveBut.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
 			if (AppContext.getInstance().getCurrTool() == PixTool.MOVE) {
+				changeCursor();
 				event.consume();
 			}
 		});
-
-		// panBut.setGraphic(panButImg);
-		// panBut.setUserData(PixTool.PAN);
-		// panButImg.imageProperty()
-		// .bind(Bindings.when(panBut.selectedProperty()).then(panButSelected).otherwise(panButUnSelected));
-		//
-		// panBut.addEventFilter(MouseEvent.ANY, event -> {
-		// if (AppContext.getInstance().getCurrTool() == PixTool.PAN) {
-		// event.consume();
-		// }
-		// });
 
 		showGridBut.setGraphic(showGridButImg);
 		showGridButImg.imageProperty().bind(
@@ -248,6 +244,12 @@ public class PixToolBar extends ToolBar implements Initializable {
 
 		showGridBut.selectedProperty().bindBidirectional(GuiFacade.getInstance().showGridProperty());
 
+	}
+
+	private void changeCursor() {
+		final Canvas canvas = GuiFacade.getInstance().getActiveTab().getCanvas();
+		CursorFactory canvasCursorFactory = new CanvasCursorFactory();
+		canvas.setCursor(canvasCursorFactory.getCursor(canvas.isMouseTransparent()));
 	}
 
 	public ToggleGroup getToggleGroup() {

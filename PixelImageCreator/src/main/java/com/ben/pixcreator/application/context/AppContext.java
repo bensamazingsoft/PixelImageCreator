@@ -14,145 +14,102 @@ import com.ben.pixcreator.application.tools.PixTool;
 
 import javafx.scene.paint.Color;
 
-public class AppContext
-{
+public class AppContext {
 
-      private static AppContext		      instance;
+	private static AppContext instance;
 
-      private static PropertiesContext	      properties;
+	private static PropertiesContext properties;
 
-      private static Color		      gridColor, currDrawColor;
+	private static Color gridColor;
 
-      private static PixTool		      currTool;
+	private static PixTool currTool;
 
-      private static ResourceBundle	      bundle;
+	private static ResourceBundle bundle;
 
-      private static Map<PixImage, File>      files;
+	private static Map<PixImage, File> files;
 
-      private static Map<PixImage, GroupLock> groupLocks;
+	private static Map<PixImage, GroupLock> groupLocks;
 
-      private static EffectManager	      effectManager;
+	private static EffectManager effectManager;
 
+	private AppContext() {
 
-      private AppContext()
-      {
+	}
 
-      }
+	public static void init() throws IOException {
 
+		properties = new PropertiesContext();
+		bundle = ResourceBundle.getBundle("i18n/trad");
+		currTool = PixTool.valueOf(properties.get("startTool"));
 
-      public static void init() throws IOException
-      {
+		gridColor = properties.getColor(properties.get("gridColor"));
 
-	    properties = new PropertiesContext();
-	    bundle = ResourceBundle.getBundle("i18n/trad");
-	    currTool = PixTool.valueOf(properties.get("startTool"));
+		files = new HashMap<>();
+		groupLocks = new HashMap<>();
+		effectManager = new EffectManager();
 
-	    gridColor = properties.getColor(properties.get("gridColor"));
-	    currDrawColor = properties.getColor(properties.get("drawColor"));
+	}
 
-	    files = new HashMap<>();
-	    groupLocks = new HashMap<>();
-	    effectManager = new EffectManager();
+	public static AppContext getInstance() {
 
-      }
+		if (instance == null) {
+			instance = new AppContext();
+		}
+		return instance;
 
+	}
 
-      public static AppContext getInstance()
-      {
+	public PropertiesContext propertyContext() {
 
-	    if (instance == null)
-	    {
-		  instance = new AppContext();
-	    }
-	    return instance;
+		return properties;
+	}
 
-      }
+	public void setProperties(PropertiesContext properties) {
 
+		AppContext.properties = properties;
+	}
 
-      public PropertiesContext propertyContext()
-      {
+	public Color getGridColor() {
 
-	    return properties;
-      }
+		return gridColor;
+	}
 
+	public void setGridColor(Color gridColor) {
 
-      public void setProperties(PropertiesContext properties)
-      {
+		AppContext.gridColor = gridColor;
+	}
 
-	    AppContext.properties = properties;
-      }
+	public void setCurrTool(PixTool pixTool) {
 
+		properties.set("startTool", pixTool.name());
 
-      public Color getGridColor()
-      {
+		currTool = pixTool;
 
-	    return gridColor;
-      }
+	}
 
+	public PixTool getCurrTool() {
 
-      public void setGridColor(Color gridColor)
-      {
+		return currTool;
+	}
 
-	    AppContext.gridColor = gridColor;
-      }
+	public ResourceBundle getBundle() {
 
+		return bundle;
+	}
 
-      public Color getCurrDrawColor()
-      {
+	public Map<PixImage, File> getFiles() {
 
-	    return currDrawColor;
-      }
+		return files;
+	}
 
+	public Map<PixImage, GroupLock> getGroupLocks() {
 
-      public void setCurrDrawColor(Color currDrawColor)
-      {
+		return groupLocks;
+	}
 
-	    AppContext.currDrawColor = currDrawColor;
-      }
+	public EffectManager getEffectManager() {
 
-
-      public void setCurrTool(PixTool pixTool)
-      {
-
-	    properties.set("startTool", pixTool.name());
-
-	    currTool = pixTool;
-
-      }
-
-
-      public PixTool getCurrTool()
-      {
-
-	    return currTool;
-      }
-
-
-      public ResourceBundle getBundle()
-      {
-
-	    return bundle;
-      }
-
-
-      public Map<PixImage, File> getFiles()
-      {
-
-	    return files;
-      }
-
-
-      public Map<PixImage, GroupLock> getGroupLocks()
-      {
-
-	    return groupLocks;
-      }
-
-
-      public EffectManager getEffectManager()
-      {
-
-	    return effectManager;
-      }
+		return effectManager;
+	}
 
 }

@@ -19,6 +19,8 @@ import com.ben.pixcreator.application.executor.Executor;
 import com.ben.pixcreator.application.image.PixImage;
 import com.ben.pixcreator.application.image.layer.impl.ALayer;
 import com.ben.pixcreator.application.image.layer.impl.PicLayer;
+import com.ben.pixcreator.gui.cursor.factory.CanvasCursorFactory;
+import com.ben.pixcreator.gui.cursor.factory.CursorFactory;
 import com.ben.pixcreator.gui.exception.popup.ExceptionPopUp;
 import com.ben.pixcreator.gui.facade.GuiFacade;
 
@@ -121,7 +123,11 @@ public class PixTab extends Tab implements Initializable {
 		this.setUserData(canvas);
 
 		canvas = new Canvas(getImage().getxSize(), getImage().getySize());
+		canvas.addEventHandler(MouseEvent.ANY, new MouseManager(this));
+		canvas.setCursor(new CanvasCursorFactory().getCursor(canvas.isMouseTransparent()));
 
+		scrollPane.setFitToWidth(true);
+		scrollPane.setFitToHeight(true);
 		scrollPane.setContent(canvas);
 		scrollPane.addEventFilter(ScrollEvent.ANY, new ZoomControl());
 
@@ -130,13 +136,8 @@ public class PixTab extends Tab implements Initializable {
 
 		setZoomFactorAdjusted(getZoomFactor());
 
-		canvas.addEventHandler(MouseEvent.ANY, new MouseManager(this));
-
 		stackPane.minWidthProperty().bind(Bindings.createDoubleBinding(() -> scrollPane.getViewportBounds().getWidth(),
 				scrollPane.viewportBoundsProperty()));
-
-		scrollPane.setFitToWidth(true);
-		scrollPane.setFitToHeight(true);
 
 	}
 
@@ -151,6 +152,11 @@ public class PixTab extends Tab implements Initializable {
 
 		@Override
 		public void handle(MouseEvent event) {
+
+			if (event.getEventType() == MouseEvent.MOUSE_ENTERED) {
+				CursorFactory canvasCursorFactory = new CanvasCursorFactory();
+				canvas.setCursor(canvasCursorFactory.getCursor(canvas.isMouseTransparent()));
+			}
 
 			IActionFactory factory = ActionFactoryProducer.getActionFactory(AppContext.getInstance().getCurrTool());
 
@@ -368,6 +374,7 @@ public class PixTab extends Tab implements Initializable {
 	public void togglePanMode() {
 
 		canvas.setMouseTransparent(!canvas.isMouseTransparent());
+		canvas.setCursor(new CanvasCursorFactory().getCursor(canvas.isMouseTransparent()));
 
 		scrollPane.setPannable(!scrollPane.isPannable());
 
