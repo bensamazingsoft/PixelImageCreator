@@ -181,6 +181,7 @@ public class LayerBox extends VBox implements Initializable, Toggle {
 
 		miniaturePane.setStyle("-fx-background-color:white");
 		miniaturePane.setMinWidth(MINIATUREWIDTH);
+		miniaturePane.setMinHeight(MINIATUREWIDTH);
 		canvas.setHeight(MINIATUREHEIGHT);
 		canvas.setWidth(MINIATUREWIDTH);
 

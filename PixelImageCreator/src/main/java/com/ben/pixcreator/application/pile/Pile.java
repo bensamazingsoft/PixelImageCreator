@@ -104,7 +104,7 @@ public class Pile<T> implements Serializable {
 
 		if (getAllItems().contains(item)) {
 
-			for (Pair pair : items) {
+			for (Pair pair : new ArrayList<>(items)) {
 				if (pair.getItem().equals(item)) {
 					success = items.remove(pair);
 				}
