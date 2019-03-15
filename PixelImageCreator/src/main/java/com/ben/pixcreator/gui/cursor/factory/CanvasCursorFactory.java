@@ -45,15 +45,15 @@ public class CanvasCursorFactory implements CursorFactory
 	    case PICK:
 
 		  double[] Xpick = {
-			      25,
-			      15,
-			      18,
-			      72 };
-		  double[] yPick = {
+			      7,
 			      28,
-			      15,
-			      18,
-			      28 };
+			      28,
+			      7 };
+		  double[] yPick = {
+			      3,
+			      3,
+			      22,
+			      22 };
 		  ImageCursor pickCursor = new ImageCursor(makeImage("pick.png", Xpick, yPick, 4), 35, 28);
 
 		  return pickCursor;
