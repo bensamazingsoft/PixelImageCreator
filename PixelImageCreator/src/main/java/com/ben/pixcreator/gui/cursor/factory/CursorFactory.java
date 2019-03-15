@@ -42,16 +42,12 @@ public interface CursorFactory {
 		Image image = new Image(getClass().getClassLoader().getResourceAsStream(IMAGEPATH + string));
 
 		Canvas canvas = new Canvas(32, 32);
-
-		canvas.getGraphicsContext2D().drawImage(image, 0, 0);
-
 		canvas.getGraphicsContext2D().setFill(GuiFacade.getInstance().getActiveColor());
+		canvas.getGraphicsContext2D().fillPolygon(X, Y, nPoints);
+		canvas.getGraphicsContext2D().drawImage(image, 0, 0);
 
 		@SuppressWarnings("unused")
 		Scene bogus = new Scene(new StackPane(canvas));
-
-		canvas.getGraphicsContext2D().fillPolygon(X, Y, nPoints);
-
 		SnapshotParameters snapshotParameters = new SnapshotParameters();
 		snapshotParameters.setFill(Color.rgb(0, 0, 0, 0));
 		Image snap = canvas.snapshot(snapshotParameters, null);
