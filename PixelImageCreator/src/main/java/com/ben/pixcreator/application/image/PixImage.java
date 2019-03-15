@@ -69,10 +69,12 @@ public class PixImage implements Serializable {
 
 	public PixImage(String name, int xSize, int ySize) {
 
-		super();
-		this.name = name;
+		this(name);
 		this.xSize = xSize;
 		this.ySize = ySize;
+		xGridResolution = xSize / 10;
+		yGridResolution = ySize / 10;
+
 	}
 
 	public PixImage(String name, PicLayer basePic) {
