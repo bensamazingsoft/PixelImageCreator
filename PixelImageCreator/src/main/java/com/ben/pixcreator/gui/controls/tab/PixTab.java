@@ -74,8 +74,6 @@ public class PixTab extends Tab implements Initializable {
 	private ScrollPane	scrollPane;
 	@FXML
 	private Canvas		canvas;
-	@FXML
-	private StackPane	stackPane;
 
 	public PixTab(PixImage image) {
 

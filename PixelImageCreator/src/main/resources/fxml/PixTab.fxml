@@ -10,9 +10,9 @@
 	
 
 <ScrollPane fx:id="scrollPane">
-	<StackPane fx:id="stackPane">
+
 		<Canvas fx:id="canvas" />
-	</StackPane> 
+
 </ScrollPane>
 
 </fx:root>
