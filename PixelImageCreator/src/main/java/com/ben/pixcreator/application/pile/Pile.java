@@ -9,20 +9,28 @@ import java.util.stream.Collectors;
 /**
  * Represents an item stack backed with an Array of index-item pairs.
  * 
+ * If a max size is set > 0, the pile pops out the lower indexed item after add
+ * operations.
+ * 
  * @author bmo
  *
  */
 public class Pile<T> implements Serializable {
 
-	// TODO impl max size parameters
 	/**
 	 * 
 	 */
 	private static final long	serialVersionUID	= 1L;
-	List<Pair>					items				= new ArrayList<>();
+	private final List<Pair>	items				= new ArrayList<>();
+	private int					maxSize				= 0;
 
 	public Pile() {
 
+	}
+
+	public Pile(int max) {
+		this();
+		setMaxSize(max);
 	}
 
 	/**
@@ -64,7 +72,21 @@ public class Pile<T> implements Serializable {
 	 */
 	public boolean add(T item) {
 
-		return items.add(new Pair(items.size(), item));
+		final boolean result = items.add(new Pair(items.size(), item));
+
+		if (maxSize > 0) {
+			constraintToMaxSize();
+		}
+
+		return result;
+
+	}
+
+	private void constraintToMaxSize() {
+
+		while (items.size() > maxSize) {
+			removeOfIndex(0);
+		}
 
 	}
 
@@ -161,6 +183,9 @@ public class Pile<T> implements Serializable {
 					pair.incr();
 				}
 			}
+			if (maxSize > 0) {
+				constraintToMaxSize();
+			}
 			return getIdx(newitem);
 		}
 		return -1;
@@ -186,6 +211,9 @@ public class Pile<T> implements Serializable {
 					pair.incr();
 				}
 			}
+			if (maxSize > 0) {
+				constraintToMaxSize();
+			}
 			return getIdx(newitem);
 		}
 		return -1;
@@ -205,6 +233,31 @@ public class Pile<T> implements Serializable {
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * deletes the item from this pile.</br>
+	 * performs removeOfItem and then dercrement indexes if necessary.
+	 * 
+	 * @param item
+	 * @return true if the item was successfully deleted from this pile.
+	 */
+	public boolean deleteOfitem(T item) {
+
+		int idx = getIdx(item);
+
+		if (removeOfitem(item)) {
+
+			for (Pair pair : items) {
+				if (pair.getIdx() > idx) {
+					pair.decr();
+				}
+			}
+
+		}
+
+		return false;
+
 	}
 
 	/**
@@ -345,29 +398,17 @@ public class Pile<T> implements Serializable {
 		return "Pile [items=" + items + "]";
 	}
 
+	public int getMaxSize() {
+		return maxSize;
+	}
+
 	/**
-	 * deletes the item from this pile.</br>
-	 * performs removeOfItem and then dercrement indexes if necessary.
+	 * Cant be <0
 	 * 
-	 * @param item
-	 * @return true if the item was successfully deleted from this pile.
+	 * @param maxSize
 	 */
-	public boolean deleteOfitem(T item) {
-
-		int idx = getIdx(item);
-
-		if (removeOfitem(item)) {
-
-			for (Pair pair : items) {
-				if (pair.getIdx() > idx) {
-					pair.decr();
-				}
-			}
-
-		}
-
-		return false;
-
+	public void setMaxSize(int maxSize) {
+		this.maxSize = Math.max(0, maxSize);
 	}
 
 }

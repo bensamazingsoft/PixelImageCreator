@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import com.ben.pixcreator.application.color.rgb.ColorRGB;
 import com.ben.pixcreator.application.context.AppContext;
+import com.ben.pixcreator.application.context.PropertiesContext;
 import com.ben.pixcreator.application.image.PixImage;
 import com.ben.pixcreator.application.image.coords.Coord;
 import com.ben.pixcreator.application.image.layer.impl.ALayer;
@@ -63,15 +64,18 @@ public class GuiFacade {
 
 	private MiniatureManager miniatureManager;
 
-	private Pile<String> recentFiles = new Pile<>();
+	private Pile<String> recentFiles;
 
 	private GuiFacade() {
+
+		final PropertiesContext ctxProp = AppContext.getInstance().propertyContext();
 
 		imagesColors = new HashMap<>();
 		selections = new HashMap<>();
 		miniatureManager = new MiniatureManager();
 		showGrid.set(false);
-		backgroundColor.set(AppContext.getInstance().propertyContext().getBackgroundColor());
+		backgroundColor.set(ctxProp.getBackgroundColor());
+		recentFiles = new Pile<String>(Integer.valueOf(ctxProp.get("maxRecentFiles")));
 
 	}
 
