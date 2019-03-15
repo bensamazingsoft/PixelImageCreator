@@ -99,14 +99,27 @@ public class Pile<T> implements Serializable {
 	 */
 	public boolean removeOfIndex(int idx) {
 
-		for (Pair pair : items) {
-			if (pair.getIdx() == idx) {
-				return items.remove(pair);
+		boolean success = false;
+		T item = getItem(idx);
+
+		if (getAllItems().contains(item)) {
+
+			for (Pair pair : items) {
+				if (pair.getItem().equals(item)) {
+					success = items.remove(pair);
+				}
 			}
 
+			if (success) {
+				for (Pair pair : items) {
+					if (pair.getIdx() >= idx) {
+						pair.decr();
+					}
+				}
+			}
 		}
+		return success;
 
-		return false;
 	}
 
 	/**
@@ -119,13 +132,26 @@ public class Pile<T> implements Serializable {
 	 */
 	public boolean removeOfitem(T item) {
 
-		for (Pair pair : items) {
-			if (pair.getItem().equals(item)) {
-				return items.remove(pair);
+		boolean success = false;
+		int idx = getIdx(item);
+
+		if (getAllItems().contains(item)) {
+
+			for (Pair pair : new ArrayList<>(items)) {
+				if (pair.getItem().equals(item)) {
+					success = items.remove(pair);
+				}
 			}
 
+			if (success) {
+				for (Pair pair : items) {
+					if (pair.getIdx() >= idx) {
+						pair.decr();
+					}
+				}
+			}
 		}
-		return false;
+		return success;
 	}
 
 	/**
