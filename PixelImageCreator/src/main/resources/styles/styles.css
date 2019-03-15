@@ -28,3 +28,7 @@
 	-fx-text-fill:darkslategray;
 	-fx-font-size:1.5em;
 }
+
+.stackpane{
+	-fx-background-color:red;
+}

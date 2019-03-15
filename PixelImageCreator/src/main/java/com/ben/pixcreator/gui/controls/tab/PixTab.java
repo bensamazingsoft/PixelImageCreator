@@ -24,7 +24,6 @@ import com.ben.pixcreator.gui.cursor.factory.CursorFactory;
 import com.ben.pixcreator.gui.exception.popup.ExceptionPopUp;
 import com.ben.pixcreator.gui.facade.GuiFacade;
 
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -128,7 +127,7 @@ public class PixTab extends Tab implements Initializable {
 
 		scrollPane.setFitToWidth(true);
 		scrollPane.setFitToHeight(true);
-		scrollPane.setContent(canvas);
+		scrollPane.setContent(new StackPane(canvas));
 		scrollPane.addEventFilter(ScrollEvent.ANY, new ZoomControl());
 
 		bindPicLayersZoomFactor();
@@ -136,8 +135,8 @@ public class PixTab extends Tab implements Initializable {
 
 		setZoomFactorAdjusted(getZoomFactor());
 
-		stackPane.minWidthProperty().bind(Bindings.createDoubleBinding(() -> scrollPane.getViewportBounds().getWidth(),
-				scrollPane.viewportBoundsProperty()));
+		scrollPane.getStylesheets().add("/styles/styles.css");
+		scrollPane.getStyleClass().add("stackpane");
 
 	}
 
