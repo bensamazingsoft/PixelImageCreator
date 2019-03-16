@@ -20,7 +20,7 @@ public class CanvasCursorFactory implements CursorFactory
 
 	    if (panMode)
 	    {
-
+		  return new ImageCursor(makeImage("hand.png"), 11, 4);
 	    }
 
 	    switch (AppContext.getInstance().getCurrTool())
@@ -60,7 +60,8 @@ public class CanvasCursorFactory implements CursorFactory
 	    case RESIZE:
 		  break;
 	    case SELECT:
-		  break;
+
+		  return new ImageCursor(makeImage("select.png"), 14, 16);
 	    case ZOOMIN:
 		  break;
 	    case ZOOMOUT:

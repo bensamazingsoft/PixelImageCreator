@@ -27,239 +27,284 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 
-public class PixToolBar extends ToolBar implements Initializable {
+public class PixToolBar extends ToolBar implements Initializable
+{
 
-	private final String IMAGEPATH = "images/gui/buttons/tools/";
+      private final String    IMAGEPATH		    = "images/gui/buttons/tools/";
 
-	@FXML
-	private ToggleGroup toggleGroup;
+      @FXML
+      private ToggleGroup     toggleGroup;
 
-	@FXML
-	private ToggleButton selectBut;
+      @FXML
+      private ToggleButton    selectBut;
 
-	@FXML
-	private ToggleButton drawBut;
+      @FXML
+      private ToggleButton    drawBut;
 
-	@FXML
-	private ToggleButton pickBut;
+      @FXML
+      private ToggleButton    pickBut;
 
-	@FXML
-	private ToggleButton moveBut;
+      @FXML
+      private ToggleButton    moveBut;
 
-	// @FXML
-	// private ToggleButton panBut;
+      // @FXML
+      // private ToggleButton panBut;
 
-	@FXML
-	private ToggleButton showGridBut;
+      @FXML
+      private ToggleButton    showGridBut;
 
-	// get images
-	final private Image		selectButSelected	= new Image(
-			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "selectButSelected.png"));
-	final private Image		selectButUnSelected	= new Image(
-			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "selectButUnSelected.png"));
-	final private ImageView	selectButImg		= new ImageView();
+      // get images
+      final private Image     selectButSelected	    = new Image(
+		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "selectButSelected.png"));
+      final private Image     selectButUnSelected   = new Image(
+		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "selectButUnSelected.png"));
+      final private ImageView selectButImg	    = new ImageView();
 
-	final private Image		drawButSelected		= new Image(
-			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "drawButSelected.png"));
-	final private Image		drawButUnSelected	= new Image(
-			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "drawButUnSelected.png"));
-	final private ImageView	drawButImg			= new ImageView();
+      final private Image     drawButSelected	    = new Image(
+		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "drawButSelected.png"));
+      final private Image     drawButUnSelected	    = new Image(
+		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "drawButUnSelected.png"));
+      final private ImageView drawButImg	    = new ImageView();
 
-	final private Image		pickButSelected		= new Image(
-			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "pickButSelected.png"));
-	final private Image		pickButUnSelected	= new Image(
-			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "pickButUnSelected.png"));
-	final private ImageView	pickButImg			= new ImageView();
+      final private Image     pickButSelected	    = new Image(
+		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "pickButSelected.png"));
+      final private Image     pickButUnSelected	    = new Image(
+		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "pickButUnSelected.png"));
+      final private ImageView pickButImg	    = new ImageView();
 
-	final private Image		moveButSelected		= new Image(
-			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "moveButSelected.png"));
-	final private Image		moveButUnSelected	= new Image(
-			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "moveButUnSelected.png"));
-	final private ImageView	moveButImg			= new ImageView();
+      final private Image     moveButSelected	    = new Image(
+		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "moveButSelected.png"));
+      final private Image     moveButUnSelected	    = new Image(
+		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "moveButUnSelected.png"));
+      final private ImageView moveButImg	    = new ImageView();
 
-	// final private Image panButSelected = new Image(
-	// getClass().getClassLoader().getResourceAsStream(IMAGEPATH +
-	// "panButSelected.png"));
-	// final private Image panButUnSelected = new Image(
-	// getClass().getClassLoader().getResourceAsStream(IMAGEPATH +
-	// "panButUnSelected.png"));
-	// final private ImageView panButImg = new ImageView();
+      // final private Image panButSelected = new Image(
+      // getClass().getClassLoader().getResourceAsStream(IMAGEPATH +
+      // "panButSelected.png"));
+      // final private Image panButUnSelected = new Image(
+      // getClass().getClassLoader().getResourceAsStream(IMAGEPATH +
+      // "panButUnSelected.png"));
+      // final private ImageView panButImg = new ImageView();
 
-	final private Image		showGridButSelected		= new Image(
-			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "showGridButSelected.png"));
-	final private Image		showGridButUnSelected	= new Image(
-			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "showGridButUnSelected.png"));
-	final private ImageView	showGridButImg			= new ImageView();
+      final private Image     showGridButSelected   = new Image(
+		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "showGridButSelected.png"));
+      final private Image     showGridButUnSelected = new Image(
+		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "showGridButUnSelected.png"));
+      final private ImageView showGridButImg	    = new ImageView();
 
-	public PixToolBar() {
 
-		toggleGroup = new ToggleGroup();
+      public PixToolBar()
+      {
 
-		ResourceBundle bundle = ResourceBundle.getBundle("i18n/trad");
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/PixToolBar.fxml"), bundle);
-		fxmlLoader.setRoot(this);
-		fxmlLoader.setController(this);
+	    toggleGroup = new ToggleGroup();
 
-		try {
-			fxmlLoader.load();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+	    ResourceBundle bundle = ResourceBundle.getBundle("i18n/trad");
+	    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/PixToolBar.fxml"), bundle);
+	    fxmlLoader.setRoot(this);
+	    fxmlLoader.setController(this);
 
-		GuiFacade.getInstance().setPixToolBar(this);
-		GuiFacade.getInstance().toggleToolTo(AppContext.getInstance().getCurrTool());
-	}
+	    try
+	    {
+		  fxmlLoader.load();
+	    }
+	    catch (IOException e)
+	    {
+		  throw new RuntimeException(e);
+	    }
 
-	@FXML
-	private void toggleSelect(ActionEvent event) {
+	    GuiFacade.getInstance().setPixToolBar(this);
+	    GuiFacade.getInstance().toggleToolTo(AppContext.getInstance().getCurrTool());
+      }
 
-		handleToggle();
-	}
 
-	@FXML
-	private void toggleDraw(ActionEvent event) {
+      @FXML
+      private void toggleSelect(ActionEvent event)
+      {
 
-		handleToggle();
+	    handleToggle();
+      }
 
-	}
 
-	@FXML
-	private void togglePick(ActionEvent event) {
+      @FXML
+      private void toggleDraw(ActionEvent event)
+      {
 
-		handleToggle();
-	}
+	    handleToggle();
 
-	@FXML
-	private void toggleMove(ActionEvent event) {
+      }
 
-		handleToggle();
-	}
 
-	@FXML
-	private void togglePan(ActionEvent event) {
+      @FXML
+      private void togglePick(ActionEvent event)
+      {
 
-		handleToggle();
-	}
+	    handleToggle();
+      }
 
-	@FXML
-	private void toggleResize(ActionEvent event) {
 
-		handleToggle();
-	}
+      @FXML
+      private void toggleMove(ActionEvent event)
+      {
 
-	@FXML
-	private void toggleZoomIn(ActionEvent event) {
+	    handleToggle();
+      }
 
-		handleToggle();
-	}
 
-	@FXML
-	private void toggleZoomOut(ActionEvent event) {
+      @FXML
+      private void togglePan(ActionEvent event)
+      {
 
-		handleToggle();
-	}
+	    handleToggle();
+      }
 
-	private void handleToggle() {
 
-		// handle tool toggle action with gui facade
-		GuiFacade guiFacade = GuiFacade.getInstance();
+      @FXML
+      private void toggleResize(ActionEvent event)
+      {
 
-		guiFacade.toggleToolTo((PixTool) toggleGroup.getSelectedToggle().getUserData());
+	    handleToggle();
+      }
 
-	}
 
-	@FXML
-	private void toggleShowGrid(ActionEvent event) {
+      @FXML
+      private void toggleZoomIn(ActionEvent event)
+      {
 
-		handleToggleShowGrid();
-	}
+	    handleToggle();
+      }
 
-	private void handleToggleShowGrid() {
 
-		if (null != GuiFacade.getInstance().getActiveimage()) {
-			try {
-				Executor.getInstance().executeAction(new RefreshAllTabsAction());
-			} catch (Exception e) {
-				new ExceptionPopUp(e);
-			}
-		}
+      @FXML
+      private void toggleZoomOut(ActionEvent event)
+      {
 
-	}
+	    handleToggle();
+      }
 
-	@Override
-	public void initialize(URL arg0, ResourceBundle arg1) {
 
-		selectBut.setGraphic(selectButImg);
-		selectBut.setUserData(PixTool.SELECT);
-		selectButImg.imageProperty().bind(
-				Bindings.when(selectBut.selectedProperty()).then(selectButSelected).otherwise(selectButUnSelected));
+      private void handleToggle()
+      {
 
-		selectBut.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
-			if (AppContext.getInstance().getCurrTool() == PixTool.SELECT) {
-				changeCursor();
-				event.consume();
-			}
-		});
+	    // handle tool toggle action with gui facade
+	    GuiFacade guiFacade = GuiFacade.getInstance();
 
-		drawBut.setGraphic(drawButImg);
-		drawBut.setUserData(PixTool.DRAW);
-		drawButImg.imageProperty()
-				.bind(Bindings.when(drawBut.selectedProperty()).then(drawButSelected).otherwise(drawButUnSelected));
+	    guiFacade.toggleToolTo((PixTool) toggleGroup.getSelectedToggle().getUserData());
 
-		drawBut.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
-			if (AppContext.getInstance().getCurrTool() == PixTool.DRAW) {
-				changeCursor();
-				event.consume();
-			}
-		});
+      }
 
-		pickBut.setGraphic(pickButImg);
-		pickBut.setUserData(PixTool.PICK);
-		pickButImg.imageProperty()
-				.bind(Bindings.when(pickBut.selectedProperty()).then(pickButSelected).otherwise(pickButUnSelected));
 
-		pickBut.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
-			if (AppContext.getInstance().getCurrTool() == PixTool.PICK) {
-				changeCursor();
-				event.consume();
-			}
-		});
+      @FXML
+      private void toggleShowGrid(ActionEvent event)
+      {
 
-		moveBut.setGraphic(moveButImg);
-		moveBut.setUserData(PixTool.MOVE);
-		moveButImg.imageProperty()
-				.bind(Bindings.when(moveBut.selectedProperty()).then(moveButSelected).otherwise(moveButUnSelected));
+	    handleToggleShowGrid();
+      }
 
-		moveBut.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
-			if (AppContext.getInstance().getCurrTool() == PixTool.MOVE) {
-				changeCursor();
-				event.consume();
-			}
-		});
 
-		showGridBut.setGraphic(showGridButImg);
-		showGridButImg.imageProperty().bind(
-				Bindings.when(showGridBut.selectedProperty()).then(showGridButSelected)
-						.otherwise(showGridButUnSelected));
+      private void handleToggleShowGrid()
+      {
 
-		showGridBut.selectedProperty().bindBidirectional(GuiFacade.getInstance().showGridProperty());
+	    if (null != GuiFacade.getInstance().getActiveimage())
+	    {
+		  try
+		  {
+			Executor.getInstance().executeAction(new RefreshAllTabsAction());
+		  }
+		  catch (Exception e)
+		  {
+			new ExceptionPopUp(e);
+		  }
+	    }
 
-	}
+      }
 
-	private void changeCursor() {
-		final Canvas canvas = GuiFacade.getInstance().getActiveTab().getCanvas();
-		CursorFactory canvasCursorFactory = new CanvasCursorFactory();
-		canvas.setCursor(canvasCursorFactory.getCursor(canvas.isMouseTransparent()));
-	}
 
-	public ToggleGroup getToggleGroup() {
+      @Override
+      public void initialize(URL arg0, ResourceBundle arg1)
+      {
 
-		return toggleGroup;
-	}
+	    selectBut.setGraphic(selectButImg);
+	    selectBut.setUserData(PixTool.SELECT);
+	    selectButImg.imageProperty().bind(
+			Bindings.when(selectBut.selectedProperty()).then(selectButSelected).otherwise(selectButUnSelected));
 
-	public void setToggleGroup(ToggleGroup toggleGroup) {
+	    selectBut.addEventFilter(MouseEvent.ANY, event -> {
+		  if (AppContext.getInstance().getCurrTool() == PixTool.SELECT)
+		  {
+			changeCursor();
+			event.consume();
+		  }
+	    });
 
-		this.toggleGroup = toggleGroup;
-	}
+	    drawBut.setGraphic(drawButImg);
+	    drawBut.setUserData(PixTool.DRAW);
+	    drawButImg.imageProperty()
+			.bind(Bindings.when(drawBut.selectedProperty()).then(drawButSelected).otherwise(drawButUnSelected));
+
+	    drawBut.addEventFilter(MouseEvent.ANY, event -> {
+		  if (AppContext.getInstance().getCurrTool() == PixTool.DRAW)
+		  {
+			changeCursor();
+			event.consume();
+		  }
+	    });
+
+	    pickBut.setGraphic(pickButImg);
+	    pickBut.setUserData(PixTool.PICK);
+	    pickButImg.imageProperty()
+			.bind(Bindings.when(pickBut.selectedProperty()).then(pickButSelected).otherwise(pickButUnSelected));
+
+	    pickBut.addEventFilter(MouseEvent.ANY, event -> {
+		  if (AppContext.getInstance().getCurrTool() == PixTool.PICK)
+		  {
+			changeCursor();
+			event.consume();
+		  }
+	    });
+
+	    moveBut.setGraphic(moveButImg);
+	    moveBut.setUserData(PixTool.MOVE);
+	    moveButImg.imageProperty()
+			.bind(Bindings.when(moveBut.selectedProperty()).then(moveButSelected).otherwise(moveButUnSelected));
+
+	    moveBut.addEventFilter(MouseEvent.ANY, event -> {
+		  if (AppContext.getInstance().getCurrTool() == PixTool.MOVE)
+		  {
+			changeCursor();
+			event.consume();
+		  }
+	    });
+
+	    showGridBut.setGraphic(showGridButImg);
+	    showGridButImg.imageProperty().bind(
+			Bindings.when(showGridBut.selectedProperty()).then(showGridButSelected)
+				    .otherwise(showGridButUnSelected));
+
+	    showGridBut.selectedProperty().bindBidirectional(GuiFacade.getInstance().showGridProperty());
+
+      }
+
+
+      private void changeCursor()
+      {
+
+	    final Canvas canvas = GuiFacade.getInstance().getActiveTab().getCanvas();
+	    CursorFactory canvasCursorFactory = new CanvasCursorFactory();
+	    canvas.setCursor(canvasCursorFactory.getCursor(canvas.isMouseTransparent()));
+      }
+
+
+      public ToggleGroup getToggleGroup()
+      {
+
+	    return toggleGroup;
+      }
+
+
+      public void setToggleGroup(ToggleGroup toggleGroup)
+      {
+
+	    this.toggleGroup = toggleGroup;
+      }
 
 }
