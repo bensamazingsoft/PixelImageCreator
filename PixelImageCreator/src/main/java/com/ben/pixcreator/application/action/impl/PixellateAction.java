@@ -22,106 +22,124 @@ import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 
-public class PixellateAction implements IAction {
+public class PixellateAction implements IAction
+{
 
-	final GuiFacade gui = GuiFacade.getInstance();
+      final GuiFacade	       gui = GuiFacade.getInstance();
 
-	private final PixImage		image;
-	private final PixTab		tab;
-	private final actionType	actionType;
+      private final PixImage   image;
+      private final PixTab     tab;
+      private final actionType actiontype;
 
-	public PixellateAction(actionType type, PixTab tab, PixImage activeImage) {
 
-		this.image = activeImage;
-		this.tab = tab;
-		this.actionType = type;
-	}
+      public PixellateAction(actionType type, PixTab tab, PixImage activeImage)
+      {
 
-	public enum actionType {
-		AVERAGE, CENTERPICK;
-	}
+	    this.image = activeImage;
+	    this.tab = tab;
+	    this.actiontype = type;
+      }
 
-	@Override
-	public void execute() throws Exception {
+      public static enum actionType {
+	    AVERAGE, CENTERPICK;
+      }
 
-		Canvas canvas = tab.getCanvas();
 
-		WritableImage snap = makeSnapShot(canvas);
+      @Override
+      public void execute() throws Exception
+      {
 
-		PixelReader reader = snap.getPixelReader();
+	    Canvas canvas = tab.getCanvas();
 
-		int xCellSize = (int) (canvas.getWidth() / image.getxGridResolution());
-		int yCellSize = (int) (canvas.getHeight() / image.getyGridResolution());
+	    WritableImage snap = makeSnapShot(canvas);
 
-		Map<Coord, ColorRGB> grid = new HashMap<>();
-		for (int x = 0; x < canvas.getWidth(); x += xCellSize) {
-			for (int y = 0; y < canvas.getHeight(); y += yCellSize) {
+	    PixelReader reader = snap.getPixelReader();
 
-				Color average = Color.WHITE;
-				if (actionType == actionType.CENTERPICK) {
-					average = pickCellCenterPixelColor(reader, x, y, xCellSize, yCellSize);
-				}
+	    int xCellSize = (int) (canvas.getWidth() / image.getxGridResolution());
+	    int yCellSize = (int) (canvas.getHeight() / image.getyGridResolution());
 
-				if (actionType == actionType.AVERAGE) {
-					average = averageColor(reader, x, y, xCellSize, yCellSize);
-				}
+	    Map<Coord, ColorRGB> grid = new HashMap<>();
+	    for (int x = 0; x < canvas.getWidth(); x += xCellSize)
+	    {
+		  for (int y = 0; y < canvas.getHeight(); y += yCellSize)
+		  {
 
-				// exclude BG color
-				if (!average.equals(gui.getBackgroundColor())) {
-					grid.put(new Coord(x / xCellSize, y / yCellSize), new ColorRGB(average));
-				}
-
+			Color average = Color.WHITE;
+			if (actiontype == actionType.CENTERPICK)
+			{
+			      average = pickCellCenterPixelColor(reader, x, y, xCellSize, yCellSize);
 			}
-		}
 
-		image.getLayerList().add(new PixLayer(grid));
-
-	}
-
-	private WritableImage makeSnapShot(Canvas canvas) throws Exception {
-
-		// deactivate grid lest it pollutes the color averaging
-		boolean showGrid = gui.isShowGrid();
-		Selection selection = GuiFacade.getInstance().getSelections().computeIfAbsent(image,
-				img -> new Selection());
-
-		gui.getSelections().remove(image);
-		gui.setShowGrid(false);
-
-		Executor.getInstance().executeAction(new RefreshTabAction(tab));
-
-		WritableImage snap = canvas.snapshot(null, null);
-
-		gui.setShowGrid(showGrid);
-		gui.getSelections().put(image, selection);
-
-		return snap;
-	}
-
-	private Color averageColor(PixelReader reader, int x, int y, int xCellSize, int yCellSize) {
-
-		Color average = Color.WHITE;
-		List<Color> colors = new ArrayList<>();
-
-		for (int i = 0; i < xCellSize; i++) {
-			for (int j = 0; j < yCellSize; j++) {
-
-				colors.add(reader.getColor(x + i, y + j));
-
+			if (actiontype == actionType.AVERAGE)
+			{
+			      average = averageColor(reader, x, y, xCellSize, yCellSize);
 			}
-		}
 
-		average = ColorUtils.averageColor(colors);
+			// exclude BG color
+			if (!average.equals(gui.getBackgroundColor()))
+			{
+			      grid.put(new Coord(x / xCellSize, y / yCellSize), new ColorRGB(average));
+			}
 
-		return average;
-	}
+		  }
+	    }
 
-	private Color pickCellCenterPixelColor(PixelReader reader, int x, int y, int xCellSize, int yCellSize) {
+	    image.getLayerList().add(new PixLayer(grid));
 
-		int centerX = x + xCellSize / 2;
-		int centerY = y + yCellSize / 2;
+      }
 
-		return reader.getColor(centerX, centerY);
-	}
+
+      private WritableImage makeSnapShot(Canvas canvas) throws Exception
+      {
+
+	    // deactivate grid lest it pollutes the color averaging
+	    boolean showGrid = gui.isShowGrid();
+	    Selection selection = GuiFacade.getInstance().getSelections().computeIfAbsent(image,
+			img -> new Selection());
+
+	    gui.getSelections().remove(image);
+	    gui.setShowGrid(false);
+
+	    Executor.getInstance().executeAction(new RefreshTabAction(tab));
+
+	    WritableImage snap = canvas.snapshot(null, null);
+
+	    gui.setShowGrid(showGrid);
+	    gui.getSelections().put(image, selection);
+
+	    return snap;
+      }
+
+
+      private Color averageColor(PixelReader reader, int x, int y, int xCellSize, int yCellSize)
+      {
+
+	    Color average = Color.WHITE;
+	    List<Color> colors = new ArrayList<>();
+
+	    for (int i = 0; i < xCellSize; i++)
+	    {
+		  for (int j = 0; j < yCellSize; j++)
+		  {
+
+			colors.add(reader.getColor(x + i, y + j));
+
+		  }
+	    }
+
+	    average = ColorUtils.averageColor(colors);
+
+	    return average;
+      }
+
+
+      private Color pickCellCenterPixelColor(PixelReader reader, int x, int y, int xCellSize, int yCellSize)
+      {
+
+	    int centerX = x + xCellSize / 2;
+	    int centerY = y + yCellSize / 2;
+
+	    return reader.getColor(centerX, centerY);
+      }
 
 }

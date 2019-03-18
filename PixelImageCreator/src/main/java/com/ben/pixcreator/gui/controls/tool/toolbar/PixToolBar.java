@@ -9,17 +9,15 @@ import com.ben.pixcreator.application.action.impl.RefreshAllTabsAction;
 import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.application.executor.Executor;
 import com.ben.pixcreator.application.tools.PixTool;
-import com.ben.pixcreator.gui.cursor.factory.CanvasCursorFactory;
-import com.ben.pixcreator.gui.cursor.factory.CursorFactory;
 import com.ben.pixcreator.gui.exception.popup.ExceptionPopUp;
 import com.ben.pixcreator.gui.facade.GuiFacade;
 
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.ToolBar;
@@ -30,67 +28,61 @@ import javafx.scene.input.MouseEvent;
 public class PixToolBar extends ToolBar implements Initializable
 {
 
-      private final String    IMAGEPATH		    = "images/gui/buttons/tools/";
+      private final String	    IMAGEPATH		  = "images/gui/buttons/tools/";
+
+      private SimpleBooleanProperty panMode		  = new SimpleBooleanProperty();
 
       @FXML
-      private ToggleGroup     toggleGroup;
+      private ToggleGroup	    toggleGroup;
 
       @FXML
-      private ToggleButton    selectBut;
+      private ToggleButton	    selectBut;
 
       @FXML
-      private ToggleButton    drawBut;
+      private ToggleButton	    drawBut;
 
       @FXML
-      private ToggleButton    pickBut;
+      private ToggleButton	    pickBut;
 
       @FXML
-      private ToggleButton    moveBut;
+      private ToggleButton	    moveBut;
 
       // @FXML
       // private ToggleButton panBut;
 
       @FXML
-      private ToggleButton    showGridBut;
+      private ToggleButton	    showGridBut;
 
       // get images
-      final private Image     selectButSelected	    = new Image(
+      final private Image	    selectButSelected	  = new Image(
 		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "selectButSelected.png"));
-      final private Image     selectButUnSelected   = new Image(
+      final private Image	    selectButUnSelected	  = new Image(
 		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "selectButUnSelected.png"));
-      final private ImageView selectButImg	    = new ImageView();
+      final private ImageView	    selectButImg	  = new ImageView();
 
-      final private Image     drawButSelected	    = new Image(
+      final private Image	    drawButSelected	  = new Image(
 		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "drawButSelected.png"));
-      final private Image     drawButUnSelected	    = new Image(
+      final private Image	    drawButUnSelected	  = new Image(
 		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "drawButUnSelected.png"));
-      final private ImageView drawButImg	    = new ImageView();
+      final private ImageView	    drawButImg		  = new ImageView();
 
-      final private Image     pickButSelected	    = new Image(
+      final private Image	    pickButSelected	  = new Image(
 		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "pickButSelected.png"));
-      final private Image     pickButUnSelected	    = new Image(
+      final private Image	    pickButUnSelected	  = new Image(
 		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "pickButUnSelected.png"));
-      final private ImageView pickButImg	    = new ImageView();
+      final private ImageView	    pickButImg		  = new ImageView();
 
-      final private Image     moveButSelected	    = new Image(
+      final private Image	    moveButSelected	  = new Image(
 		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "moveButSelected.png"));
-      final private Image     moveButUnSelected	    = new Image(
+      final private Image	    moveButUnSelected	  = new Image(
 		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "moveButUnSelected.png"));
-      final private ImageView moveButImg	    = new ImageView();
+      final private ImageView	    moveButImg		  = new ImageView();
 
-      // final private Image panButSelected = new Image(
-      // getClass().getClassLoader().getResourceAsStream(IMAGEPATH +
-      // "panButSelected.png"));
-      // final private Image panButUnSelected = new Image(
-      // getClass().getClassLoader().getResourceAsStream(IMAGEPATH +
-      // "panButUnSelected.png"));
-      // final private ImageView panButImg = new ImageView();
-
-      final private Image     showGridButSelected   = new Image(
+      final private Image	    showGridButSelected	  = new Image(
 		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "showGridButSelected.png"));
-      final private Image     showGridButUnSelected = new Image(
+      final private Image	    showGridButUnSelected = new Image(
 		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "showGridButUnSelected.png"));
-      final private ImageView showGridButImg	    = new ImageView();
+      final private ImageView	    showGridButImg	  = new ImageView();
 
 
       public PixToolBar()
@@ -114,6 +106,9 @@ public class PixToolBar extends ToolBar implements Initializable
 
 	    GuiFacade.getInstance().setPixToolBar(this);
 	    GuiFacade.getInstance().toggleToolTo(AppContext.getInstance().getCurrTool());
+
+	    panMode.bindBidirectional(GuiFacade.getInstance().panModeProperty());
+	    panMode.bindBidirectional(disableProperty());
       }
 
 
@@ -231,7 +226,7 @@ public class PixToolBar extends ToolBar implements Initializable
 	    selectBut.addEventFilter(MouseEvent.ANY, event -> {
 		  if (AppContext.getInstance().getCurrTool() == PixTool.SELECT)
 		  {
-			changeCursor();
+
 			event.consume();
 		  }
 	    });
@@ -244,7 +239,7 @@ public class PixToolBar extends ToolBar implements Initializable
 	    drawBut.addEventFilter(MouseEvent.ANY, event -> {
 		  if (AppContext.getInstance().getCurrTool() == PixTool.DRAW)
 		  {
-			changeCursor();
+
 			event.consume();
 		  }
 	    });
@@ -257,7 +252,7 @@ public class PixToolBar extends ToolBar implements Initializable
 	    pickBut.addEventFilter(MouseEvent.ANY, event -> {
 		  if (AppContext.getInstance().getCurrTool() == PixTool.PICK)
 		  {
-			changeCursor();
+
 			event.consume();
 		  }
 	    });
@@ -270,7 +265,7 @@ public class PixToolBar extends ToolBar implements Initializable
 	    moveBut.addEventFilter(MouseEvent.ANY, event -> {
 		  if (AppContext.getInstance().getCurrTool() == PixTool.MOVE)
 		  {
-			changeCursor();
+
 			event.consume();
 		  }
 	    });
@@ -282,15 +277,8 @@ public class PixToolBar extends ToolBar implements Initializable
 
 	    showGridBut.selectedProperty().bindBidirectional(GuiFacade.getInstance().showGridProperty());
 
-      }
+	    toggleGroup.selectToggle(drawBut);
 
-
-      private void changeCursor()
-      {
-
-	    final Canvas canvas = GuiFacade.getInstance().getActiveTab().getCanvas();
-	    CursorFactory canvasCursorFactory = new CanvasCursorFactory();
-	    canvas.setCursor(canvasCursorFactory.getCursor(canvas.isMouseTransparent()));
       }
 
 
@@ -305,6 +293,27 @@ public class PixToolBar extends ToolBar implements Initializable
       {
 
 	    this.toggleGroup = toggleGroup;
+      }
+
+
+      public final SimpleBooleanProperty panModeProperty()
+      {
+
+	    return this.panMode;
+      }
+
+
+      public final boolean isPanMode()
+      {
+
+	    return this.panModeProperty().get();
+      }
+
+
+      public final void setPanMode(final boolean panMode)
+      {
+
+	    this.panModeProperty().set(panMode);
       }
 
 }

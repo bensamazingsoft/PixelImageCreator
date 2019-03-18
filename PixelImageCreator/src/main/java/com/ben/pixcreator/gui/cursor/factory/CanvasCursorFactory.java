@@ -15,13 +15,8 @@ public class CanvasCursorFactory implements CursorFactory
        * @see com.ben.pixcreator.gui.cursor.factory.CursorFactory#getCursor(java.lang. Boolean)
        */
       @Override
-      public Cursor getCursor(Boolean panMode)
+      public Cursor getCursor()
       {
-
-	    if (panMode)
-	    {
-		  return new ImageCursor(makeImage("hand.png"), 11, 4);
-	    }
 
 	    switch (AppContext.getInstance().getCurrTool())
 	    {
@@ -41,7 +36,7 @@ public class CanvasCursorFactory implements CursorFactory
 	    case NONE:
 		  break;
 	    case PAN:
-		  break;
+		  return new ImageCursor(makeImage("hand.png"), 11, 4);
 	    case PICK:
 
 		  double[] Xpick = {

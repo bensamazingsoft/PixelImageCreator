@@ -30,9 +30,7 @@
 }
 
 .stackpane{
-	-fx-background-color:red;
+	-fx-background-color:darkslategray;
+
 }
 
-.scrollPane :pannable{
-	-fx-cursor:url('/resources/images/gui/cursors/hand.png'),auto;
-}

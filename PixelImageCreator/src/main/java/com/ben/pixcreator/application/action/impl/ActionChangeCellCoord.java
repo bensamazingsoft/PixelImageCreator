@@ -47,7 +47,7 @@ public class ActionChangeCellCoord implements IAction
 
 	    if (GuiFacade.getInstance().getActiveimage() == image)
 	    {
-		  if (image.getLayerList().getItems().contains(layer))
+		  if (image.getLayerList().getAllItems().contains(layer))
 		  {
 			layer.getGrid().remove(oldCoord);
 			layer.getGrid().put(newCoord, color);
@@ -61,7 +61,7 @@ public class ActionChangeCellCoord implements IAction
 
 	    if (GuiFacade.getInstance().getActiveimage() == image)
 	    {
-		  if (image.getLayerList().getItems().contains(layer))
+		  if (image.getLayerList().getAllItems().contains(layer))
 		  {
 			layer.getGrid().remove(newCoord);
 			layer.getGrid().put(oldCoord, color);
