@@ -17,7 +17,7 @@ public class PropertiesContext {
 
 	private Properties		defaultProp, properties;
 	private File			propFile;
-	private final String	defaultPropertiesFileName	= "./properties/default.properties";
+	private final String	defaultPropertiesFileName	= "properties/default.properties";
 
 	public PropertiesContext() throws IOException {
 

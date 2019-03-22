@@ -32,6 +32,8 @@ public class AppContext {
 
 	private static EffectManager effectManager;
 
+	private static boolean initialized = false;
+
 	private AppContext() {
 
 	}
@@ -47,6 +49,8 @@ public class AppContext {
 		files = new HashMap<>();
 		groupLocks = new HashMap<>();
 		effectManager = new EffectManager();
+
+		initialized = true;
 
 	}
 
@@ -110,6 +114,14 @@ public class AppContext {
 	public EffectManager getEffectManager() {
 
 		return effectManager;
+	}
+
+	public static boolean isInitialized() {
+		return initialized;
+	}
+
+	public static void setInitialized(boolean initialized) {
+		AppContext.initialized = initialized;
 	}
 
 }

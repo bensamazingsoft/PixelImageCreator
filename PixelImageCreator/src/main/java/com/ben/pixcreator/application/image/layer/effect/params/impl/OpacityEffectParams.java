@@ -29,7 +29,9 @@ public class OpacityEffectParams extends EffectParams {
 
 	public double getOpacity() {
 
-		return (double) map.get(EffectParams.Param.OPACITY).getValue();
+		final Object param = map.get(EffectParams.Param.OPACITY).getValue();
+		final double value = Double.valueOf(param.toString());
+		return value;
 	}
 
 }
