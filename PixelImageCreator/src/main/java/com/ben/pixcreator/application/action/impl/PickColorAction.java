@@ -1,3 +1,4 @@
+
 package com.ben.pixcreator.application.action.impl;
 
 import java.util.Set;
@@ -14,60 +15,71 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 
-public class PickColorAction implements IAction {
+public class PickColorAction implements IAction
+{
 
-	private final PixTab		tab;
-	private final MouseEvent	event;
+      private final PixTab     tab;
+      private final MouseEvent event;
 
-	public PickColorAction(PixTab activeTab, MouseEvent event) {
-		this.tab = activeTab;
-		this.event = event;
-	}
 
-	@Override
-	public void execute() throws Exception {
+      public PickColorAction(PixTab activeTab, MouseEvent event)
+      {
 
-		Color color = readColorFromEventCoordinates();
+	    this.tab = activeTab;
+	    this.event = event;
+      }
 
-		final GuiFacade gui = GuiFacade.getInstance();
-		Set<Color> colors = gui.getImagesColors().get(gui.getActiveImage()).stream()
-				.map(prop -> prop.get())
-				.collect(Collectors.toSet());
 
-		if (!colors.contains(color)) {
+      @Override
+      public void execute() throws Exception
+      {
 
-			addColorToImageColorsAndReloadRoster(color, gui);
+	    Color color = readColorFromEventCoordinates(tab, event);
 
-		}
+	    final GuiFacade gui = GuiFacade.getInstance();
+	    Set<Color> colors = gui.getImagesColors().get(gui.getActiveImage()).stream()
+			.map(prop -> prop.get())
+			.collect(Collectors.toSet());
 
-		gui.getColorRoster().selectColor(color);
+	    if (!colors.contains(color))
+	    {
 
-	}
+		  addColorToImageColorsAndReloadRoster(color, gui);
 
-	private void addColorToImageColorsAndReloadRoster(Color color, final GuiFacade gui) {
+	    }
 
-		SimpleObjectProperty<Color> prop = new SimpleObjectProperty<>();
-		prop.set(color);
+	    gui.getColorRoster().selectColor(color);
 
-		gui.getImagesColors().get(gui.getActiveImage()).add(prop);
+      }
 
-		gui.getColorRoster().reload(gui.getActiveImage());
 
-	}
+      private void addColorToImageColorsAndReloadRoster(Color color, final GuiFacade gui)
+      {
 
-	private Color readColorFromEventCoordinates() {
+	    SimpleObjectProperty<Color> prop = new SimpleObjectProperty<>();
+	    prop.set(color);
 
-		Canvas canvas = tab.getCanvas();
+	    gui.getImagesColors().get(gui.getActiveImage()).add(prop);
 
-		WritableImage snap = canvas.snapshot(null, null);
+	    gui.getColorRoster().reload(gui.getActiveImage());
 
-		PixelReader reader = snap.getPixelReader();
-		int x = new Double((event).getX()).intValue();
-		int y = new Double((event).getY()).intValue();
+      }
 
-		final Color color = reader.getColor(x, y);
 
-		return color;
-	}
+      public static Color readColorFromEventCoordinates(PixTab tab, MouseEvent event)
+      {
+
+	    Canvas canvas = tab.getCanvas();
+
+	    WritableImage snap = canvas.snapshot(null, null);
+
+	    PixelReader reader = snap.getPixelReader();
+	    int x = new Double((event).getX()).intValue();
+	    int y = new Double((event).getY()).intValue();
+
+	    final Color color = reader.getColor(x, y);
+
+	    return color;
+      }
 
 }

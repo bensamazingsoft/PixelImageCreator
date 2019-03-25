@@ -21,22 +21,9 @@ public class PanActionFactory implements IActionFactory
       public IAction getAction(Event event)
       {
 
-	    log.debug(event.getEventType().getName());
+	    // log.debug(event.getEventType().getName());
 
-	    // GuiFacade gui = GuiFacade.getInstance();
-	    // if (event instanceof MouseEvent && gui.getActiveLayer() instanceof PixLayer)
-	    // {
-	    //
-	    // setTabScrollPaneCursor(gui);
-	    //
-	    // }
 	    return new ActionNoOp();
       }
 
-      // private void setTabScrollPaneCursor(GuiFacade gui)
-      // {
-      //
-      // PixTab tab = gui.getActiveTab();
-      // tab.getScrollPane().setCursor(new CanvasCursorFactory().getCursor(tab.getCanvas().isMouseTransparent()));
-      // }
 }

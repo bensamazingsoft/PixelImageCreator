@@ -53,7 +53,7 @@ public class SaveAction implements IAction {
 			GuiFacade gui = GuiFacade.getInstance();
 			final Pile<String> recentFiles = gui.getRecentFiles();
 			if (recentFiles.getAllItems().contains(file.toString())) {
-				recentFiles.removeOfitem(file.toString());
+				recentFiles.removeOfItem(file.toString());
 			}
 			recentFiles.add(file.toString());
 			gui.getPixMenuBar().loadRecentFiles();

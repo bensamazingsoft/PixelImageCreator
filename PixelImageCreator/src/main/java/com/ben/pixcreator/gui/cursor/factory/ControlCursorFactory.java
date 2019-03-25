@@ -6,7 +6,7 @@ import com.ben.pixcreator.application.context.AppContext;
 import javafx.scene.Cursor;
 import javafx.scene.ImageCursor;
 
-public class CanvasCursorFactory implements CursorFactory
+public class ControlCursorFactory implements CursorFactory
 {
 
       /*
