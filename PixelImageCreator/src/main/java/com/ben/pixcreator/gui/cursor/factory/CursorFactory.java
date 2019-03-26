@@ -1,6 +1,8 @@
 
 package com.ben.pixcreator.gui.cursor.factory;
 
+import com.ben.pixcreator.application.context.AppContext;
+import com.ben.pixcreator.application.tools.PixTool;
 import com.ben.pixcreator.gui.facade.GuiFacade;
 
 import javafx.scene.Cursor;
@@ -45,7 +47,15 @@ public interface CursorFactory
 	    Image image = new Image(getClass().getClassLoader().getResourceAsStream(IMAGEPATH + string));
 
 	    Canvas canvas = new Canvas(32, 32);
-	    canvas.getGraphicsContext2D().setFill(GuiFacade.getInstance().getActiveColor());
+	    if (AppContext.getInstance().getCurrTool() == PixTool.PICK)
+	    {
+		  canvas.getGraphicsContext2D().setFill(GuiFacade.getInstance().getHoverColor());
+	    }
+	    else
+	    {
+		  canvas.getGraphicsContext2D().setFill(GuiFacade.getInstance().getActiveColor());
+
+	    }
 	    canvas.getGraphicsContext2D().fillPolygon(X, Y, nPoints);
 	    canvas.getGraphicsContext2D().drawImage(image, 0, 0);
 

@@ -49,7 +49,7 @@ public class ControlCursorFactory implements CursorFactory
 			      3,
 			      22,
 			      22 };
-		  ImageCursor pickCursor = new ImageCursor(makeImage("pick.png", Xpick, yPick, 4), 35, 28);
+		  ImageCursor pickCursor = new ImageCursor(makeImage("pick.png", Xpick, yPick, 4), 3, 28);
 
 		  return pickCursor;
 	    case RESIZE:
