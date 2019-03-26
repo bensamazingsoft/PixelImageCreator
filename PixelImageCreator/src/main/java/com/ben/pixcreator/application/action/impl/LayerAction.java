@@ -113,7 +113,7 @@ public class LayerAction implements IAction, ICancelable {
 		ctx.getEffectManager().getImageEffects(gui.getActiveimage())
 				.remove(gui.getActiveLayer());
 
-		layerList.deleteOfitem(layer);
+		layerList.removeOfItem(layer);
 
 	}
 

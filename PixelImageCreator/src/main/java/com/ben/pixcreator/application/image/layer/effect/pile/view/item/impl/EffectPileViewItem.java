@@ -26,108 +26,92 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
-public class EffectPileViewItem extends VBox
-{
+public class EffectPileViewItem extends VBox {
 
-      private final String	    IMAGEPATH	     = "images/gui/buttons/effectItem/";
+	private final String IMAGEPATH = "images/gui/buttons/effectItem/";
 
-      final private Image	    bypassSelected   = new Image(
-		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "bypassSelected.png"));
-      final private Image	    bypassUnSelected = new Image(
-		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "bypassUnSelected.png"));
-      final private ImageView	    bypassButImg     = new ImageView();
+	final private Image		bypassSelected		= new Image(
+			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "bypassSelected.png"));
+	final private Image		bypassUnSelected	= new Image(
+			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "bypassUnSelected.png"));
+	final private ImageView	bypassButImg		= new ImageView();
 
-      private Label		    title	     = new Label();
-      private HBox		    container	     = new HBox();
-      private ToggleButton	    bypassBut	     = new ToggleButton();
-      private StackPane		    content	     = new StackPane();
-      private Button		    deleteBut	     = new Button("X");
+	private Label			title		= new Label();
+	private HBox			container	= new HBox();
+	private ToggleButton	bypassBut	= new ToggleButton();
+	private StackPane		content		= new StackPane();
+	private Button			deleteBut	= new Button("X");
 
-      private SimpleBooleanProperty bypass	     = new SimpleBooleanProperty();
+	private SimpleBooleanProperty bypass = new SimpleBooleanProperty();
 
+	public EffectPileViewItem(Effect fx) {
 
-      public EffectPileViewItem(Effect fx)
-      {
+		IEffectPileViewItemControl control = EffectPileViewItemControlFactory.getControl(fx);
 
-	    IEffectPileViewItemControl control = EffectPileViewItemControlFactory.getControl(fx);
+		title.setText(EffectPileViewItemControlFactory.getTitle(fx));
 
-	    title.setText(EffectPileViewItemControlFactory.getTitle(fx));
+		setBypass(false);
+		bypassBut.setGraphic(bypassButImg);
+		bypassButImg.imageProperty()
+				.bind(Bindings.when(bypass).then(bypassSelected).otherwise(bypassUnSelected));
+		bypassBut.setOnAction(event -> setBypass(!isBypass()));
 
-	    setBypass(false);
-	    bypassBut.setGraphic(bypassButImg);
-	    bypassButImg.imageProperty()
-			.bind(Bindings.when(bypass).then(bypassSelected).otherwise(bypassUnSelected));
-	    bypassBut.setOnAction(event -> setBypass(!isBypass()));
+		bypass.addListener((obs, oldVal, newVal) -> {
+			if (newVal) {
+				control.bypass();
+			} else {
+				control.enable();
+			}
+		});
 
-	    bypass.addListener((obs, oldVal, newVal) -> {
-		  if (newVal)
-		  {
-			control.bypass();
-		  }
-		  else
-		  {
-			control.enable();
-		  }
-	    });
+		deleteBut.setOnAction(event -> {
 
-	    deleteBut.setOnAction(event -> {
+			control.reset();
 
-		  control.reset();
+			Set<Pile<Effect>> pool = AppContext.getInstance().getEffectManager().getManager().values().stream()
+					.map(Map::values)
+					.flatMap(set -> set.stream())
+					.collect(Collectors.toSet());
 
-		  Set<Pile<Effect>> pool = AppContext.getInstance().getEffectManager().getManager().values().stream()
-			      .map(Map::values)
-			      .flatMap(set -> set.stream())
-			      .collect(Collectors.toSet());
+			for (Pile<Effect> pile : pool) {
+				pile.removeOfItem(fx);
+			}
 
-		  for (Pile<Effect> pile : pool)
-		  {
-			pile.deleteOfitem(fx);
-		  }
+			try {
+				GuiFacade.getInstance().getLayerPanel().populate();
+				Executor.getInstance().executeAction(new RefreshAllTabsAction());
+			} catch (Exception e) {
+				new ExceptionPopUp(e);
+			}
 
-		  try
-		  {
-			GuiFacade.getInstance().getLayerPanel().populate();
-			Executor.getInstance().executeAction(new RefreshAllTabsAction());
-		  }
-		  catch (Exception e)
-		  {
-			new ExceptionPopUp(e);
-		  }
+		});
 
-	    });
+		content.getChildren().add(control.node());
 
-	    content.getChildren().add(control.node());
+		container.getChildren().add(bypassBut);
+		// container.getChildren().add(new Separator());
+		container.getChildren().add(content);
+		// container.getChildren().add(new Separator());
+		container.getChildren().add(deleteBut);
 
-	    container.getChildren().add(bypassBut);
-	    // container.getChildren().add(new Separator());
-	    container.getChildren().add(content);
-	    // container.getChildren().add(new Separator());
-	    container.getChildren().add(deleteBut);
+		getChildren().add(new StackPane(title));
+		getChildren().add(container);
 
-	    getChildren().add(new StackPane(title));
-	    getChildren().add(container);
+	}
 
-      }
+	public final SimpleBooleanProperty bypassProperty() {
 
+		return this.bypass;
+	}
 
-      public final SimpleBooleanProperty bypassProperty()
-      {
+	public final boolean isBypass() {
 
-	    return this.bypass;
-      }
+		return this.bypassProperty().get();
+	}
 
+	public final void setBypass(final boolean bypass) {
 
-      public final boolean isBypass()
-      {
-
-	    return this.bypassProperty().get();
-      }
-
-
-      public final void setBypass(final boolean bypass)
-      {
-
-	    this.bypassProperty().set(bypass);
-      }
+		this.bypassProperty().set(bypass);
+	}
 
 }
