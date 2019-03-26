@@ -34,6 +34,7 @@
 				<MenuItem text="%deselectionner" onAction="#unSelect"
 					accelerator="Shortcut+d" />
 				<MenuItem Text="%extract" onAction="#extractAction" />
+				<MenuItem Text="%fill" onAction="#fillAction" />
 				<SeparatorMenuItem />
 				<MenuItem text="%copy" onAction="#copy" accelerator="Shortcut+c" />
 				<MenuItem text="%cut" onAction="#cut" accelerator="Shortcut+x" />

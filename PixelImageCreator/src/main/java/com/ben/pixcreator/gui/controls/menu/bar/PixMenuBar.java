@@ -40,6 +40,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 
@@ -222,8 +223,7 @@ public class PixMenuBar extends MenuBar implements Initializable {
 	private void handleExtractAction() {
 
 		PixImage activeImage = GuiFacade.getInstance().getActiveimage();
-		Selection selection = GuiFacade.getInstance().getSelections().computeIfAbsent(activeImage,
-				img -> new Selection());
+		Selection selection = GuiFacade.getInstance().getActiveSelection();
 		PixTab tab = GuiFacade.getInstance().getActiveTab();
 
 		try {
@@ -263,8 +263,7 @@ public class PixMenuBar extends MenuBar implements Initializable {
 
 		final GuiFacade gui = GuiFacade.getInstance();
 		PixImage activeImage = gui.getActiveimage();
-		Selection selection = gui.getSelections().computeIfAbsent(activeImage,
-				img -> new Selection());
+		Selection selection = gui.getActiveSelection();
 
 		if (!selection.getCoords().isEmpty()) {
 			ALayer activeLayer = gui.getActiveLayer();
@@ -365,6 +364,45 @@ public class PixMenuBar extends MenuBar implements Initializable {
 			Executor.getInstance().executeAction(new RefreshTabAction(gui.getActiveTab()));
 		} catch (Exception e) {
 			new ExceptionPopUp(e);
+		}
+	}
+
+	@FXML
+	private void fillAction(ActionEvent event) {
+
+		final GuiFacade gui = GuiFacade.getInstance();
+		Selection selection = gui.getActiveSelection();
+
+		if (!selection.getCoords().isEmpty() && gui.getActiveLayer() instanceof PixLayer) {
+
+			Color color = gui.getActiveColor();
+
+			final Executor exec = Executor.getInstance();
+			exec.startOperation();
+
+			for (Coord coord : selection.getCoords()) {
+
+				try {
+
+					exec.continueOperation(
+							new ActionChangeCellColor(
+									gui.getActiveimage(),
+									(PixLayer) gui.getActiveLayer(),
+									coord,
+									color));
+
+				} catch (Exception e) {
+					exec.endOperation();
+					new ExceptionPopUp(e);
+					break;
+				}
+
+			}
+
+			if (exec.isOperationStarted()) {
+				exec.endOperation();
+			}
+
 		}
 	}
 

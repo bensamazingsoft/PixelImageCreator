@@ -227,6 +227,9 @@ public class PixImage implements Serializable {
 		this.ghost = ghost;
 	}
 
+	/**
+	 * @return the 'select' PixLayer of the image
+	 */
 	public PixLayer getSelect() {
 
 		return select;

@@ -36,7 +36,7 @@ public class Executor {
 	private Map<PixImage, LinkedList<ICancelable>>	historyMap		= new HashMap<>();
 	private Map<PixImage, LinkedList<ICancelable>>	cancelledMap	= new HashMap<>();
 
-	private boolean operationStarted;
+	public boolean operationStarted;
 
 	private Executor() {
 
@@ -187,6 +187,10 @@ public class Executor {
 	public void setCancelledMap(Map<PixImage, LinkedList<ICancelable>> cancelledMap) {
 
 		this.cancelledMap = cancelledMap;
+	}
+
+	public boolean isOperationStarted() {
+		return operationStarted;
 	}
 
 }
