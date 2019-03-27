@@ -97,6 +97,7 @@ public class GuiFacade {
 		try {
 			Executor.getInstance().executeAction(new ChangeToolAction(pixTool));
 			Executor.getInstance().executeAction(new SetCursorsAction());
+
 		} catch (Exception e) {
 			new ExceptionPopUp(e);
 		}

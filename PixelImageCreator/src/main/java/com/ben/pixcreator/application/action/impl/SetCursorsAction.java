@@ -22,7 +22,7 @@ public class SetCursorsAction implements IAction {
 			PixTab pixTab = (PixTab) tab;
 
 			final Cursor cursor = new ControlCursorFactory().getCursor();
-			log.debug("execute ->" + cursor.toString());
+			log.debug("execute");
 
 			pixTab.getCanvas().setCursor(cursor);
 			// pixTab.getScrollPane().setCursor(cursor);

@@ -11,10 +11,13 @@ import com.ben.pixcreator.application.grouplock.GroupLock;
 import com.ben.pixcreator.application.image.PixImage;
 import com.ben.pixcreator.application.image.effect.manager.EffectManager;
 import com.ben.pixcreator.application.tools.PixTool;
+import com.ben.pixcreator.gui.cursor.updater.CursorUpdater;
 
 import javafx.scene.paint.Color;
 
 public class AppContext {
+
+	private static CursorUpdater cursorUpdater;
 
 	private static AppContext instance;
 
@@ -39,6 +42,9 @@ public class AppContext {
 	}
 
 	public static void init() throws IOException {
+
+		cursorUpdater = new CursorUpdater();
+		cursorUpdater.start();
 
 		properties = new PropertiesContext();
 		bundle = ResourceBundle.getBundle("i18n/trad");
@@ -122,6 +128,15 @@ public class AppContext {
 
 	public static void setInitialized(boolean initialized) {
 		AppContext.initialized = initialized;
+	}
+
+	public CursorUpdater getCursorUpdater() {
+
+		return cursorUpdater;
+	}
+
+	public static void setCursorUpdater(CursorUpdater cursorUpdater) {
+		AppContext.cursorUpdater = cursorUpdater;
 	}
 
 }
