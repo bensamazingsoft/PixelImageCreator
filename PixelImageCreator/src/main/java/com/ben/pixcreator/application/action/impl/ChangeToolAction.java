@@ -27,7 +27,7 @@ public class ChangeToolAction implements IAction {
 	@Override
 	public void execute() throws Exception {
 
-		log.debug("execute : " + getClass().toString() + " : " + pixTool.name());
+		log.debug("execute -> " + pixTool.name());
 
 		final GuiFacade gui = GuiFacade.getInstance();
 

@@ -16,35 +16,31 @@ import javafx.event.Event;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 
-public class PickActionFactory implements IActionFactory
-{
+public class PickActionFactory implements IActionFactory {
 
-      private static final Logger log = LoggerFactory.getLogger(PickActionFactory.class);
+	private static final Logger log = LoggerFactory.getLogger(PickActionFactory.class);
 
+	@Override
+	public IAction getAction(Event event) {
 
-      @Override
-      public IAction getAction(Event event)
-      {
+		log.debug(event.getEventType().getName());
 
-	    log.debug(event.getEventType().getName());
-	    GuiFacade gui = GuiFacade.getInstance();
-	    if (event.getEventType().getName().equals("MOUSE_PRESSED"))
-	    {
-		  event.consume();
-		  return new PickColorAction(gui.getActiveTab(), (MouseEvent) event);
+		GuiFacade gui = GuiFacade.getInstance();
+		if (event.getEventType().getName().equals("MOUSE_PRESSED")) {
+			event.consume();
+			return new PickColorAction(gui.getActiveTab(), (MouseEvent) event);
 
-	    }
+		}
 
-	    if (event.getEventType().getName().equals("MOUSE_MOVED"))
-	    {
-		  PixTab tab = gui.getActiveTab();
-		  Color color = PickColorAction.readColorFromEventCoordinates(tab, (MouseEvent) event);
-		  gui.setHoverColor(color);
-		  event.consume();
-		  return new SetCursorsAction();
+		if (event.getEventType().getName().equals("MOUSE_MOVED")) {
+			PixTab tab = gui.getActiveTab();
+			Color color = PickColorAction.readColorFromEventCoordinates(tab, (MouseEvent) event);
+			gui.setHoverColor(color);
+			event.consume();
+			return new SetCursorsAction();
 
-	    }
-	    return new ActionNoOp();
-      }
+		}
+		return new ActionNoOp();
+	}
 
 }
