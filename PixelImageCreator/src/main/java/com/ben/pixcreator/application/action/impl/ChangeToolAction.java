@@ -4,6 +4,9 @@ package com.ben.pixcreator.application.action.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.ben.pixcreator.application.action.IAction;
 import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.application.tools.PixTool;
@@ -12,38 +15,34 @@ import com.ben.pixcreator.gui.facade.GuiFacade;
 
 import javafx.scene.control.Toggle;
 
-public class ChangeToolAction implements IAction
-{
+public class ChangeToolAction implements IAction {
+	private static final Logger	log	= LoggerFactory.getLogger(ChangeToolAction.class);
+	private PixTool				pixTool;
 
-      private PixTool pixTool;
+	public ChangeToolAction(PixTool pixTool) {
 
+		this.pixTool = pixTool;
+	}
 
-      public ChangeToolAction(PixTool pixTool)
-      {
+	@Override
+	public void execute() throws Exception {
 
-	    this.pixTool = pixTool;
-      }
+		log.debug("execute : " + getClass().toString() + " : " + pixTool.name());
 
+		final GuiFacade gui = GuiFacade.getInstance();
 
-      @Override
-      public void execute() throws Exception
-      {
+		AppContext.getInstance().setCurrTool(pixTool);
 
-	    final GuiFacade gui = GuiFacade.getInstance();
+		PixToolBar pixToolBar = gui.getPixToolBar();
+		List<Toggle> list = pixToolBar.getToggleGroup().getToggles().stream()
+				.filter(togBut -> ((PixTool) togBut.getUserData()).name().equals(pixTool.name()))
+				.collect(Collectors.toList());
 
-	    AppContext.getInstance().setCurrTool(pixTool);
+		if (list.size() > 0) {
+			Toggle toggle = list.get(0);
+			pixToolBar.getToggleGroup().selectToggle(toggle);
+		}
 
-	    PixToolBar pixToolBar = gui.getPixToolBar();
-	    List<Toggle> list = pixToolBar.getToggleGroup().getToggles().stream()
-			.filter(togBut -> ((PixTool) togBut.getUserData()).name().equals(pixTool.name()))
-			.collect(Collectors.toList());
-
-	    if (list.size() > 0)
-	    {
-		  Toggle toggle = list.get(0);
-		  pixToolBar.getToggleGroup().selectToggle(toggle);
-	    }
-
-      }
+	}
 
 }

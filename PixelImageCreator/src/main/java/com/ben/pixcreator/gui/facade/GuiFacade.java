@@ -52,7 +52,6 @@ public class GuiFacade {
 	private PixToolBar	pixToolBar;
 	private PixTabPane	pixTabPane;
 	private LayerPanel	layerPanel;
-	@SuppressWarnings("unused")
 	private ColorRoster	colorRoster;
 
 	private Map<PixImage, Set<SimpleObjectProperty<Color>>>	imagesColors;

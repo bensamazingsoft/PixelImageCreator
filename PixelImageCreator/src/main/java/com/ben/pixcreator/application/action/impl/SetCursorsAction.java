@@ -1,27 +1,34 @@
 
 package com.ben.pixcreator.application.action.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.ben.pixcreator.application.action.IAction;
 import com.ben.pixcreator.gui.controls.tab.PixTab;
 import com.ben.pixcreator.gui.cursor.factory.ControlCursorFactory;
 import com.ben.pixcreator.gui.facade.GuiFacade;
 
-public class SetCursorsAction implements IAction
-{
+import javafx.scene.Cursor;
 
-      @Override
-      public void execute() throws Exception
-      {
+public class SetCursorsAction implements IAction {
+	private static final Logger log = LoggerFactory.getLogger(SetCursorsAction.class);
 
-	    GuiFacade.getInstance().getTabs().forEach(tab -> {
+	@Override
+	public void execute() throws Exception {
 
-		  PixTab pixTab = (PixTab) tab;
+		GuiFacade.getInstance().getTabs().forEach(tab -> {
 
-		  pixTab.getCanvas().setCursor(new ControlCursorFactory().getCursor());
-		  pixTab.getScrollPane().setCursor(new ControlCursorFactory().getCursor());
+			PixTab pixTab = (PixTab) tab;
 
-	    });
+			final Cursor cursor = new ControlCursorFactory().getCursor();
+			log.debug("execute : " + getClass().toString() + " : " + cursor.toString());
 
-      }
+			pixTab.getCanvas().setCursor(cursor);
+			pixTab.getScrollPane().setCursor(cursor);
+
+		});
+
+	}
 
 }
