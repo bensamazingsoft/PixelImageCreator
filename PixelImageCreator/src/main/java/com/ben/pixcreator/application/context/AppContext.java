@@ -12,12 +12,15 @@ import com.ben.pixcreator.application.image.PixImage;
 import com.ben.pixcreator.application.image.effect.manager.EffectManager;
 import com.ben.pixcreator.application.tools.PixTool;
 import com.ben.pixcreator.gui.cursor.updater.CursorUpdater;
+import com.ben.pixcreator.gui.cursor.updater.SnapshotUpdater;
 
 import javafx.scene.paint.Color;
 
 public class AppContext {
 
 	private static CursorUpdater cursorUpdater;
+
+	private static SnapshotUpdater snapshotUpdater;
 
 	private static AppContext instance;
 
@@ -45,6 +48,8 @@ public class AppContext {
 
 		cursorUpdater = new CursorUpdater();
 		cursorUpdater.start();
+
+		snapshotUpdater = new SnapshotUpdater();
 
 		properties = new PropertiesContext();
 		bundle = ResourceBundle.getBundle("i18n/trad");
@@ -137,6 +142,10 @@ public class AppContext {
 
 	public static void setCursorUpdater(CursorUpdater cursorUpdater) {
 		AppContext.cursorUpdater = cursorUpdater;
+	}
+
+	public static SnapshotUpdater getSnapshotUpdater() {
+		return snapshotUpdater;
 	}
 
 }

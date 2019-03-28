@@ -17,6 +17,7 @@ import javafx.scene.paint.Color;
 
 public class PickActionFactory implements IActionFactory {
 
+	@SuppressWarnings("unused")
 	private static final Logger log = LoggerFactory.getLogger(PickActionFactory.class);
 
 	@Override

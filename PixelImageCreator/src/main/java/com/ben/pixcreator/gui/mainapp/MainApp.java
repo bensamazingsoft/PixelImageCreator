@@ -60,6 +60,10 @@ public class MainApp extends Application {
 		GuiFacade.getInstance().toggleToolTo(AppContext.getInstance().getCurrTool());
 		GuiFacade.getInstance().setPanMode(AppContext.getInstance().getCurrTool() == PixTool.PAN);
 
+		AppContext.getInstance();
+		// start this thread in case Pick is the starting tool.
+		AppContext.getSnapshotUpdater().start();
+
 	}
 
 	private void handleClose() {
@@ -69,6 +73,7 @@ public class MainApp extends Application {
 			final AppContext ctx = AppContext.getInstance();
 			ctx.propertyContext().save();
 			ctx.getCursorUpdater().setClose(true);
+			AppContext.getSnapshotUpdater().setClose(true);
 
 			Executor.getInstance().executeAction(new SaveRecentFilesAction());
 
