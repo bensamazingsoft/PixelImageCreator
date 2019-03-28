@@ -15,7 +15,8 @@ public class CursorUpdater extends Thread {
 
 	private static final Logger log = LoggerFactory.getLogger(CursorUpdater.class);
 
-	private boolean run = false;
+	private boolean	run		= false;
+	private boolean	close	= false;
 
 	public boolean isRun() {
 		return run;
@@ -29,40 +30,48 @@ public class CursorUpdater extends Thread {
 	public void run() {
 
 		super.run();
-		for (;;) {
-
-			try {
-				sleep(50);
-			} catch (InterruptedException e2) {
-				log.error("infinite loop pre-sleep error", e2);
-			}
-
-			if (AppContext.getInstance().getCurrTool() == PixTool.PICK) {
+		while (!close) {
+			for (;;) {
 
 				try {
-					sleep(1000);
-				} catch (InterruptedException e1) {
-
-					log.error("infinite loop sleep interrupted", e1);
+					sleep(50);
+				} catch (InterruptedException e2) {
+					log.error("infinite loop pre-sleep error", e2);
 				}
 
-				Platform.runLater(() -> {
+				if (AppContext.getInstance().getCurrTool() == PixTool.PICK) {
 
 					try {
-						log.debug("update (Platform.runLater)");
+						sleep(150);
+					} catch (InterruptedException e1) {
 
-						Executor.getInstance().executeAction(new SetCursorsAction());
-
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					} catch (Exception e) {
-						new ExceptionPopUp(e);
+						log.error("infinite loop sleep interrupted", e1);
 					}
-				});
 
+					Platform.runLater(() -> {
+
+						try {
+							// log.debug("update (Platform.runLater)");
+
+							Executor.getInstance().executeAction(new SetCursorsAction());
+
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						} catch (Exception e) {
+							new ExceptionPopUp(e);
+						}
+					});
+
+				}
+				if (close) {
+					break;
+				}
 			}
-
 		}
+	}
+
+	public void setClose(boolean close) {
+		this.close = close;
 	}
 
 }

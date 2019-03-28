@@ -66,12 +66,9 @@ public class MainApp extends Application {
 
 		try {
 
-			// if (AppContext.getInstance().getCurrTool() == PixTool.PAN)
-			// {
-			// AppContext.getInstance().setCurrTool(PixTool.DRAW);
-			// }
-
-			AppContext.getInstance().propertyContext().save();
+			final AppContext ctx = AppContext.getInstance();
+			ctx.propertyContext().save();
+			ctx.getCursorUpdater().setClose(true);
 
 			Executor.getInstance().executeAction(new SaveRecentFilesAction());
 
