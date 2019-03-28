@@ -32,11 +32,11 @@ public class PickActionFactory implements IActionFactory {
 		}
 
 		if (event.getEventType().getName().equals("MOUSE_MOVED")) {
+			event.consume();
 			PixTab tab = gui.getActiveTab();
 			Color color = PickColorAction.readColorFromEventCoordinates(tab,
 					(MouseEvent) event);
 			gui.setHoverColor(color);
-			event.consume();
 
 		}
 		return new ActionNoOp();
