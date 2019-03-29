@@ -11,6 +11,13 @@ import com.ben.pixcreator.gui.exception.popup.ExceptionPopUp;
 
 import javafx.application.Platform;
 
+/**
+ * Updates the Pick cursor. Use of a separate thread because the implementation
+ * in the MOUSE_MOVED listener was causing artefacts bugs. And it's cool af.
+ * 
+ * @author bmo
+ *
+ */
 public class CursorUpdater extends Thread {
 
 	private static final Logger log = LoggerFactory.getLogger(CursorUpdater.class);

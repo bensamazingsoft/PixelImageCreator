@@ -133,10 +133,10 @@ public class PixTab extends Tab implements Initializable {
 		canvas = new Canvas(getImage().getxSize(), getImage().getySize());
 		canvas.addEventHandler(MouseEvent.ANY, new MouseManager(this));
 
-		scrollPane.setFitToWidth(true);
-		scrollPane.setFitToHeight(true);
 		StackPane stackpane = new StackPane(canvas);
 		scrollPane.setContent(stackpane);
+		scrollPane.setFitToWidth(true);
+		scrollPane.setFitToHeight(true);
 		scrollPane.addEventFilter(ScrollEvent.ANY, new ZoomControl());
 
 		bindPicLayersZoomFactor();
