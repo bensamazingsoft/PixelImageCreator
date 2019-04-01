@@ -3,6 +3,7 @@ package com.ben.pixcreator.gui.controls.color.box;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Comparator;
 import java.util.ResourceBundle;
 
 import com.ben.pixcreator.application.context.AppContext;
@@ -34,7 +35,12 @@ import javafx.scene.paint.Color;
  * has a color builder method
  *
  */
-public class ColorBox extends VBox implements Toggle, Initializable {
+public class ColorBox extends VBox implements Toggle, Initializable, Comparable<ColorBox> {
+
+	private final static Comparator<ColorBox> COMPARATOR = Comparator.comparingInt(ColorBox::getLuma)
+			.thenComparingDouble(box -> box.getColor().getRed())
+			.thenComparingDouble(box -> box.getColor().getBlue())
+			.thenComparingDouble(box -> box.getColor().getGreen());
 
 	@FXML
 	ColorPicker colorPicker;
@@ -175,6 +181,43 @@ public class ColorBox extends VBox implements Toggle, Initializable {
 	public final void setColor(final Color color) {
 
 		this.colorProperty().set(color);
+	}
+
+	private int getLuma() {
+
+		return (int) (this.getColor().getBrightness() * 255);
+
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((color.get() == null) ? 0 : color.get().hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ColorBox other = (ColorBox) obj;
+		if (color.get() == null) {
+			if (other.color.get() != null)
+				return false;
+		} else if (!color.get().equals(other.color.get()))
+			return false;
+		return true;
+	}
+
+	@Override
+	public int compareTo(ColorBox o) {
+
+		return COMPARATOR.compare(this, o);
 	}
 
 }

@@ -6,6 +6,7 @@ import java.net.URL;
 import java.util.HashSet;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +32,7 @@ public class ColorRoster extends HBox implements Initializable {
 
 	private ToggleGroup toggleGroup = new ToggleGroup();
 
-	private Set<ColorBox>					colorBoxes	= new HashSet<>();
+	private Set<ColorBox>					colorBoxes	= new TreeSet<>();
 	private SimpleObjectProperty<PixImage>	imageProp;
 
 	/**
@@ -142,7 +143,8 @@ public class ColorRoster extends HBox implements Initializable {
 
 	private Set<ColorBox> makeColorBoxes(PixImage image) {
 
-		Set<ColorBox> tempBoxes = new HashSet<>();
+		Set<ColorBox> tempBoxes = new TreeSet<>();
+		toggleGroup.getToggles().clear();
 		Set<SimpleObjectProperty<Color>> colorProps = GuiFacade.getInstance().getImagesColors().get(image);
 
 		for (SimpleObjectProperty<Color> prop : colorProps) {
