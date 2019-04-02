@@ -22,7 +22,7 @@ public class EffectParams implements Serializable {
 	}
 
 	public static enum Param {
-		OPACITY, XSIZE, YSIZE, KEEPRATIO;
+		OPACITY, XSIZE, YSIZE, KEEPRATIO, HUE;
 	}
 
 	public ParamValue<?> put(Param param, ParamValue<?> value) {

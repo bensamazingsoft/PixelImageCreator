@@ -6,6 +6,8 @@ import com.ben.pixcreator.application.action.impl.RefreshTabAction;
 import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.application.executor.Executor;
 import com.ben.pixcreator.application.image.layer.effect.EffectDesign;
+import com.ben.pixcreator.application.image.layer.effect.params.EffectParams;
+import com.ben.pixcreator.application.image.layer.effect.params.impl.HueEffectParams;
 import com.ben.pixcreator.application.image.layer.effect.params.impl.OpacityEffectParams;
 import com.ben.pixcreator.application.image.layer.impl.ALayer;
 import com.ben.pixcreator.gui.exception.popup.ExceptionPopUp;
@@ -18,16 +20,22 @@ public class PixLayerBoxContextMenu extends ContextMenu {
 
 	public PixLayerBoxContextMenu(ALayer layer) {
 
+		addMenuItem(layer, "pixLayerBoxContextMenuAddOpacity", EffectDesign.OPACITY, new OpacityEffectParams());
+		addMenuItem(layer, "pixLayerBoxContextMenuAddHue", EffectDesign.HUE, new HueEffectParams());
+
+	}
+
+	public void addMenuItem(ALayer layer, String i18String, EffectDesign effectDesign, EffectParams effectParam) {
 		MenuItem menuItem = new MenuItem();
 
-		menuItem.setText(AppContext.getInstance().getBundle().getString("pixLayerBoxContextMenuAddOpacity"));
+		menuItem.setText(AppContext.getInstance().getBundle().getString(i18String));
 
 		menuItem.setOnAction(event -> {
 
 			try {
 
 				Executor.getInstance().executeAction(
-						new AddEffectToLayerAction(EffectDesign.OPACITY, new OpacityEffectParams(), layer));
+						new AddEffectToLayerAction(effectDesign, effectParam, layer));
 
 				Executor.getInstance().executeAction(new RefreshTabAction(GuiFacade.getInstance().getActiveTab()));
 
@@ -37,7 +45,6 @@ public class PixLayerBoxContextMenu extends ContextMenu {
 		});
 
 		this.getItems().add(menuItem);
-
 	}
 
 }

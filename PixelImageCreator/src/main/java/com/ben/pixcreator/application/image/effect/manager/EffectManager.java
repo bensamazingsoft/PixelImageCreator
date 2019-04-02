@@ -9,61 +9,58 @@ import com.ben.pixcreator.application.image.effect.Effect;
 import com.ben.pixcreator.application.image.layer.impl.ALayer;
 import com.ben.pixcreator.application.pile.Pile;
 
-public class EffectManager
-{
+/**
+ * 
+ * encapsulates the Map that holds the effects for each layer and each image
+ * 
+ * @author bmo
+ *
+ */
+public class EffectManager {
 
-      private final Map<PixImage, Map<ALayer, Pile<Effect>>> manager;
+	private final Map<PixImage, Map<ALayer, Pile<Effect>>> manager;
 
+	public EffectManager() {
 
-      public EffectManager()
-      {
+		manager = new HashMap<>();
+	}
 
-	    manager = new HashMap<>();
-      }
+	public EffectManager(Map<PixImage, Map<ALayer, Pile<Effect>>> manager) {
 
+		super();
+		this.manager = manager;
+	}
 
-      public EffectManager(Map<PixImage, Map<ALayer, Pile<Effect>>> manager)
-      {
+	public Map<PixImage, Map<ALayer, Pile<Effect>>> getManager() {
 
-	    super();
-	    this.manager = manager;
-      }
+		return manager;
+	}
 
+	/**
+	 * Convenience method, returns the image effects piles (compute if absent)
+	 * 
+	 * @param image
+	 * @return com.ben.pixcreator.application.pile.Pile<com.ben.pixcreator.application.image.effect.Effect>
+	 */
+	public Map<ALayer, Pile<Effect>> getImageEffects(PixImage image) {
 
-      public Map<PixImage, Map<ALayer, Pile<Effect>>> getManager()
-      {
+		return manager.computeIfAbsent(image, k -> new HashMap<ALayer, Pile<Effect>>());
+	}
 
-	    return manager;
-      }
+	/**
+	 * Convenience method, returns the layer effects piles (compute empty Pile
+	 * if absent)
+	 * 
+	 * @param image
+	 * @param layer
+	 * @return com.ben.pixcreator.application.pile.Pile<com.ben.pixcreator.application.image.effect.Effect>
+	 */
+	public Pile<Effect> getImageLayerEffects(PixImage image, ALayer layer) {
 
+		Map<ALayer, Pile<Effect>> imageEffects = getImageEffects(image);
 
-      /**
-       * Convenience method, returns the image effects piles (compute if absent)
-       * 
-       * @param image
-       * @return com.ben.pixcreator.application.pile.Pile<com.ben.pixcreator.application.image.effect.Effect>
-       */
-      public Map<ALayer, Pile<Effect>> getImageEffects(PixImage image)
-      {
+		return imageEffects.computeIfAbsent(layer, k -> new Pile<Effect>());
 
-	    return manager.computeIfAbsent(image, k -> new HashMap<ALayer, Pile<Effect>>());
-      }
-
-
-      /**
-       * Convenience method, returns the layer effects piles (compute empty Pile if absent)
-       * 
-       * @param image
-       * @param layer
-       * @return com.ben.pixcreator.application.pile.Pile<com.ben.pixcreator.application.image.effect.Effect>
-       */
-      public Pile<Effect> getImageLayerEffects(PixImage image, ALayer layer)
-      {
-
-	    Map<ALayer, Pile<Effect>> imageEffects = getImageEffects(image);
-
-	    return imageEffects.computeIfAbsent(layer, k -> new Pile<Effect>());
-
-      }
+	}
 
 }
