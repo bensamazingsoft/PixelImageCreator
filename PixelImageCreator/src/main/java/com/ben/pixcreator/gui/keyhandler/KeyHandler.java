@@ -41,6 +41,28 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 
 			event.consume();
 		}
+
+		if (event.getEventType().getName().equals("KEY_PRESSED") &&
+				event.getCode().isArrowKey()) {
+			// log.debug("KEY_PRESSED -> event.getCode() : " + event.getCode());
+
+			switch (event.getCode()) {
+
+			case LEFT:
+				log.debug("selectPrevColorBox()");
+				gui.getColorRoster().selectPrevColorBox();
+				break;
+			case RIGHT:
+				log.debug("selectNextColorBox()");
+				gui.getColorRoster().selectNextColorBox();
+				break;
+			default:
+				break;
+			}
+
+			event.consume();
+		}
+
 	}
 
 }

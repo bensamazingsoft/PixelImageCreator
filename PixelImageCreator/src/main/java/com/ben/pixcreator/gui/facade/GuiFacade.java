@@ -215,18 +215,6 @@ public class GuiFacade {
 
 		activeColor.set(((ColorBox) colorRoster.getToggleGroup().getSelectedToggle()).getColor());
 
-		colorRoster.getToggleGroup().selectedToggleProperty().addListener((obs, oldVal, newVal) -> {
-			if (!colorRoster.getToggleGroup().getToggles().isEmpty()) {
-				Color color = ((ColorBox) newVal).getColor();
-				activeColor.set(color);
-				try {
-					Executor.getInstance().executeAction(new SetCursorsAction());
-				} catch (Exception e) {
-					new ExceptionPopUp(e);
-				}
-			}
-		});
-
 	}
 
 	public void setPixToolBar(PixToolBar pixToolBar) {

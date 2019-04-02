@@ -4,6 +4,7 @@ package com.ben.pixcreator.gui.controls.color.roster;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.TreeSet;
@@ -11,10 +12,13 @@ import java.util.TreeSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ben.pixcreator.application.action.impl.SetCursorsAction;
 import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.application.context.PropertiesContext;
+import com.ben.pixcreator.application.executor.Executor;
 import com.ben.pixcreator.application.image.PixImage;
 import com.ben.pixcreator.gui.controls.color.box.ColorBox;
+import com.ben.pixcreator.gui.exception.popup.ExceptionPopUp;
 import com.ben.pixcreator.gui.facade.GuiFacade;
 
 import javafx.beans.property.SimpleObjectProperty;
@@ -62,6 +66,18 @@ public class ColorRoster extends HBox implements Initializable {
 		populate();
 
 		GuiFacade.getInstance().setColorRoster(this);
+
+		getToggleGroup().selectedToggleProperty().addListener((obs, oldVal, newVal) -> {
+			if (!getToggleGroup().getToggles().isEmpty()) {
+				Color color = ((ColorBox) newVal).getColor();
+				GuiFacade.getInstance().setActiveColor(color);
+				try {
+					Executor.getInstance().executeAction(new SetCursorsAction());
+				} catch (Exception e) {
+					new ExceptionPopUp(e);
+				}
+			}
+		});
 
 	}
 
@@ -220,6 +236,45 @@ public class ColorRoster extends HBox implements Initializable {
 
 		reload(imageProp.get());
 
+	}
+
+	public void selectPrevColorBox() {
+		changeSelectedColorBox(-1);
+	}
+
+	public void selectNextColorBox() {
+		changeSelectedColorBox(1);
+	}
+
+	private void changeSelectedColorBox(int i) {
+
+		ColorBox currBox = (ColorBox) toggleGroup.getSelectedToggle();
+		ColorBox prevBox = currBox;
+
+		Iterator<ColorBox> it = colorBoxes.iterator();
+
+		while (it.hasNext()) {
+
+			prevBox = currBox;
+			currBox = it.next();
+
+			if (currBox == (ColorBox) toggleGroup.getSelectedToggle()) {
+
+				switch (i) {
+
+				case -1:
+					toggleGroup.selectToggle(prevBox);
+					i = 0;
+					break;
+				case 1:
+					if (it.hasNext()) {
+						toggleGroup.selectToggle(it.next());
+						i = 0;
+					}
+					break;
+				}
+			}
+		}
 	}
 
 }
