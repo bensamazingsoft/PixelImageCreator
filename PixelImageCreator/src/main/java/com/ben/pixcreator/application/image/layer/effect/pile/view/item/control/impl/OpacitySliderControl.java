@@ -15,6 +15,7 @@ public class OpacitySliderControl extends StackPane implements IEffectPileViewIt
 
 	private Slider		slider;
 	ParamValue<Double>	params;
+	private double		save	= 0;
 
 	@SuppressWarnings("unchecked")
 	public OpacitySliderControl(Effect fx) {
@@ -24,11 +25,14 @@ public class OpacitySliderControl extends StackPane implements IEffectPileViewIt
 		slider = new EffectSlider(params);
 
 		getChildren().add(slider);
+
+		save = slider.getValue();
 	}
 
 	@Override
 	public void bypass() {
 
+		save();
 		slider.setValue(params.getBypass());
 		slider.setDisable(true);
 
@@ -38,6 +42,7 @@ public class OpacitySliderControl extends StackPane implements IEffectPileViewIt
 	public void enable() {
 
 		slider.setDisable(false);
+		restore();
 	}
 
 	@Override
@@ -51,6 +56,18 @@ public class OpacitySliderControl extends StackPane implements IEffectPileViewIt
 	public Node node() {
 
 		return this;
+	}
+
+	@Override
+	public void save() {
+		save = slider.getValue();
+
+	}
+
+	@Override
+	public void restore() {
+		slider.setValue(save);
+
 	}
 
 }

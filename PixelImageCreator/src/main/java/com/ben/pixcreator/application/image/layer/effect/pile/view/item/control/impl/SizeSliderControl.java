@@ -27,6 +27,10 @@ public class SizeSliderControl extends StackPane implements IEffectPileViewItemC
 	ParamValue<Double>	Y;
 	ParamValue<Boolean>	lockRatio;
 
+	private double saveX = 0;
+
+	private double saveY = 0;
+
 	@SuppressWarnings("unchecked")
 	public SizeSliderControl(Effect fx) {
 
@@ -37,6 +41,9 @@ public class SizeSliderControl extends StackPane implements IEffectPileViewItemC
 		sliderX = new EffectSlider(X);
 		sliderY = new EffectSlider(Y);
 		lockRatioCb = new EffectCheckBox(lockRatio);
+
+		saveX = sliderX.getValue();
+		saveY = sliderY.getValue();
 
 		sliderX.valueProperty().addListener((obs, oldVal, newVal) -> {
 			if (lockRatio.getValue()) {
@@ -63,6 +70,8 @@ public class SizeSliderControl extends StackPane implements IEffectPileViewItemC
 	@Override
 	public void bypass() {
 
+		save();
+
 		sliderX.setValue(X.getBypass());
 		sliderY.setValue(Y.getBypass());
 		lockRatio.setValue(lockRatio.getBypass());
@@ -76,6 +85,7 @@ public class SizeSliderControl extends StackPane implements IEffectPileViewItemC
 	@Override
 	public void enable() {
 
+		restore();
 		sliderX.setDisable(false);
 		sliderY.setDisable(false);
 		lockRatioCb.setDisable(false);
@@ -95,6 +105,21 @@ public class SizeSliderControl extends StackPane implements IEffectPileViewItemC
 	public Node node() {
 
 		return this;
+	}
+
+	@Override
+	public void save() {
+		saveX = sliderX.getValue();
+		saveY = sliderY.getValue();
+
+	}
+
+	@Override
+	public void restore() {
+
+		sliderX.setValue(saveX);
+		sliderY.setValue(saveY);
+
 	}
 
 }
