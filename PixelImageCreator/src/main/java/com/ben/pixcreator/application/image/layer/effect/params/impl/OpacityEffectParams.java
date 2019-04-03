@@ -11,9 +11,10 @@ public class OpacityEffectParams extends EffectParams {
 	*/
 	private static final long serialVersionUID = 1L;
 
+	ParamValue<Double> param = new ParamValue<Double>(0.0, 1.0, 1.0);
+
 	public OpacityEffectParams() {
 
-		ParamValue<Double> param = new ParamValue<Double>(0.0, 1.0, 1.0);
 		param.setValue(1.0);
 		map.put(EffectParams.Param.OPACITY, param);
 
@@ -21,7 +22,6 @@ public class OpacityEffectParams extends EffectParams {
 
 	public void setOpacity(Double value) {
 
-		ParamValue<Double> param = new ParamValue<Double>(0.0, 1.0, 1.0);
 		param.setValue(value);
 
 		map.put(EffectParams.Param.OPACITY, param);
