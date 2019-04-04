@@ -6,6 +6,7 @@ import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.application.executor.Executor;
 import com.ben.pixcreator.application.image.layer.effect.EffectDesign;
 import com.ben.pixcreator.application.image.layer.effect.params.EffectParams;
+import com.ben.pixcreator.application.image.layer.effect.params.impl.HueEffectParams;
 import com.ben.pixcreator.application.image.layer.effect.params.impl.OpacityEffectParams;
 import com.ben.pixcreator.application.image.layer.effect.params.impl.SizeEffectParams;
 import com.ben.pixcreator.application.image.layer.impl.ALayer;
@@ -27,6 +28,9 @@ public class PicLayerBoxContextMenu extends ContextMenu {
 		this.getItems()
 				.add(menuItem(layer, "layerBoxContextMenuAddShrink", EffectDesign.SHRINK,
 						new SizeEffectParams(0, 100, 100)));
+
+		this.getItems().add(menuItem(layer, "pixLayerBoxContextMenuAddHue", EffectDesign.HUE, new HueEffectParams()));
+
 	}
 
 	private MenuItem menuItem(ALayer layer, String i18nParam, EffectDesign fxDesign, EffectParams params) {

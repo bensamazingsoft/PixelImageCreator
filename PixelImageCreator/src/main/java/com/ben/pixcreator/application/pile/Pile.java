@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -256,8 +257,11 @@ public class Pile<T> implements Serializable {
 	 */
 	public boolean replace(int i, T other) {
 
-		if (items.remove(new Pair(i, getItem(i)))) {
-			return insertAt(i, other);
+		for (Pair pair : items) {
+			if (pair.getIdx() == i) {
+				pair.setItem(other);
+				return true;
+			}
 		}
 		return false;
 	}
@@ -304,7 +308,7 @@ public class Pile<T> implements Serializable {
 	// }
 
 	/**
-	 * utility class that represents an index-item association.
+	 * utility class that encapsulates an index-item association.
 	 * 
 	 * @author bmo
 	 *
@@ -314,16 +318,16 @@ public class Pile<T> implements Serializable {
 		/**
 		 * 
 		 */
-		private static final long serialVersionUID = 1L;
-		// private final UUID uuid;
-		int	idx;
-		T	item;
+		private static final long	serialVersionUID	= 1L;
+		private final UUID			uuid;
+		int							idx;
+		T							item;
 
 		public Pair(int idx, T item) {
 
 			this.idx = idx;
 			this.item = item;
-			// this.uuid = UUID.randomUUID();
+			this.uuid = UUID.randomUUID();
 		}
 
 		public void incr() {
@@ -353,42 +357,38 @@ public class Pile<T> implements Serializable {
 		}
 
 		@Override
-		public int hashCode() {
+		public int compareTo(Pile<T>.Pair o) {
+			Pile<T>.Pair pair = (Pair) o;
+			return this.idx - pair.idx;
+		}
 
+		@Override
+		public int hashCode() {
 			final int prime = 31;
 			int result = 1;
-			// result = prime * result + idx;
-			result = prime * result + ((item == null) ? 0 : item.hashCode());
+			result = prime * result + ((uuid == null) ? 0 : uuid.hashCode());
 			return result;
 		}
 
 		@Override
 		public boolean equals(Object obj) {
-
-			if (this == obj) {
+			if (this == obj)
 				return true;
-			}
-			if (obj == null) {
+			if (obj == null)
 				return false;
-			}
+			if (getClass() != obj.getClass())
+				return false;
 			Pair other = (Pair) obj;
-			if (idx != other.idx) {
-				return false;
-			}
-			if (item == null) {
-				if (other.item != null) {
+			if (uuid == null) {
+				if (other.uuid != null)
 					return false;
-				}
-			} else if (!item.equals(other.item)) {
+			} else if (!uuid.equals(other.uuid))
 				return false;
-			}
 			return true;
 		}
 
-		@Override
-		public int compareTo(Pile<T>.Pair o) {
-			Pile<T>.Pair pair = (Pair) o;
-			return this.idx - pair.idx;
+		protected void setItem(T item) {
+			this.item = item;
 		}
 
 	}
