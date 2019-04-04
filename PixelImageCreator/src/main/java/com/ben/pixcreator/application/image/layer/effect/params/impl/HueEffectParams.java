@@ -30,4 +30,9 @@ public class HueEffectParams extends EffectParams {
 
 	}
 
+	@Override
+	public String toString() {
+		return "HueEffectParams [hue=" + hue + "]";
+	}
+
 }

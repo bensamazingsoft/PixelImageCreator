@@ -139,7 +139,7 @@ public class Pile<T> implements Serializable {
 
 		if (getAllItems().contains(item)) {
 
-			for (Pair pair : new ArrayList<>(items)) {
+			for (Pair pair : new HashSet<>(items)) {
 				if (pair.getItem().equals(item)) {
 					success = items.remove(pair);
 				}
@@ -309,19 +309,21 @@ public class Pile<T> implements Serializable {
 	 * @author bmo
 	 *
 	 */
-	public class Pair implements Serializable, Comparable {
+	public class Pair implements Serializable, Comparable<Pile<T>.Pair> {
 
 		/**
 		 * 
 		 */
-		private static final long	serialVersionUID	= 1L;
-		int							idx;
-		T							item;
+		private static final long serialVersionUID = 1L;
+		// private final UUID uuid;
+		int	idx;
+		T	item;
 
 		public Pair(int idx, T item) {
 
 			this.idx = idx;
 			this.item = item;
+			// this.uuid = UUID.randomUUID();
 		}
 
 		public void incr() {
@@ -331,7 +333,7 @@ public class Pile<T> implements Serializable {
 
 		public void decr() {
 
-			Math.max(0, idx--);
+			idx--;
 		}
 
 		public int getIdx() {
@@ -355,7 +357,7 @@ public class Pile<T> implements Serializable {
 
 			final int prime = 31;
 			int result = 1;
-			result = prime * result + idx;
+			// result = prime * result + idx;
 			result = prime * result + ((item == null) ? 0 : item.hashCode());
 			return result;
 		}
@@ -383,17 +385,10 @@ public class Pile<T> implements Serializable {
 			return true;
 		}
 
-		private Pile getOuterType() {
-
-			return Pile.this;
-		}
-
 		@Override
-		public int compareTo(Object arg0) {
-
-			Pile<T>.Pair pair = (Pair) arg0;
+		public int compareTo(Pile<T>.Pair o) {
+			Pile<T>.Pair pair = (Pair) o;
 			return this.idx - pair.idx;
-
 		}
 
 	}

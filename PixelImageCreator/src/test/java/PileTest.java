@@ -76,6 +76,11 @@ public class PileTest {
 	@Test
 	public void removeOfitemTest() {
 
+		Pile<String> pile0 = new Pile<>(0);
+		pile0.add("zero");
+		pile0.removeOfItem("zero");
+		assertTrue(pile0.isEmpty());
+
 		Pile<String> pile1 = new Pile<>(0);
 		pile1.add("one");
 		pile1.add("two");
@@ -88,6 +93,21 @@ public class PileTest {
 		pile2.add("three");
 
 		assertEquals(pile1, pile2);
+
+		//
+		pile1.removeOfItem("one");
+
+		Pile<String> pile3 = new Pile<>(0);
+		pile3.add("three");
+
+		assertEquals(pile1, pile3);
+
+		//
+		pile1.removeOfItem("three");
+
+		Pile<String> pile4 = new Pile<>(0);
+
+		assertEquals(pile1, pile4);
 
 	}
 

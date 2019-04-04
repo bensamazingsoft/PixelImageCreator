@@ -34,4 +34,9 @@ public class OpacityEffectParams extends EffectParams {
 		return value;
 	}
 
+	@Override
+	public String toString() {
+		return "OpacityEffectParams [OPACITY=" + param.getValue() + "]";
+	}
+
 }
