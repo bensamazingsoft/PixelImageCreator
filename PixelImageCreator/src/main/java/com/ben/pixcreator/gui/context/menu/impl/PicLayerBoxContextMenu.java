@@ -6,8 +6,10 @@ import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.application.executor.Executor;
 import com.ben.pixcreator.application.image.layer.effect.EffectDesign;
 import com.ben.pixcreator.application.image.layer.effect.params.EffectParams;
+import com.ben.pixcreator.application.image.layer.effect.params.impl.BrightnessEffectParams;
 import com.ben.pixcreator.application.image.layer.effect.params.impl.HueEffectParams;
 import com.ben.pixcreator.application.image.layer.effect.params.impl.OpacityEffectParams;
+import com.ben.pixcreator.application.image.layer.effect.params.impl.SaturationEffectParams;
 import com.ben.pixcreator.application.image.layer.effect.params.impl.SizeEffectParams;
 import com.ben.pixcreator.application.image.layer.impl.ALayer;
 import com.ben.pixcreator.gui.exception.popup.ExceptionPopUp;
@@ -30,6 +32,13 @@ public class PicLayerBoxContextMenu extends ContextMenu {
 						new SizeEffectParams(0, 100, 100)));
 
 		this.getItems().add(menuItem(layer, "pixLayerBoxContextMenuAddHue", EffectDesign.HUE, new HueEffectParams()));
+		this.getItems().add(menuItem(layer, "pixLayerBoxContextMenuAddSaturation", EffectDesign.SATURATION,
+				new SaturationEffectParams()));
+
+		final BrightnessEffectParams brightnessParam = new BrightnessEffectParams();
+		brightnessParam.setBrightness(0.5);
+		this.getItems().add(menuItem(layer, "pixLayerBoxContextMenuAddBrightness", EffectDesign.BRIGHTNESS,
+				brightnessParam));
 
 	}
 

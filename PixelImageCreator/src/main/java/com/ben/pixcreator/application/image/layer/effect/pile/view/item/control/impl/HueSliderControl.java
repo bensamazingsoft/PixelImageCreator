@@ -4,7 +4,7 @@ import com.ben.pixcreator.application.image.effect.Effect;
 import com.ben.pixcreator.application.image.layer.effect.params.EffectParams.Param;
 import com.ben.pixcreator.application.image.layer.effect.params.param.value.ParamValue;
 import com.ben.pixcreator.application.image.layer.effect.pile.view.item.control.IEffectPileViewItemControl;
-import com.ben.pixcreator.application.image.layer.effect.pile.view.item.control.slider.EffectSlider;
+import com.ben.pixcreator.application.image.layer.effect.pile.view.item.control.slider.EffectSliderDouble;
 
 import javafx.scene.Node;
 import javafx.scene.control.Slider;
@@ -20,7 +20,7 @@ public class HueSliderControl extends StackPane implements IEffectPileViewItemCo
 
 		params = (ParamValue<Double>) fx.getParams().get(Param.HUE);
 
-		slider = new EffectSlider(params);
+		slider = new EffectSliderDouble(params);
 
 		getChildren().add(slider);
 

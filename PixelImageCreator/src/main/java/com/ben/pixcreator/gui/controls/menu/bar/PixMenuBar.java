@@ -1,6 +1,7 @@
 
 package com.ben.pixcreator.gui.controls.menu.bar;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -9,6 +10,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
+
+import javax.imageio.ImageIO;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,13 +36,16 @@ import com.ben.pixcreator.gui.controls.tab.PixTab;
 import com.ben.pixcreator.gui.exception.popup.ExceptionPopUp;
 import com.ben.pixcreator.gui.facade.GuiFacade;
 
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -158,6 +164,42 @@ public class PixMenuBar extends MenuBar implements Initializable {
 			}
 		}
 	}
+
+	@FXML
+	private void exportAction(ActionEvent event) {
+		handleExportAction();
+	}
+
+	private void handleExportAction() {
+
+		final PixImage activeImage = GuiFacade.getInstance().getActiveImage();
+		final Canvas canvas = new Canvas(activeImage.getxSize(), activeImage.getySize());
+		activeImage.draw(canvas);
+		WritableImage wi = canvas.snapshot(null, null);
+
+		final FileChooser fileChooser = new FileChooser();
+		fileChooser.getExtensionFilters().add(new ExtensionFilter("PNG", "*.png"));
+		File file = fileChooser.showSaveDialog(null);
+
+		BufferedImage bi = SwingFXUtils.fromFXImage(wi, null);
+
+		try {
+			ImageIO.write(bi, "png", file);
+		} catch (IOException e) {
+			new ExceptionPopUp(e);
+		}
+
+	}
+
+	// public static void saveToFile(Image image) {
+	// File outputFile = new File("C:/JavaFX/");
+	// BufferedImage bImage = SwingFXUtils.fromFXImage(image, null);
+	// try {
+	// ImageIO.write(bImage, "png", outputFile);
+	// } catch (IOException e) {
+	// throw new RuntimeException(e);
+	// }
+	// }
 
 	@FXML
 	public void cancel(final ActionEvent event) {

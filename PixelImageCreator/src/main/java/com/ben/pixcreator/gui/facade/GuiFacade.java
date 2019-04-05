@@ -80,6 +80,14 @@ public class GuiFacade {
 		backgroundColor.set(ctxProp.getBackgroundColor());
 		recentFiles = new Pile<String>(Integer.valueOf(ctxProp.get("maxRecentFiles")));
 
+		activeColor.addListener((obs, oldVal, newVal) -> {
+			try {
+				Executor.getInstance().executeAction(new SetCursorsAction());
+			} catch (Exception e) {
+				new ExceptionPopUp(e);
+			}
+		});
+
 	}
 
 	public static GuiFacade getInstance() {

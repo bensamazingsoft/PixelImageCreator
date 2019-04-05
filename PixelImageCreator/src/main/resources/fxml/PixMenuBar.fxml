@@ -17,8 +17,9 @@
 				<MenuItem text="%save" onAction="#saveAction" accelerator="Shortcut+s" />
 				<MenuItem text="%saveAs" onAction="#saveAsAction"
 					accelerator="Shortcut+Shift+s" />
+				<MenuItem text="%export" onAction="#exportAction"/>
 					<SeparatorMenuItem />
-					<Menu text="%recentFiles" fx:id="fileMenu"/>
+				<Menu text="%recentFiles" fx:id="fileMenu"/>
 			</items>
 		</Menu>
 

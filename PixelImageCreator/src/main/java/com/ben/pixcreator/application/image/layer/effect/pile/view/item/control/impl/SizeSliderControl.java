@@ -6,7 +6,7 @@ import com.ben.pixcreator.application.image.layer.effect.params.EffectParams.Par
 import com.ben.pixcreator.application.image.layer.effect.params.param.value.ParamValue;
 import com.ben.pixcreator.application.image.layer.effect.pile.view.item.control.IEffectPileViewItemControl;
 import com.ben.pixcreator.application.image.layer.effect.pile.view.item.control.checkbox.EffectCheckBox;
-import com.ben.pixcreator.application.image.layer.effect.pile.view.item.control.slider.EffectSlider;
+import com.ben.pixcreator.application.image.layer.effect.pile.view.item.control.slider.EffectSliderDouble;
 
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
@@ -38,8 +38,8 @@ public class SizeSliderControl extends StackPane implements IEffectPileViewItemC
 		Y = (ParamValue<Double>) fx.getParams().get(Param.YSIZE);
 		lockRatio = (ParamValue<Boolean>) fx.getParams().get(Param.KEEPRATIO);
 
-		sliderX = new EffectSlider(X);
-		sliderY = new EffectSlider(Y);
+		sliderX = new EffectSliderDouble(X);
+		sliderY = new EffectSliderDouble(Y);
 		lockRatioCb = new EffectCheckBox(lockRatio);
 
 		saveX = sliderX.getValue();

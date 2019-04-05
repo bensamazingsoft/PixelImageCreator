@@ -1,4 +1,3 @@
-
 package com.ben.pixcreator.application.image.layer.effect.pile.view.item.control.impl;
 
 import com.ben.pixcreator.application.image.effect.Effect;
@@ -11,16 +10,15 @@ import javafx.scene.Node;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.StackPane;
 
-public class OpacitySliderControl extends StackPane implements IEffectPileViewItemControl {
+public class BrightnessSliderControl extends StackPane implements IEffectPileViewItemControl {
 
 	private Slider		slider;
 	ParamValue<Double>	params;
 	private double		save	= 0;
 
-	@SuppressWarnings("unchecked")
-	public OpacitySliderControl(Effect fx) {
+	public BrightnessSliderControl(Effect fx) {
 
-		params = (ParamValue<Double>) fx.getParams().get(Param.OPACITY);
+		params = (ParamValue<Double>) fx.getParams().get(Param.BRIGHTNESS);
 
 		slider = new EffectSliderDouble(params);
 
@@ -31,7 +29,6 @@ public class OpacitySliderControl extends StackPane implements IEffectPileViewIt
 
 	@Override
 	public void bypass() {
-
 		save();
 		slider.setValue(params.getBypass());
 		slider.setDisable(true);
@@ -40,22 +37,15 @@ public class OpacitySliderControl extends StackPane implements IEffectPileViewIt
 
 	@Override
 	public void enable() {
-
 		slider.setDisable(false);
 		restore();
+
 	}
 
 	@Override
 	public void reset() {
-
 		slider.setValue(params.getBypass());
 
-	}
-
-	@Override
-	public Node node() {
-
-		return this;
 	}
 
 	@Override
@@ -67,6 +57,13 @@ public class OpacitySliderControl extends StackPane implements IEffectPileViewIt
 	@Override
 	public void restore() {
 		slider.setValue(save);
+
+	}
+
+	@Override
+	public Node node() {
+
+		return this;
 
 	}
 

@@ -8,9 +8,15 @@ import com.ben.pixcreator.gui.facade.GuiFacade;
 
 import javafx.scene.control.Slider;
 
-public class EffectSlider extends Slider {
+/**
+ * Custom slider, its value is binded to the effect param value.
+ * 
+ * @author bmo
+ *
+ */
+public class EffectSliderDouble extends Slider {
 
-	public EffectSlider(ParamValue<Double> param) {
+	public EffectSliderDouble(ParamValue<Double> param) {
 
 		super();
 
