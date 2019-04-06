@@ -217,7 +217,7 @@ public class LayerPanel extends BorderPane implements Initializable {
 				populate();
 
 				if (gui.getActiveimage().getLayerList().getIdx(layer) > -1) {
-					gui.selectLayer(layer);
+					gui.selectLayer(gui.getFocusLayer());
 				}
 
 				Executor.getInstance().executeAction(new RefreshTabAction(gui.getActiveTab()));

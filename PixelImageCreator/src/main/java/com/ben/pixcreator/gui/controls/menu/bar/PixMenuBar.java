@@ -445,6 +445,8 @@ public class PixMenuBar extends MenuBar implements Initializable {
 				exec.endOperation();
 			}
 
+			handleUnSelect();
+
 		}
 	}
 

@@ -40,7 +40,7 @@ public class LayerAction implements IAction, ICancelable {
 
 		switch (action) {
 		case ADDNEW:
-			addNew();
+			addNewPix();
 			break;
 		case ADDNEWPIC:
 			addNewPic();
@@ -64,37 +64,17 @@ public class LayerAction implements IAction, ICancelable {
 
 	}
 
-	private void addNewPic() {
-
-		FileChooser fc = new FileChooser();
-		fc.getExtensionFilters().addAll(
-				Arrays.asList(new ExtensionFilter("pics extensions", Arrays.asList("*.jpg", "*.png", "*.bmp"))));
-
-		File picfile = fc.showOpenDialog(null);
-		;
-
-		if (null != picfile && picfile.exists()) {
-
-			PicLayer picLayer = new PicLayer(picfile);
-
-			layerList.insertOver(layer, picLayer);
-
-			picLayer.zoomFactorProperty()
-					.bindBidirectional(gui.getActiveTab().zoomFactorAdjustedProperty());
-
-		}
-
-	}
-
 	private void moveUp() {
 
 		layerList.moveUp(layer);
+		gui.setFocusLayer(layer);
 
 	}
 
 	private void moveDown() {
 
 		layerList.moveDown(layer);
+		gui.setFocusLayer(layer);
 
 	}
 
@@ -103,6 +83,7 @@ public class LayerAction implements IAction, ICancelable {
 		ALayer dup = layer.duplicate();
 
 		layerList.insertUnder(layer, dup);
+		gui.setFocusLayer(layer);
 
 	}
 
@@ -117,9 +98,37 @@ public class LayerAction implements IAction, ICancelable {
 
 	}
 
-	private void addNew() {
+	private void addNewPix() {
 
-		layerList.insertOver(layer, new PixLayer());
+		final PixLayer pixLayer = new PixLayer();
+		insertNewLayer(pixLayer);
+
+	}
+
+	private void addNewPic() {
+
+		FileChooser fc = new FileChooser();
+		fc.getExtensionFilters().addAll(
+				Arrays.asList(new ExtensionFilter("pics extensions", Arrays.asList("*.jpg", "*.png", "*.bmp"))));
+
+		File picfile = fc.showOpenDialog(null);
+		;
+
+		if (null != picfile && picfile.exists()) {
+
+			PicLayer picLayer = new PicLayer(picfile);
+
+			picLayer.zoomFactorProperty()
+					.bindBidirectional(gui.getActiveTab().zoomFactorAdjustedProperty());
+
+			insertNewLayer(picLayer);
+		}
+
+	}
+
+	private void insertNewLayer(ALayer newLayer) {
+		layerList.insertOver(layer, newLayer);
+		gui.setFocusLayer(newLayer);
 
 	}
 

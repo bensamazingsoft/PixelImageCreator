@@ -54,6 +54,8 @@ public class GuiFacade {
 	private LayerPanel	layerPanel;
 	private ColorRoster	colorRoster;
 
+	private ALayer focusLayer;
+
 	private Map<PixImage, Set<SimpleObjectProperty<Color>>>	imagesColors;
 	private Map<PixImage, Selection>						selections;
 	private SimpleObjectProperty<Color>						activeColor		= new SimpleObjectProperty<>();
@@ -361,6 +363,14 @@ public class GuiFacade {
 	public final void setHoverColor(final Color hoverColor) {
 
 		this.hoverColorProperty().set(hoverColor);
+	}
+
+	public ALayer getFocusLayer() {
+		return focusLayer;
+	}
+
+	public void setFocusLayer(ALayer focusLayer) {
+		this.focusLayer = focusLayer;
 	}
 
 }

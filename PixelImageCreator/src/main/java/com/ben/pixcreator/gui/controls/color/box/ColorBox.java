@@ -193,7 +193,7 @@ public class ColorBox extends VBox implements Toggle, Initializable, Comparable<
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((color.get() == null) ? 0 : color.get().hashCode());
+		result = prime * result + ((color == null) ? 0 : color.hashCode());
 		return result;
 	}
 
@@ -207,9 +207,9 @@ public class ColorBox extends VBox implements Toggle, Initializable, Comparable<
 			return false;
 		ColorBox other = (ColorBox) obj;
 		if (color.get() == null) {
-			if (other.color.get() != null)
+			if (other.color != null)
 				return false;
-		} else if (!color.get().equals(other.color.get()))
+		} else if (!color.equals(other.color))
 			return false;
 		return true;
 	}
@@ -218,6 +218,11 @@ public class ColorBox extends VBox implements Toggle, Initializable, Comparable<
 	public int compareTo(ColorBox o) {
 
 		return COMPARATOR.compare(this, o);
+	}
+
+	@Override
+	public String toString() {
+		return "ColorBox [color=" + color.get() + "]";
 	}
 
 }
