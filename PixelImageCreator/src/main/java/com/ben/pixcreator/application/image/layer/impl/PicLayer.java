@@ -21,202 +21,251 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
-public class PicLayer extends ALayer implements Serializable {
+public class PicLayer extends ALayer implements Serializable
+{
 
-	/**
-	 * 
-	 */
-	private static final long	serialVersionUID	= 1L;
-	private File				imageFile;
-	private transient Image		image;
-	private Coord				position;
+      /**
+       * 
+       */
+      private static final long		     serialVersionUID = 1L;
+      private File			     imageFile;
+      private transient Image		     image;
+      private Coord			     position	      = new Coord();
 
-	private transient SimpleDoubleProperty zoomFactor = new SimpleDoubleProperty();
+      private transient SimpleDoubleProperty zoomFactor	      = new SimpleDoubleProperty(1.0);
 
-	public PicLayer(File imageFile) {
 
-		super();
-		this.imageFile = imageFile;
-		position = new Coord();
-		sizeFactorX = 100d;
-		sizeFactorY = 100d;
-		setVisible(true);
+      public PicLayer(File imageFile)
+      {
 
-		if (imageFile.exists()) {
-			try {
-				image = new Image(
-						new BufferedInputStream(Files.newInputStream(imageFile.toPath(), StandardOpenOption.READ)));
-			} catch (IOException e) {
-				new ExceptionPopUp(e);
-			}
+	    super();
+	    this.imageFile = imageFile;
+	    position = new Coord();
+	    sizeFactorX = 100d;
+	    sizeFactorY = 100d;
+	    setVisible(true);
 
-		}
+	    if (imageFile.exists())
+	    {
+		  try
+		  {
+			image = new Image(
+				    new BufferedInputStream(Files.newInputStream(imageFile.toPath(), StandardOpenOption.READ)));
+		  }
+		  catch (IOException e)
+		  {
+			new ExceptionPopUp(e);
+		  }
 
-	}
+	    }
 
-	public PicLayer() {
-		super();
-	}
+      }
 
-	/*
-	 * public void drawImage(Image img, double sx, double sy, double sw, double
-	 * sh, double dx, double dy, double dw, double dh)
-	 * 
-	 * Draws the specified source rectangle of the given image to the given
-	 * destination rectangle of the Canvas.A null image value or an image still
-	 * in progress will be ignored. This method will be affected by any of the
-	 * global common attributes as specified in the Rendering Attributes Table.
-	 * Parameters: img - the image to be drawn or null. sx - the source
-	 * rectangle's X coordinate position. sy - the source rectangle's Y
-	 * coordinate position. sw - the source rectangle's width. sh - the source
-	 * rectangle's height. dx - the destination rectangle's X coordinate
-	 * position. dy - the destination rectangle's Y coordinate position. dw -
-	 * the destination rectangle's width. dh - the destination rectangle's
-	 * height.
-	 * 
-	 */
-	public void draw(Canvas canvas, int xGridResolution, int yGridResolution) {
 
-		int xCellSize = (int) (Math.floor(canvas.getWidth()) / xGridResolution);
-		int yCellSize = (int) (Math.floor(canvas.getHeight()) / yGridResolution);
+      public PicLayer()
+      {
 
-		GraphicsContext graphic = canvas.getGraphicsContext2D();
+	    super();
+	    position = new Coord();
+	    sizeFactorX = 100d;
+	    sizeFactorY = 100d;
+	    setVisible(true);
+      }
 
-		graphic.setGlobalAlpha(getOpacity());
 
-		graphic.drawImage(
-				image,
-				0, 0, image.getWidth(), image.getHeight(),
-				position.getX() * xCellSize,
-				position.getY() * yCellSize,
-				image.getWidth() * (sizeFactorX / 100) * zoomFactor.get(),
-				image.getHeight() * (sizeFactorY / 100) * zoomFactor.get());
+      /*
+       * public void drawImage(Image img, double sx, double sy, double sw, double sh, double dx, double dy, double dw, double dh)
+       * 
+       * Draws the specified source rectangle of the given image to the given destination rectangle of the Canvas.A null image value or an image still in progress will be ignored. This method will be
+       * affected by any of the global common attributes as specified in the Rendering Attributes Table. Parameters: img - the image to be drawn or null. sx - the source rectangle's X coordinate
+       * position. sy - the source rectangle's Y coordinate position. sw - the source rectangle's width. sh - the source rectangle's height. dx - the destination rectangle's X coordinate position. dy
+       * - the destination rectangle's Y coordinate position. dw - the destination rectangle's width. dh - the destination rectangle's height.
+       * 
+       */
+      public void draw(Canvas canvas, int xGridResolution, int yGridResolution)
+      {
 
-		graphic.setGlobalAlpha(1.0);
+	    int xCellSize = (int) (Math.floor(canvas.getWidth()) / xGridResolution);
+	    int yCellSize = (int) (Math.floor(canvas.getHeight()) / yGridResolution);
 
-	}
+	    GraphicsContext graphic = canvas.getGraphicsContext2D();
 
-	@Override
-	public String toString() {
+	    graphic.setGlobalAlpha(getOpacity());
 
-		return "PicLayer [imageFile=" + imageFile + "]";
-	}
+	    graphic.drawImage(
+			image,
+			0, 0, image.getWidth(), image.getHeight(),
+			position.getX() * xCellSize,
+			position.getY() * yCellSize,
+			image.getWidth() * (sizeFactorX / 100) * zoomFactor.get(),
+			image.getHeight() * (sizeFactorY / 100) * zoomFactor.get());
 
-	public File getImageFile() {
+	    graphic.setGlobalAlpha(1.0);
 
-		return imageFile;
-	}
+      }
 
-	public void setImageFile(File imageFile) {
 
-		this.imageFile = imageFile;
-	}
+      @Override
+      public String toString()
+      {
 
-	public Image getImage() {
+	    return "PicLayer [imageFile=" + imageFile + "]";
+      }
 
-		return image;
-	}
 
-	public void setImage(Image image) {
+      public File getImageFile()
+      {
 
-		this.image = image;
-	}
+	    return imageFile;
+      }
 
-	public Coord getPosition() {
 
-		return position;
-	}
+      public void setImageFile(File imageFile)
+      {
 
-	public void setPosition(Coord position) {
+	    this.imageFile = imageFile;
+      }
 
-		this.position = position;
-	}
 
-	public final SimpleDoubleProperty zoomFactorProperty() {
+      public Image getImage()
+      {
 
-		return this.zoomFactor;
-	}
+	    return image;
+      }
 
-	public final double getZoomFactor() {
 
-		return this.zoomFactorProperty().get();
-	}
+      public void setImage(Image image)
+      {
 
-	public final void setZoomFactor(final double zoomFactor) {
+	    this.image = image;
+      }
 
-		this.zoomFactorProperty().set(zoomFactor);
-	}
 
-	public class Memento extends ALayer.Memento {
+      public Coord getPosition()
+      {
 
-		protected Coord pos;
+	    return position;
+      }
 
-		protected Memento(ALayer layer) {
 
-			super(layer);
-		}
+      public void setPosition(Coord position)
+      {
 
-		@Override
-		protected void init(ALayer layer) {
-			pos = ((PicLayer) layer).getPosition();
+	    this.position = position;
+      }
 
-		}
 
-		@Override
-		public void restore() {
-			((PicLayer) layer).setPosition(pos);
+      public final SimpleDoubleProperty zoomFactorProperty()
+      {
 
-		}
+	    return this.zoomFactor;
+      }
 
-	}
 
-	@Override
-	public Memento getMemento() {
+      public final double getZoomFactor()
+      {
 
-		return new PicLayer.Memento(this);
-	}
+	    return this.zoomFactorProperty().get();
+      }
 
-	@Override
-	public ALayer offset(Coord min) {
 
-		setPosition(getPosition().add(min));
+      public final void setZoomFactor(final double zoomFactor)
+      {
 
-		return this;
-	}
+	    this.zoomFactorProperty().set(zoomFactor);
+      }
 
-	@Override
-	public ALayer duplicate() {
+      public class Memento extends ALayer.Memento
+      {
 
-		PicLayer clone = new PicLayer();
+	    protected Coord pos;
 
-		clone.setVisible(isVisible());
 
-		clone.setPosition(getPosition());
+	    protected Memento(ALayer layer)
+	    {
 
-		clone.setSizeFactorX(getSizeFactorX());
+		  super(layer);
+	    }
 
-		clone.setSizeFactorY(getSizeFactorY());
 
-		clone.setZoomFactor(getZoomFactor());
+	    @Override
+	    protected void init(ALayer layer)
+	    {
 
-		clone.setImage(getImage());
+		  pos = ((PicLayer) layer).getPosition();
 
-		clone.setImageFile(getImageFile());
+	    }
 
-		clone.setOpacity(getOpacity());
 
-		return clone;
-	}
+	    @Override
+	    public void restore()
+	    {
 
-	private void readObject(ObjectInputStream s) throws ClassNotFoundException, IOException {
-		s.defaultReadObject();
-		image = SwingFXUtils.toFXImage(ImageIO.read(s), null);
-		zoomFactor = new SimpleDoubleProperty();
-	}
+		  ((PicLayer) layer).setPosition(pos);
 
-	private void writeObject(ObjectOutputStream s) throws IOException {
-		s.defaultWriteObject();
-		ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", s);
-	}
+	    }
+
+      }
+
+
+      @Override
+      public Memento getMemento()
+      {
+
+	    return new PicLayer.Memento(this);
+      }
+
+
+      @Override
+      public ALayer offset(Coord min)
+      {
+
+	    setPosition(getPosition().add(min));
+
+	    return this;
+      }
+
+
+      @Override
+      public ALayer duplicate()
+      {
+
+	    PicLayer clone = new PicLayer();
+
+	    clone.setVisible(isVisible());
+
+	    clone.setPosition(getPosition());
+
+	    clone.setSizeFactorX(getSizeFactorX());
+
+	    clone.setSizeFactorY(getSizeFactorY());
+
+	    clone.setZoomFactor(getZoomFactor());
+
+	    clone.setImage(getImage());
+
+	    clone.setImageFile(getImageFile());
+
+	    clone.setOpacity(getOpacity());
+
+	    return clone;
+      }
+
+
+      private void readObject(ObjectInputStream s) throws ClassNotFoundException, IOException
+      {
+
+	    s.defaultReadObject();
+	    image = SwingFXUtils.toFXImage(ImageIO.read(s), null);
+	    zoomFactor = new SimpleDoubleProperty();
+      }
+
+
+      private void writeObject(ObjectOutputStream s) throws IOException
+      {
+
+	    s.defaultWriteObject();
+	    ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", s);
+      }
 
 }

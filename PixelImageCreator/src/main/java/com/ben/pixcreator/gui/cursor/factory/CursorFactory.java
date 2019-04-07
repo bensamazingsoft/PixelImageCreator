@@ -19,11 +19,6 @@ public interface CursorFactory
       final static String IMAGEPATH = "images/gui/cursors/";
 
 
-      /**
-       * @param panMode
-       *              : is the active tab canvas mouse transparent ?
-       * @return a Cursor
-       */
       Cursor getCursor();
 
 

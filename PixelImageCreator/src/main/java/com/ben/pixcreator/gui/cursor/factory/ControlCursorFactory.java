@@ -32,7 +32,7 @@ public class ControlCursorFactory implements CursorFactory
 		  ImageCursor cursor = new ImageCursor(makeImage("draw.png", X, Y, 3), 16, 2);
 		  return cursor;
 	    case MOVE:
-		  break;
+		  return new ImageCursor(makeImage("move.png"), 11, 4);
 	    case NONE:
 		  break;
 	    case PAN:
