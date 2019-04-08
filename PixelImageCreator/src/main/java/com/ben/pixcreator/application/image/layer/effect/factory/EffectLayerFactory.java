@@ -10,6 +10,7 @@ import com.ben.pixcreator.application.image.layer.modifier.impl.HueModifier;
 import com.ben.pixcreator.application.image.layer.modifier.impl.OpacityModifier;
 import com.ben.pixcreator.application.image.layer.modifier.impl.SaturationModifier;
 import com.ben.pixcreator.application.image.layer.modifier.impl.SizeModifier;
+import com.ben.pixcreator.application.image.layer.modifier.impl.TextModifier;
 
 public class EffectLayerFactory {
 
@@ -38,6 +39,9 @@ public class EffectLayerFactory {
 		case BRIGHTNESS:
 			IModifier brightnessModifier = new BrightnessModifier(effect);
 			return brightnessModifier.modify(layer);
+		case TEXT:
+			IModifier textModifier = new TextModifier(effect);
+			return textModifier.modify(layer);
 		default:
 			break;
 

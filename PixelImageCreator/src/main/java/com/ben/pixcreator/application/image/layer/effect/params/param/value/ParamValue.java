@@ -27,8 +27,8 @@ public class ParamValue<T> implements Serializable {
 
 	public ParamValue(T value) {
 
-		min = max = bypass = null;
-		this.value = value;
+		min = max = null;
+		this.value = bypass = value;
 	}
 
 	public T getValue() {

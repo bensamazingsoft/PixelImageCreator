@@ -42,7 +42,7 @@ public class PicLayerBoxContextMenu extends ContextMenu {
 
 	}
 
-	private MenuItem menuItem(ALayer layer, String i18nParam, EffectDesign fxDesign, EffectParams params) {
+	public static MenuItem menuItem(ALayer layer, String i18nParam, EffectDesign fxDesign, EffectParams params) {
 
 		MenuItem fxMenuItem = new MenuItem();
 
