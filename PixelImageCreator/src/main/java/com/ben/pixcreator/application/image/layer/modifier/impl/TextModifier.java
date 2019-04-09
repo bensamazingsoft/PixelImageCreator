@@ -1,3 +1,4 @@
+
 package com.ben.pixcreator.application.image.layer.modifier.impl;
 
 import com.ben.pixcreator.application.image.effect.Effect;
@@ -7,40 +8,47 @@ import com.ben.pixcreator.application.image.layer.impl.ALayer;
 import com.ben.pixcreator.application.image.layer.impl.TextLayer;
 import com.ben.pixcreator.application.image.layer.modifier.IModifier;
 
-import javafx.scene.text.Font;
+public class TextModifier implements IModifier
+{
 
-public class TextModifier implements IModifier {
+      private Effect fx;
 
-	private Effect fx;
 
-	public TextModifier(Effect effect) {
-		this.fx = effect;
-	}
+      public TextModifier(Effect effect)
+      {
 
-	@Override
-	public ALayer modify(ALayer layer) throws EffectException {
+	    this.fx = effect;
+      }
 
-		TextLayer txtLayer = new TextLayer();
 
-		if (layer instanceof TextLayer) {
+      @Override
+      public ALayer modify(ALayer layer) throws EffectException
+      {
 
-			txtLayer = (TextLayer) layer.duplicate();
+	    TextLayer txtLayer = new TextLayer();
 
-			final TextEffectParams params = (TextEffectParams) fx.getParams();
-			txtLayer.setColor(params.getColor());
-			txtLayer.setFontSize(params.getFontSize());
-			txtLayer.setAlign(params.getTextAlign());
-			txtLayer.setBaseline(params.getBaseline());
-			txtLayer.setText(params.getText());
-			txtLayer.setFont(Font.font(params.getFontFamily()));
-			txtLayer.setPosture(params.getPosture());
-			txtLayer.setWeight(params.getFontWeight());
+	    if (layer instanceof TextLayer)
+	    {
 
-		} else {
-			throw new EffectException("Not a TEXT layer");
-		}
+		  txtLayer = (TextLayer) layer.duplicate();
 
-		return txtLayer;
-	}
+		  final TextEffectParams params = (TextEffectParams) fx.getParams();
+		  txtLayer.setColor(params.getColor());
+		  txtLayer.setFontSize(params.getFontSize());
+		  txtLayer.setAlign(params.getTextAlign());
+		  txtLayer.setBaseline(params.getBaseline());
+		  txtLayer.setText(params.getText());
+		  txtLayer.setFontFamily(params.getFontFamily());
+		  txtLayer.setPosture(params.getPosture());
+		  txtLayer.setWeight(params.getFontWeight());
+
+	    }
+	    else
+	    {
+		  throw new EffectException("Not a TEXT layer");
+	    }
+
+	    return txtLayer;
+      }
 
 }
