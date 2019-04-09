@@ -2,6 +2,8 @@
 package com.ben.pixcreator.application.image.layer.impl;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,8 +45,13 @@ public class TextLayer extends PicLayer {
 	private TextAlignment	align		= TextAlignment.LEFT;
 	private VPos			baseline	= VPos.TOP;
 	private RenderType		renderType	= RenderType.FILL;
+	/**
+	 * 
+	 */
 	private FontPosture		posture		= FontPosture.REGULAR;
 	private FontWeight		weight		= FontWeight.NORMAL;
+
+	public static List<Integer> fontSizes = Arrays.asList(8, 16, 32, 48, 64, 128);
 
 	private enum RenderType {
 		FILL, STROKE;
@@ -70,6 +77,8 @@ public class TextLayer extends PicLayer {
 
 		// renderImage();
 		// super.draw(canvas, xGridResolution, yGridResolution);
+		int xCellSize = (int) (Math.floor(canvas.getWidth()) / xGridResolution);
+		int yCellSize = (int) (Math.floor(canvas.getHeight()) / yGridResolution);
 
 		GraphicsContext graph = canvas.getGraphicsContext2D();
 		graph.setFont(Font.font(font.getFamily(), weight, posture, fontSize * getZoomFactor()));
@@ -81,11 +90,12 @@ public class TextLayer extends PicLayer {
 		switch (renderType) {
 		case FILL:
 			graph.setFill(color.getFxColor());
-			graph.fillText(text, 0, 0, Double.MAX_VALUE);
+			graph.fillText(text, getPosition().getX() * xCellSize, getPosition().getY() * yCellSize, Double.MAX_VALUE);
 			break;
 		case STROKE:
 			graph.setStroke(color.getFxColor());
-			graph.strokeText(text, 0, 0, Double.MAX_VALUE);
+			graph.strokeText(text, getPosition().getX() * xCellSize, getPosition().getY() * yCellSize,
+					Double.MAX_VALUE);
 			break;
 		}
 
@@ -239,6 +249,22 @@ public class TextLayer extends PicLayer {
 	public void setColor(ColorRGB color) {
 
 		this.color = color;
+	}
+
+	public FontPosture getPosture() {
+		return posture;
+	}
+
+	public void setPosture(FontPosture posture) {
+		this.posture = posture;
+	}
+
+	public FontWeight getWeight() {
+		return weight;
+	}
+
+	public void setWeight(FontWeight weight) {
+		this.weight = weight;
 	}
 
 }

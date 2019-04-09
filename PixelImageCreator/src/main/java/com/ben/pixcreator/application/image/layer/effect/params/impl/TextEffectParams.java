@@ -94,7 +94,7 @@ public class TextEffectParams extends EffectParams {
 		this.fontFamilyParam.setValue(fontFamily);
 	}
 
-	public String getTextParam() {
+	public String getText() {
 		return textParam.getValue();
 	}
 

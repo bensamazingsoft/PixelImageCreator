@@ -9,6 +9,7 @@ import com.ben.pixcreator.application.image.layer.effect.pile.view.item.control.
 import com.ben.pixcreator.application.image.layer.effect.pile.view.item.control.impl.OpacitySliderControl;
 import com.ben.pixcreator.application.image.layer.effect.pile.view.item.control.impl.SaturationSliderControl;
 import com.ben.pixcreator.application.image.layer.effect.pile.view.item.control.impl.SizeSliderControl;
+import com.ben.pixcreator.application.image.layer.effect.pile.view.item.control.impl.TextControl;
 
 public class EffectPileViewItemControlFactory {
 
@@ -27,6 +28,8 @@ public class EffectPileViewItemControlFactory {
 			return new SaturationSliderControl(fx);
 		case BRIGHTNESS:
 			return new BrightnessSliderControl(fx);
+		case TEXT:
+			return new TextControl(fx);
 		default:
 			break;
 

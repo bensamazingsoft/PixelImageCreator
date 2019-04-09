@@ -2,19 +2,45 @@ package com.ben.pixcreator.application.image.layer.modifier.impl;
 
 import com.ben.pixcreator.application.image.effect.Effect;
 import com.ben.pixcreator.application.image.layer.effect.exception.EffectException;
+import com.ben.pixcreator.application.image.layer.effect.params.impl.TextEffectParams;
 import com.ben.pixcreator.application.image.layer.impl.ALayer;
+import com.ben.pixcreator.application.image.layer.impl.TextLayer;
 import com.ben.pixcreator.application.image.layer.modifier.IModifier;
+
+import javafx.scene.text.Font;
 
 public class TextModifier implements IModifier {
 
+	private Effect fx;
+
 	public TextModifier(Effect effect) {
-		// TODO Auto-generated constructor stub
+		this.fx = effect;
 	}
 
 	@Override
 	public ALayer modify(ALayer layer) throws EffectException {
-		// TODO Auto-generated method stub
-		return null;
+
+		TextLayer txtLayer = new TextLayer();
+
+		if (layer instanceof TextLayer) {
+
+			txtLayer = (TextLayer) layer.duplicate();
+
+			final TextEffectParams params = (TextEffectParams) fx.getParams();
+			txtLayer.setColor(params.getColor());
+			txtLayer.setFontSize(params.getFontSize());
+			txtLayer.setAlign(params.getTextAlign());
+			txtLayer.setBaseline(params.getBaseline());
+			txtLayer.setText(params.getText());
+			txtLayer.setFont(Font.font(params.getFontFamily()));
+			txtLayer.setPosture(params.getPosture());
+			txtLayer.setWeight(params.getFontWeight());
+
+		} else {
+			throw new EffectException("Not a TEXT layer");
+		}
+
+		return txtLayer;
 	}
 
 }
