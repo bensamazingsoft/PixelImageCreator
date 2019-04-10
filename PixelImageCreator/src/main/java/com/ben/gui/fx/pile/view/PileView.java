@@ -13,93 +13,79 @@ import javafx.scene.layout.VBox;
 
 /**
  * 
- * Represents a Pile<T>. Has a title element and is expandable to reveal PileViewItems. Elements are provided by a PileViewItemFactory, wich you can extend and then provide.
+ * Represents a Pile<T>. Has a title element and is expandable to reveal
+ * PileViewItems. Elements are provided by a PileViewItemFactory, wich you can
+ * extend and then provide.
  * 
  * @author ben
  *
  * @param <T>
  */
-public class PileView extends VBox
-{
+public class PileView extends VBox {
 
-      private final SimpleBooleanProperty expand     = new SimpleBooleanProperty();
-      private ToggleButton		  expandBut  = new ToggleButton();
+	private SimpleBooleanProperty	expand		= new SimpleBooleanProperty();
+	private ToggleButton			expandBut	= new ToggleButton();
 
-      private final HBox		  titleBox   = new HBox();
-      private Label			  titleLabel = new Label();
-      private VBox			  content    = new VBox();
-      private PileViewItemFactory	  factory;
+	private final HBox			titleBox	= new HBox();
+	private Label				titleLabel	= new Label();
+	private VBox				content		= new VBox();
+	private PileViewItemFactory	factory;
 
+	public PileView(String displayTitle, Pile<?> pile, PileViewItemFactory factory, SimpleBooleanProperty expand) {
 
-      public PileView(String displayTitle, Pile<?> pile, PileViewItemFactory factory)
-      {
+		this.factory = factory;
 
-	    this.factory = factory;
+		this.expand = expand;
 
-	    setExpand(true);
+		titleLabel.setText(displayTitle);
+		titleLabel.getStyleClass().add("pileViewTitle");
+		expandBut.selectedProperty().bindBidirectional(expand);
+		expandBut.textProperty().bind(Bindings.when(expandProperty()).then("-").otherwise("+"));
+		expandBut.setOnAction(event -> {
+			expand(pile);
+		});
 
-	    titleLabel.setText(displayTitle);
-	    titleLabel.getStyleClass().add("pileViewTitle");
-	    expandBut.selectedProperty().bindBidirectional(expand);
-	    expandBut.textProperty().bind(Bindings.when(expandProperty()).then("-").otherwise("+"));
-	    expandBut.setOnAction(event -> {
-		  expand(pile);
-	    });
+		titleBox.getChildren().add(expandBut);
+		// titleBox.getChildren().add(new Separator());
+		titleBox.getChildren().add(titleLabel);
 
-	    titleBox.getChildren().add(expandBut);
-	    // titleBox.getChildren().add(new Separator());
-	    titleBox.getChildren().add(titleLabel);
+		getChildren().add(titleBox);
 
-	    getChildren().add(titleBox);
+		// getChildren().add(new Separator());
 
-	    // getChildren().add(new Separator());
+		getChildren().add(content);
 
-	    getChildren().add(content);
+		if (isExpand()) {
+			expand(pile);
+		}
 
-	    if (isExpand())
-	    {
-		  expand(pile);
-	    }
+	}
 
-      }
+	private void expand(Pile<?> pile) {
 
+		content.getChildren().clear();
+		if (isExpand()) {
+			for (int i = 0; i < pile.getAllItems().size(); i++) {
+				content.getChildren().add(factory.getItem(pile.getItem(i)));
+			}
+		} else {
+			content.getChildren().clear();
+		}
+	}
 
-      private void expand(Pile<?> pile)
-      {
+	public final SimpleBooleanProperty expandProperty() {
 
-	    content.getChildren().clear();
-	    if (isExpand())
-	    {
-		  for (int i = 0; i < pile.getAllItems().size(); i++)
-		  {
-			content.getChildren().add(factory.getItem(pile.getItem(i)));
-		  }
-	    }
-	    else
-	    {
-		  content.getChildren().clear();
-	    }
-      }
+		return this.expand;
+	}
 
+	public final boolean isExpand() {
 
-      public final SimpleBooleanProperty expandProperty()
-      {
+		return this.expandProperty().get();
+	}
 
-	    return this.expand;
-      }
+	public final void setExpand(final boolean expand) {
 
-
-      public final boolean isExpand()
-      {
-
-	    return this.expandProperty().get();
-      }
-
-
-      public final void setExpand(final boolean expand)
-      {
-
-	    this.expandProperty().set(expand);
-      }
+		this.expandProperty().set(expand);
+	}
 
 }

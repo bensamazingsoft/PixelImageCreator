@@ -19,6 +19,7 @@ import com.ben.pixcreator.application.executor.Executor;
 import com.ben.pixcreator.application.image.PixImage;
 import com.ben.pixcreator.application.image.layer.impl.ALayer;
 import com.ben.pixcreator.application.image.layer.impl.PicLayer;
+import com.ben.pixcreator.gui.controls.layer.panel.LayerPanel;
 import com.ben.pixcreator.gui.cursor.factory.ControlCursorFactory;
 import com.ben.pixcreator.gui.exception.popup.ExceptionPopUp;
 import com.ben.pixcreator.gui.facade.GuiFacade;
@@ -42,458 +43,397 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.StackPane;
 
 /**
- * public Logistic(double k, double m, double b, double q, double a, double n) throws NotStrictlyPositiveException Parameters: k - If b > 0, value of the function for x going towards inf If b < 0,
- * value of the function for x going towards -inf. m - Abscissa of maximum growth. b - Growth rate. q - Parameter that affects the position of the curve along the ordinate axis. a - If b > 0, value of
- * the function for x going towards -inf. If b < 0, value of the function for x going towards inf. n - Parameter that affects near which asymptote the maximum growth occurs.
+ * public Logistic(double k, double m, double b, double q, double a, double n)
+ * throws NotStrictlyPositiveException Parameters: k - If b > 0, value of the
+ * function for x going towards inf If b < 0, value of the function for x going
+ * towards -inf. m - Abscissa of maximum growth. b - Growth rate. q - Parameter
+ * that affects the position of the curve along the ordinate axis. a - If b > 0,
+ * value of the function for x going towards -inf. If b < 0, value of the
+ * function for x going towards inf. n - Parameter that affects near which
+ * asymptote the maximum growth occurs.
  * 
  * @author bmo
  *
  */
-public class PixTab extends Tab implements Initializable
-{
+public class PixTab extends Tab implements Initializable {
 
-      @SuppressWarnings("unused")
-      private static final Logger	     log		= LoggerFactory.getLogger(PixTab.class);
+	@SuppressWarnings("unused")
+	private static final Logger log = LoggerFactory.getLogger(PixTab.class);
 
-      // private final String IMAGEPATH = "images/gui/buttons/tab/";
+	// private final String IMAGEPATH = "images/gui/buttons/tab/";
 
-      private SimpleObjectProperty<PixImage> image		= new SimpleObjectProperty<PixImage>();
-      private SimpleDoubleProperty	     zoomFactor		= new SimpleDoubleProperty();
-      private SimpleDoubleProperty	     zoomFactorAdjusted	= new SimpleDoubleProperty();
-      private SimpleBooleanProperty	     panMode		= new SimpleBooleanProperty();
+	private SimpleObjectProperty<PixImage>	image				= new SimpleObjectProperty<PixImage>();
+	private SimpleDoubleProperty			zoomFactor			= new SimpleDoubleProperty();
+	private SimpleDoubleProperty			zoomFactorAdjusted	= new SimpleDoubleProperty();
+	private SimpleBooleanProperty			panMode				= new SimpleBooleanProperty();
 
-      private Logistic			     logistic;
-      private double			     x, step;							// x is the abscissa of the logistic
-      // function and step is the amount added/sub
-      // of it for each scroll event
+	private Logistic	logistic;
+	private double		x, step;	// x is the abscissa of the logistic
+	// function and step is the amount added/sub
+	// of it for each scroll event
 
-      @FXML
-      private ScrollPane		     scrollPane;
-      @FXML
-      private Canvas			     canvas;
+	@FXML
+	private ScrollPane	scrollPane;
+	@FXML
+	private Canvas		canvas;
 
+	// private static PixTool savedTool;
 
-      // private static PixTool savedTool;
+	public PixTab(PixImage image) {
 
-      public PixTab(PixImage image)
-      {
+		super();
+		x = 0d;
+		step = 0.5;
+		setImage(image);
+		setZoomFactor(1d);
 
-	    super();
-	    x = 0d;
-	    step = 0.5;
-	    setImage(image);
-	    setZoomFactor(1d);
+		logistic = new Logistic(10.0, 2.7, 1.0, 1.0, 0.2, 1.0);
 
-	    logistic = new Logistic(10.0, 2.7, 1.0, 1.0, 0.2, 1.0);
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n/trad");
 
-	    ResourceBundle bundle = ResourceBundle.getBundle("i18n/trad");
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/PixTab.fxml"), bundle);
+		fxmlLoader.setRoot(this);
+		fxmlLoader.setController(this);
 
-	    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/PixTab.fxml"), bundle);
-	    fxmlLoader.setRoot(this);
-	    fxmlLoader.setController(this);
+		try {
+			fxmlLoader.load();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 
-	    try
-	    {
-		  fxmlLoader.load();
-	    }
-	    catch (IOException e)
-	    {
-		  throw new RuntimeException(e);
-	    }
+		panMode.bindBidirectional(GuiFacade.getInstance().panModeProperty());
+		panMode.addListener((obs, oldVal, newVal) -> togglePanMode(newVal));
 
-	    panMode.bindBidirectional(GuiFacade.getInstance().panModeProperty());
-	    panMode.addListener((obs, oldVal, newVal) -> togglePanMode(newVal));
+		setPanMode(GuiFacade.getInstance().isPanMode());
 
-	    setPanMode(GuiFacade.getInstance().isPanMode());
+		canvas.setCursor(new ControlCursorFactory().getCursor());
+		// scrollPane.setCursor(new ControlCursorFactory().getCursor());
 
-	    canvas.setCursor(new ControlCursorFactory().getCursor());
-	    // scrollPane.setCursor(new ControlCursorFactory().getCursor());
+	}
 
-      }
+	@FXML
+	public void handleClose(Event event) {
 
+		// onClose
+		onClose();
+	}
 
-      @FXML
-      public void handleClose(Event event)
-      {
+	private void onClose() {
 
-	    // onClose
-	    onClose();
-      }
+		final Object userData = getUserData();
+		GuiFacade.getInstance().getImagesColors().remove(userData);
+		Executor.getInstance().getHistoryMap().remove(userData);
+		LayerPanel.effectPaneExpand.remove(userData);
 
+	}
 
-      private void onClose()
-      {
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
 
-	    GuiFacade.getInstance().getImagesColors().remove(getUserData());
-	    Executor.getInstance().getHistoryMap().remove(getUserData());
+		this.setText(getImage().getName());
+		this.setUserData(canvas);
 
-      }
+		canvas = new Canvas(getImage().getxSize(), getImage().getySize());
+		canvas.addEventHandler(MouseEvent.ANY, new MouseManager(this));
 
+		StackPane stackpane = new StackPane(canvas);
+		scrollPane.setContent(stackpane);
+		scrollPane.setFitToWidth(true);
+		scrollPane.setFitToHeight(true);
+		scrollPane.addEventFilter(ScrollEvent.ANY, new ZoomControl());
 
-      @Override
-      public void initialize(URL arg0, ResourceBundle arg1)
-      {
+		bindPicLayersZoomFactor();
+		zoomFactor.addListener(new ZoomListener(this));
 
-	    this.setText(getImage().getName());
-	    this.setUserData(canvas);
+		setZoomFactorAdjusted(getZoomFactor());
 
-	    canvas = new Canvas(getImage().getxSize(), getImage().getySize());
-	    canvas.addEventHandler(MouseEvent.ANY, new MouseManager(this));
+		scrollPane.getStylesheets().add("/styles/styles.css");
+		scrollPane.getStyleClass().add("scrollpane");
 
-	    StackPane stackpane = new StackPane(canvas);
-	    scrollPane.setContent(stackpane);
-	    scrollPane.setFitToWidth(true);
-	    scrollPane.setFitToHeight(true);
-	    scrollPane.addEventFilter(ScrollEvent.ANY, new ZoomControl());
+		stackpane.getStylesheets().add("/styles/styles.css");
+		stackpane.getStyleClass().add("stackpane");
 
-	    bindPicLayersZoomFactor();
-	    zoomFactor.addListener(new ZoomListener(this));
+	}
 
-	    setZoomFactorAdjusted(getZoomFactor());
+	private class MouseManager implements EventHandler<MouseEvent> {
 
-	    scrollPane.getStylesheets().add("/styles/styles.css");
-	    scrollPane.getStyleClass().add("scrollpane");
+		protected PixTab tab;
 
-	    stackpane.getStylesheets().add("/styles/styles.css");
-	    stackpane.getStyleClass().add("stackpane");
+		public MouseManager(PixTab tab) {
 
-      }
+			this.tab = tab;
+		}
 
-      private class MouseManager implements EventHandler<MouseEvent>
-      {
+		@Override
+		public void handle(MouseEvent event) {
 
-	    protected PixTab tab;
+			IActionFactory factory = ActionFactoryProducer.getActionFactory(AppContext.getInstance().getCurrTool());
 
+			try {
 
-	    public MouseManager(PixTab tab)
-	    {
+				IAction action = factory.getAction(event);
 
-		  this.tab = tab;
-	    }
+				if (action instanceof ActionNoOp) {
+				} else {
 
+					Executor.getInstance().executeAction(action);
+					Executor.getInstance().executeAction(new RefreshTabAction(tab));
 
-	    @Override
-	    public void handle(MouseEvent event)
-	    {
+				}
 
-		  IActionFactory factory = ActionFactoryProducer.getActionFactory(AppContext.getInstance().getCurrTool());
-
-		  try
-		  {
-
-			IAction action = factory.getAction(event);
-
-			if (action instanceof ActionNoOp)
-			{
-			}
-			else
-			{
-
-			      Executor.getInstance().executeAction(action);
-			      Executor.getInstance().executeAction(new RefreshTabAction(tab));
-
+			} catch (Exception e) {
+				new ExceptionPopUp(e);
 			}
 
-		  }
-		  catch (Exception e)
-		  {
-			new ExceptionPopUp(e);
-		  }
+		}
 
-	    }
+	}
 
-      }
+	public class ZoomControl implements EventHandler<ScrollEvent> {
 
-      public class ZoomControl implements EventHandler<ScrollEvent>
-      {
+		@Override
+		public void handle(ScrollEvent event) {
 
-	    @Override
-	    public void handle(ScrollEvent event)
-	    {
+			zoom(event);
+		}
 
-		  zoom(event);
-	    }
+		private void zoom(ScrollEvent event) {
 
+			if (event.getDeltaY() > 0) {
+				zoomIn();
+			} else {
+				zoomOut();
+			}
+			event.consume();
+		}
 
-	    private void zoom(ScrollEvent event)
-	    {
+	}
 
-		  if (event.getDeltaY() > 0)
-		  {
-			zoomIn();
-		  }
-		  else
-		  {
-			zoomOut();
-		  }
-		  event.consume();
-	    }
+	class ZoomListener implements ChangeListener<Number> {
 
-      }
+		private PixTab tab;
 
-      class ZoomListener implements ChangeListener<Number>
-      {
+		public ZoomListener(PixTab tab) {
 
-	    private PixTab tab;
+			super();
+			this.tab = tab;
+		}
 
+		@Override
+		public void changed(ObservableValue<? extends Number> observable, Number oldVal, Number newVal) {
 
-	    public ZoomListener(PixTab tab)
-	    {
-
-		  super();
-		  this.tab = tab;
-	    }
-
-
-	    @Override
-	    public void changed(ObservableValue<? extends Number> observable, Number oldVal, Number newVal)
-	    {
-
-		  {
-
-			int resultX = (int) (getImage().getxSize() * (double) newVal);
-			int xGridRes = getImage().getxGridResolution();
-
-			while (resultX % xGridRes != 0)
 			{
 
-			      resultX--;
+				int resultX = (int) (getImage().getxSize() * (double) newVal);
+				int xGridRes = getImage().getxGridResolution();
+
+				while (resultX % xGridRes != 0) {
+
+					resultX--;
+
+				}
+
+				int resultY = (int) (getImage().getySize() * (double) newVal);
+				int yGridRes = getImage().getyGridResolution();
+
+				while (resultY % yGridRes != 0) {
+
+					resultY--;
+
+				}
+
+				setZoomFactorAdjusted((double) resultX / (double) getImage().getxSize());
+
+				// log.debug("ZoomFactorAdjusted = " + getZoomFactorAdjusted());
+
+				canvas.setWidth(resultX);
+				canvas.setHeight(resultY);
+
+				StackPane stackpane = new StackPane(canvas);
+				stackpane.getStylesheets().add("/styles/styles.css");
+				stackpane.getStyleClass().add("stackpane");
+
+				scrollPane.setContent(stackpane);
+
+				try {
+					Executor.getInstance().executeAction(new RefreshTabAction(tab));
+				} catch (Exception e) {
+					new ExceptionPopUp(e);
+				}
 
 			}
 
-			int resultY = (int) (getImage().getySize() * (double) newVal);
-			int yGridRes = getImage().getyGridResolution();
+		}
 
-			while (resultY % yGridRes != 0)
-			{
+	}
 
-			      resultY--;
+	private void bindPicLayersZoomFactor() {
+
+		for (ALayer layer : image.get().getLayerList().getAllItems())
+
+		{
+			if (layer instanceof PicLayer) {
+				PicLayer picLayer = (PicLayer) layer;
+				picLayer.zoomFactorProperty().bindBidirectional(zoomFactorAdjusted);
 
 			}
+		}
 
-			setZoomFactorAdjusted((double) resultX / (double) getImage().getxSize());
+	}
 
-			// log.debug("ZoomFactorAdjusted = " + getZoomFactorAdjusted());
+	private void zoomIn() {
 
-			canvas.setWidth(resultX);
-			canvas.setHeight(resultY);
+		Bounds viewPort = scrollPane.getViewportBounds();
+		Bounds contentSize = scrollPane.getContent().getBoundsInParent();
 
-			StackPane stackpane = new StackPane(canvas);
-			stackpane.getStylesheets().add("/styles/styles.css");
-			stackpane.getStyleClass().add("stackpane");
+		double centerPosX = (contentSize.getWidth() - viewPort.getWidth()) *
+				scrollPane.getHvalue()
+				+ viewPort.getWidth() / 2;
+		double centerPosY = (contentSize.getHeight() - viewPort.getHeight())
+				* scrollPane.getVvalue()
+				+ viewPort.getHeight() / 2;
 
-			scrollPane.setContent(stackpane);
+		x += step;
+		zoomFactor.set(logistic.value(x));
+		// log.debug("zoom in : X = " + x + " factor = " + zoomFactor.get());
 
-			try
-			{
-			      Executor.getInstance().executeAction(new RefreshTabAction(tab));
-			}
-			catch (Exception e)
-			{
-			      new ExceptionPopUp(e);
-			}
+		double newCenterX = centerPosX * zoomFactor.get() / (zoomFactor.get()
+				- 1);
+		double newCenterY = centerPosY * zoomFactor.get() / (zoomFactor.get()
+				- 1);
 
-		  }
+		scrollPane.setHvalue((newCenterX - viewPort.getWidth() / 2)
+				/ (contentSize.getWidth() * zoomFactor.get() / (zoomFactor.get() - 1)
+						- viewPort.getWidth()));
+		scrollPane.setVvalue((newCenterY - viewPort.getHeight() / 2)
+				/ (contentSize.getHeight() * zoomFactor.get() / (zoomFactor.get() -
+						1) - viewPort.getHeight()));
 
-	    }
+		// log.debug("scrollPane.getVvalue() : " + scrollPane.getVvalue());
+		// log.debug("scrollPane.getVmin() : " + scrollPane.getVmin());
+		// log.debug("scrollPane.getVmax() : " + scrollPane.getVmax());
 
-      }
+	}
 
+	private void zoomOut() {
 
-      private void bindPicLayersZoomFactor()
-      {
+		Bounds viewPort = scrollPane.getViewportBounds();
+		Bounds contentSize = scrollPane.getContent().getBoundsInParent();
 
-	    for (ALayer layer : image.get().getLayerList().getAllItems())
+		double centerPosX = (contentSize.getWidth() - viewPort.getWidth()) *
+				scrollPane.getHvalue()
+				+ viewPort.getWidth() / 2;
+		double centerPosY = (contentSize.getHeight() - viewPort.getHeight())
+				* scrollPane.getVvalue()
+				+ viewPort.getHeight() / 2;
 
-	    {
-		  if (layer instanceof PicLayer)
-		  {
-			PicLayer picLayer = (PicLayer) layer;
-			picLayer.zoomFactorProperty().bindBidirectional(zoomFactorAdjusted);
+		x -= step;
+		zoomFactor.set(logistic.value(x));
+		// log.debug("zoom out : X = " + x + " factor = " + zoomFactor.get());
 
-		  }
-	    }
+		double newCenterX = centerPosX * zoomFactor.get() / (zoomFactor.get()
+				+ 1);
+		double newCenterY = centerPosY * zoomFactor.get() / (zoomFactor.get()
+				+ 1);
 
-      }
+		scrollPane.setHvalue((newCenterX - viewPort.getWidth() / 2)
+				/ (contentSize.getWidth() * zoomFactor.get() / (zoomFactor.get() + 1)
+						- viewPort.getWidth()));
+		scrollPane.setVvalue((newCenterY - viewPort.getHeight() / 2)
+				/ (contentSize.getHeight() * zoomFactor.get() / (zoomFactor.get() +
+						1) - viewPort.getHeight()));
 
+	}
 
-      private void zoomIn()
-      {
+	public Canvas getCanvas() {
 
-	    Bounds viewPort = scrollPane.getViewportBounds();
-	    Bounds contentSize = scrollPane.getContent().getBoundsInParent();
+		return canvas;
+	}
 
-	    double centerPosX = (contentSize.getWidth() - viewPort.getWidth()) *
-			scrollPane.getHvalue()
-			+ viewPort.getWidth() / 2;
-	    double centerPosY = (contentSize.getHeight() - viewPort.getHeight())
-			* scrollPane.getVvalue()
-			+ viewPort.getHeight() / 2;
+	public final SimpleObjectProperty<PixImage> imageProperty() {
 
-	    x += step;
-	    zoomFactor.set(logistic.value(x));
-	    // log.debug("zoom in : X = " + x + " factor = " + zoomFactor.get());
+		return this.image;
+	}
 
-	    double newCenterX = centerPosX * zoomFactor.get() / (zoomFactor.get()
-			- 1);
-	    double newCenterY = centerPosY * zoomFactor.get() / (zoomFactor.get()
-			- 1);
+	public final PixImage getImage() {
 
-	    scrollPane.setHvalue((newCenterX - viewPort.getWidth() / 2)
-			/ (contentSize.getWidth() * zoomFactor.get() / (zoomFactor.get() - 1)
-				    - viewPort.getWidth()));
-	    scrollPane.setVvalue((newCenterY - viewPort.getHeight() / 2)
-			/ (contentSize.getHeight() * zoomFactor.get() / (zoomFactor.get() -
-				    1) - viewPort.getHeight()));
+		return this.imageProperty().get();
+	}
 
-	    // log.debug("scrollPane.getVvalue() : " + scrollPane.getVvalue());
-	    // log.debug("scrollPane.getVmin() : " + scrollPane.getVmin());
-	    // log.debug("scrollPane.getVmax() : " + scrollPane.getVmax());
+	public final void setImage(final PixImage image) {
 
-      }
+		this.imageProperty().set(image);
+	}
 
+	public final SimpleDoubleProperty zoomFactorProperty() {
 
-      private void zoomOut()
-      {
+		return this.zoomFactor;
+	}
 
-	    Bounds viewPort = scrollPane.getViewportBounds();
-	    Bounds contentSize = scrollPane.getContent().getBoundsInParent();
+	public final double getZoomFactor() {
 
-	    double centerPosX = (contentSize.getWidth() - viewPort.getWidth()) *
-			scrollPane.getHvalue()
-			+ viewPort.getWidth() / 2;
-	    double centerPosY = (contentSize.getHeight() - viewPort.getHeight())
-			* scrollPane.getVvalue()
-			+ viewPort.getHeight() / 2;
+		return this.zoomFactorProperty().get();
+	}
 
-	    x -= step;
-	    zoomFactor.set(logistic.value(x));
-	    // log.debug("zoom out : X = " + x + " factor = " + zoomFactor.get());
+	public final void setZoomFactor(final double zoomFactor) {
 
-	    double newCenterX = centerPosX * zoomFactor.get() / (zoomFactor.get()
-			+ 1);
-	    double newCenterY = centerPosY * zoomFactor.get() / (zoomFactor.get()
-			+ 1);
+		this.zoomFactorProperty().set(zoomFactor);
+	}
 
-	    scrollPane.setHvalue((newCenterX - viewPort.getWidth() / 2)
-			/ (contentSize.getWidth() * zoomFactor.get() / (zoomFactor.get() + 1)
-				    - viewPort.getWidth()));
-	    scrollPane.setVvalue((newCenterY - viewPort.getHeight() / 2)
-			/ (contentSize.getHeight() * zoomFactor.get() / (zoomFactor.get() +
-				    1) - viewPort.getHeight()));
+	public final SimpleDoubleProperty zoomFactorAdjustedProperty() {
 
-      }
+		return this.zoomFactorAdjusted;
+	}
 
+	public final double getZoomFactorAdjusted() {
 
-      public Canvas getCanvas()
-      {
+		return this.zoomFactorAdjustedProperty().get();
+	}
 
-	    return canvas;
-      }
+	public final void setZoomFactorAdjusted(final double zoomFactorAdjusted) {
 
+		this.zoomFactorAdjustedProperty().set(zoomFactorAdjusted);
+	}
 
-      public final SimpleObjectProperty<PixImage> imageProperty()
-      {
+	/**
+	 * enables or disables the pan mode
+	 * 
+	 * @param b
+	 */
+	public void togglePanMode(boolean pan) {
 
-	    return this.image;
-      }
+		// canvas.setMouseTransparent(pan);
+		scrollPane.setPannable(pan);
 
+	}
 
-      public final PixImage getImage()
-      {
+	public ScrollPane getScrollPane() {
 
-	    return this.imageProperty().get();
-      }
+		return scrollPane;
+	}
 
+	public final SimpleBooleanProperty panModeProperty() {
 
-      public final void setImage(final PixImage image)
-      {
+		return this.panMode;
+	}
 
-	    this.imageProperty().set(image);
-      }
+	public final boolean isPanMode() {
 
+		return this.panModeProperty().get();
+	}
 
-      public final SimpleDoubleProperty zoomFactorProperty()
-      {
+	public final void setPanMode(final boolean panMode) {
 
-	    return this.zoomFactor;
-      }
+		this.panModeProperty().set(panMode);
+	}
 
+	public void setUserData(PixImage value) {
+		super.setUserData(value);
+	}
 
-      public final double getZoomFactor()
-      {
+	public PixImage getUserData() {
 
-	    return this.zoomFactorProperty().get();
-      }
-
-
-      public final void setZoomFactor(final double zoomFactor)
-      {
-
-	    this.zoomFactorProperty().set(zoomFactor);
-      }
-
-
-      public final SimpleDoubleProperty zoomFactorAdjustedProperty()
-      {
-
-	    return this.zoomFactorAdjusted;
-      }
-
-
-      public final double getZoomFactorAdjusted()
-      {
-
-	    return this.zoomFactorAdjustedProperty().get();
-      }
-
-
-      public final void setZoomFactorAdjusted(final double zoomFactorAdjusted)
-      {
-
-	    this.zoomFactorAdjustedProperty().set(zoomFactorAdjusted);
-      }
-
-
-      /**
-       * enables or disables the pan mode
-       * 
-       * @param b
-       */
-      public void togglePanMode(boolean pan)
-      {
-
-	    // canvas.setMouseTransparent(pan);
-	    scrollPane.setPannable(pan);
-
-      }
-
-
-      public ScrollPane getScrollPane()
-      {
-
-	    return scrollPane;
-      }
-
-
-      public final SimpleBooleanProperty panModeProperty()
-      {
-
-	    return this.panMode;
-      }
-
-
-      public final boolean isPanMode()
-      {
-
-	    return this.panModeProperty().get();
-      }
-
-
-      public final void setPanMode(final boolean panMode)
-      {
-
-	    this.panModeProperty().set(panMode);
-      }
+		return (PixImage) super.getUserData();
+	}
 
 }
