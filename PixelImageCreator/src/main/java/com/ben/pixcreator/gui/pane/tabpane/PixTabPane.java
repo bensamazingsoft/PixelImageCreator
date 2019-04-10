@@ -17,78 +17,64 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 
-public class PixTabPane extends TabPane implements Initializable
-{
+public class PixTabPane extends TabPane implements Initializable {
 
-      // private final String IMAGEPATH = "images/gui/buttons/tabpane/";
+	// private final String IMAGEPATH = "images/gui/buttons/tabpane/";
 
-      public PixTabPane()
-      {
+	public PixTabPane() {
 
-	    super();
-	    ResourceBundle bundle = ResourceBundle.getBundle("i18n/trad");
+		super();
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n/trad");
 
-	    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/PixTabPane.fxml"), bundle);
-	    fxmlLoader.setRoot(this);
-	    fxmlLoader.setController(this);
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/PixTabPane.fxml"), bundle);
+		fxmlLoader.setRoot(this);
+		fxmlLoader.setController(this);
 
-	    try
-	    {
-		  fxmlLoader.load();
-	    }
-	    catch (IOException e)
-	    {
-		  throw new RuntimeException(e);
-	    }
+		try {
+			fxmlLoader.load();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 
-	    GuiFacade.getInstance().setPixTabPane(this);
+		GuiFacade.getInstance().setPixTabPane(this);
 
-	    getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+		getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
 
-		  if (newVal instanceof Tab)
-		  {
-			PixTab tab = (PixTab) newVal;
-			PixImage image = tab.getImage();
-			GuiFacade.getInstance().setActiveImage(image);
-		  }
-
-		  else if (null == newVal)
-		  {
-			try
-			{
-			      Executor.getInstance().executeAction(new OpenNewImageAction());
+			if (newVal instanceof Tab) {
+				PixTab tab = (PixTab) newVal;
+				PixImage image = tab.getImage();
+				GuiFacade.getInstance().setActiveImage(image);
 			}
-			catch (Exception e)
-			{
-			      new ExceptionPopUp(e);
+
+			else if (null == newVal) {
+				try {
+					Executor.getInstance().executeAction(new OpenNewImageAction());
+				} catch (Exception e) {
+					new ExceptionPopUp(e);
+				}
 			}
-		  }
 
-	    });
+		});
 
-      }
+	}
 
+	public void initialize(URL arg0, ResourceBundle arg1) {
 
-      public void initialize(URL arg0, ResourceBundle arg1)
-      {
+		populate();
 
-	    populate();
+		GuiFacade.getInstance().setPixTabPane(this);
 
-	    GuiFacade.getInstance().setPixTabPane(this);
+		// focusedProperty().addListener((obs, oldVal, newVal) -> {
+		// if (!newVal)
+		// {
+		// requestFocus();
+		// }
+		// });
 
-	    focusedProperty().addListener((obs, oldVal, newVal) -> {
-		  if (!newVal)
-		  {
-			requestFocus();
-		  }
-	    });
+	}
 
-      }
+	private void populate() {
 
-
-      private void populate()
-      {
-
-      }
+	}
 
 }

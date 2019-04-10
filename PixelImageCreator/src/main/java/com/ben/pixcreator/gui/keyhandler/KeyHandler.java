@@ -9,6 +9,7 @@ import com.ben.pixcreator.application.tools.PixTool;
 import com.ben.pixcreator.gui.facade.GuiFacade;
 
 import javafx.event.EventHandler;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
 public class KeyHandler implements EventHandler<KeyEvent> {
@@ -25,7 +26,7 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 
 		// log.debug("Handling " + event.getCode());
 		if (event.getEventType().getName().equals("KEY_PRESSED") &&
-				event.getCode().isWhitespaceKey()) {
+				event.getCode() == KeyCode.SPACE) {
 			// log.debug("KEY_PRESSED -> event.getCode() : " + event.getCode());
 
 			if (ctx.getCurrTool() != PixTool.PAN) {

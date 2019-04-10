@@ -107,7 +107,6 @@ public class PixTab extends Tab implements Initializable {
 		setPanMode(GuiFacade.getInstance().isPanMode());
 
 		canvas.setCursor(new ControlCursorFactory().getCursor());
-		// scrollPane.setCursor(new ControlCursorFactory().getCursor());
 
 	}
 
