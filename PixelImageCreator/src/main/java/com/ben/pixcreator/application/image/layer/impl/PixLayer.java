@@ -164,4 +164,22 @@ public class PixLayer extends ALayer {
 		return this;
 	}
 
+	public Coord minCell() {
+		// get the min X and Y coord
+		int minX = getGrid().keySet().stream().map(Coord::getX).min((a, b) -> Integer.compare(a, b)).get();
+
+		int minY = getGrid().keySet().stream().map(Coord::getY).min((a, b) -> Integer.compare(a, b)).get();
+
+		return new Coord(minX, minY);
+	}
+
+	public Coord maxCell() {
+		// get the max X and Y coord
+		int maxX = getGrid().keySet().stream().map(Coord::getX).max((a, b) -> Integer.compare(a, b)).get();
+
+		int maxY = getGrid().keySet().stream().map(Coord::getY).max((a, b) -> Integer.compare(a, b)).get();
+
+		return new Coord(maxX, maxY);
+	}
+
 }

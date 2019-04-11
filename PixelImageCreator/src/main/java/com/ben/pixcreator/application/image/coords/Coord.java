@@ -81,6 +81,16 @@ public class Coord implements Serializable, Comparable<Coord> {
 		this.y = y;
 	}
 
+	/**
+	 * @param factor
+	 * @return new Coord(getX() * factor, getY() * factor)
+	 */
+	public Coord mult(int factor) {
+
+		return new Coord(getX() * factor, getY() * factor);
+
+	}
+
 	@Override
 	public int compareTo(Coord oth) {
 

@@ -8,6 +8,7 @@ import com.ben.pixcreator.application.image.layer.modifier.IModifier;
 import com.ben.pixcreator.application.image.layer.modifier.impl.BrightnessModifier;
 import com.ben.pixcreator.application.image.layer.modifier.impl.HueModifier;
 import com.ben.pixcreator.application.image.layer.modifier.impl.OpacityModifier;
+import com.ben.pixcreator.application.image.layer.modifier.impl.SampleModifier;
 import com.ben.pixcreator.application.image.layer.modifier.impl.SaturationModifier;
 import com.ben.pixcreator.application.image.layer.modifier.impl.SizeModifier;
 import com.ben.pixcreator.application.image.layer.modifier.impl.TextModifier;
@@ -42,6 +43,9 @@ public class EffectLayerFactory {
 		case TEXT:
 			IModifier textModifier = new TextModifier(effect);
 			return textModifier.modify(layer);
+		case RESAMPLE:
+			IModifier sampleModifier = new SampleModifier(effect);
+			return sampleModifier.modify(layer);
 		default:
 			break;
 

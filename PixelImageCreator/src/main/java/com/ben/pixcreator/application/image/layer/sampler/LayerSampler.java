@@ -17,18 +17,17 @@ import javafx.scene.paint.Color;
 public class LayerSampler {
 
 	private PixLayer	pixLayer;
-	private final Coord	max;
+	private Coord		max	= new Coord();
+	private Coord		min	= new Coord();
 
 	public LayerSampler(PixLayer pixLayer) {
 
 		this.pixLayer = Objects.requireNonNull(pixLayer);
 
-		// get the max X and Y coord
-		int maxX = pixLayer.getGrid().keySet().stream().map(Coord::getX).max((a, b) -> Integer.compare(a, b)).get();
+		max = pixLayer.maxCell();
 
-		int maxY = pixLayer.getGrid().keySet().stream().map(Coord::getY).max((a, b) -> Integer.compare(a, b)).get();
+		min = pixLayer.minCell();
 
-		max = new Coord(maxX, maxY);
 	}
 
 	public PixLayer div(int xDivFactor, int yDivFactor) {
@@ -36,8 +35,8 @@ public class LayerSampler {
 		PixLayer resultLayer = new PixLayer();
 
 		// for each resulting new Coords (multiples of divfactors)
-		for (int x = 0; x <= max.getX(); x += xDivFactor) {
-			for (int y = 0; y <= max.getY(); y += yDivFactor) {
+		for (int x = min.getX(); x <= max.getX(); x += xDivFactor) {
+			for (int y = min.getY(); y <= max.getY(); y += yDivFactor) {
 
 				List<Color> colors = new ArrayList<>();
 
@@ -51,14 +50,18 @@ public class LayerSampler {
 					}
 				}
 				if (!colors.isEmpty()) {
-					resultLayer.getGrid().put(new Coord(x / xDivFactor, y / yDivFactor),
+					final int nouvX = x / xDivFactor;
+					final int nouvY = y / yDivFactor;
+					resultLayer.getGrid().put(new Coord(nouvX, nouvY),
 							new ColorRGB(ColorUtils.averageColor(colors)));
 				}
 			}
 
 		}
 
-		return resultLayer;
+		return (PixLayer) resultLayer.offset(
+				new Coord(-1 * (min.getX() - resultLayer.minCell().getX()),
+						-1 * (min.getY() - resultLayer.minCell().getY())));
 	}
 
 	public PixLayer mult(int xMultFactor, int yMultFactor) {
@@ -72,7 +75,7 @@ public class LayerSampler {
 
 		}
 
-		return resultLayer;
+		return (PixLayer) resultLayer.offset(min.mult(xMultFactor - 1));
 	}
 
 	private Map<Coord, ColorRGB> multCell(Coord coord, Color color, int xMultFactor, int yMultFactor) {

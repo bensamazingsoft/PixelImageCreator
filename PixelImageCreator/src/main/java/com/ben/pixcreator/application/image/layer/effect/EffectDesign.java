@@ -5,6 +5,6 @@ import java.io.Serializable;
 
 public enum EffectDesign implements Serializable {
 
-	OPACITY, SIZE, ENLARGE, SHRINK, HUE, SATURATION, BRIGHTNESS, TEXT;
+	OPACITY, SIZE, ENLARGE, SHRINK, HUE, SATURATION, BRIGHTNESS, TEXT, RESAMPLE;
 
 }
