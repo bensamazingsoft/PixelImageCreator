@@ -51,29 +51,38 @@ public class TextControl extends VBox implements IEffectPileViewItemControl {
 	private FontWeight		fontWeightParamSave		= FontWeight.NORMAL;
 	private String			textContentParamSave	= textContentParam.getValue();
 
+	ColorPicker					colorControl;
+	ChoiceBox<Integer>			sizeParamControl;
+	ChoiceBox<String>			fontFamilyControl;
+	ChoiceBox<TextAlignment>	textAlignControl;
+	ChoiceBox<VPos>				baselineControl;
+	ChoiceBox<FontPosture>		postureControl;
+	ChoiceBox<FontWeight>		fontWeightControl;
+	TextArea					textControl;
+
 	@SuppressWarnings("unchecked")
 	public TextControl(Effect fx) {
 		this.fx = fx;
 
 		colorParam = (ParamValue<ColorRGB>) fx.getParams().get(EffectParams.Param.COLOR);
-		ColorPicker colorControl = new ColorControl(colorParam);
+		colorControl = new ColorControl(colorParam);
 		fontSizeParam = (ParamValue<Integer>) fx.getParams().get(EffectParams.Param.FONTSIZE);
-		ChoiceBox<Integer> sizeParamControl = new ListChoiceControl<Integer>(TextLayer.fontSizes, fontSizeParam);
+		sizeParamControl = new ListChoiceControl<Integer>(TextLayer.fontSizes, fontSizeParam);
 		fontFamilyParam = (ParamValue<String>) fx.getParams().get(EffectParams.Param.FONTFAMILY);
-		ChoiceBox<String> fontFamilyControl = new ListChoiceControl<String>(Font.getFamilies(), fontFamilyParam);
+		fontFamilyControl = new ListChoiceControl<String>(Font.getFamilies(), fontFamilyParam);
 		textAlignParam = (ParamValue<TextAlignment>) fx.getParams().get(EffectParams.Param.TXTALIGN);
-		ChoiceBox<TextAlignment> textAlignControl = new ListChoiceControl<TextAlignment>(
+		textAlignControl = new ListChoiceControl<TextAlignment>(
 				Arrays.asList(TextAlignment.values()), textAlignParam);
 		baselineParam = (ParamValue<VPos>) fx.getParams().get(EffectParams.Param.TXTBASELINE);
-		ChoiceBox<VPos> baselineControl = new ListChoiceControl<VPos>(Arrays.asList(VPos.values()), baselineParam);
+		baselineControl = new ListChoiceControl<VPos>(Arrays.asList(VPos.values()), baselineParam);
 		postureParam = (ParamValue<FontPosture>) fx.getParams().get(EffectParams.Param.FONTPOSTURE);
-		ChoiceBox<FontPosture> postureControl = new ListChoiceControl<FontPosture>(Arrays.asList(FontPosture.values()),
+		postureControl = new ListChoiceControl<FontPosture>(Arrays.asList(FontPosture.values()),
 				postureParam);
 		fontWeightParam = (ParamValue<FontWeight>) fx.getParams().get(EffectParams.Param.FONTWEIGHT);
-		ChoiceBox<FontWeight> fontWeightControl = new ListChoiceControl<FontWeight>(Arrays.asList(FontWeight.values()),
+		fontWeightControl = new ListChoiceControl<FontWeight>(Arrays.asList(FontWeight.values()),
 				fontWeightParam);
 		textContentParam = (ParamValue<String>) fx.getParams().get(EffectParams.Param.TEXT);
-		TextArea textControl = new TextContentControl(textContentParam);
+		textControl = new TextContentControl(textContentParam);
 
 		save();
 
@@ -97,14 +106,30 @@ public class TextControl extends VBox implements IEffectPileViewItemControl {
 	@Override
 	public void bypass() {
 		save();
-		colorParam.setValue(colorParam.getBypass());
-		fontSizeParam.setValue(fontSizeParam.getBypass());
-		fontFamilyParam.setValue(fontFamilyParam.getBypass());
-		textAlignParam.setValue(textAlignParam.getBypass());
-		baselineParam.setValue(baselineParam.getBypass());
-		postureParam.setValue(postureParam.getBypass());
-		fontWeightParam.setValue(fontWeightParam.getBypass());
-		textContentParam.setValue(textContentParam.getBypass());
+
+		colorControl.setValue(colorParam.getBypass().getFxColor());
+		colorControl.setDisable(true);
+
+		sizeParamControl.setValue(fontSizeParam.getBypass());
+		sizeParamControl.setDisable(true);
+
+		fontFamilyControl.getSelectionModel().select(fontFamilyParam.getBypass());
+		fontFamilyControl.setDisable(true);
+
+		textAlignControl.getSelectionModel().select(textAlignParam.getBypass());
+		textAlignControl.setDisable(true);
+
+		baselineControl.getSelectionModel().select(baselineParam.getBypass());
+		baselineControl.setDisable(true);
+
+		postureControl.getSelectionModel().select(postureParam.getBypass());
+		postureControl.setDisable(true);
+
+		fontWeightControl.getSelectionModel().select(fontWeightParam.getBypass());
+		fontWeightControl.setDisable(true);
+
+		// textControl.setText(textContentParam.getBypass());
+		textControl.setDisable(true);
 
 	}
 
@@ -112,6 +137,22 @@ public class TextControl extends VBox implements IEffectPileViewItemControl {
 	public void enable() {
 
 		restore();
+
+		colorControl.setDisable(false);
+
+		sizeParamControl.setDisable(false);
+
+		fontFamilyControl.setDisable(false);
+
+		textAlignControl.setDisable(false);
+
+		baselineControl.setDisable(false);
+
+		postureControl.setDisable(false);
+
+		fontWeightControl.setDisable(false);
+
+		textControl.setDisable(false);
 	}
 
 	@Override
@@ -144,14 +185,19 @@ public class TextControl extends VBox implements IEffectPileViewItemControl {
 	@Override
 	public void restore() {
 
-		colorParam.setValue(colorParamSave);
-		fontSizeParam.setValue(fontSizeParamSave);
-		fontFamilyParam.setValue(fontFamilyParamSave);
-		textAlignParam.setValue(textAlignParamSave);
-		baselineParam.setValue(baselineParamSave);
-		postureParam.setValue(postureParamSave);
-		fontWeightParam.setValue(fontWeightParamSave);
-		textContentParam.setValue(textContentParamSave);
+		colorControl.setValue(colorParamSave.getFxColor());
+
+		sizeParamControl.setValue(fontSizeParamSave);
+
+		fontFamilyControl.getSelectionModel().select(fontFamilyParamSave);
+
+		textAlignControl.getSelectionModel().select(textAlignParamSave);
+
+		baselineControl.getSelectionModel().select(baselineParamSave);
+
+		postureControl.getSelectionModel().select(postureParamSave);
+
+		fontWeightControl.getSelectionModel().select(fontWeightParamSave);
 
 	}
 

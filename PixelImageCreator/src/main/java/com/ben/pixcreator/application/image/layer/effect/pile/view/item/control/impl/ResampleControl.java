@@ -35,6 +35,7 @@ public class ResampleControl extends VBox implements IEffectPileViewItemControl 
 	public void bypass() {
 		save();
 		param.setValue(param.getBypass());
+		choiceBox.getSelectionModel().select(param.getValue());
 		choiceBox.setDisable(true);
 
 	}
