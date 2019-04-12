@@ -16,7 +16,6 @@ import javafx.scene.canvas.Canvas;
 
 public class RefreshTabAction implements IAction {
 
-	@SuppressWarnings("unused")
 	private static final Logger log = LoggerFactory.getLogger(RefreshTabAction.class);
 
 	private final PixImage	image;
@@ -31,18 +30,17 @@ public class RefreshTabAction implements IAction {
 	@Override
 	public void execute() throws Exception {
 
-		// log.debug("Refresh tab : " + image.toString());
+		log.debug(image.toString());
 		canvas.getGraphicsContext2D().clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
 		Executor.getInstance().executeAction(new ActionUpdateSelection(image));
 		DrawImageFactory.getDrawImage(image).draw(canvas);
 
+		log.debug("MiniatureManager().update()");
 		for (ALayer layer : image.getLayerList().getAllItems()) {
 
 			GuiFacade.getInstance().getMiniatureManager().update(layer);
 
 		}
-
 	}
-
 }
