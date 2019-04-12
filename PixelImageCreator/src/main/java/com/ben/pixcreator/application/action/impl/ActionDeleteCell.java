@@ -6,7 +6,7 @@ import com.ben.pixcreator.application.action.ICancelable;
 import com.ben.pixcreator.application.color.rgb.ColorRGB;
 import com.ben.pixcreator.application.image.PixImage;
 import com.ben.pixcreator.application.image.coords.Coord;
-import com.ben.pixcreator.application.image.layer.impl.PixLayer;
+import com.ben.pixcreator.application.image.layer.impl.alayer.impl.PixLayer;
 import com.ben.pixcreator.gui.facade.GuiFacade;
 
 public class ActionDeleteCell implements IAction, ICancelable

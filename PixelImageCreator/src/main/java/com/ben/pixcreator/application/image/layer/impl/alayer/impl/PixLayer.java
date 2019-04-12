@@ -1,5 +1,5 @@
 
-package com.ben.pixcreator.application.image.layer.impl;
+package com.ben.pixcreator.application.image.layer.impl.alayer.impl;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import com.ben.pixcreator.application.color.rgb.ColorRGB;
 import com.ben.pixcreator.application.image.coords.Coord;
+import com.ben.pixcreator.application.image.layer.impl.alayer.ALayer;
 import com.ben.pixcreator.application.image.layer.sampler.LayerSampler;
 
 import javafx.scene.canvas.Canvas;
@@ -142,6 +143,7 @@ public class PixLayer extends ALayer {
 	public PixLayer duplicate() {
 
 		PixLayer duplicate = new PixLayer(new HashMap<>(this.grid));
+		duplicate.setUuid(getUUID());
 		duplicate.setVisible(isVisible());
 		duplicate.setOpacity(getOpacity());
 		return duplicate;

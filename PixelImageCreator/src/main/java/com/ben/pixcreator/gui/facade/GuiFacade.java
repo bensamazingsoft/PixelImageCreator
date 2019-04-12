@@ -16,7 +16,7 @@ import com.ben.pixcreator.application.context.PropertiesContext;
 import com.ben.pixcreator.application.executor.Executor;
 import com.ben.pixcreator.application.image.PixImage;
 import com.ben.pixcreator.application.image.coords.Coord;
-import com.ben.pixcreator.application.image.layer.impl.ALayer;
+import com.ben.pixcreator.application.image.layer.impl.alayer.ALayer;
 import com.ben.pixcreator.application.pile.Pile;
 import com.ben.pixcreator.application.selection.Selection;
 import com.ben.pixcreator.application.tools.PixTool;

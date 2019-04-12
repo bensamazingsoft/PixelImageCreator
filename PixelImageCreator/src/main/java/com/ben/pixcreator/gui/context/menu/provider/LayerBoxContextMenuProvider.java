@@ -1,10 +1,10 @@
 
 package com.ben.pixcreator.gui.context.menu.provider;
 
-import com.ben.pixcreator.application.image.layer.impl.ALayer;
-import com.ben.pixcreator.application.image.layer.impl.PicLayer;
-import com.ben.pixcreator.application.image.layer.impl.PixLayer;
-import com.ben.pixcreator.application.image.layer.impl.TextLayer;
+import com.ben.pixcreator.application.image.layer.impl.alayer.ALayer;
+import com.ben.pixcreator.application.image.layer.impl.alayer.impl.PicLayer;
+import com.ben.pixcreator.application.image.layer.impl.alayer.impl.PixLayer;
+import com.ben.pixcreator.application.image.layer.impl.alayer.impl.TextLayer;
 import com.ben.pixcreator.gui.context.menu.impl.PicLayerBoxContextMenu;
 import com.ben.pixcreator.gui.context.menu.impl.PixLayerBoxContextMenu;
 import com.ben.pixcreator.gui.context.menu.impl.TextLayerBoxContextMenu;

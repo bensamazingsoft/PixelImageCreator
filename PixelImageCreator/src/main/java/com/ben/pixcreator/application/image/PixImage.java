@@ -9,9 +9,9 @@ import org.slf4j.LoggerFactory;
 
 import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.application.image.layer.ILayer;
-import com.ben.pixcreator.application.image.layer.impl.ALayer;
-import com.ben.pixcreator.application.image.layer.impl.PicLayer;
-import com.ben.pixcreator.application.image.layer.impl.PixLayer;
+import com.ben.pixcreator.application.image.layer.impl.alayer.ALayer;
+import com.ben.pixcreator.application.image.layer.impl.alayer.impl.PicLayer;
+import com.ben.pixcreator.application.image.layer.impl.alayer.impl.PixLayer;
 import com.ben.pixcreator.application.pile.Pile;
 import com.ben.pixcreator.gui.facade.GuiFacade;
 

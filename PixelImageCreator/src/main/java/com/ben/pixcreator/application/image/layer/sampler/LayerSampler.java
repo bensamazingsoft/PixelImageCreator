@@ -10,7 +10,7 @@ import java.util.Objects;
 import com.ben.pixcreator.application.color.ColorUtils;
 import com.ben.pixcreator.application.color.rgb.ColorRGB;
 import com.ben.pixcreator.application.image.coords.Coord;
-import com.ben.pixcreator.application.image.layer.impl.PixLayer;
+import com.ben.pixcreator.application.image.layer.impl.alayer.impl.PixLayer;
 
 import javafx.scene.paint.Color;
 

@@ -16,7 +16,7 @@ import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.application.executor.Executor;
 import com.ben.pixcreator.application.grouplock.GroupLock;
 import com.ben.pixcreator.application.image.PixImage;
-import com.ben.pixcreator.application.image.layer.impl.ALayer;
+import com.ben.pixcreator.application.image.layer.impl.alayer.ALayer;
 import com.ben.pixcreator.gui.controls.layer.box.LayerBox;
 import com.ben.pixcreator.gui.controls.layer.panel.actions.LayerActions;
 import com.ben.pixcreator.gui.exception.popup.ExceptionPopUp;
@@ -63,6 +63,8 @@ public class LayerPanel extends BorderPane implements Initializable {
 			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "newPicLayerButImg.png"));
 	final Image	newTextLayerButImg		= new Image(
 			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "newTextLayerButImg.png"));
+	final Image	newBakeLayerButImg		= new Image(
+			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "newTextLayerButImg.png"));
 
 	@FXML
 	private ToolBar toolBar;
@@ -87,6 +89,9 @@ public class LayerPanel extends BorderPane implements Initializable {
 
 	@FXML
 	private Button newTextLayerBut;
+
+	@FXML
+	private Button newBakeLayerBut;
 
 	@FXML
 	private Button moveLayerUpBut;
@@ -203,6 +208,19 @@ public class LayerPanel extends BorderPane implements Initializable {
 
 	}
 
+	@FXML
+	private void handleNewBakeLayer(ActionEvent event) {
+
+		// handleNewLayer
+		newBakeLayer();
+	}
+
+	private void newBakeLayer() {
+
+		executeLayerAction(LayerActions.ADDNEWBAKE);
+
+	}
+
 	private void newPicLayer() {
 
 		executeLayerAction(LayerActions.ADDNEWPIC);
@@ -261,6 +279,8 @@ public class LayerPanel extends BorderPane implements Initializable {
 		newPicLayerBut.setGraphic(new ImageView(newPicLayerButImg));
 
 		newTextLayerBut.setGraphic(new ImageView(newTextLayerButImg));
+
+		newBakeLayerBut.setGraphic(new ImageView(newBakeLayerButImg));
 
 		moveLayerUpBut.setGraphic(new ImageView(moveLayerUpButImg));
 

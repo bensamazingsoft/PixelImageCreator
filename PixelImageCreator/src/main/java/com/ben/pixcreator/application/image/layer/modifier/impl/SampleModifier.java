@@ -3,8 +3,8 @@ package com.ben.pixcreator.application.image.layer.modifier.impl;
 import com.ben.pixcreator.application.image.effect.Effect;
 import com.ben.pixcreator.application.image.layer.effect.exception.EffectException;
 import com.ben.pixcreator.application.image.layer.effect.params.EffectParams;
-import com.ben.pixcreator.application.image.layer.impl.ALayer;
-import com.ben.pixcreator.application.image.layer.impl.PixLayer;
+import com.ben.pixcreator.application.image.layer.impl.alayer.ALayer;
+import com.ben.pixcreator.application.image.layer.impl.alayer.impl.PixLayer;
 import com.ben.pixcreator.application.image.layer.modifier.IModifier;
 import com.ben.pixcreator.application.image.layer.sampler.LayerSampler;
 

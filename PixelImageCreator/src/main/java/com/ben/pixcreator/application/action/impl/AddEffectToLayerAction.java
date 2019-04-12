@@ -7,7 +7,7 @@ import com.ben.pixcreator.application.image.effect.Effect;
 import com.ben.pixcreator.application.image.effect.manager.EffectManager;
 import com.ben.pixcreator.application.image.layer.effect.EffectDesign;
 import com.ben.pixcreator.application.image.layer.effect.params.EffectParams;
-import com.ben.pixcreator.application.image.layer.impl.ALayer;
+import com.ben.pixcreator.application.image.layer.impl.alayer.ALayer;
 import com.ben.pixcreator.gui.facade.GuiFacade;
 
 public class AddEffectToLayerAction implements IAction {

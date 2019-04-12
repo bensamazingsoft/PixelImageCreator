@@ -6,7 +6,7 @@ import com.ben.pixcreator.application.image.PixImage;
 import com.ben.pixcreator.application.image.effect.Effect;
 import com.ben.pixcreator.application.image.layer.draw.factory.DrawLayerFactory;
 import com.ben.pixcreator.application.image.layer.effect.exception.EffectException;
-import com.ben.pixcreator.application.image.layer.impl.ALayer;
+import com.ben.pixcreator.application.image.layer.impl.alayer.ALayer;
 import com.ben.pixcreator.application.pile.Pile;
 
 /**
@@ -33,10 +33,10 @@ public class DrawImageFactory {
 		// loop through all layers
 		for (int i = 0; i < drawImage.getLayerList().getItems().size(); i++) {
 
-			Pile<Effect> effectPile = AppContext.getInstance().getEffectManager().getImageLayerEffects(image,
-					image.getLayerList().getItem(i));
-
 			ALayer layer = drawImage.getLayerList().getItem(i);
+
+			Pile<Effect> effectPile = AppContext.getInstance().getEffectManager().getImageLayerEffects(image,
+					layer);
 
 			// check visibility here : no effect = no need to compute a non
 			// visible effect layer
@@ -46,7 +46,6 @@ public class DrawImageFactory {
 
 			}
 		}
-
 		return drawImage;
 	}
 

@@ -10,9 +10,9 @@ import com.ben.pixcreator.application.action.IAction;
 import com.ben.pixcreator.application.action.ICancelable;
 import com.ben.pixcreator.application.color.rgb.ColorRGB;
 import com.ben.pixcreator.application.image.coords.Coord;
-import com.ben.pixcreator.application.image.layer.impl.ALayer;
-import com.ben.pixcreator.application.image.layer.impl.PicLayer;
-import com.ben.pixcreator.application.image.layer.impl.PixLayer;
+import com.ben.pixcreator.application.image.layer.impl.alayer.ALayer;
+import com.ben.pixcreator.application.image.layer.impl.alayer.impl.PicLayer;
+import com.ben.pixcreator.application.image.layer.impl.alayer.impl.PixLayer;
 import com.ben.pixcreator.application.selection.Selection;
 
 public class ActionTranslateLayer implements IAction, ICancelable {

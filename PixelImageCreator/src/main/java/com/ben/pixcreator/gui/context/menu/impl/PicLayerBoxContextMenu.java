@@ -11,7 +11,7 @@ import com.ben.pixcreator.application.image.layer.effect.params.impl.HueEffectPa
 import com.ben.pixcreator.application.image.layer.effect.params.impl.OpacityEffectParams;
 import com.ben.pixcreator.application.image.layer.effect.params.impl.SaturationEffectParams;
 import com.ben.pixcreator.application.image.layer.effect.params.impl.SizeEffectParams;
-import com.ben.pixcreator.application.image.layer.impl.ALayer;
+import com.ben.pixcreator.application.image.layer.impl.alayer.ALayer;
 import com.ben.pixcreator.gui.exception.popup.ExceptionPopUp;
 import com.ben.pixcreator.gui.facade.GuiFacade;
 

@@ -4,8 +4,8 @@ package com.ben.pixcreator.application.image.layer.modifier.impl;
 import com.ben.pixcreator.application.image.effect.Effect;
 import com.ben.pixcreator.application.image.layer.effect.exception.EffectException;
 import com.ben.pixcreator.application.image.layer.effect.params.impl.TextEffectParams;
-import com.ben.pixcreator.application.image.layer.impl.ALayer;
-import com.ben.pixcreator.application.image.layer.impl.TextLayer;
+import com.ben.pixcreator.application.image.layer.impl.alayer.ALayer;
+import com.ben.pixcreator.application.image.layer.impl.alayer.impl.TextLayer;
 import com.ben.pixcreator.application.image.layer.modifier.IModifier;
 
 public class TextModifier implements IModifier

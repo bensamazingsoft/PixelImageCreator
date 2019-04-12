@@ -12,7 +12,7 @@ import com.ben.pixcreator.application.color.rgb.ColorRGB;
 import com.ben.pixcreator.application.executor.Executor;
 import com.ben.pixcreator.application.image.PixImage;
 import com.ben.pixcreator.application.image.coords.Coord;
-import com.ben.pixcreator.application.image.layer.impl.PixLayer;
+import com.ben.pixcreator.application.image.layer.impl.alayer.impl.PixLayer;
 import com.ben.pixcreator.application.selection.Selection;
 import com.ben.pixcreator.gui.controls.tab.PixTab;
 import com.ben.pixcreator.gui.facade.GuiFacade;

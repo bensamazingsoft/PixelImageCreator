@@ -1,7 +1,7 @@
 package com.ben.pixcreator.application.image.layer.modifier;
 
 import com.ben.pixcreator.application.image.layer.effect.exception.EffectException;
-import com.ben.pixcreator.application.image.layer.impl.ALayer;
+import com.ben.pixcreator.application.image.layer.impl.alayer.ALayer;
 
 public interface IModifier {
 

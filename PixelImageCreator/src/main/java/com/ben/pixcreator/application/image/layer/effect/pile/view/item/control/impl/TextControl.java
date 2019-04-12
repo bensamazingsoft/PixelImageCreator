@@ -12,7 +12,7 @@ import com.ben.pixcreator.application.image.layer.effect.pile.view.item.control.
 import com.ben.pixcreator.application.image.layer.effect.pile.view.item.control.choicebox.ListChoiceControl;
 import com.ben.pixcreator.application.image.layer.effect.pile.view.item.control.colorpicker.ColorControl;
 import com.ben.pixcreator.application.image.layer.effect.pile.view.item.control.textarea.TextContentControl;
-import com.ben.pixcreator.application.image.layer.impl.TextLayer;
+import com.ben.pixcreator.application.image.layer.impl.alayer.impl.TextLayer;
 
 import javafx.geometry.VPos;
 import javafx.scene.Node;

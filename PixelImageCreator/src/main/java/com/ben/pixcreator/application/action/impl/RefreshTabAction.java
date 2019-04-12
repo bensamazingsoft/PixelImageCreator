@@ -8,7 +8,7 @@ import com.ben.pixcreator.application.action.IAction;
 import com.ben.pixcreator.application.executor.Executor;
 import com.ben.pixcreator.application.image.PixImage;
 import com.ben.pixcreator.application.image.draw.factory.DrawImageFactory;
-import com.ben.pixcreator.application.image.layer.impl.ALayer;
+import com.ben.pixcreator.application.image.layer.impl.alayer.ALayer;
 import com.ben.pixcreator.gui.controls.tab.PixTab;
 import com.ben.pixcreator.gui.facade.GuiFacade;
 

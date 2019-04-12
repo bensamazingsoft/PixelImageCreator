@@ -29,6 +29,7 @@
 			<Button fx:id="newLayerBut" onAction="#handleNewLayer" />
 			<Button fx:id="newPicLayerBut" onAction="#handleNewPicLayer" />
 			<Button fx:id="newTextLayerBut" onAction="#handleNewTextLayer" />
+			<Button fx:id="newBakeLayerBut" onAction="#handleNewBakeLayer" />
 			<Button fx:id="duplicateLayerBut"
 				onAction="#handleDuplicateLayer" />
 			<Button fx:id="deleteLayerBut" onAction="#handleDeleteLayer" />

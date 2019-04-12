@@ -2,7 +2,7 @@ package com.ben.pixcreator.gui.context.menu.impl;
 
 import com.ben.pixcreator.application.image.layer.effect.EffectDesign;
 import com.ben.pixcreator.application.image.layer.effect.params.impl.TextEffectParams;
-import com.ben.pixcreator.application.image.layer.impl.ALayer;
+import com.ben.pixcreator.application.image.layer.impl.alayer.ALayer;
 
 import javafx.scene.control.ContextMenu;
 
