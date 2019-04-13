@@ -52,7 +52,7 @@ public class SelectActionFactory implements IActionFactory
 
 					  // return new
 					  // ActionUpdateSelection(GuiFacade.getInstance().getActiveImage());
-					  return null;
+					  return new ActionUpdateSelection(GuiFacade.getInstance().getActiveImage());
 
 				    }
 

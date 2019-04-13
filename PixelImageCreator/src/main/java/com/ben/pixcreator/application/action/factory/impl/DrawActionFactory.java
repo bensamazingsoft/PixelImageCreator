@@ -10,11 +10,13 @@ import com.ben.pixcreator.application.action.factory.IActionFactory;
 import com.ben.pixcreator.application.action.impl.ActionChangeCellColor;
 import com.ben.pixcreator.application.action.impl.ActionDeleteCell;
 import com.ben.pixcreator.application.action.impl.ActionNoOp;
+import com.ben.pixcreator.application.action.impl.RefreshTabAction;
 import com.ben.pixcreator.application.executor.Executor;
 import com.ben.pixcreator.application.image.PixImage;
 import com.ben.pixcreator.application.image.coords.Coord;
 import com.ben.pixcreator.application.image.layer.impl.alayer.ALayer;
 import com.ben.pixcreator.application.image.layer.impl.alayer.impl.PixLayer;
+import com.ben.pixcreator.gui.controls.tab.PixTab;
 import com.ben.pixcreator.gui.exception.popup.ExceptionPopUp;
 import com.ben.pixcreator.gui.facade.GuiFacade;
 
@@ -28,6 +30,7 @@ public class DrawActionFactory implements IActionFactory
 
       @SuppressWarnings("unused")
       private static final Logger log = LoggerFactory.getLogger(DrawActionFactory.class);
+      private PixTab		  tab = GuiFacade.getInstance().getActiveTab();
 
 
       @Override
@@ -55,10 +58,12 @@ public class DrawActionFactory implements IActionFactory
 				    if (((MouseEvent) event).getButton() == MouseButton.PRIMARY)
 				    {
 					  Executor.getInstance().continueOperation((ICancelable) getChangeCellColorAction(event));
+					  Executor.getInstance().executeAction(new RefreshTabAction(tab));
 				    }
 				    if (((MouseEvent) event).getButton() == MouseButton.SECONDARY)
 				    {
 					  Executor.getInstance().continueOperation((ICancelable) getDeleteCellAction(event));
+					  Executor.getInstance().executeAction(new RefreshTabAction(tab));
 				    }
 			      }
 			      catch (Exception e)
@@ -81,11 +86,13 @@ public class DrawActionFactory implements IActionFactory
 				    if (((MouseEvent) event).getButton() == MouseButton.PRIMARY)
 				    {
 					  Executor.getInstance().continueOperation((ICancelable) getChangeCellColorAction(event));
+					  Executor.getInstance().executeAction(new RefreshTabAction(tab));
 				    }
 				    if (((MouseEvent) event).getButton() == MouseButton.SECONDARY)
 				    {
 					  event.consume();
 					  Executor.getInstance().continueOperation((ICancelable) getDeleteCellAction(event));
+					  Executor.getInstance().executeAction(new RefreshTabAction(tab));
 				    }
 			      }
 			      catch (Exception e)
