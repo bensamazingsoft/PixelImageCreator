@@ -21,151 +21,178 @@ import com.ben.pixcreator.gui.facade.GuiFacade;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 
-public class LayerAction implements IAction, ICancelable {
+public class LayerAction implements IAction, ICancelable
+{
 
-	final AppContext	ctx	= AppContext.getInstance();
-	final GuiFacade		gui	= GuiFacade.getInstance();
+      final AppContext		 ctx = AppContext.getInstance();
+      final GuiFacade		 gui = GuiFacade.getInstance();
 
-	private final Pile<ALayer>	layerList;
-	private final ALayer		layer;
-	private final LayerActions	action;
+      private final Pile<ALayer> layerList;
+      private final ALayer	 layer;
+      private final LayerActions action;
 
-	public LayerAction(PixImage image, ALayer layer, LayerActions action) {
 
-		super();
-		this.layerList = image.getLayerList();
-		this.layer = layer;
-		this.action = action;
-	}
+      public LayerAction(PixImage image, ALayer layer, LayerActions action)
+      {
 
-	@Override
-	public void execute() throws Exception {
+	    super();
+	    this.layerList = image.getLayerList();
+	    this.layer = layer;
+	    this.action = action;
+      }
 
-		switch (action) {
-		case ADDNEW:
-			addNewPix();
-			break;
-		case ADDNEWPIC:
-			addNewPic();
-			break;
-		case ADDNEWTEXT:
-			addNewText();
-			break;
-		case ADDNEWBAKE:
-			addNewBake();
-			break;
-		case DELETE:
-			delete();
-			break;
-		case DUPLICATE:
-			duplicate();
-			break;
-		case MOVEDOWN:
-			moveDown();
-			break;
-		case MOVEUP:
-			moveUp();
-			break;
-		default:
-			break;
 
-		}
+      @Override
+      public void execute() throws Exception
+      {
 
-	}
+	    switch (action)
+	    {
+	    case ADDNEW:
+		  addNewPix();
+		  break;
+	    case ADDNEWPIC:
+		  addNewPic();
+		  break;
+	    case ADDNEWTEXT:
+		  addNewText();
+		  break;
+	    case ADDNEWBAKE:
+		  addNewBake();
+		  break;
+	    case DELETE:
+		  delete();
+		  break;
+	    case DUPLICATE:
+		  duplicate();
+		  break;
+	    case MOVEDOWN:
+		  moveDown();
+		  break;
+	    case MOVEUP:
+		  moveUp();
+		  break;
+	    default:
+		  break;
 
-	private void moveUp() {
+	    }
 
-		layerList.moveUp(layer);
-		gui.setFocusLayer(layer);
+      }
 
-	}
 
-	private void moveDown() {
+      private void moveUp()
+      {
 
-		layerList.moveDown(layer);
-		gui.setFocusLayer(layer);
+	    layerList.moveUp(layer);
+	    gui.setFocusLayer(layer);
 
-	}
+      }
 
-	private void duplicate() {
 
-		ALayer dup = layer.duplicate();
-		dup.setUuid(UUID.randomUUID());
+      private void moveDown()
+      {
 
-		layerList.insertUnder(layer, dup);
-		gui.setFocusLayer(layer);
+	    layerList.moveDown(layer);
+	    gui.setFocusLayer(layer);
 
-	}
+      }
 
-	private void delete() {
 
-		ctx.getGroupLocks().get(gui.getActiveimage()).unlock(layer);
+      private void duplicate()
+      {
 
-		ctx.getEffectManager().getImageEffects(gui.getActiveimage())
-				.remove(gui.getActiveLayer());
+	    ALayer dup = layer.duplicate();
+	    dup.setUuid(UUID.randomUUID());
 
-		layerList.removeOfItem(layer);
+	    layerList.insertUnder(layer, dup);
+	    gui.setFocusLayer(layer);
 
-	}
+      }
 
-	private void addNewPix() {
 
-		final PixLayer pixLayer = new PixLayer();
-		insertNewLayer(pixLayer);
+      private void delete()
+      {
 
-	}
+	    ctx.getGroupLocks().get(gui.getActiveimage()).unlock(layer);
 
-	private void addNewText() {
+	    ctx.getEffectManager().getImageEffects(gui.getActiveimage())
+			.remove(gui.getActiveLayer());
 
-		final TextLayer txtLayer = new TextLayer();
-		txtLayer.zoomFactorProperty()
-				.bindBidirectional(gui.getActiveTab().zoomFactorAdjustedProperty());
-		insertNewLayer(txtLayer);
+	    layerList.removeOfItem(layer);
 
-	}
+      }
 
-	private void addNewBake() {
 
-		final BakeLayer bakeLayer = new BakeLayer(gui.getActiveimage());
+      private void addNewPix()
+      {
 
-		bakeLayer.zoomFactorProperty()
-				.bindBidirectional(gui.getActiveTab().zoomFactorAdjustedProperty());
+	    final PixLayer pixLayer = new PixLayer();
+	    insertNewLayer(pixLayer);
 
-		insertNewLayer(bakeLayer);
+      }
 
-	}
 
-	private void addNewPic() {
+      private void addNewText()
+      {
 
-		FileChooser fc = new FileChooser();
-		fc.getExtensionFilters().addAll(
-				Arrays.asList(new ExtensionFilter("pics extensions", Arrays.asList("*.jpg", "*.png", "*.bmp"))));
+	    final TextLayer txtLayer = new TextLayer();
+	    txtLayer.zoomFactorProperty()
+			.bindBidirectional(gui.getActiveTab().zoomFactorAdjustedProperty());
+	    insertNewLayer(txtLayer);
 
-		File picfile = fc.showOpenDialog(null);
-		;
+      }
 
-		if (null != picfile && picfile.exists()) {
 
-			PicLayer picLayer = new PicLayer(picfile);
+      private void addNewBake()
+      {
 
-			picLayer.zoomFactorProperty()
-					.bindBidirectional(gui.getActiveTab().zoomFactorAdjustedProperty());
+	    final BakeLayer bakeLayer = new BakeLayer();
 
-			insertNewLayer(picLayer);
-		}
+	    bakeLayer.zoomFactorProperty()
+			.bindBidirectional(gui.getActiveTab().zoomFactorAdjustedProperty());
 
-	}
+	    insertNewLayer(bakeLayer);
 
-	private void insertNewLayer(ALayer newLayer) {
+      }
 
-		layerList.insertOver(layer, newLayer);
-		gui.setFocusLayer(newLayer);
 
-	}
+      private void addNewPic()
+      {
 
-	@Override
-	public void cancel() throws Exception {
+	    FileChooser fc = new FileChooser();
+	    fc.getExtensionFilters().addAll(
+			Arrays.asList(new ExtensionFilter("pics extensions", Arrays.asList("*.jpg", "*.png", "*.bmp"))));
 
-	}
+	    File picfile = fc.showOpenDialog(null);
+	    ;
+
+	    if (null != picfile && picfile.exists())
+	    {
+
+		  PicLayer picLayer = new PicLayer(picfile);
+
+		  picLayer.zoomFactorProperty()
+			      .bindBidirectional(gui.getActiveTab().zoomFactorAdjustedProperty());
+
+		  insertNewLayer(picLayer);
+	    }
+
+      }
+
+
+      private void insertNewLayer(ALayer newLayer)
+      {
+
+	    layerList.insertOver(layer, newLayer);
+	    gui.setFocusLayer(newLayer);
+
+      }
+
+
+      @Override
+      public void cancel() throws Exception
+      {
+
+      }
 
 }

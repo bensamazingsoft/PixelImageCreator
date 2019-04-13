@@ -8,7 +8,6 @@ import com.ben.pixcreator.application.image.layer.draw.factory.DrawLayerFactory;
 import com.ben.pixcreator.application.image.layer.effect.exception.EffectException;
 import com.ben.pixcreator.application.image.layer.impl.alayer.ALayer;
 import com.ben.pixcreator.application.image.layer.impl.alayer.impl.BakeLayer;
-import com.ben.pixcreator.application.image.layer.impl.alayer.impl.PicLayer;
 import com.ben.pixcreator.application.pile.Pile;
 
 /**
@@ -31,50 +30,55 @@ public class DrawImageFactory
       {
 
 	    PixImage drawImage = image.duplicate();
-	    preBake(drawImage, image);
+
 	    // loop through all layers
 	    for (int i = 0; i < drawImage.getLayerList().getItems().size(); i++)
 	    {
 
 		  ALayer layer = drawImage.getLayerList().getItem(i);
 
-		  Pile<Effect> effectPile = AppContext.getInstance().getEffectManager().getImageLayerEffects(image,
-			      layer);
-
-		  // check visibility here : no effect = no need to compute a non
-		  // visible effect layer
-		  if (!effectPile.isEmpty() && layer.isVisible())
+		  // process non BakeLayer
+		  if (!(layer instanceof BakeLayer))
 		  {
+			// retrieve layer effects
+			Pile<Effect> effectPile = new Pile<Effect>(AppContext.getInstance().getEffectManager().getImageLayerEffects(image,
+				    layer));
 
-			drawImage.getLayerList().replace(i, DrawLayerFactory.getDrawLayer(effectPile, layer));
+			for (int a = i; a < drawImage.getLayerList().getItems().size(); a++)
+			{
 
+			      ALayer layer2 = drawImage.getLayerList().getItem(a);
+
+			      if (layer2 instanceof BakeLayer)
+			      {
+
+				    Pile<Effect> bakeEffectPile = AppContext.getInstance().getEffectManager().getImageLayerEffects(image,
+						layer2);
+
+				    if (!bakeEffectPile.isEmpty())
+				    {
+					  for (int x = 0; x < bakeEffectPile.getAllItems().size(); x++)
+					  {
+
+						effectPile.add(bakeEffectPile.getItem(x));
+
+					  }
+				    }
+
+			      }
+
+			}
+			// check visibility here : no effect = no need to compute a non
+			// visible effect layer
+			if (!effectPile.isEmpty() && layer.isVisible())
+			{
+
+			      drawImage.getLayerList().replace(i, DrawLayerFactory.getDrawLayer(effectPile, layer));
+
+			}
 		  }
 	    }
 	    return drawImage;
-      }
-
-
-      private static void preBake(PixImage drawImage, PixImage image) throws EffectException
-      {
-
-	    for (int i = 0; i < drawImage.getLayerList().getItems().size(); i++)
-	    {
-
-		  ALayer layer = drawImage.getLayerList().getItem(i);
-
-		  if (layer instanceof BakeLayer)
-		  {
-
-			PicLayer bakedPicLayer = ((BakeLayer) layer).getBakedPicLayer();
-
-			// Pile<Effect> effectPile = AppContext.getInstance().getEffectManager().getImageLayerEffects(image,
-			// layer);
-
-			drawImage.getLayerList().replace(i, bakedPicLayer);
-
-		  }
-	    }
-
       }
 
 }

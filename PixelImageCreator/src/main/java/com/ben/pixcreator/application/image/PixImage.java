@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.application.image.layer.ILayer;
 import com.ben.pixcreator.application.image.layer.impl.alayer.ALayer;
-import com.ben.pixcreator.application.image.layer.impl.alayer.impl.BakeLayer;
 import com.ben.pixcreator.application.image.layer.impl.alayer.impl.PicLayer;
 import com.ben.pixcreator.application.image.layer.impl.alayer.impl.PixLayer;
 import com.ben.pixcreator.application.pile.Pile;
@@ -181,10 +180,10 @@ public class PixImage implements Serializable
 		  ALayer layer = this.layerList.getItem(i);
 		  clone.layerList.add(layer.duplicate());
 
-		  if (layer instanceof BakeLayer)
-		  {
-			((BakeLayer) layer).setHostImage(clone);
-		  }
+		  // if (layer instanceof BakeLayer)
+		  // {
+		  // ((BakeLayer) layer).setHostImage(clone);
+		  // }
 
 	    }
 
