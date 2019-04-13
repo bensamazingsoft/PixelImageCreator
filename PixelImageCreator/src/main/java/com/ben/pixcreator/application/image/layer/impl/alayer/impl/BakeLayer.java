@@ -67,7 +67,10 @@ public class BakeLayer extends PicLayer
 			      try
 			      {
 
-				    DrawLayerFactory.getDrawLayer(bakeEffectPile, DrawLayerFactory.getDrawLayer(effectPile, layer)).draw(
+				    ALayer drawLayerEffect = DrawLayerFactory.getDrawLayer(effectPile, layer);
+				    // ALayer drawBakedEffect = DrawLayerFactory.getDrawLayer(bakeEffectPile, drawLayerEffect);
+
+				    drawLayerEffect.draw(
 						canvas,
 						getHostImage().getxGridResolution(),
 						getHostImage().getyGridResolution());
@@ -119,6 +122,36 @@ public class BakeLayer extends PicLayer
 	    clone.setOpacity(getOpacity());
 
 	    return clone;
+      }
+
+
+      public PicLayer getBakedPicLayer()
+      {
+
+	    PicLayer baked = new PicLayer();
+
+	    bake();
+
+	    baked.setUuid(getUUID());
+
+	    baked.setVisible(isVisible());
+
+	    baked.setPosition(getPosition());
+
+	    baked.setSizeFactorX(getSizeFactorX());
+
+	    baked.setSizeFactorY(getSizeFactorY());
+
+	    baked.setZoomFactor(getZoomFactor());
+
+	    baked.setImage(getImage());
+
+	    baked.setImageFile(getImageFile());
+
+	    baked.setOpacity(getOpacity());
+
+	    return baked;
+
       }
 
 
