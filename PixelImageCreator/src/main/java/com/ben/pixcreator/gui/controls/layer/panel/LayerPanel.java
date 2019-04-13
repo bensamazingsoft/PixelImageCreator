@@ -64,7 +64,7 @@ public class LayerPanel extends BorderPane implements Initializable {
 	final Image	newTextLayerButImg		= new Image(
 			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "newTextLayerButImg.png"));
 	final Image	newBakeLayerButImg		= new Image(
-			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "newTextLayerButImg.png"));
+			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "newBakeLayerButImg.png"));
 
 	@FXML
 	private ToolBar toolBar;

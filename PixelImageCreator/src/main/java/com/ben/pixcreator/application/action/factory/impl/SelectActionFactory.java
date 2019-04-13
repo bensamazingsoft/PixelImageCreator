@@ -1,3 +1,4 @@
+
 package com.ben.pixcreator.application.action.factory.impl;
 
 import org.slf4j.Logger;
@@ -5,6 +6,7 @@ import org.slf4j.LoggerFactory;
 
 import com.ben.pixcreator.application.action.IAction;
 import com.ben.pixcreator.application.action.factory.IActionFactory;
+import com.ben.pixcreator.application.action.impl.ActionNoOp;
 import com.ben.pixcreator.application.action.impl.ActionUpdateSelection;
 import com.ben.pixcreator.application.image.coords.Coord;
 import com.ben.pixcreator.application.selection.Selection;
@@ -15,66 +17,81 @@ import javafx.event.Event;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
-public class SelectActionFactory implements IActionFactory {
+public class SelectActionFactory implements IActionFactory
+{
 
-	@SuppressWarnings("unused")
-	private static final Logger log = LoggerFactory.getLogger(SelectActionFactory.class);
+      @SuppressWarnings("unused")
+      private static final Logger log = LoggerFactory.getLogger(SelectActionFactory.class);
 
-	@Override
-	public IAction getAction(Event event) {
-		IAction action = null;
 
-		if (event instanceof MouseEvent) {
+      @Override
+      public IAction getAction(Event event)
+      {
 
-			switch (event.getEventType().getName()) {
+	    IAction action = new ActionNoOp();
 
-			case ("MOUSE_PRESSED"): {
+	    if (event instanceof MouseEvent)
+	    {
 
-				if (((MouseEvent) event).getButton() == MouseButton.PRIMARY) {
+		  switch (event.getEventType().getName())
+		  {
 
-					try {
-						if (((MouseEvent) event).getButton() == MouseButton.PRIMARY) {
+		  case ("MOUSE_PRESSED"):
+		  {
 
-							GuiFacade.getInstance().getSelections().put(GuiFacade.getInstance().getActiveImage(),
-									new Selection(eventCoord((MouseEvent) event), eventCoord((MouseEvent) event)));
+			if (((MouseEvent) event).getButton() == MouseButton.PRIMARY)
+			{
 
-							// return new
-							// ActionUpdateSelection(GuiFacade.getInstance().getActiveImage());
-							return null;
+			      try
+			      {
+				    if (((MouseEvent) event).getButton() == MouseButton.PRIMARY)
+				    {
 
-						}
+					  GuiFacade.getInstance().getSelections().put(GuiFacade.getInstance().getActiveImage(),
+						      new Selection(eventCoord((MouseEvent) event), eventCoord((MouseEvent) event)));
 
-					} catch (Exception e) {
-						new ExceptionPopUp(e);
-					}
-				}
-				event.consume();
-				break;
+					  // return new
+					  // ActionUpdateSelection(GuiFacade.getInstance().getActiveImage());
+					  return null;
+
+				    }
+
+			      }
+			      catch (Exception e)
+			      {
+				    new ExceptionPopUp(e);
+			      }
 			}
+			event.consume();
+			break;
+		  }
 
-			case ("MOUSE_DRAGGED"): {
+		  case ("MOUSE_DRAGGED"):
+		  {
 
-				if (((MouseEvent) event).getButton() == MouseButton.PRIMARY) {
+			if (((MouseEvent) event).getButton() == MouseButton.PRIMARY)
+			{
 
-					if (null != GuiFacade.getInstance().getSelections().get(GuiFacade.getInstance().getActiveImage())) {
+			      if (null != GuiFacade.getInstance().getSelections().get(GuiFacade.getInstance().getActiveImage()))
+			      {
 
-						Coord start = GuiFacade.getInstance().getSelections()
-								.get(GuiFacade.getInstance().getActiveImage()).getStart();
+				    Coord start = GuiFacade.getInstance().getSelections()
+						.get(GuiFacade.getInstance().getActiveImage()).getStart();
 
-						GuiFacade.getInstance().getSelections().put(GuiFacade.getInstance().getActiveImage(),
-								new Selection(start, eventCoord((MouseEvent) event)));
+				    GuiFacade.getInstance().getSelections().put(GuiFacade.getInstance().getActiveImage(),
+						new Selection(start, eventCoord((MouseEvent) event)));
 
-						return new ActionUpdateSelection(GuiFacade.getInstance().getActiveImage());
+				    return new ActionUpdateSelection(GuiFacade.getInstance().getActiveImage());
 
-					}
+			      }
 
-				}
-				event.consume();
-				break;
 			}
+			event.consume();
+			break;
+		  }
 
-			}
-		}
-		return action;
-	}
+		  }
+	    }
+	    return action;
+      }
 }
