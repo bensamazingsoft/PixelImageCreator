@@ -1,3 +1,4 @@
+
 package com.ben.pixcreator.application.image.layer.impl.alayer.impl;
 
 import com.ben.pixcreator.application.context.AppContext;
@@ -11,100 +12,127 @@ import com.ben.pixcreator.gui.exception.popup.ExceptionPopUp;
 
 import javafx.scene.canvas.Canvas;
 
-public class BakeLayer extends PicLayer {
+public class BakeLayer extends PicLayer
+{
 
-	private static final long	serialVersionUID	= 1L;
-	private PixImage			hostImage;
+      private static final long	serialVersionUID = 1L;
+      private PixImage		hostImage;
 
-	public BakeLayer(PixImage hostImage) {
-		super();
-		this.hostImage = hostImage;
-		bake();
-	}
 
-	@Override
-	public void draw(Canvas canvas, int xGridResolution, int yGridResolution) {
+      public BakeLayer(PixImage hostImage)
+      {
 
-		bake();
-		super.draw(canvas, xGridResolution, yGridResolution);
-	}
+	    super();
+	    this.hostImage = hostImage;
+	    bake();
+      }
 
-	private void bake() {
 
-		Canvas canvas = new Canvas();
-		canvas.setWidth(getHostImage().getxSize());
-		canvas.setHeight(getHostImage().getySize());
+      @Override
+      public void draw(Canvas canvas, int xGridResolution, int yGridResolution)
+      {
 
-		final Pile<ALayer> layerList = getHostImage().getLayerList();
+	    bake();
+	    super.draw(canvas, xGridResolution, yGridResolution);
+      }
 
-		int id = layerList.getIdx(this);
 
-		if (id > 0) {
+      private void bake()
+      {
 
-			for (int i = 0; i < id; i++) {
+	    Canvas canvas = new Canvas();
+	    canvas.setWidth(getHostImage().getxSize());
+	    canvas.setHeight(getHostImage().getySize());
 
-				final ALayer layer = layerList.getItem(i);
-				Pile<Effect> effectPile = AppContext.getInstance().getEffectManager().getImageLayerEffects(
-						getHostImage(),
-						layer);
+	    final Pile<ALayer> layerList = getHostImage().getLayerList();
 
-				if (true) {
-					try {
+	    int id = layerList.getIdx(this);
 
-						DrawLayerFactory.getDrawLayer(effectPile, layer).draw(
-								canvas,
-								getHostImage().getxGridResolution(),
-								getHostImage().getyGridResolution());
+	    if (id > 0)
+	    {
 
-					} catch (EffectException e) {
-						new ExceptionPopUp(e);
-					}
-				}
+		  for (int i = 0; i < id; i++)
+		  {
 
+			final ALayer layer = layerList.getItem(i);
+			Pile<Effect> effectPile = AppContext.getInstance().getEffectManager().getImageLayerEffects(
+				    getHostImage(),
+				    layer);
+			Pile<Effect> bakeEffectPile = AppContext.getInstance().getEffectManager().getImageLayerEffects(
+				    getHostImage(),
+				    this);
+
+			if (true)
+			{
+			      try
+			      {
+
+				    DrawLayerFactory.getDrawLayer(bakeEffectPile, DrawLayerFactory.getDrawLayer(effectPile, layer)).draw(
+						canvas,
+						getHostImage().getxGridResolution(),
+						getHostImage().getyGridResolution());
+
+			      }
+			      catch (EffectException e)
+			      {
+				    new ExceptionPopUp(e);
+			      }
 			}
-		}
-		setImage(canvas.snapshot(null, null));
 
-	}
+		  }
+	    }
+	    setImage(canvas.snapshot(null, null));
 
-	@Override
-	public String toString() {
+      }
 
-		return "BakeLayer [image : " + getImage() + "]";
-	}
 
-	@Override
-	public ALayer duplicate() {
+      @Override
+      public String toString()
+      {
 
-		BakeLayer clone = new BakeLayer(getHostImage());
+	    return "BakeLayer [image : " + getImage() + "]";
+      }
 
-		clone.setUuid(getUUID());
 
-		clone.setVisible(isVisible());
+      @Override
+      public ALayer duplicate()
+      {
 
-		clone.setPosition(getPosition());
+	    BakeLayer clone = new BakeLayer(getHostImage());
 
-		clone.setSizeFactorX(getSizeFactorX());
+	    clone.setUuid(getUUID());
 
-		clone.setSizeFactorY(getSizeFactorY());
+	    clone.setVisible(isVisible());
 
-		clone.setZoomFactor(getZoomFactor());
+	    clone.setPosition(getPosition());
 
-		clone.setImage(getImage());
+	    clone.setSizeFactorX(getSizeFactorX());
 
-		clone.setImageFile(getImageFile());
+	    clone.setSizeFactorY(getSizeFactorY());
 
-		clone.setOpacity(getOpacity());
+	    clone.setZoomFactor(getZoomFactor());
 
-		return clone;
-	}
+	    clone.setImage(getImage());
 
-	public PixImage getHostImage() {
-		return hostImage;
-	}
+	    clone.setImageFile(getImageFile());
 
-	public void setHostImage(PixImage hostImage) {
-		this.hostImage = hostImage;
-	}
+	    clone.setOpacity(getOpacity());
+
+	    return clone;
+      }
+
+
+      public PixImage getHostImage()
+      {
+
+	    return hostImage;
+      }
+
+
+      public void setHostImage(PixImage hostImage)
+      {
+
+	    this.hostImage = hostImage;
+      }
 
 }

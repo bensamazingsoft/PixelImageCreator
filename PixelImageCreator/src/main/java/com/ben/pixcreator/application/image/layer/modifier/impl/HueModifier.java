@@ -1,3 +1,4 @@
+
 package com.ben.pixcreator.application.image.layer.modifier.impl;
 
 import java.util.HashMap;
@@ -18,55 +19,64 @@ import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-public class HueModifier implements IModifier {
+public class HueModifier implements IModifier
+{
 
-	private Effect fx;
+      private Effect fx;
 
-	public HueModifier(Effect effect) {
-		this.fx = effect;
-	}
 
-	@Override
-	public ALayer modify(ALayer layer) throws EffectException {
+      public HueModifier(Effect effect)
+      {
 
-		if (fx.getEffect() != EffectDesign.HUE) {
-			throw new EffectException("Effect design is not HUE");
-		}
+	    this.fx = effect;
+      }
 
-		HueEffectParams hueParam = (HueEffectParams) fx.getParams();
-		double hueShift = hueParam.getHue();
 
-		if ((layer instanceof PixLayer)) {
+      @Override
+      public ALayer modify(ALayer layer) throws EffectException
+      {
 
-			PixLayer pxLayer = (PixLayer) layer.duplicate();
+	    if (fx.getEffect() != EffectDesign.HUE)
+	    {
+		  throw new EffectException("Effect design is not HUE");
+	    }
 
-			Map<Coord, ColorRGB> newGrid = new HashMap<>();
+	    HueEffectParams hueParam = (HueEffectParams) fx.getParams();
+	    double hueShift = hueParam.getHue();
 
-			pxLayer.getGrid().forEach((coord, colorRGB) -> {
-				newGrid.put(coord, new ColorRGB(colorRGB.getFxColor().deriveColor(hueShift, 1, 1, 1)));
-			});
+	    if ((layer instanceof PixLayer))
+	    {
 
-			pxLayer.setGrid(newGrid);
+		  PixLayer pxLayer = (PixLayer) layer.duplicate();
 
-			return pxLayer;
-		}
+		  Map<Coord, ColorRGB> newGrid = new HashMap<>();
 
-		if (layer instanceof PicLayer) {
+		  pxLayer.getGrid().forEach((coord, colorRGB) -> {
+			newGrid.put(coord, new ColorRGB(colorRGB.getFxColor().deriveColor(hueShift, 1, 1, 1)));
+		  });
 
-			PicLayer pcLayer = (PicLayer) layer.duplicate();
+		  pxLayer.setGrid(newGrid);
 
-			ImageView view = new ImageView(pcLayer.getImage());
-			view.setEffect(new ColorAdjust((hueShift / 150) - 1, 0, 0, 0));
+		  return pxLayer;
+	    }
 
-			Image snapshot = view.snapshot(null, null);
+	    if (layer instanceof PicLayer)
+	    {
 
-			pcLayer.setImage(snapshot);
+		  PicLayer pcLayer = (PicLayer) layer;
 
-			return pcLayer;
-		}
+		  ImageView view = new ImageView(pcLayer.getImage());
+		  view.setEffect(new ColorAdjust((hueShift / 150) - 1, 0, 0, 0));
 
-		return layer;
+		  Image snapshot = view.snapshot(null, null);
 
-	}
+		  pcLayer.setImage(snapshot);
+
+		  return pcLayer;
+	    }
+
+	    return layer;
+
+      }
 
 }

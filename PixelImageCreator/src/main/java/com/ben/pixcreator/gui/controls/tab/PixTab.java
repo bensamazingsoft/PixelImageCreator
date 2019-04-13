@@ -192,9 +192,9 @@ public class PixTab extends Tab implements Initializable
 			{
 
 			      Executor.getInstance().executeAction(action);
-			      Executor.getInstance().executeAction(new RefreshTabAction(tab));
 
 			}
+			Executor.getInstance().executeAction(new RefreshTabAction(tab));
 
 		  }
 		  catch (Exception e)
