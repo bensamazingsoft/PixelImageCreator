@@ -105,9 +105,10 @@ public class LayerBox extends VBox implements Initializable, Toggle {
 	private StackPane eye;
 
 	@FXML
-	private StackPane	miniaturePane;
+	private StackPane miniaturePane;
+
 	@FXML
-	private Canvas		canvas;
+	private Canvas canvas;
 
 	@FXML
 	private StackPane titlePane;
@@ -255,6 +256,11 @@ public class LayerBox extends VBox implements Initializable, Toggle {
 	private void handleMiniatureClicked(MouseEvent event) {
 
 		miniatureClicked();
+
+		if (event.isControlDown()) {
+			soloLayer();
+		}
+
 	}
 
 	private void miniatureClicked() {
@@ -262,6 +268,19 @@ public class LayerBox extends VBox implements Initializable, Toggle {
 		if (!isSelected()) {
 			toggleGroup.get().selectToggle(this);
 		}
+
+	}
+
+	private void soloLayer() {
+
+		((ALayer) getUserData()).setVisible(true);
+
+		// toggle all other layers visibility to false
+		toggleGroup.get().getToggles().stream()
+				.map(Toggle::getUserData)
+				.map(obj -> (ALayer) obj)
+				.filter(layer -> !layer.equals(this.layer))
+				.forEach(layer -> layer.setVisible(false));
 
 	}
 
