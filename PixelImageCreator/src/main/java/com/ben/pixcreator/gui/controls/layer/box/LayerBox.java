@@ -178,6 +178,14 @@ public class LayerBox extends VBox implements Initializable, Toggle {
 		lockButImg.imageProperty()
 				.bind(Bindings.when(lockedProperty()).then(lockSelected).otherwise(lockUnSelected));
 
+		locked.addListener((obs, oldVal, newVal) -> {
+			try {
+				Executor.getInstance().executeAction(new RefreshTabAction(GuiFacade.getInstance().getActiveTab()));
+			} catch (Exception e) {
+				new ExceptionPopUp(e);
+			}
+		});
+
 		imgTypeView.imageProperty().setValue(layer instanceof PixLayer ? imgTypePixImg
 				: (layer instanceof TextLayer ? imgTypeTextImg : imgTypePicImg));
 
