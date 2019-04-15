@@ -1,6 +1,7 @@
 
 package com.ben.pixcreator.application.image.draw.factory;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -67,7 +68,7 @@ public class DrawImageFactory {
 						ALayer layer2 = drawImage.getLayerList().getItem(a);
 
 						// is layer locked to this layer2 ?
-						boolean lock = groupLock.get(layer2).contains(layer);
+						boolean lock = groupLock.computeIfAbsent(layer2, lay -> new HashSet<ALayer>()).contains(layer);
 
 						if (layer2 instanceof BakeLayer && lock) {
 

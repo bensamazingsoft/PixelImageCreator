@@ -5,56 +5,54 @@ import com.ben.pixcreator.application.image.layer.impl.alayer.ALayer;
 
 import javafx.scene.canvas.Canvas;
 
-public class BakeLayer extends PicLayer
-{
+public class BakeLayer extends PicLayer {
 
-      private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
+	public BakeLayer() {
 
-      public BakeLayer()
-      {
+		super();
 
-	    super();
+		Canvas canvas = new Canvas(100, 100);
+		setImage(canvas.snapshot(null, null));
 
-	    Canvas canvas = new Canvas(100, 100);
-	    setImage(canvas.snapshot(null, null));
+	}
 
-      }
+	@Override
+	public String toString() {
 
+		return "BakeLayer [image : " + getImage() + "]";
+	}
 
-      @Override
-      public String toString()
-      {
+	@Override
+	public ALayer duplicate() {
 
-	    return "BakeLayer [image : " + getImage() + "]";
-      }
+		BakeLayer clone = new BakeLayer();
 
+		clone.setUuid(getUUID());
 
-      @Override
-      public ALayer duplicate()
-      {
+		clone.setVisible(isVisible());
 
-	    BakeLayer clone = new BakeLayer();
+		clone.setPosition(getPosition());
 
-	    clone.setUuid(getUUID());
+		clone.setSizeFactorX(getSizeFactorX());
 
-	    clone.setVisible(isVisible());
+		clone.setSizeFactorY(getSizeFactorY());
 
-	    clone.setPosition(getPosition());
+		clone.setZoomFactor(getZoomFactor());
 
-	    clone.setSizeFactorX(getSizeFactorX());
+		clone.setImage(getImage());
 
-	    clone.setSizeFactorY(getSizeFactorY());
+		clone.setImageFile(getImageFile());
 
-	    clone.setZoomFactor(getZoomFactor());
+		clone.setOpacity(getOpacity());
 
-	    clone.setImage(getImage());
+		return clone;
+	}
 
-	    clone.setImageFile(getImageFile());
+	@Override
+	public void draw(Canvas canvas, int xGridResolution, int yGridResolution) {
 
-	    clone.setOpacity(getOpacity());
-
-	    return clone;
-      }
+	}
 
 }
