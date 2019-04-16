@@ -9,7 +9,7 @@
 	xmlns:fx="http://javafx.com/fxml">
 
 	<center>
-		<ScrollPane>
+		<ScrollPane fx:id="scrollPane">
 			<VBox fx:id="layersBox" />
 		</ScrollPane>
 	</center>

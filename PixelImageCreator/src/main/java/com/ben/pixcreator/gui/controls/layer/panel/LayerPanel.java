@@ -32,6 +32,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.ToolBar;
 import javafx.scene.image.Image;
@@ -101,6 +102,9 @@ public class LayerPanel extends BorderPane implements Initializable {
 
 	@FXML
 	private ToggleGroup togglegroup;
+
+	@FXML
+	private ScrollPane scrollPane;
 
 	public LayerPanel() {
 
@@ -285,6 +289,9 @@ public class LayerPanel extends BorderPane implements Initializable {
 		moveLayerUpBut.setGraphic(new ImageView(moveLayerUpButImg));
 
 		moveLayerDownBut.setGraphic(new ImageView(moveLayerDownButImg));
+
+		scrollPane.setFitToWidth(true);
+		scrollPane.setFitToHeight(true);
 
 	}
 

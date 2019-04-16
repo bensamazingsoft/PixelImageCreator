@@ -24,7 +24,7 @@
 	</top>
 
 	<center>
-		<SplitPane>
+		<SplitPane fx:id="splitPane">
 			<PixTabPane fx:id="tabPane" />
 			<LayerPanel fx:id="layerPanel"/>
 		</SplitPane>
