@@ -10,20 +10,30 @@ public class LumaKeyEffectParams extends EffectParams {
 	*/
 	private static final long serialVersionUID = 1L;
 
-	ParamValue<Double> param = new ParamValue<Double>(0.0, 1.0, 1.0);
+	ParamValue<Double>	factorParam	= new ParamValue<Double>(0.0, 1.0, 1.0);
+	ParamValue<Boolean>	invertParam	= new ParamValue<Boolean>(false);
 
 	public LumaKeyEffectParams() {
 
-		param.setValue(1.0);
-		map.put(EffectParams.Param.LUMAKEY, param);
+		factorParam.setValue(1.0);
+		map.put(EffectParams.Param.LUMAKEY, factorParam);
+		map.put(EffectParams.Param.LUMAKEYINVERT, invertParam);
 
 	}
 
 	public void setFactor(Double value) {
 
-		param.setValue(value);
+		factorParam.setValue(value);
 
-		map.put(EffectParams.Param.LUMAKEY, param);
+		map.put(EffectParams.Param.LUMAKEY, factorParam);
+	}
+
+	public void setInvert(Boolean invert) {
+		invertParam.setValue(invert);
+	}
+
+	public boolean isInvert() {
+		return invertParam.getValue();
 	}
 
 	public double getFactor() {
@@ -35,7 +45,7 @@ public class LumaKeyEffectParams extends EffectParams {
 
 	@Override
 	public String toString() {
-		return "LumaKeyEffectParams [LUMAKEY=" + param.getValue() + "]";
+		return "LumaKeyEffectParams [LUMAKEY=" + factorParam.getValue() + "]";
 	}
 
 }

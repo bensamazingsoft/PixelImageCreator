@@ -48,6 +48,10 @@ public class LumaKeyModifier implements IModifier {
 
 					double key = Math.max(0d, (Math.min(1, factor / color.getBrightness())));
 
+					if (param.isInvert()) {
+						key = Math.max(0d, (Math.min(1, factor * color.getBrightness())));
+					}
+
 					ColorRGB newColor = new ColorRGB(
 							Color.hsb(color.getHue(), color.getSaturation(), color.getBrightness(), key));
 					newGrid.put(coord, newColor);
