@@ -21,6 +21,7 @@ import com.ben.pixcreator.gui.controls.layer.box.LayerBox;
 import com.ben.pixcreator.gui.controls.layer.panel.actions.LayerActions;
 import com.ben.pixcreator.gui.exception.popup.ExceptionPopUp;
 import com.ben.pixcreator.gui.facade.GuiFacade;
+import com.ben.pixcreator.gui.tooltip.provider.ToolTipProvider;
 
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
@@ -105,6 +106,8 @@ public class LayerPanel extends BorderPane implements Initializable {
 
 	@FXML
 	private ScrollPane scrollPane;
+
+	private ToolTipProvider toolTipProvider = AppContext.getInstance().getToolTipProvider();
 
 	public LayerPanel() {
 
@@ -275,20 +278,28 @@ public class LayerPanel extends BorderPane implements Initializable {
 	public void initialize(URL arg0, ResourceBundle arg1) {
 
 		deleteLayerBut.setGraphic(new ImageView(deleteLayerButImg));
+		deleteLayerBut.setTooltip(toolTipProvider.get("deleteLayerButTip"));
 
 		duplicateLayerBut.setGraphic(new ImageView(duplicateLayerButImg));
+		duplicateLayerBut.setTooltip(toolTipProvider.get("duplicateLayerButTip"));
 
 		newLayerBut.setGraphic(new ImageView(newLayerButImg));
+		newLayerBut.setTooltip(toolTipProvider.get("newLayerButTip"));
 
 		newPicLayerBut.setGraphic(new ImageView(newPicLayerButImg));
+		newPicLayerBut.setTooltip(toolTipProvider.get("newPicLayerButTip"));
 
 		newTextLayerBut.setGraphic(new ImageView(newTextLayerButImg));
+		newTextLayerBut.setTooltip(toolTipProvider.get("newTextLayerButTip"));
 
 		newBakeLayerBut.setGraphic(new ImageView(newBakeLayerButImg));
+		newBakeLayerBut.setTooltip(toolTipProvider.get("newBakeLayerButTip"));
 
 		moveLayerUpBut.setGraphic(new ImageView(moveLayerUpButImg));
+		moveLayerUpBut.setTooltip(toolTipProvider.get("moveLayerUpButTip"));
 
 		moveLayerDownBut.setGraphic(new ImageView(moveLayerDownButImg));
+		moveLayerDownBut.setTooltip(toolTipProvider.get("moveLayerDownButTip"));
 
 		scrollPane.setFitToWidth(true);
 		scrollPane.setFitToHeight(true);

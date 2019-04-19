@@ -11,6 +11,7 @@ import com.ben.pixcreator.application.executor.Executor;
 import com.ben.pixcreator.application.tools.PixTool;
 import com.ben.pixcreator.gui.exception.popup.ExceptionPopUp;
 import com.ben.pixcreator.gui.facade.GuiFacade;
+import com.ben.pixcreator.gui.tooltip.provider.ToolTipProvider;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -82,6 +83,8 @@ public class PixToolBar extends ToolBar implements Initializable {
 	final private Image		showGridButUnSelected	= new Image(
 			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "showGridButUnSelected.png"));
 	final private ImageView	showGridButImg			= new ImageView();
+
+	private ToolTipProvider toolTipProvider = AppContext.getInstance().getToolTipProvider();
 
 	public PixToolBar() {
 
@@ -194,6 +197,7 @@ public class PixToolBar extends ToolBar implements Initializable {
 				event.consume();
 			}
 		});
+		selectBut.setTooltip(toolTipProvider.get("selectButTip"));
 
 		drawBut.setGraphic(drawButImg);
 		drawBut.setUserData(PixTool.DRAW);
@@ -206,6 +210,7 @@ public class PixToolBar extends ToolBar implements Initializable {
 				event.consume();
 			}
 		});
+		drawBut.setTooltip(toolTipProvider.get("drawButTip"));
 
 		pickBut.setGraphic(pickButImg);
 		pickBut.setUserData(PixTool.PICK);
@@ -218,6 +223,7 @@ public class PixToolBar extends ToolBar implements Initializable {
 				event.consume();
 			}
 		});
+		pickBut.setTooltip(toolTipProvider.get("pickButTip"));
 
 		moveBut.setGraphic(moveButImg);
 		moveBut.setUserData(PixTool.MOVE);
@@ -230,6 +236,7 @@ public class PixToolBar extends ToolBar implements Initializable {
 				event.consume();
 			}
 		});
+		moveBut.setTooltip(toolTipProvider.get("moveButTip"));
 
 		showGridBut.setGraphic(showGridButImg);
 		showGridButImg.imageProperty().bind(
@@ -237,6 +244,7 @@ public class PixToolBar extends ToolBar implements Initializable {
 						.otherwise(showGridButUnSelected));
 
 		showGridBut.selectedProperty().bindBidirectional(GuiFacade.getInstance().showGridProperty());
+		showGridBut.setTooltip(toolTipProvider.get("showGridButTip"));
 
 		toggleGroup.selectToggle(drawBut);
 

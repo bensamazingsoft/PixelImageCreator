@@ -47,8 +47,17 @@
 		<Menu Text="%action">
 			<Menu Text="%pixellate">
 				<items>
-						<MenuItem text="%average" onAction="#averagePixellateAction"/>
-							<MenuItem text="%centerPick" onAction="#centerPickPixellateAction"/>
+					<CustomMenuItem fx:id="averagePixellateMenuItem" onAction="#averagePixellateAction">
+					<content>
+						<Label  text="%average"/>
+						</content>
+					</CustomMenuItem>
+					<CustomMenuItem fx:id="centerPickPixellateMenuItem"  onAction="#centerPickPixellateAction">
+						<content>
+							<Label  text="%centerPick"/>
+						</content>
+					</CustomMenuItem>
+					
 				</items>
 			</Menu>
 		</Menu>

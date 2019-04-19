@@ -13,6 +13,7 @@ import com.ben.pixcreator.application.image.effect.manager.EffectManager;
 import com.ben.pixcreator.application.tools.PixTool;
 import com.ben.pixcreator.gui.cursor.updater.CursorUpdater;
 import com.ben.pixcreator.gui.cursor.updater.SnapshotUpdater;
+import com.ben.pixcreator.gui.tooltip.provider.ToolTipProvider;
 
 import javafx.scene.paint.Color;
 
@@ -30,13 +31,16 @@ public class AppContext {
 
 	private static PixTool currTool;
 
-	private static ResourceBundle bundle;
+	private static ResourceBundle	bundle;
+	private static ResourceBundle	tipBundle;
 
 	private static Map<PixImage, File> files;
 
 	private static Map<PixImage, GroupLock> groupLocks;
 
 	private static EffectManager effectManager;
+
+	private static ToolTipProvider toolTipProvider;
 
 	private static boolean initialized = false;
 
@@ -53,6 +57,7 @@ public class AppContext {
 
 		properties = new PropertiesContext();
 		bundle = ResourceBundle.getBundle("i18n/trad");
+		tipBundle = ResourceBundle.getBundle("i18n/tips");
 		currTool = PixTool.valueOf(properties.get("startTool"));
 
 		gridColor = properties.getColor(properties.get("gridColor"));
@@ -60,6 +65,8 @@ public class AppContext {
 		files = new HashMap<>();
 		groupLocks = new HashMap<>();
 		effectManager = new EffectManager();
+
+		toolTipProvider = new ToolTipProvider(tipBundle);
 
 		initialized = true;
 
@@ -146,6 +153,14 @@ public class AppContext {
 
 	public static SnapshotUpdater getSnapshotUpdater() {
 		return snapshotUpdater;
+	}
+
+	public ToolTipProvider getToolTipProvider() {
+		return toolTipProvider;
+	}
+
+	public static void setToolTipProvider(ToolTipProvider toolTipProvider) {
+		AppContext.toolTipProvider = toolTipProvider;
 	}
 
 }
