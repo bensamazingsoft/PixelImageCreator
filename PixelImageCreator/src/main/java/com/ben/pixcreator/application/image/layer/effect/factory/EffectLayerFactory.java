@@ -7,6 +7,7 @@ import com.ben.pixcreator.application.image.layer.impl.alayer.ALayer;
 import com.ben.pixcreator.application.image.layer.modifier.IModifier;
 import com.ben.pixcreator.application.image.layer.modifier.impl.BrightnessModifier;
 import com.ben.pixcreator.application.image.layer.modifier.impl.HueModifier;
+import com.ben.pixcreator.application.image.layer.modifier.impl.LumaKeyModifier;
 import com.ben.pixcreator.application.image.layer.modifier.impl.OpacityModifier;
 import com.ben.pixcreator.application.image.layer.modifier.impl.SampleModifier;
 import com.ben.pixcreator.application.image.layer.modifier.impl.SaturationModifier;
@@ -46,6 +47,9 @@ public class EffectLayerFactory {
 		case RESAMPLE:
 			IModifier sampleModifier = new SampleModifier(effect);
 			return sampleModifier.modify(layer);
+		case LUMAKEY:
+			IModifier lumaKeyModifier = new LumaKeyModifier(effect);
+			return lumaKeyModifier.modify(layer);
 		default:
 			break;
 

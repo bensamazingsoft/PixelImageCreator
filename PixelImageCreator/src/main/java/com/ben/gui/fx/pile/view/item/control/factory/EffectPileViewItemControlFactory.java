@@ -6,6 +6,7 @@ import com.ben.pixcreator.application.image.effect.Effect;
 import com.ben.pixcreator.application.image.layer.effect.pile.view.item.control.IEffectPileViewItemControl;
 import com.ben.pixcreator.application.image.layer.effect.pile.view.item.control.impl.BrightnessSliderControl;
 import com.ben.pixcreator.application.image.layer.effect.pile.view.item.control.impl.HueSliderControl;
+import com.ben.pixcreator.application.image.layer.effect.pile.view.item.control.impl.LumaKeyControl;
 import com.ben.pixcreator.application.image.layer.effect.pile.view.item.control.impl.OpacitySliderControl;
 import com.ben.pixcreator.application.image.layer.effect.pile.view.item.control.impl.ResampleControl;
 import com.ben.pixcreator.application.image.layer.effect.pile.view.item.control.impl.SaturationSliderControl;
@@ -33,6 +34,8 @@ public class EffectPileViewItemControlFactory {
 			return new TextControl(fx);
 		case RESAMPLE:
 			return new ResampleControl(fx);
+		case LUMAKEY:
+			return new LumaKeyControl(fx);
 		default:
 			break;
 

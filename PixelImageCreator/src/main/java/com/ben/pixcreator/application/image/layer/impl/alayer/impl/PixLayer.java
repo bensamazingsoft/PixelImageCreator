@@ -45,10 +45,6 @@ public class PixLayer extends ALayer {
 
 		int xCellSize = (int) Math.floor(canvas.getWidth() / xGridResolution);
 		int yCellSize = (int) Math.floor(canvas.getHeight() / yGridResolution);
-		// log.debug("Drawing " + toString());
-		// log.debug("canvas width : " + canvas.getWidth() + " height : " +
-		// canvas.getHeight() + "xCellSize :" + xCellSize
-		// + " yCellSize : " + yCellSize);
 
 		if (xCellSize >= 1 && yCellSize >= 1) {
 
@@ -72,10 +68,12 @@ public class PixLayer extends ALayer {
 	private void drawGraphics(Canvas canvas, int xCellSize, int yCellSize) {
 
 		GraphicsContext graphic = canvas.getGraphicsContext2D();
-
-		graphic.setGlobalAlpha(getOpacity());
+		final double layerOpacity = getOpacity();
 
 		for (Coord cell : getGrid().keySet()) {
+
+			final double cellOpacity = getGrid().get(cell).getOpacity();
+			graphic.setGlobalAlpha(layerOpacity * cellOpacity);
 
 			graphic.setFill(getGrid().get(cell).getFxColor());
 

@@ -9,6 +9,7 @@ import com.ben.pixcreator.application.image.layer.effect.EffectDesign;
 import com.ben.pixcreator.application.image.layer.effect.params.EffectParams;
 import com.ben.pixcreator.application.image.layer.effect.params.impl.BrightnessEffectParams;
 import com.ben.pixcreator.application.image.layer.effect.params.impl.HueEffectParams;
+import com.ben.pixcreator.application.image.layer.effect.params.impl.LumaKeyEffectParams;
 import com.ben.pixcreator.application.image.layer.effect.params.impl.OpacityEffectParams;
 import com.ben.pixcreator.application.image.layer.effect.params.impl.ResampleEffectParams;
 import com.ben.pixcreator.application.image.layer.effect.params.impl.SaturationEffectParams;
@@ -31,7 +32,8 @@ public class PixLayerBoxContextMenu extends ContextMenu {
 				new BrightnessEffectParams());
 		addMenuItem(layer, "pixLayerBoxContextMenuAddResample", EffectDesign.RESAMPLE,
 				new ResampleEffectParams());
-
+		addMenuItem(layer, "pixLayerBoxContextMenuAddLumaKey", EffectDesign.LUMAKEY,
+				new LumaKeyEffectParams());
 	}
 
 	public void addMenuItem(ALayer layer, String i18String, EffectDesign effectDesign, EffectParams effectParam) {
