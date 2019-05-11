@@ -1,9 +1,11 @@
 
 package com.ben.pixcreator.application.image.layer.impl.alayer.impl;
 
+import com.ben.pixcreator.application.image.layer.effect.exception.EffectException;
 import com.ben.pixcreator.application.image.layer.impl.alayer.ALayer;
 
 import javafx.scene.canvas.Canvas;
+import javafx.scene.image.Image;
 
 public class BakeLayer extends PicLayer {
 
@@ -52,6 +54,15 @@ public class BakeLayer extends PicLayer {
 
 	@Override
 	public void draw(Canvas canvas, int xGridResolution, int yGridResolution) {
+
+	}
+
+	/**
+	 * @return a baked image of this layer. Consists of an image made with all
+	 *         sub-layers.
+	 * @throws EffectException
+	 */
+	public Image getBakedSnapshot() throws EffectException {
 
 	}
 

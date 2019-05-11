@@ -9,7 +9,9 @@ import org.slf4j.LoggerFactory;
 
 import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.application.image.coords.Coord;
+import com.ben.pixcreator.application.image.layer.effect.exception.EffectException;
 import com.ben.pixcreator.application.image.layer.impl.alayer.ALayer;
+import com.ben.pixcreator.application.image.layer.impl.alayer.impl.BakeLayer;
 import com.ben.pixcreator.application.image.layer.impl.alayer.impl.PicLayer;
 import com.ben.pixcreator.application.image.layer.impl.alayer.impl.PixLayer;
 import com.ben.pixcreator.application.image.layer.impl.alayer.impl.TextLayer;
@@ -37,7 +39,7 @@ public class MiniatureManager {
 
 	}
 
-	public void update(ALayer layer) {
+	public void update(ALayer layer) throws EffectException {
 
 		if (miniatures.containsKey(layer)) {
 			Canvas canvas = miniatures.get(layer);
@@ -95,8 +97,16 @@ public class MiniatureManager {
 					PicLayer drawLayer = new PicLayer();
 					drawLayer.setImage(((TextLayer) layer).getImage());
 					layer = makeDrawPicLayer((PicLayer) drawLayer, canvas);
+				}
+
+				if (layer instanceof BakeLayer) {
+
+					PicLayer drawLayer = new PicLayer();
+					drawLayer.setImage(((BakeLayer) layer).getBakedSnapshot());
+					layer = makeDrawPicLayer((PicLayer) drawLayer, canvas);
 
 				}
+
 			}
 
 			layer.draw(canvas, xGridResolution, yGridResolution);

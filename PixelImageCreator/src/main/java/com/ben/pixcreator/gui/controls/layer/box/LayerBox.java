@@ -16,6 +16,7 @@ import com.ben.pixcreator.application.image.PixImage;
 import com.ben.pixcreator.application.image.effect.Effect;
 import com.ben.pixcreator.application.image.layer.effect.pile.view.item.factory.impl.EffectPileViewItemFactory;
 import com.ben.pixcreator.application.image.layer.impl.alayer.ALayer;
+import com.ben.pixcreator.application.image.layer.impl.alayer.impl.BakeLayer;
 import com.ben.pixcreator.application.image.layer.impl.alayer.impl.PixLayer;
 import com.ben.pixcreator.application.image.layer.impl.alayer.impl.TextLayer;
 import com.ben.pixcreator.application.pile.Pile;
@@ -79,6 +80,8 @@ public class LayerBox extends VBox implements Initializable, Toggle {
 			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "imgTypePixImg.png"));
 	private Image	imgTypeTextImg	= new Image(
 			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "imgTypeTextImg.png"));
+	private Image	imgTypeFxImg	= new Image(
+			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "imgTypeFxImg.png"));
 
 	@FXML
 	private ImageView imgTypeView;
@@ -187,8 +190,10 @@ public class LayerBox extends VBox implements Initializable, Toggle {
 			}
 		});
 
-		imgTypeView.imageProperty().setValue(layer instanceof PixLayer ? imgTypePixImg
-				: (layer instanceof TextLayer ? imgTypeTextImg : imgTypePicImg));
+		imgTypeView.imageProperty().setValue(
+				layer instanceof PixLayer ? imgTypePixImg
+						: (layer instanceof TextLayer ? imgTypeTextImg
+								: (layer instanceof BakeLayer ? imgTypeFxImg : imgTypePicImg)));
 
 		// this.setMaxHeight(BOXHEIGHT);
 		this.setMinHeight(BOXHEIGHT);
