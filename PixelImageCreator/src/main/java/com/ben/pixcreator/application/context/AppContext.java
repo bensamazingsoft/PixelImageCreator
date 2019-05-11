@@ -31,8 +31,9 @@ public class AppContext {
 
 	private static PixTool currTool;
 
-	private static ResourceBundle	bundle;
-	private static ResourceBundle	tipBundle;
+	private static ResourceBundle bundle;
+
+	private static ResourceBundle tipBundle;
 
 	private static Map<PixImage, File> files;
 

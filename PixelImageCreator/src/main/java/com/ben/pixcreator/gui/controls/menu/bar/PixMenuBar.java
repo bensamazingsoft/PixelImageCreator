@@ -268,8 +268,6 @@ public class PixMenuBar extends MenuBar implements Initializable {
 		PixTab tab = GuiFacade.getInstance().getActiveTab();
 
 		try {
-			// Executor.getInstance().executeAction(new
-			// ActionUpdateSelection(activeImage));
 			Executor.getInstance().executeAction(new RefreshTabAction(tab));
 		} catch (Exception e) {
 			new ExceptionPopUp(e);
@@ -311,6 +309,9 @@ public class PixMenuBar extends MenuBar implements Initializable {
 
 			GuiFacade.getInstance().getLayerPanel().populate();
 			Executor.getInstance().executeAction(new RefreshTabAction(tab));
+
+			handleUnSelect();
+
 		} catch (Exception e) {
 			new ExceptionPopUp(e);
 		}
@@ -341,7 +342,8 @@ public class PixMenuBar extends MenuBar implements Initializable {
 
 				gui.setClipboard(clipboard);
 			}
-			gui.getSelections().remove(activeImage);
+
+			handleUnSelect();
 
 			try {
 				Executor.getInstance().executeAction(new RefreshTabAction(gui.getActiveTab()));
@@ -378,13 +380,19 @@ public class PixMenuBar extends MenuBar implements Initializable {
 				try {
 					exec.continueOperation(new ActionDeleteCell(activeImage, pixLayer, k));
 				} catch (Exception e) {
-					exec.endOperation();
+					try {
+						exec.abortOperation();
+					} catch (Exception e1) {
+						new ExceptionPopUp(e1);
+					}
 					new ExceptionPopUp(e);
 				}
 
 			});
 
 			exec.endOperation();
+
+			handleUnSelect();
 
 		}
 		try {
@@ -417,7 +425,11 @@ public class PixMenuBar extends MenuBar implements Initializable {
 					exec.continueOperation(
 							new ActionChangeCellColor(gui.getActiveimage(), pixLayer, coord, colorRGB.getFxColor()));
 				} catch (Exception e) {
-					exec.endOperation();
+					try {
+						exec.abortOperation();
+					} catch (Exception e1) {
+						new ExceptionPopUp(e1);
+					}
 					new ExceptionPopUp(e);
 				}
 
@@ -458,7 +470,11 @@ public class PixMenuBar extends MenuBar implements Initializable {
 									color));
 
 				} catch (Exception e) {
-					exec.endOperation();
+					try {
+						exec.abortOperation();
+					} catch (Exception e1) {
+						new ExceptionPopUp(e1);
+					}
 					new ExceptionPopUp(e);
 					break;
 				}

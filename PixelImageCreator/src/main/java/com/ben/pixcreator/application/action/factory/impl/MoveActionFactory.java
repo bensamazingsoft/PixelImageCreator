@@ -27,124 +27,114 @@ import com.ben.pixcreator.gui.facade.GuiFacade;
 import javafx.event.Event;
 import javafx.scene.input.MouseEvent;
 
-public class MoveActionFactory implements IActionFactory
-{
+public class MoveActionFactory implements IActionFactory {
 
-      @SuppressWarnings("unused")
-      private static final Logger		log = LoggerFactory.getLogger(MoveActionFactory.class);
+	@SuppressWarnings("unused")
+	private static final Logger log = LoggerFactory.getLogger(MoveActionFactory.class);
 
-      public static boolean			moveStarted;
-      public static Coord			startCoord;
-      public static Map<ALayer, ALayer.Memento>	startState;
+	public static boolean						moveStarted;
+	public static Coord							startCoord;
+	public static Map<ALayer, ALayer.Memento>	startState;
 
-      private PixTab				tab = GuiFacade.getInstance().getActiveTab();;
+	private PixTab tab = GuiFacade.getInstance().getActiveTab();;
 
+	@Override
+	public IAction getAction(Event event) {
 
-      @Override
-      public IAction getAction(Event event)
-      {
+		if (event instanceof MouseEvent) {
 
-	    if (event instanceof MouseEvent)
-	    {
+			final Executor exec = Executor.getInstance();
+			switch (event.getEventType().getName()) {
 
-		  switch (event.getEventType().getName())
-		  {
+			case ("MOUSE_PRESSED"): {
+				exec.startOperation();
+				moveStarted = true;
+				startCoord = eventCoord((MouseEvent) event);
+				startState = new HashMap<>();
 
-		  case ("MOUSE_PRESSED"):
-		  {
-			Executor.getInstance().startOperation();
-			moveStarted = true;
-			startCoord = eventCoord((MouseEvent) event);
-			startState = new HashMap<>();
+				GuiFacade gui = GuiFacade.getInstance();
+				GroupLock groupLock = AppContext.getInstance().getGroupLocks().get(gui.getActiveImage());
 
-			GuiFacade gui = GuiFacade.getInstance();
-			GroupLock groupLock = AppContext.getInstance().getGroupLocks().get(gui.getActiveImage());
+				ALayer activeLayer = gui.getActiveLayer();
+				Set<ALayer> layers = groupLock.getLockedLayers(activeLayer);
+				layers.add(activeLayer);
 
-			ALayer activeLayer = gui.getActiveLayer();
-			Set<ALayer> layers = groupLock.getLockedLayers(activeLayer);
-			layers.add(activeLayer);
-
-			for (ALayer layer : layers)
-			{
-			      startState.put(layer, layer.getMemento());
+				for (ALayer layer : layers) {
+					startState.put(layer, layer.getMemento());
+				}
+				// log.debug(event.getEventType().getName());
+				// log.debug(startCoord.toString());
+				event.consume();
+				break;
 			}
-			// log.debug(event.getEventType().getName());
-			// log.debug(startCoord.toString());
-			event.consume();
-			break;
-		  }
 
-		  case ("MOUSE_DRAGGED"):
-		  {
+			case ("MOUSE_DRAGGED"): {
 
-			GuiFacade gui = GuiFacade.getInstance();
-			GroupLock groupLock = AppContext.getInstance().getGroupLocks().get(gui.getActiveImage());
+				GuiFacade gui = GuiFacade.getInstance();
+				GroupLock groupLock = AppContext.getInstance().getGroupLocks().get(gui.getActiveImage());
 
-			PixImage image = gui.getActiveImage();
-			ALayer activeLayer = gui.getActiveLayer();
+				PixImage image = gui.getActiveImage();
+				ALayer activeLayer = gui.getActiveLayer();
 
-			Set<ALayer> layers = groupLock.getLockedLayers(activeLayer);
-			layers.add(activeLayer);
+				Set<ALayer> layers = groupLock.getLockedLayers(activeLayer);
+				layers.add(activeLayer);
 
-			Selection selection = GuiFacade.getInstance().getSelections().get(image);
+				Selection selection = GuiFacade.getInstance().getSelections().get(image);
 
-			Coord eventCoord = eventCoord((MouseEvent) event);
+				Coord eventCoord = eventCoord((MouseEvent) event);
 
-			int translateX = eventCoord.getX() - startCoord.getX();
-			int translateY = eventCoord.getY() - startCoord.getY();
-			// log.debug("" + translateX);
-			for (ALayer layer : layers)
-			{
-			      // log.debug(startState.toString());
-			      try
-			      {
-				    // restore the initial (move start) state of the layer
-				    // to compute the translation from there
-				    startState.get(layer).restore();
-				    Executor.getInstance()
-						.continueOperation(new ActionTranslateLayer(translateX, translateY, layer, selection));
-				    Executor.getInstance().executeAction(new RefreshTabAction(tab));
-			      }
-			      catch (Exception e)
-			      {
-				    new ExceptionPopUp(e);
-			      }
+				int translateX = eventCoord.getX() - startCoord.getX();
+				int translateY = eventCoord.getY() - startCoord.getY();
+				// log.debug("" + translateX);
+				for (ALayer layer : layers) {
+					// log.debug(startState.toString());
+					try {
+						// restore the initial (move start) state of the layer
+						// to compute the translation from there
+						startState.get(layer).restore();
+						exec
+								.continueOperation(new ActionTranslateLayer(translateX, translateY, layer, selection));
+						exec.executeAction(new RefreshTabAction(tab));
+					} catch (Exception e) {
+						try {
+							exec.abortOperation();
+						} catch (Exception e1) {
+							new ExceptionPopUp(e1);
+						}
+						new ExceptionPopUp(e);
+					}
 
+				}
+				event.consume();
+				break;
 			}
-			event.consume();
-			break;
-		  }
 
-		  case ("MOUSE_RELEASED"):
-		  {
-			Executor.getInstance().endOperation();
-			moveStarted = false;
-			startCoord = null;
-			// log.debug(event.getEventType().getName());
-			event.consume();
-			break;
-		  }
-		  case ("MOUSE_ENTERED"):
-		  {
+			case ("MOUSE_RELEASED"): {
+				exec.endOperation();
+				moveStarted = false;
+				startCoord = null;
+				// log.debug(event.getEventType().getName());
+				event.consume();
+				break;
+			}
+			case ("MOUSE_ENTERED"): {
 
-			event.consume();
-			return new ActionNoOp();
-		  }
-		  case ("MOUSE_MOVED"):
-		  {
-			event.consume();
-			return new ActionNoOp();
-		  }
-		  case ("MOUSE_EXITED"):
-		  {
-			event.consume();
-			return new ActionNoOp();
-		  }
-		  }
+				event.consume();
+				return new ActionNoOp();
+			}
+			case ("MOUSE_MOVED"): {
+				event.consume();
+				return new ActionNoOp();
+			}
+			case ("MOUSE_EXITED"): {
+				event.consume();
+				return new ActionNoOp();
+			}
+			}
 
-	    }
+		}
 
-	    return new ActionNoOp();
-      }
+		return new ActionNoOp();
+	}
 
 }

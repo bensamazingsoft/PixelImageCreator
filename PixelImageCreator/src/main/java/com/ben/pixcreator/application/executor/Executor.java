@@ -24,9 +24,6 @@ import com.ben.pixcreator.gui.facade.GuiFacade;
  */
 public class Executor {
 
-	// TODO needs an abortOperation method that would cancel already done
-	// actions and end the operation
-
 	private static volatile Executor instance;
 
 	private static final Logger logger = LoggerFactory.getLogger(Executor.class);
@@ -49,6 +46,11 @@ public class Executor {
 				image -> new LinkedList<ICancelable>());
 	}
 
+	/**
+	 * actions cancelled and redoable.
+	 * 
+	 * @return
+	 */
 	private LinkedList<ICancelable> activeCancelled() {
 
 		return cancelledMap.computeIfAbsent(GuiFacade.getInstance().getActiveImage(),
@@ -126,6 +128,23 @@ public class Executor {
 		} else {
 			logger.info("no started operation to end");
 		}
+	}
+
+	/**
+	 * Terminates the current operation and cancels its actions<br/>
+	 * Then updates the operation status.
+	 * 
+	 * 
+	 */
+	public void abortOperation() throws Exception {
+
+		if (operationStarted) {
+			currOperation.cancel();
+			operationStarted = false;
+		} else {
+			logger.info("no started operation to abort");
+		}
+
 	}
 
 	/**
