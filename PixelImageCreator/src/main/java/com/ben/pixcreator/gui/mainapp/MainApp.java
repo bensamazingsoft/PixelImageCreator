@@ -23,62 +23,78 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
-public class MainApp extends Application {
+public class MainApp extends Application
+{
 
-	@SuppressWarnings("unused")
-	private static final Logger log = LoggerFactory.getLogger(MainApp.class);
+      @SuppressWarnings("unused")
+      private static final Logger log = LoggerFactory.getLogger(MainApp.class);
 
-	public static void main(String[] args) throws Exception {
 
-		launch(args);
-	}
+      public static void main(String[] args) throws Exception
+      {
 
-	public void start(Stage stage) throws Exception {
+	    launch(args);
+      }
 
-		AppContext.init();
 
-		ResourceBundle bundle = ResourceBundle.getBundle("i18n/trad");
+      public void start(Stage stage) throws Exception
+      {
 
-		String fxmlFile = "/fxml/main.fxml";
-		// log.debug("Loading FXML for main view from: {}", fxmlFile);
-		FXMLLoader loader = new FXMLLoader();
-		Parent rootNode = (Parent) loader.load(getClass().getResourceAsStream(fxmlFile));
+	    try
+	    {
+		  AppContext.getInstance().init();
+	    }
+	    catch (Exception e)
+	    {
+		  new ExceptionPopUp(e);
+	    }
 
-		// log.debug("Showing JFX scene");
-		Scene scene = new Scene(rootNode, 1200, 800);
-		scene.getStylesheets().add("/styles/styles.css");
-		scene.addEventFilter(KeyEvent.ANY, new KeyHandler());
+	    ResourceBundle bundle = ResourceBundle.getBundle("i18n/trad");
 
-		stage.setOnCloseRequest((Event) -> handleClose());
-		stage.setTitle(bundle.getString("appTitle"));
-		stage.setScene(scene);
-		stage.show();
+	    String fxmlFile = "/fxml/main.fxml";
+	    // log.debug("Loading FXML for main view from: {}", fxmlFile);
+	    FXMLLoader loader = new FXMLLoader();
+	    Parent rootNode = (Parent) loader.load(getClass().getResourceAsStream(fxmlFile));
 
-		Executor.getInstance().executeAction(new LoadRecentFilesAction());
-		Executor.getInstance().executeAction(new OpenNewImageAction());
+	    // log.debug("Showing JFX scene");
+	    Scene scene = new Scene(rootNode, 1200, 800);
+	    scene.getStylesheets().add("/styles/styles.css");
+	    scene.addEventFilter(KeyEvent.ANY, new KeyHandler());
 
-		GuiFacade.getInstance().toggleToolTo(AppContext.getInstance().getCurrTool());
-		GuiFacade.getInstance().setPanMode(AppContext.getInstance().getCurrTool() == PixTool.PAN);
+	    stage.setOnCloseRequest((Event) -> handleClose());
+	    stage.setTitle(bundle.getString("appTitle"));
+	    stage.setScene(scene);
+	    stage.show();
 
-		AppContext.getInstance();
-		// start this thread in case Pick is the starting tool.
-		AppContext.getSnapshotUpdater().start();
+	    Executor.getInstance().executeAction(new LoadRecentFilesAction());
+	    Executor.getInstance().executeAction(new OpenNewImageAction());
 
-	}
+	    GuiFacade.getInstance().toggleToolTo(AppContext.getInstance().getCurrTool());
+	    GuiFacade.getInstance().setPanMode(AppContext.getInstance().getCurrTool() == PixTool.PAN);
 
-	private void handleClose() {
+	    // start this thread in case Pick is the starting tool.
+	    AppContext.getInstance().getSnapshotUpdater().start();
 
-		try {
+      }
 
-			final AppContext ctx = AppContext.getInstance();
-			ctx.propertyContext().save();
-			ctx.getCursorUpdater().setClose(true);
-			AppContext.getSnapshotUpdater().setClose(true);
 
-			Executor.getInstance().executeAction(new SaveRecentFilesAction());
+      private void handleClose()
+      {
 
-		} catch (Exception e) {
-			new ExceptionPopUp(e);
-		}
-	}
+	    try
+	    {
+
+		  final AppContext ctx = AppContext.getInstance();
+		  ctx.propertyContext().save();
+		  ctx.getCursorUpdater().setClose(true);
+		  AppContext.getInstance().getSnapshotUpdater().setClose(true);
+
+		  Executor.getInstance().executeAction(new SaveRecentFilesAction());
+
+	    }
+	    catch (Exception e)
+	    {
+		  new ExceptionPopUp(e);
+	    }
+      }
 }

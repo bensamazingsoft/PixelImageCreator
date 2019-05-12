@@ -17,151 +17,199 @@ import com.ben.pixcreator.gui.tooltip.provider.ToolTipProvider;
 
 import javafx.scene.paint.Color;
 
-public class AppContext {
+public class AppContext
+{
 
-	private static CursorUpdater cursorUpdater;
+      private CursorUpdater	       cursorUpdater;
 
-	private static SnapshotUpdater snapshotUpdater;
+      private SnapshotUpdater	       snapshotUpdater;
 
-	private static AppContext instance;
+      private static AppContext	       instance;
 
-	private static PropertiesContext properties;
+      private PropertiesContext	       properties;
 
-	private static Color gridColor;
+      private Color		       gridColor;
 
-	private static PixTool currTool;
+      private PixTool		       currTool;
 
-	private static ResourceBundle bundle;
+      private ResourceBundle	       bundle;
 
-	private static ResourceBundle tipBundle;
+      private ResourceBundle	       tipBundle;
 
-	private static Map<PixImage, File> files;
+      private Map<PixImage, File>      files;
 
-	private static Map<PixImage, GroupLock> groupLocks;
+      private Map<PixImage, GroupLock> groupLocks;
 
-	private static EffectManager effectManager;
+      private EffectManager	       effectManager;
 
-	private static ToolTipProvider toolTipProvider;
+      private ToolTipProvider	       toolTipProvider;
 
-	private static boolean initialized = false;
+      private boolean		       initialized = false;
 
-	private AppContext() {
 
-	}
+      private AppContext()
+      {
 
-	public static void init() throws IOException {
+      }
 
-		cursorUpdater = new CursorUpdater();
-		cursorUpdater.start();
 
-		snapshotUpdater = new SnapshotUpdater();
+      public void init() throws IOException
+      {
 
-		properties = new PropertiesContext();
-		bundle = ResourceBundle.getBundle("i18n/trad");
-		tipBundle = ResourceBundle.getBundle("i18n/tips");
-		currTool = PixTool.valueOf(properties.get("startTool"));
+	    cursorUpdater = new CursorUpdater();
+	    cursorUpdater.start();
 
-		gridColor = properties.getColor(properties.get("gridColor"));
+	    snapshotUpdater = new SnapshotUpdater();
 
-		files = new HashMap<>();
-		groupLocks = new HashMap<>();
-		effectManager = new EffectManager();
+	    properties = new PropertiesContext();
+	    bundle = ResourceBundle.getBundle("i18n/trad");
+	    tipBundle = ResourceBundle.getBundle("i18n/tips");
+	    currTool = PixTool.valueOf(properties.get("startTool"));
 
-		toolTipProvider = new ToolTipProvider(tipBundle);
+	    gridColor = properties.getColor(properties.get("gridColor"));
 
-		initialized = true;
+	    files = new HashMap<>();
+	    groupLocks = new HashMap<>();
+	    effectManager = new EffectManager();
 
-	}
+	    toolTipProvider = new ToolTipProvider(tipBundle);
 
-	public static AppContext getInstance() {
+	    initialized = true;
 
-		if (instance == null) {
-			instance = new AppContext();
-		}
-		return instance;
+      }
 
-	}
 
-	public PropertiesContext propertyContext() {
+      public static AppContext getInstance()
+      {
 
-		return properties;
-	}
+	    if (instance == null)
+	    {
+		  instance = new AppContext();
+	    }
+	    return instance;
 
-	public void setProperties(PropertiesContext properties) {
+      }
 
-		AppContext.properties = properties;
-	}
 
-	public Color getGridColor() {
+      public PropertiesContext propertyContext()
+      {
 
-		return gridColor;
-	}
+	    return properties;
+      }
 
-	public void setGridColor(Color gridColor) {
 
-		AppContext.gridColor = gridColor;
-	}
+      public void setProperties(PropertiesContext properties)
+      {
 
-	public void setCurrTool(PixTool pixTool) {
+	    this.properties = properties;
+      }
 
-		properties.set("startTool", pixTool.name());
 
-		currTool = pixTool;
+      public Color getGridColor()
+      {
 
-	}
+	    return gridColor;
+      }
 
-	public PixTool getCurrTool() {
 
-		return currTool;
-	}
+      public void setGridColor(Color gridColor)
+      {
 
-	public ResourceBundle getBundle() {
+	    this.gridColor = gridColor;
+      }
 
-		return bundle;
-	}
 
-	public Map<PixImage, File> getFiles() {
+      public void setCurrTool(PixTool pixTool)
+      {
 
-		return files;
-	}
+	    properties.set("startTool", pixTool.name());
 
-	public Map<PixImage, GroupLock> getGroupLocks() {
+	    currTool = pixTool;
 
-		return groupLocks;
-	}
+      }
 
-	public EffectManager getEffectManager() {
 
-		return effectManager;
-	}
+      public PixTool getCurrTool()
+      {
 
-	public static boolean isInitialized() {
-		return initialized;
-	}
+	    return currTool;
+      }
 
-	public static void setInitialized(boolean initialized) {
-		AppContext.initialized = initialized;
-	}
 
-	public CursorUpdater getCursorUpdater() {
+      public ResourceBundle getBundle()
+      {
 
-		return cursorUpdater;
-	}
+	    return bundle;
+      }
 
-	public static void setCursorUpdater(CursorUpdater cursorUpdater) {
-		AppContext.cursorUpdater = cursorUpdater;
-	}
 
-	public static SnapshotUpdater getSnapshotUpdater() {
-		return snapshotUpdater;
-	}
+      public Map<PixImage, File> getFiles()
+      {
 
-	public ToolTipProvider getToolTipProvider() {
-		return toolTipProvider;
-	}
+	    return files;
+      }
 
-	public static void setToolTipProvider(ToolTipProvider toolTipProvider) {
-		AppContext.toolTipProvider = toolTipProvider;
-	}
+
+      public Map<PixImage, GroupLock> getGroupLocks()
+      {
+
+	    return groupLocks;
+      }
+
+
+      public EffectManager getEffectManager()
+      {
+
+	    return effectManager;
+      }
+
+
+      public boolean isInitialized()
+      {
+
+	    return initialized;
+      }
+
+
+      public void setInitialized(boolean initialized)
+      {
+
+	    this.initialized = initialized;
+      }
+
+
+      public CursorUpdater getCursorUpdater()
+      {
+
+	    return cursorUpdater;
+      }
+
+
+      public void setCursorUpdater(CursorUpdater cursorUpdater)
+      {
+
+	    this.cursorUpdater = cursorUpdater;
+      }
+
+
+      public SnapshotUpdater getSnapshotUpdater()
+      {
+
+	    return snapshotUpdater;
+      }
+
+
+      public ToolTipProvider getToolTipProvider()
+      {
+
+	    return toolTipProvider;
+      }
+
+
+      public void setToolTipProvider(ToolTipProvider toolTipProvider)
+      {
+
+	    this.toolTipProvider = toolTipProvider;
+      }
 
 }

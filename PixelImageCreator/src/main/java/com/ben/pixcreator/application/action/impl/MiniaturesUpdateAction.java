@@ -29,7 +29,7 @@ public class MiniaturesUpdateAction implements IAction
       public void execute() throws Exception
       {
 
-	    log.debug("MiniatureManager().update()");
+	    log.debug("update");
 	    for (ALayer layer : image.getLayerList().getAllItems())
 	    {
 

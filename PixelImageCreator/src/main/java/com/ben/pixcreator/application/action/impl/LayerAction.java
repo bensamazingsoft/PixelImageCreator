@@ -5,6 +5,9 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.ben.pixcreator.application.action.IAction;
 import com.ben.pixcreator.application.action.ICancelable;
 import com.ben.pixcreator.application.context.AppContext;
@@ -24,12 +27,14 @@ import javafx.stage.FileChooser.ExtensionFilter;
 public class LayerAction implements IAction, ICancelable
 {
 
-      final AppContext		 ctx = AppContext.getInstance();
-      final GuiFacade		 gui = GuiFacade.getInstance();
+      private static final Logger log = LoggerFactory.getLogger(LayerAction.class);
 
-      private final Pile<ALayer> layerList;
-      private final ALayer	 layer;
-      private final LayerActions action;
+      final AppContext		  ctx = AppContext.getInstance();
+      final GuiFacade		  gui = GuiFacade.getInstance();
+
+      private final Pile<ALayer>  layerList;
+      private final ALayer	  layer;
+      private final LayerActions  action;
 
 
       public LayerAction(PixImage image, ALayer layer, LayerActions action)
@@ -83,6 +88,7 @@ public class LayerAction implements IAction, ICancelable
       private void moveUp()
       {
 
+	    log.debug("moveUp");
 	    layerList.moveUp(layer);
 	    gui.setFocusLayer(layer);
 
@@ -92,6 +98,7 @@ public class LayerAction implements IAction, ICancelable
       private void moveDown()
       {
 
+	    log.debug("moveDown");
 	    layerList.moveDown(layer);
 	    gui.setFocusLayer(layer);
 
@@ -101,6 +108,7 @@ public class LayerAction implements IAction, ICancelable
       private void duplicate()
       {
 
+	    log.debug("duplicate");
 	    ALayer dup = layer.duplicate();
 	    dup.setUuid(UUID.randomUUID());
 
@@ -113,6 +121,7 @@ public class LayerAction implements IAction, ICancelable
       private void delete()
       {
 
+	    log.debug("delete");
 	    ctx.getGroupLocks().get(gui.getActiveimage()).unlock(layer);
 
 	    ctx.getEffectManager().getImageEffects(gui.getActiveimage())
@@ -126,6 +135,7 @@ public class LayerAction implements IAction, ICancelable
       private void addNewPix()
       {
 
+	    log.debug("addNewPix");
 	    final PixLayer pixLayer = new PixLayer();
 	    insertNewLayer(pixLayer);
 
@@ -135,6 +145,7 @@ public class LayerAction implements IAction, ICancelable
       private void addNewText()
       {
 
+	    log.debug("addNewText");
 	    final TextLayer txtLayer = new TextLayer();
 	    txtLayer.zoomFactorProperty()
 			.bindBidirectional(gui.getActiveTab().zoomFactorAdjustedProperty());
@@ -146,6 +157,7 @@ public class LayerAction implements IAction, ICancelable
       private void addNewBake()
       {
 
+	    log.debug("addNewBake");
 	    final BakeLayer bakeLayer = new BakeLayer();
 
 	    bakeLayer.zoomFactorProperty()
@@ -159,6 +171,7 @@ public class LayerAction implements IAction, ICancelable
       private void addNewPic()
       {
 
+	    log.debug("addNewPic");
 	    FileChooser fc = new FileChooser();
 	    fc.getExtensionFilters().addAll(
 			Arrays.asList(new ExtensionFilter("pics extensions", Arrays.asList("*.jpg", "*.png", "*.bmp"))));
@@ -183,6 +196,7 @@ public class LayerAction implements IAction, ICancelable
       private void insertNewLayer(ALayer newLayer)
       {
 
+	    log.debug("insertNewLayer");
 	    layerList.insertOver(layer, newLayer);
 	    gui.setFocusLayer(newLayer);
 

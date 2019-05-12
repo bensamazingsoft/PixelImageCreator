@@ -384,15 +384,15 @@ public class LayerPanel extends BorderPane implements Initializable
 
 		  GuiFacade.getInstance().getMiniatureManager().addMiniature(layer, box.getCanvas());
 
-		  try
-		  {
-			Executor.getInstance().executeAction(new MiniaturesUpdateAction(GuiFacade.getInstance().getActiveTab()));
-		  }
-		  catch (Exception e)
-		  {
-			new ExceptionPopUp(e);
-		  }
+	    }
 
+	    try
+	    {
+		  Executor.getInstance().executeAction(new MiniaturesUpdateAction(GuiFacade.getInstance().getActiveTab()));
+	    }
+	    catch (Exception e)
+	    {
+		  new ExceptionPopUp(e);
 	    }
 
       }

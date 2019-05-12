@@ -93,11 +93,11 @@ public class BakeLayer extends PicLayer
 
 		  for (ALayer layer : layerList.getAllItems())
 		  {
+			visibility.put(layer, layer.isVisible());
 			if (layerList.getIdx(layer) > layerIdx)
 			{
 			      layer.setVisible(false);
 			}
-			visibility.put(layer, layer.isVisible());
 
 			if (layer instanceof PicLayer)
 			{
@@ -113,6 +113,9 @@ public class BakeLayer extends PicLayer
 
 		  visibility.keySet().forEach(layer -> {
 			layer.setVisible(visibility.get(layer));
+		  });
+
+		  zoomFactors.keySet().forEach(layer -> {
 			if (layer instanceof PicLayer)
 			{
 			      ((PicLayer) layer).setZoomFactor(zoomFactors.get(layer));

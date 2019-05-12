@@ -7,6 +7,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.ben.gui.fx.pile.view.PileView;
 import com.ben.pixcreator.application.action.impl.RefreshTabAction;
 import com.ben.pixcreator.application.context.AppContext;
@@ -38,7 +41,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.Tab;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
@@ -51,310 +53,372 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
-public class LayerBox extends VBox implements Initializable, Toggle {
+public class LayerBox extends VBox implements Initializable, Toggle
+{
 
-	private ContextMenuProvider	contextMenuProvider	= new LayerBoxContextMenuProvider();
-	private LayerBox			layerBox			= this;
+      private static final Logger	  log		      = LoggerFactory.getLogger(LayerBox.class);
 
-	// properties
-	private final int	MINIATUREHEIGHT;
-	private final int	MINIATUREWIDTH;
-	private final int	BOXHEIGHT;
-	private final int	BOXWIDTH;
+      private ContextMenuProvider	  contextMenuProvider = new LayerBoxContextMenuProvider();
+      private LayerBox			  layerBox	      = this;
 
-	// toggle fields
-	private ObjectProperty<ToggleGroup>	toggleGroup	= new SimpleObjectProperty<ToggleGroup>();
-	private SimpleBooleanProperty		selected	= new SimpleBooleanProperty();
-	ObservableMap<Object, Object>		properties;
+      // properties
+      private final int			  MINIATUREHEIGHT;
+      private final int			  MINIATUREWIDTH;
+      private final int			  BOXHEIGHT;
+      private final int			  BOXWIDTH;
 
-	// instance fields
-	private PixImage				image;
-	private ALayer					layer;
-	private SimpleBooleanProperty	locked	= new SimpleBooleanProperty();
+      // toggle fields
+      private ObjectProperty<ToggleGroup> toggleGroup	      = new SimpleObjectProperty<ToggleGroup>();
+      private SimpleBooleanProperty	  selected	      = new SimpleBooleanProperty();
+      ObservableMap<Object, Object>	  properties;
 
-	private final String IMAGEPATH = "images/gui/buttons/layerbox/";
+      // instance fields
+      private PixImage			  image;
+      private ALayer			  layer;
+      private SimpleBooleanProperty	  locked	      = new SimpleBooleanProperty();
 
-	private Image	imgTypePicImg	= new Image(
-			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "imgTypePicImg.png"));
-	private Image	imgTypePixImg	= new Image(
-			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "imgTypePixImg.png"));
-	private Image	imgTypeTextImg	= new Image(
-			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "imgTypeTextImg.png"));
-	private Image	imgTypeFxImg	= new Image(
-			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "imgTypeFxImg.png"));
+      private final String		  IMAGEPATH	      = "images/gui/buttons/layerbox/";
 
-	@FXML
-	private ImageView imgTypeView;
+      private Image			  imgTypePicImg	      = new Image(
+		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "imgTypePicImg.png"));
+      private Image			  imgTypePixImg	      = new Image(
+		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "imgTypePixImg.png"));
+      private Image			  imgTypeTextImg      = new Image(
+		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "imgTypeTextImg.png"));
+      private Image			  imgTypeFxImg	      = new Image(
+		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "imgTypeFxImg.png"));
 
-	final private Image		lockSelected	= new Image(
-			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "lockSelected.png"));
-	final private Image		lockUnSelected	= new Image(
-			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "lockUnSelected.png"));
-	final private ImageView	lockButImg		= new ImageView();
+      @FXML
+      private ImageView			  imgTypeView;
 
-	final private Image		eyeSelected		= new Image(
-			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "eyeSelected.png"));
-	final private Image		eyeUnSelected	= new Image(
-			getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "eyeUnSelected.png"));
-	final private ImageView	eyeButImg		= new ImageView();
-
-	@FXML
-	private ToggleButton eyeBut;
-
-	@FXML
-	private ToggleButton lockBut;
-
-	@FXML
-	private StackPane eye;
-
-	@FXML
-	private StackPane miniaturePane;
-
-	@FXML
-	private Canvas canvas;
-
-	@FXML
-	private StackPane titlePane;
-
-	@FXML
-	private StackPane lockPane;
-
-	public LayerBox(PixImage image, ALayer layer) throws NumberFormatException {
-
-		super();
-		getStylesheets().add("/styles/styles.css");
-		getStyleClass().add("layerbox");
-
-		MINIATUREHEIGHT = Integer.valueOf(AppContext.getInstance().propertyContext().get("miniatureWH"));
-		MINIATUREWIDTH = Integer.valueOf(AppContext.getInstance().propertyContext().get("miniatureWH"));
-		BOXHEIGHT = Integer.valueOf(AppContext.getInstance().propertyContext().get("layerBoxH"));
-		BOXWIDTH = Integer.valueOf(AppContext.getInstance().propertyContext().get("layerBoxW"));
-
-		this.image = image;
-		this.layer = layer;
-
-		ResourceBundle bundle = ResourceBundle.getBundle("i18n/trad");
-
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/LayerBox.fxml"), bundle);
-		fxmlLoader.setRoot(this);
-		fxmlLoader.setController(this);
+      final private Image		  lockSelected	      = new Image(
+		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "lockSelected.png"));
+      final private Image		  lockUnSelected      = new Image(
+		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "lockUnSelected.png"));
+      final private ImageView		  lockButImg	      = new ImageView();
 
-		try {
-			fxmlLoader.load();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+      final private Image		  eyeSelected	      = new Image(
+		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "eyeSelected.png"));
+      final private Image		  eyeUnSelected	      = new Image(
+		  getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "eyeUnSelected.png"));
+      final private ImageView		  eyeButImg	      = new ImageView();
 
-		setLocked(false);
+      @FXML
+      private ToggleButton		  eyeBut;
 
-		this.setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
+      @FXML
+      private ToggleButton		  lockBut;
+
+      @FXML
+      private StackPane			  eye;
+
+      @FXML
+      private StackPane			  miniaturePane;
+
+      @FXML
+      private Canvas			  canvas;
+
+      @FXML
+      private StackPane			  titlePane;
+
+      @FXML
+      private StackPane			  lockPane;
+
+
+      public LayerBox(PixImage image, ALayer layer) throws NumberFormatException
+      {
+
+	    super();
+	    getStylesheets().add("/styles/styles.css");
+	    getStyleClass().add("layerbox");
+
+	    MINIATUREHEIGHT = Integer.valueOf(AppContext.getInstance().propertyContext().get("miniatureWH"));
+	    MINIATUREWIDTH = Integer.valueOf(AppContext.getInstance().propertyContext().get("miniatureWH"));
+	    BOXHEIGHT = Integer.valueOf(AppContext.getInstance().propertyContext().get("layerBoxH"));
+	    BOXWIDTH = Integer.valueOf(AppContext.getInstance().propertyContext().get("layerBoxW"));
+
+	    this.image = image;
+	    this.layer = layer;
+
+	    ResourceBundle bundle = ResourceBundle.getBundle("i18n/trad");
+
+	    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/LayerBox.fxml"), bundle);
+	    fxmlLoader.setRoot(this);
+	    fxmlLoader.setController(this);
+
+	    try
+	    {
+		  fxmlLoader.load();
+	    }
+	    catch (IOException e)
+	    {
+		  throw new RuntimeException(e);
+	    }
+
+	    setLocked(false);
+
+	    this.setOnContextMenuRequested(new EventHandler<ContextMenuEvent>()
+	    {
+
+		  @Override
+		  public void handle(ContextMenuEvent event)
+		  {
 
-			@Override
-			public void handle(ContextMenuEvent event) {
+			contextMenuProvider.getMenu(layer).show(layerBox, event.getScreenX(), event.getScreenY());
+		  }
+	    });
 
-				contextMenuProvider.getMenu(layer).show(layerBox, event.getScreenX(), event.getScreenY());
-			}
-		});
+      }
 
-	}
 
-	@Override
-	public void initialize(URL arg0, ResourceBundle arg1) {
+      @Override
+      public void initialize(URL arg0, ResourceBundle arg1)
+      {
 
-		eyeBut.setGraphic(eyeButImg);
-		eyeBut.selectedProperty().bindBidirectional(layer.visibleProperty());
-		eyeBut.selectedProperty().addListener((obs, oldVal, newVal) -> {
+	    eyeBut.setGraphic(eyeButImg);
+	    eyeBut.selectedProperty().bindBidirectional(layer.visibleProperty());
+	    eyeBut.selectedProperty().addListener((obs, oldVal, newVal) -> {
 
-			Tab tab = GuiFacade.getInstance().getActiveTab();
+		  PixTab tab = GuiFacade.getInstance().getActiveTab();
 
-			if (tab instanceof PixTab) {
-				try {
-					Executor.getInstance().executeAction(new RefreshTabAction((PixTab) tab));
-				} catch (Exception e) {
-					new ExceptionPopUp(e);
-				}
-			}
-		});
-		eyeButImg.imageProperty()
-				.bind(Bindings.when(eyeBut.selectedProperty()).then(eyeSelected).otherwise(eyeUnSelected));
+		  try
+		  {
+			Executor.getInstance().executeAction(new RefreshTabAction(tab));
+		  }
+		  catch (Exception e)
+		  {
+			new ExceptionPopUp(e);
+		  }
 
-		lockBut.setGraphic(lockButImg);
-		lockButImg.imageProperty()
-				.bind(Bindings.when(lockedProperty()).then(lockSelected).otherwise(lockUnSelected));
+	    });
+	    eyeButImg.imageProperty()
+			.bind(Bindings.when(eyeBut.selectedProperty()).then(eyeSelected).otherwise(eyeUnSelected));
 
-		locked.addListener((obs, oldVal, newVal) -> {
-			try {
-				Executor.getInstance().executeAction(new RefreshTabAction(GuiFacade.getInstance().getActiveTab()));
-			} catch (Exception e) {
-				new ExceptionPopUp(e);
-			}
-		});
+	    lockBut.setGraphic(lockButImg);
+	    lockButImg.imageProperty()
+			.bind(Bindings.when(lockedProperty()).then(lockSelected).otherwise(lockUnSelected));
 
-		imgTypeView.imageProperty().setValue(
-				layer instanceof PixLayer ? imgTypePixImg
-						: (layer instanceof TextLayer ? imgTypeTextImg
-								: (layer instanceof BakeLayer ? imgTypeFxImg : imgTypePicImg)));
+	    locked.addListener((obs, oldVal, newVal) -> {
+		  try
+		  {
+			Executor.getInstance().executeAction(new RefreshTabAction(GuiFacade.getInstance().getActiveTab()));
+		  }
+		  catch (Exception e)
+		  {
+			new ExceptionPopUp(e);
+		  }
+	    });
 
-		// this.setMaxHeight(BOXHEIGHT);
-		this.setMinHeight(BOXHEIGHT);
-		this.setMinWidth(BOXWIDTH);
-		HBox.setHgrow(titlePane, Priority.ALWAYS);
+	    imgTypeView.imageProperty().setValue(
+			layer instanceof PixLayer ? imgTypePixImg
+				    : (layer instanceof TextLayer ? imgTypeTextImg
+						: (layer instanceof BakeLayer ? imgTypeFxImg : imgTypePicImg)));
 
-		miniaturePane.setStyle("-fx-background-color:white");
-		miniaturePane.setMinWidth(MINIATUREWIDTH);
-		miniaturePane.setMinHeight(MINIATUREWIDTH);
-		canvas.setHeight(MINIATUREHEIGHT);
-		canvas.setWidth(MINIATUREWIDTH);
+	    // this.setMaxHeight(BOXHEIGHT);
+	    this.setMinHeight(BOXHEIGHT);
+	    this.setMinWidth(BOXWIDTH);
+	    HBox.setHgrow(titlePane, Priority.ALWAYS);
 
-		selected.addListener((obs, oldVal, newVal) -> {
-			if (newVal) {
-				setStyle("-fx-background-color:" + AppContext.getInstance().propertyContext().get("selectColor1"));
-			} else {
-				setStyle("-fx-background-color:" + AppContext.getInstance().propertyContext().get("selectColor2"));
-			}
-		});
+	    miniaturePane.setStyle("-fx-background-color:white");
+	    miniaturePane.setMinWidth(MINIATUREWIDTH);
+	    miniaturePane.setMinHeight(MINIATUREWIDTH);
+	    canvas.setHeight(MINIATUREHEIGHT);
+	    canvas.setWidth(MINIATUREWIDTH);
 
-		Pile<Effect> effects = AppContext.getInstance().getEffectManager().getImageLayerEffects(image, layer);
+	    selected.addListener((obs, oldVal, newVal) -> {
+		  if (newVal)
+		  {
+			setStyle("-fx-background-color:" + AppContext.getInstance().propertyContext().get("selectColor1"));
+		  }
+		  else
+		  {
+			setStyle("-fx-background-color:" + AppContext.getInstance().propertyContext().get("selectColor2"));
+		  }
+	    });
 
-		if (!effects.isEmpty()) {
-			String DISPLAY_TITLE = AppContext.getInstance().getBundle().getString("effectcontentDipslayTitle");
+	    Pile<Effect> effects = AppContext.getInstance().getEffectManager().getImageLayerEffects(image, layer);
 
-			Map<ALayer, SimpleBooleanProperty> imageEffectPaneExpand = LayerPanel.effectPaneExpand.computeIfAbsent(
-					image, piximage -> new HashMap<ALayer, SimpleBooleanProperty>());
+	    if (!effects.isEmpty())
+	    {
+		  String DISPLAY_TITLE = AppContext.getInstance().getBundle().getString("effectcontentDipslayTitle");
 
-			SimpleBooleanProperty expand = imageEffectPaneExpand.computeIfAbsent(layer,
-					alayer -> new SimpleBooleanProperty(true));
+		  Map<ALayer, SimpleBooleanProperty> imageEffectPaneExpand = LayerPanel.effectPaneExpand.computeIfAbsent(
+			      image, piximage -> new HashMap<ALayer, SimpleBooleanProperty>());
 
-			PileView pileView = new PileView(DISPLAY_TITLE, effects, new EffectPileViewItemFactory(), expand);
-			pileView.getStyleClass().add("effectView");
-			getChildren().add(pileView);
-		}
+		  SimpleBooleanProperty expand = imageEffectPaneExpand.computeIfAbsent(layer,
+			      alayer -> new SimpleBooleanProperty(true));
 
-	}
+		  PileView pileView = new PileView(DISPLAY_TITLE, effects, new EffectPileViewItemFactory(), expand);
+		  pileView.getStyleClass().add("effectView");
+		  getChildren().add(pileView);
+	    }
 
-	@FXML
-	private void toggleEye(MouseEvent event) {
+      }
 
-	}
 
-	@FXML
-	private void toggleLock(MouseEvent event) {
+      @FXML
+      private void toggleEye(MouseEvent event)
+      {
 
-		toggleLayerLock();
-	}
+      }
 
-	private void toggleLayerLock() {
 
-		GroupLock groupLock = AppContext.getInstance().getGroupLocks().get(GuiFacade.getInstance().getActiveImage());
+      @FXML
+      private void toggleLock(MouseEvent event)
+      {
 
-		if (groupLock.getLockedLayers(GuiFacade.getInstance().getActiveLayer()).contains(layer)) {
-			groupLock.unlock(layer);
-			setLocked(false);
-		} else {
-			groupLock.lockToActiveLayer(layer);
-			setLocked(true);
-		}
+	    toggleLayerLock();
+      }
 
-	}
 
-	@FXML
-	private void handleMiniatureClicked(MouseEvent event) {
+      private void toggleLayerLock()
+      {
 
-		miniatureClicked();
+	    GroupLock groupLock = AppContext.getInstance().getGroupLocks().get(GuiFacade.getInstance().getActiveImage());
 
-		if (event.isControlDown()) {
-			soloLayer();
-		}
+	    if (groupLock.getLockedLayers(GuiFacade.getInstance().getActiveLayer()).contains(layer))
+	    {
+		  groupLock.unlock(layer);
+		  setLocked(false);
+	    }
+	    else
+	    {
+		  groupLock.lockToActiveLayer(layer);
+		  setLocked(true);
+	    }
 
-	}
+      }
 
-	private void miniatureClicked() {
 
-		if (!isSelected()) {
-			toggleGroup.get().selectToggle(this);
-		}
+      @FXML
+      private void handleMiniatureClicked(MouseEvent event)
+      {
 
-	}
+	    miniatureClicked();
 
-	private void soloLayer() {
+	    if (event.isControlDown())
+	    {
+		  soloLayer();
+	    }
 
-		((ALayer) getUserData()).setVisible(true);
+      }
 
-		// toggle all other layers visibility to false
-		toggleGroup.get().getToggles().stream()
-				.map(Toggle::getUserData)
-				.map(obj -> (ALayer) obj)
-				.filter(layer -> !layer.equals(this.layer))
-				.forEach(layer -> layer.setVisible(false));
 
-	}
+      private void miniatureClicked()
+      {
 
-	@Override
-	public ToggleGroup getToggleGroup() {
+	    if (!isSelected())
+	    {
+		  toggleGroup.get().selectToggle(this);
+	    }
 
-		return toggleGroup.get();
-	}
+      }
 
-	public ALayer getUserData() {
 
-		return layer;
-	}
+      private void soloLayer()
+      {
 
-	@Override
-	public void setToggleGroup(ToggleGroup arg0) {
+	    ((ALayer) getUserData()).setVisible(true);
 
-		toggleGroup.set(arg0);
-		toggleGroup.get().getToggles().add(this);
-		toggleGroup.get().selectToggle(this);
-	}
+	    // toggle all other layers visibility to false
+	    toggleGroup.get().getToggles().stream()
+			.map(Toggle::getUserData)
+			.map(obj -> (ALayer) obj)
+			.filter(layer -> !layer.equals(this.layer))
+			.forEach(layer -> layer.setVisible(false));
 
-	public ObjectProperty<ToggleGroup> toggleGroupProperty() {
+      }
 
-		return toggleGroup;
-	}
 
-	@Override
-	public boolean isSelected() {
+      @Override
+      public ToggleGroup getToggleGroup()
+      {
 
-		return selected.get();
-	}
+	    return toggleGroup.get();
+      }
 
-	@Override
-	public BooleanProperty selectedProperty() {
 
-		return selected;
-	}
+      public ALayer getUserData()
+      {
 
-	@Override
-	public void setSelected(boolean value) {
+	    return layer;
+      }
 
-		selected.set(value);
 
-	}
+      @Override
+      public void setToggleGroup(ToggleGroup arg0)
+      {
 
-	public final SimpleBooleanProperty lockedProperty() {
+	    toggleGroup.set(arg0);
+	    toggleGroup.get().getToggles().add(this);
+	    toggleGroup.get().selectToggle(this);
+      }
 
-		return this.locked;
-	}
 
-	public final boolean isLocked() {
+      public ObjectProperty<ToggleGroup> toggleGroupProperty()
+      {
 
-		return this.lockedProperty().get();
-	}
+	    return toggleGroup;
+      }
 
-	public final void setLocked(final boolean locked) {
 
-		this.lockedProperty().set(locked);
-	}
+      @Override
+      public boolean isSelected()
+      {
 
-	public ALayer getLayer() {
+	    return selected.get();
+      }
 
-		return layer;
-	}
 
-	public Canvas getCanvas() {
+      @Override
+      public BooleanProperty selectedProperty()
+      {
 
-		return canvas;
-	}
+	    return selected;
+      }
+
+
+      @Override
+      public void setSelected(boolean value)
+      {
+
+	    selected.set(value);
+
+      }
+
+
+      public final SimpleBooleanProperty lockedProperty()
+      {
+
+	    return this.locked;
+      }
+
+
+      public final boolean isLocked()
+      {
+
+	    return this.lockedProperty().get();
+      }
+
+
+      public final void setLocked(final boolean locked)
+      {
+
+	    this.lockedProperty().set(locked);
+      }
+
+
+      public ALayer getLayer()
+      {
+
+	    return layer;
+      }
+
+
+      public Canvas getCanvas()
+      {
+
+	    return canvas;
+      }
 
 }

@@ -1,3 +1,4 @@
+
 package com.ben.pixcreator.application.image.layer.effect.pile.view.item.control.textarea;
 
 import org.slf4j.Logger;
@@ -11,31 +12,32 @@ import com.ben.pixcreator.gui.facade.GuiFacade;
 
 import javafx.scene.control.TextArea;
 
-public class TextContentControl extends TextArea {
+public class TextContentControl extends TextArea
+{
 
-	private static final Logger log = LoggerFactory.getLogger(TextContentControl.class);
+      private static final Logger log = LoggerFactory.getLogger(TextContentControl.class);
 
-	public TextContentControl(ParamValue<String> textContentParam) {
 
-		setText(textContentParam.getValue());
+      public TextContentControl(ParamValue<String> textContentParam)
+      {
 
-		textProperty().addListener((obs, oldVal, newVal) -> {
+	    setText(textContentParam.getValue());
 
-			textContentParam.setValue(newVal);
+	    textProperty().addListener((obs, oldVal, newVal) -> {
 
-			try {
-				Executor.getInstance().executeAction(new RefreshTabAction(GuiFacade.getInstance().getActiveTab()));
-			} catch (Exception e) {
-				new ExceptionPopUp(e);
-			}
+		  textContentParam.setValue(newVal);
 
-		});
+		  try
+		  {
+			Executor.getInstance().executeAction(new RefreshTabAction(GuiFacade.getInstance().getActiveTab()));
+		  }
+		  catch (Exception e)
+		  {
+			new ExceptionPopUp(e);
+		  }
 
-		// addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-		// log.debug("setFocused(true)");
-		// setFocused(true);
-		// });
+	    });
 
-	}
+      }
 
 }
