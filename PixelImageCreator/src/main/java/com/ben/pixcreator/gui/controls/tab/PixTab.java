@@ -13,6 +13,7 @@ import com.ben.pixcreator.application.action.IAction;
 import com.ben.pixcreator.application.action.factory.ActionFactoryProducer;
 import com.ben.pixcreator.application.action.factory.IActionFactory;
 import com.ben.pixcreator.application.action.impl.ActionNoOp;
+import com.ben.pixcreator.application.action.impl.MiniaturesUpdateAction;
 import com.ben.pixcreator.application.action.impl.RefreshTabAction;
 import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.application.executor.Executor;
@@ -185,15 +186,19 @@ public class PixTab extends Tab implements Initializable
 
 			IAction action = factory.getAction(event);
 
-			if (action instanceof ActionNoOp)
-			{
-			}
-			else
+			if (!(action instanceof ActionNoOp))
 			{
 
 			      Executor.getInstance().executeAction(action);
 
 			      Executor.getInstance().executeAction(new RefreshTabAction(tab));
+
+			}
+
+			if (event.getEventType().getName().equals("MOUSE_RELEASED"))
+			{
+
+			      Executor.getInstance().executeAction(new MiniaturesUpdateAction(tab));
 			}
 
 		  }
@@ -201,7 +206,7 @@ public class PixTab extends Tab implements Initializable
 		  {
 			new ExceptionPopUp(e);
 		  }
-
+		  event.consume();
 	    }
 
       }

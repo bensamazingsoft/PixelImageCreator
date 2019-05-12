@@ -8,39 +8,36 @@ import com.ben.pixcreator.application.action.IAction;
 import com.ben.pixcreator.application.executor.Executor;
 import com.ben.pixcreator.application.image.PixImage;
 import com.ben.pixcreator.application.image.draw.factory.DrawImageFactory;
-import com.ben.pixcreator.application.image.layer.impl.alayer.ALayer;
 import com.ben.pixcreator.gui.controls.tab.PixTab;
-import com.ben.pixcreator.gui.facade.GuiFacade;
 
 import javafx.scene.canvas.Canvas;
 
-public class RefreshTabAction implements IAction {
+public class RefreshTabAction implements IAction
+{
 
-	private static final Logger log = LoggerFactory.getLogger(RefreshTabAction.class);
+      private static final Logger log = LoggerFactory.getLogger(RefreshTabAction.class);
 
-	private final PixImage	image;
-	private final Canvas	canvas;
+      private final PixImage	  image;
+      private final Canvas	  canvas;
 
-	public RefreshTabAction(PixTab pxTab) {
 
-		canvas = pxTab.getCanvas();
-		image = pxTab.getImage();
-	}
+      public RefreshTabAction(PixTab pxTab)
+      {
 
-	@Override
-	public void execute() throws Exception {
+	    canvas = pxTab.getCanvas();
+	    image = pxTab.getImage();
+      }
 
-		log.debug(image.toString());
-		canvas.getGraphicsContext2D().clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
-		Executor.getInstance().executeAction(new ActionUpdateSelection(image));
-		DrawImageFactory.getDrawImage(image).draw(canvas);
+      @Override
+      public void execute() throws Exception
+      {
 
-		log.debug("MiniatureManager().update()");
-		for (ALayer layer : image.getLayerList().getAllItems()) {
+	    log.debug(image.toString());
+	    canvas.getGraphicsContext2D().clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
-			GuiFacade.getInstance().getMiniatureManager().update(layer);
+	    Executor.getInstance().executeAction(new ActionUpdateSelection(image));
+	    DrawImageFactory.getDrawImage(image).draw(canvas);
 
-		}
-	}
+      }
 }

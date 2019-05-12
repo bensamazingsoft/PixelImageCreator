@@ -1,69 +1,129 @@
 
 package com.ben.pixcreator.application.image.layer.impl.alayer.impl;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import com.ben.pixcreator.application.image.PixImage;
+import com.ben.pixcreator.application.image.draw.factory.DrawImageFactory;
 import com.ben.pixcreator.application.image.layer.effect.exception.EffectException;
 import com.ben.pixcreator.application.image.layer.impl.alayer.ALayer;
+import com.ben.pixcreator.application.pile.Pile;
+import com.ben.pixcreator.gui.facade.GuiFacade;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 
-public class BakeLayer extends PicLayer {
+public class BakeLayer extends PicLayer
+{
 
-	private static final long serialVersionUID = 1L;
+      private static final long serialVersionUID = 1L;
 
-	public BakeLayer() {
 
-		super();
+      public BakeLayer()
+      {
 
-		Canvas canvas = new Canvas(100, 100);
-		setImage(canvas.snapshot(null, null));
+	    super();
 
-	}
+	    Canvas canvas = new Canvas(100, 100);
+	    setImage(canvas.snapshot(null, null));
 
-	@Override
-	public String toString() {
+      }
 
-		return "BakeLayer [image : " + getImage() + "]";
-	}
 
-	@Override
-	public ALayer duplicate() {
+      @Override
+      public String toString()
+      {
 
-		BakeLayer clone = new BakeLayer();
+	    return "BakeLayer [image : " + getImage() + "]";
+      }
 
-		clone.setUuid(getUUID());
 
-		clone.setVisible(isVisible());
+      @Override
+      public ALayer duplicate()
+      {
 
-		clone.setPosition(getPosition());
+	    BakeLayer clone = new BakeLayer();
 
-		clone.setSizeFactorX(getSizeFactorX());
+	    clone.setUuid(getUUID());
 
-		clone.setSizeFactorY(getSizeFactorY());
+	    clone.setVisible(isVisible());
 
-		clone.setZoomFactor(getZoomFactor());
+	    clone.setPosition(getPosition());
 
-		clone.setImage(getImage());
+	    clone.setSizeFactorX(getSizeFactorX());
 
-		clone.setImageFile(getImageFile());
+	    clone.setSizeFactorY(getSizeFactorY());
 
-		clone.setOpacity(getOpacity());
+	    clone.setZoomFactor(getZoomFactor());
 
-		return clone;
-	}
+	    clone.setImage(getImage());
 
-	@Override
-	public void draw(Canvas canvas, int xGridResolution, int yGridResolution) {
+	    clone.setImageFile(getImageFile());
 
-	}
+	    clone.setOpacity(getOpacity());
 
-	/**
-	 * @return a baked image of this layer. Consists of an image made with all
-	 *         sub-layers.
-	 * @throws EffectException
-	 */
-	public Image getBakedSnapshot() throws EffectException {
+	    return clone;
+      }
 
-	}
+
+      @Override
+      public void draw(Canvas canvas, int xGridResolution, int yGridResolution)
+      {
+
+      }
+
+
+      /**
+       * @return a baked image of this layer. Consists of an image made with all sub-layers.
+       * @throws EffectException
+       */
+      public Image getBakedSnapshot() throws EffectException
+      {
+
+	    PixImage image = GuiFacade.getInstance().getActiveimage();
+	    Pile<ALayer> layerList = image.getLayerList();
+
+	    if (layerList.getAllItems().contains(this))
+	    {
+
+		  int layerIdx = layerList.getIdx(this);
+		  Map<ALayer, Boolean> visibility = new HashMap<>();
+		  Map<ALayer, Double> zoomFactors = new HashMap<>();
+
+		  for (ALayer layer : layerList.getAllItems())
+		  {
+			if (layerList.getIdx(layer) > layerIdx)
+			{
+			      layer.setVisible(false);
+			}
+			visibility.put(layer, layer.isVisible());
+
+			if (layer instanceof PicLayer)
+			{
+			      zoomFactors.put(layer, ((PicLayer) layer).getZoomFactor());
+			      ((PicLayer) layer).setZoomFactor(1.0d);
+			}
+		  }
+
+		  Canvas canvas = new Canvas(image.getxSize(), image.getySize());
+		  DrawImageFactory.getDrawImage(image).draw(canvas);
+
+		  Image snap = canvas.snapshot(null, null);
+
+		  visibility.keySet().forEach(layer -> {
+			layer.setVisible(visibility.get(layer));
+			if (layer instanceof PicLayer)
+			{
+			      ((PicLayer) layer).setZoomFactor(zoomFactors.get(layer));
+			}
+		  });
+
+		  return snap;
+
+	    }
+	    return getImage();
+
+      }
 
 }

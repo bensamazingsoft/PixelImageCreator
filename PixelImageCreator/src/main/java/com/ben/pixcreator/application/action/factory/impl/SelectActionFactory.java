@@ -62,7 +62,7 @@ public class SelectActionFactory implements IActionFactory
 				    new ExceptionPopUp(e);
 			      }
 			}
-			event.consume();
+
 			break;
 		  }
 
@@ -86,7 +86,7 @@ public class SelectActionFactory implements IActionFactory
 			      }
 
 			}
-			event.consume();
+
 			break;
 		  }
 

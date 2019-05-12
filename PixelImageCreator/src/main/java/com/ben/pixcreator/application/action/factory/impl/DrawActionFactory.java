@@ -25,128 +25,161 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 
-public class DrawActionFactory implements IActionFactory {
+public class DrawActionFactory implements IActionFactory
+{
 
-	@SuppressWarnings("unused")
-	private static final Logger	log	= LoggerFactory.getLogger(DrawActionFactory.class);
-	private PixTab				tab	= GuiFacade.getInstance().getActiveTab();
+      @SuppressWarnings("unused")
+      private static final Logger log = LoggerFactory.getLogger(DrawActionFactory.class);
+      private PixTab		  tab = GuiFacade.getInstance().getActiveTab();
 
-	@Override
-	public IAction getAction(Event event) {
 
-		// log.debug(event.getEventType().getName());
+      @Override
+      public IAction getAction(Event event)
+      {
 
-		if (event instanceof MouseEvent && GuiFacade.getInstance().getActiveLayer() instanceof PixLayer) {
+	    // log.debug(event.getEventType().getName());
 
-			final Executor exec = Executor.getInstance();
-			switch (event.getEventType().getName()) {
+	    if (event instanceof MouseEvent && GuiFacade.getInstance().getActiveLayer() instanceof PixLayer)
+	    {
 
-			case ("MOUSE_PRESSED"): {
-				if (((MouseEvent) event).getButton() == MouseButton.PRIMARY
-						|| ((MouseEvent) event).getButton() == MouseButton.SECONDARY) {
+		  final Executor exec = Executor.getInstance();
+		  switch (event.getEventType().getName())
+		  {
 
-					exec.startOperation();
+		  case ("MOUSE_PRESSED"):
+		  {
+			if (((MouseEvent) event).getButton() == MouseButton.PRIMARY
+				    || ((MouseEvent) event).getButton() == MouseButton.SECONDARY)
+			{
 
-					try {
-						if (((MouseEvent) event).getButton() == MouseButton.PRIMARY) {
-							exec.continueOperation((ICancelable) getChangeCellColorAction(event));
-							exec.executeAction(new RefreshTabAction(tab));
-						}
-						if (((MouseEvent) event).getButton() == MouseButton.SECONDARY) {
-							exec.continueOperation((ICancelable) getDeleteCellAction(event));
-							exec.executeAction(new RefreshTabAction(tab));
-						}
-					} catch (Exception e) {
-						try {
-							exec.abortOperation();
-						} catch (Exception e1) {
-							new ExceptionPopUp(e1);
-						}
-						new ExceptionPopUp(e);
-					}
-				}
-				event.consume();
-				break;
+			      exec.startOperation();
+
+			      try
+			      {
+				    if (((MouseEvent) event).getButton() == MouseButton.PRIMARY)
+				    {
+					  exec.continueOperation((ICancelable) getChangeCellColorAction(event));
+					  exec.executeAction(new RefreshTabAction(tab));
+				    }
+				    if (((MouseEvent) event).getButton() == MouseButton.SECONDARY)
+				    {
+					  exec.continueOperation((ICancelable) getDeleteCellAction(event));
+					  exec.executeAction(new RefreshTabAction(tab));
+				    }
+			      }
+			      catch (Exception e)
+			      {
+				    try
+				    {
+					  exec.abortOperation();
+				    }
+				    catch (Exception e1)
+				    {
+					  new ExceptionPopUp(e1);
+				    }
+				    new ExceptionPopUp(e);
+			      }
 			}
 
-			case ("MOUSE_DRAGGED"): {
+			break;
+		  }
 
-				if (((MouseEvent) event).getButton() == MouseButton.PRIMARY
-						|| ((MouseEvent) event).getButton() == MouseButton.SECONDARY) {
-					try {
-						if (((MouseEvent) event).getButton() == MouseButton.PRIMARY) {
-							exec.continueOperation((ICancelable) getChangeCellColorAction(event));
-							exec.executeAction(new RefreshTabAction(tab));
-						}
-						if (((MouseEvent) event).getButton() == MouseButton.SECONDARY) {
-							event.consume();
-							exec.continueOperation((ICancelable) getDeleteCellAction(event));
-							exec.executeAction(new RefreshTabAction(tab));
-						}
-					} catch (Exception e) {
-						try {
-							exec.abortOperation();
-						} catch (Exception e1) {
-							new ExceptionPopUp(e1);
-						}
-						new ExceptionPopUp(e);
-					}
-				}
-				break;
-			}
+		  case ("MOUSE_DRAGGED"):
+		  {
 
-			case ("MOUSE_RELEASED"): {
-				if (((MouseEvent) event).getButton() == MouseButton.PRIMARY
-						|| ((MouseEvent) event).getButton() == MouseButton.SECONDARY) {
-					exec.endOperation();
-					event.consume();
-				}
-				break;
-			}
+			if (((MouseEvent) event).getButton() == MouseButton.PRIMARY
+				    || ((MouseEvent) event).getButton() == MouseButton.SECONDARY)
+			{
+			      try
+			      {
+				    if (((MouseEvent) event).getButton() == MouseButton.PRIMARY)
+				    {
+					  exec.continueOperation((ICancelable) getChangeCellColorAction(event));
+					  exec.executeAction(new RefreshTabAction(tab));
+				    }
+				    if (((MouseEvent) event).getButton() == MouseButton.SECONDARY)
+				    {
 
-			case ("MOUSE_ENTERED"): {
+					  exec.continueOperation((ICancelable) getDeleteCellAction(event));
+					  exec.executeAction(new RefreshTabAction(tab));
+				    }
+			      }
+			      catch (Exception e)
+			      {
+				    try
+				    {
+					  exec.abortOperation();
+				    }
+				    catch (Exception e1)
+				    {
+					  new ExceptionPopUp(e1);
+				    }
+				    new ExceptionPopUp(e);
+			      }
+			}
+			break;
+		  }
 
-				event.consume();
-				return new ActionNoOp();
-
-			}
-			case ("MOUSE_MOVED"): {
-				event.consume();
-				return new ActionNoOp();
-			}
-			case ("MOUSE_EXITED"): {
-				event.consume();
-				return new ActionNoOp();
-			}
+		  case ("MOUSE_RELEASED"):
+		  {
+			if (((MouseEvent) event).getButton() == MouseButton.PRIMARY
+				    || ((MouseEvent) event).getButton() == MouseButton.SECONDARY)
+			{
+			      exec.endOperation();
 
 			}
-		}
+			break;
+		  }
 
-		return new ActionNoOp();
+		  case ("MOUSE_ENTERED"):
+		  {
 
-	}
+			return new ActionNoOp();
 
-	private IAction getDeleteCellAction(Event event) {
+		  }
+		  case ("MOUSE_MOVED"):
+		  {
 
-		ALayer layer = GuiFacade.getInstance().getActiveLayer();
-		PixImage image = GuiFacade.getInstance().getActiveimage();
+			return new ActionNoOp();
+		  }
+		  case ("MOUSE_EXITED"):
+		  {
 
-		Coord coord = eventCoord((MouseEvent) event);
+			return new ActionNoOp();
+		  }
 
-		return new ActionDeleteCell(image, (PixLayer) layer, coord);
+		  }
+	    }
 
-	}
+	    return new ActionNoOp();
 
-	private IAction getChangeCellColorAction(Event event) {
+      }
 
-		PixImage image = GuiFacade.getInstance().getActiveimage();
-		ALayer layer = GuiFacade.getInstance().getActiveLayer();
-		Color color = GuiFacade.getInstance().getActiveColor();
 
-		Coord eventCoord = eventCoord((MouseEvent) event);
+      private IAction getDeleteCellAction(Event event)
+      {
 
-		return new ActionChangeCellColor(image, (PixLayer) layer, eventCoord, color);
+	    ALayer layer = GuiFacade.getInstance().getActiveLayer();
+	    PixImage image = GuiFacade.getInstance().getActiveimage();
 
-	}
+	    Coord coord = eventCoord((MouseEvent) event);
+
+	    return new ActionDeleteCell(image, (PixLayer) layer, coord);
+
+      }
+
+
+      private IAction getChangeCellColorAction(Event event)
+      {
+
+	    PixImage image = GuiFacade.getInstance().getActiveimage();
+	    ALayer layer = GuiFacade.getInstance().getActiveLayer();
+	    Color color = GuiFacade.getInstance().getActiveColor();
+
+	    Coord eventCoord = eventCoord((MouseEvent) event);
+
+	    return new ActionChangeCellColor(image, (PixLayer) layer, eventCoord, color);
+
+      }
 
 }

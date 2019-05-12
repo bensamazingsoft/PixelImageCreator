@@ -12,36 +12,44 @@ import com.ben.pixcreator.application.image.coords.Coord;
 import com.ben.pixcreator.application.selection.Selection;
 import com.ben.pixcreator.gui.facade.GuiFacade;
 
-public class ActionUpdateSelection implements IAction {
+public class ActionUpdateSelection implements IAction
+{
 
-	private static final Logger log = LoggerFactory.getLogger(ActionUpdateSelection.class);
+      private static final Logger log = LoggerFactory.getLogger(ActionUpdateSelection.class);
 
-	private PixImage	image;
-	private ColorRGB	color;
+      private PixImage		  image;
+      private ColorRGB		  color;
 
-	public ActionUpdateSelection(PixImage image) {
 
-		this.image = image;
+      public ActionUpdateSelection(PixImage image)
+      {
 
-		color = new ColorRGB(AppContext.getInstance().propertyContext().getSelectionColor());
-	}
+	    this.image = image;
 
-	@Override
-	public void execute() throws Exception {
-		log.debug("execute");
-		Selection selection = GuiFacade.getInstance().getSelections().get(image);
-		image.getSelect().getGrid().clear();
+	    color = new ColorRGB(AppContext.getInstance().propertyContext().getSelectionColor());
+      }
 
-		if (null != selection) {
 
-			for (Coord coord : selection.getCoords()) {
+      @Override
+      public void execute() throws Exception
+      {
 
-				image.getSelect().getGrid().put(coord, color);
+	    log.debug("execute");
+	    Selection selection = GuiFacade.getInstance().getSelections().get(image);
+	    image.getSelect().getGrid().clear();
 
-			}
+	    if (null != selection)
+	    {
+		  log.debug("selected " + selection.getCoords().size() + " cells");
+		  for (Coord coord : selection.getCoords())
+		  {
 
-		}
+			image.getSelect().getGrid().put(coord, color);
 
-	}
+		  }
+
+	    }
+
+      }
 
 }
