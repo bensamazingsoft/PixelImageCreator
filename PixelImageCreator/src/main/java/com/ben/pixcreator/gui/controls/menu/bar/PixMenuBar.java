@@ -16,8 +16,8 @@ import javax.imageio.ImageIO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ben.pixcreator.application.action.impl.ActionChangeCellColor;
-import com.ben.pixcreator.application.action.impl.ActionDeleteCell;
+import com.ben.pixcreator.application.action.impl.ChangeCellColorAction;
+import com.ben.pixcreator.application.action.impl.DeleteCellAction;
 import com.ben.pixcreator.application.action.impl.LoadFileAction;
 import com.ben.pixcreator.application.action.impl.OpenNewImageAction;
 import com.ben.pixcreator.application.action.impl.PixellateAction;
@@ -378,7 +378,7 @@ public class PixMenuBar extends MenuBar implements Initializable {
 			gui.getClipboard().forEach((k, v) -> {
 
 				try {
-					exec.continueOperation(new ActionDeleteCell(activeImage, pixLayer, k));
+					exec.continueOperation(new DeleteCellAction(activeImage, pixLayer, k));
 				} catch (Exception e) {
 					try {
 						exec.abortOperation();
@@ -423,7 +423,7 @@ public class PixMenuBar extends MenuBar implements Initializable {
 
 				try {
 					exec.continueOperation(
-							new ActionChangeCellColor(gui.getActiveimage(), pixLayer, coord, colorRGB.getFxColor()));
+							new ChangeCellColorAction(gui.getActiveimage(), pixLayer, coord, colorRGB.getFxColor()));
 				} catch (Exception e) {
 					try {
 						exec.abortOperation();
@@ -463,7 +463,7 @@ public class PixMenuBar extends MenuBar implements Initializable {
 				try {
 
 					exec.continueOperation(
-							new ActionChangeCellColor(
+							new ChangeCellColorAction(
 									gui.getActiveimage(),
 									(PixLayer) gui.getActiveLayer(),
 									coord,

@@ -10,8 +10,8 @@ import org.slf4j.LoggerFactory;
 
 import com.ben.pixcreator.application.action.IAction;
 import com.ben.pixcreator.application.action.factory.IActionFactory;
-import com.ben.pixcreator.application.action.impl.ActionNoOp;
-import com.ben.pixcreator.application.action.impl.ActionTranslateLayer;
+import com.ben.pixcreator.application.action.impl.NoOpAction;
+import com.ben.pixcreator.application.action.impl.TranslateLayerAction;
 import com.ben.pixcreator.application.action.impl.RefreshTabAction;
 import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.application.executor.Executor;
@@ -103,7 +103,7 @@ public class MoveActionFactory implements IActionFactory
 				    // to compute the translation from there
 				    startState.get(layer).restore();
 				    exec
-						.continueOperation(new ActionTranslateLayer(translateX, translateY, layer, selection));
+						.continueOperation(new TranslateLayerAction(translateX, translateY, layer, selection));
 				    exec.executeAction(new RefreshTabAction(tab));
 			      }
 			      catch (Exception e)
@@ -136,23 +136,23 @@ public class MoveActionFactory implements IActionFactory
 		  case ("MOUSE_ENTERED"):
 		  {
 
-			return new ActionNoOp();
+			return new NoOpAction();
 		  }
 		  case ("MOUSE_MOVED"):
 		  {
 
-			return new ActionNoOp();
+			return new NoOpAction();
 		  }
 		  case ("MOUSE_EXITED"):
 		  {
 
-			return new ActionNoOp();
+			return new NoOpAction();
 		  }
 		  }
 
 	    }
 
-	    return new ActionNoOp();
+	    return new NoOpAction();
       }
 
 }

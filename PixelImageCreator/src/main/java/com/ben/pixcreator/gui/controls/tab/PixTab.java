@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import com.ben.pixcreator.application.action.IAction;
 import com.ben.pixcreator.application.action.factory.ActionFactoryProducer;
 import com.ben.pixcreator.application.action.factory.IActionFactory;
-import com.ben.pixcreator.application.action.impl.ActionNoOp;
+import com.ben.pixcreator.application.action.impl.NoOpAction;
 import com.ben.pixcreator.application.action.impl.MiniaturesUpdateAction;
 import com.ben.pixcreator.application.action.impl.RefreshTabAction;
 import com.ben.pixcreator.application.context.AppContext;
@@ -186,7 +186,7 @@ public class PixTab extends Tab implements Initializable
 
 			IAction action = factory.getAction(event);
 
-			if (!(action instanceof ActionNoOp))
+			if (!(action instanceof NoOpAction))
 			{
 
 			      Executor.getInstance().executeAction(action);

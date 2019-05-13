@@ -12,16 +12,16 @@ import com.ben.pixcreator.application.image.coords.Coord;
 import com.ben.pixcreator.application.selection.Selection;
 import com.ben.pixcreator.gui.facade.GuiFacade;
 
-public class ActionUpdateSelection implements IAction
+public class UpdateSelectionAction implements IAction
 {
 
-      private static final Logger log = LoggerFactory.getLogger(ActionUpdateSelection.class);
+      private static final Logger log = LoggerFactory.getLogger(UpdateSelectionAction.class);
 
       private PixImage		  image;
       private ColorRGB		  color;
 
 
-      public ActionUpdateSelection(PixImage image)
+      public UpdateSelectionAction(PixImage image)
       {
 
 	    this.image = image;

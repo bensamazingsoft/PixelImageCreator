@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 
 import com.ben.pixcreator.application.action.IAction;
 import com.ben.pixcreator.application.action.factory.IActionFactory;
-import com.ben.pixcreator.application.action.impl.ActionNoOp;
+import com.ben.pixcreator.application.action.impl.NoOpAction;
 
 import javafx.event.Event;
 
@@ -23,7 +23,7 @@ public class PanActionFactory implements IActionFactory
 
 	    // log.debug(event.getEventType().getName());
 
-	    return new ActionNoOp();
+	    return new NoOpAction();
       }
 
 }

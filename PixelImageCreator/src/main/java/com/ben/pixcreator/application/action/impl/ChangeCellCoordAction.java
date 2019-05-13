@@ -10,7 +10,7 @@ import com.ben.pixcreator.gui.facade.GuiFacade;
 
 import javafx.scene.paint.Color;
 
-public class ActionChangeCellCoord implements IAction
+public class ChangeCellCoordAction implements IAction
 {
 
       private PixImage image;
@@ -20,7 +20,7 @@ public class ActionChangeCellCoord implements IAction
       private ColorRGB color;
 
 
-      public ActionChangeCellCoord()
+      public ChangeCellCoordAction()
       {
 
 	    layer = new PixLayer();
@@ -30,7 +30,7 @@ public class ActionChangeCellCoord implements IAction
       }
 
 
-      public ActionChangeCellCoord(PixImage image, PixLayer layer, Coord oldCoord, Coord newCoord)
+      public ChangeCellCoordAction(PixImage image, PixLayer layer, Coord oldCoord, Coord newCoord)
       {
 
 	    this.layer = layer;

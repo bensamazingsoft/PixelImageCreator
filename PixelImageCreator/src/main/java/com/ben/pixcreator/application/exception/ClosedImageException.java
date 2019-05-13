@@ -1,5 +1,5 @@
 
-package com.ben.pixcreator.application.action.impl;
+package com.ben.pixcreator.application.exception;
 
 public class ClosedImageException extends Exception {
 

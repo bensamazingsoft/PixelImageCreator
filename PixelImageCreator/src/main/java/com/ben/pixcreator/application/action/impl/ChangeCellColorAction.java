@@ -14,11 +14,11 @@ import com.ben.pixcreator.gui.facade.GuiFacade;
 
 import javafx.scene.paint.Color;
 
-public class ActionChangeCellColor implements IAction, ICancelable
+public class ChangeCellColorAction implements IAction, ICancelable
 {
 
       @SuppressWarnings("unused")
-      private static final Logger log = LoggerFactory.getLogger(ActionChangeCellColor.class);
+      private static final Logger log = LoggerFactory.getLogger(ChangeCellColorAction.class);
 
       private PixImage		  image;
       private PixLayer		  layer;
@@ -30,7 +30,7 @@ public class ActionChangeCellColor implements IAction, ICancelable
       private final boolean	  newCell;
 
 
-      public ActionChangeCellColor(PixImage image, PixLayer layer, Coord coord, Color color)
+      public ChangeCellColorAction(PixImage image, PixLayer layer, Coord coord, Color color)
       {
 
 	    this.image = image;
@@ -90,7 +90,7 @@ public class ActionChangeCellColor implements IAction, ICancelable
       public String toString()
       {
 
-	    return "ActionChangeCellColor (" + newCell + ") [layer=" + layer + ", coord=" + coord + ", color=" + color
+	    return "ChangeCellColorAction (" + newCell + ") [layer=" + layer + ", coord=" + coord + ", color=" + color
 			+ "]";
       }
 
@@ -121,11 +121,11 @@ public class ActionChangeCellColor implements IAction, ICancelable
 	    {
 		  return false;
 	    }
-	    if (!(obj instanceof ActionChangeCellColor))
+	    if (!(obj instanceof ChangeCellColorAction))
 	    {
 		  return false;
 	    }
-	    ActionChangeCellColor other = (ActionChangeCellColor) obj;
+	    ChangeCellColorAction other = (ChangeCellColorAction) obj;
 	    if (color == null)
 	    {
 		  if (other.color != null)

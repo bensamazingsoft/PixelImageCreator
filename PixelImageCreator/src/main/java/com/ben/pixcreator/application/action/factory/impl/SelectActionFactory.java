@@ -6,8 +6,8 @@ import org.slf4j.LoggerFactory;
 
 import com.ben.pixcreator.application.action.IAction;
 import com.ben.pixcreator.application.action.factory.IActionFactory;
-import com.ben.pixcreator.application.action.impl.ActionNoOp;
-import com.ben.pixcreator.application.action.impl.ActionUpdateSelection;
+import com.ben.pixcreator.application.action.impl.NoOpAction;
+import com.ben.pixcreator.application.action.impl.UpdateSelectionAction;
 import com.ben.pixcreator.application.image.coords.Coord;
 import com.ben.pixcreator.application.selection.Selection;
 import com.ben.pixcreator.gui.exception.popup.ExceptionPopUp;
@@ -28,7 +28,7 @@ public class SelectActionFactory implements IActionFactory
       public IAction getAction(Event event)
       {
 
-	    IAction action = new ActionNoOp();
+	    IAction action = new NoOpAction();
 
 	    if (event instanceof MouseEvent)
 	    {
@@ -51,8 +51,8 @@ public class SelectActionFactory implements IActionFactory
 						      new Selection(eventCoord((MouseEvent) event), eventCoord((MouseEvent) event)));
 
 					  // return new
-					  // ActionUpdateSelection(GuiFacade.getInstance().getActiveImage());
-					  return new ActionUpdateSelection(GuiFacade.getInstance().getActiveImage());
+					  // UpdateSelectionAction(GuiFacade.getInstance().getActiveImage());
+					  return new UpdateSelectionAction(GuiFacade.getInstance().getActiveImage());
 
 				    }
 
@@ -81,7 +81,7 @@ public class SelectActionFactory implements IActionFactory
 				    GuiFacade.getInstance().getSelections().put(GuiFacade.getInstance().getActiveImage(),
 						new Selection(start, eventCoord((MouseEvent) event)));
 
-				    return new ActionUpdateSelection(GuiFacade.getInstance().getActiveImage());
+				    return new UpdateSelectionAction(GuiFacade.getInstance().getActiveImage());
 
 			      }
 

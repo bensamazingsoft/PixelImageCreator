@@ -15,7 +15,7 @@ import com.ben.pixcreator.application.image.layer.impl.alayer.impl.PicLayer;
 import com.ben.pixcreator.application.image.layer.impl.alayer.impl.PixLayer;
 import com.ben.pixcreator.application.selection.Selection;
 
-public class ActionTranslateLayer implements IAction, ICancelable {
+public class TranslateLayerAction implements IAction, ICancelable {
 
 	private final int				translateX;
 	private final int				translateY;
@@ -24,7 +24,7 @@ public class ActionTranslateLayer implements IAction, ICancelable {
 	private Map<Coord, ColorRGB>	newCells		= new HashMap<>();
 	private Map<Coord, ColorRGB>	unselectedCells	= new HashMap<>();;
 
-	public ActionTranslateLayer(int translateX, int translateY, ALayer layer, Selection selection) {
+	public TranslateLayerAction(int translateX, int translateY, ALayer layer, Selection selection) {
 
 		super();
 		this.translateX = translateX;

@@ -7,9 +7,9 @@ import org.slf4j.LoggerFactory;
 import com.ben.pixcreator.application.action.IAction;
 import com.ben.pixcreator.application.action.ICancelable;
 import com.ben.pixcreator.application.action.factory.IActionFactory;
-import com.ben.pixcreator.application.action.impl.ActionChangeCellColor;
-import com.ben.pixcreator.application.action.impl.ActionDeleteCell;
-import com.ben.pixcreator.application.action.impl.ActionNoOp;
+import com.ben.pixcreator.application.action.impl.ChangeCellColorAction;
+import com.ben.pixcreator.application.action.impl.DeleteCellAction;
+import com.ben.pixcreator.application.action.impl.NoOpAction;
 import com.ben.pixcreator.application.action.impl.RefreshTabAction;
 import com.ben.pixcreator.application.executor.Executor;
 import com.ben.pixcreator.application.image.PixImage;
@@ -134,24 +134,24 @@ public class DrawActionFactory implements IActionFactory
 		  case ("MOUSE_ENTERED"):
 		  {
 
-			return new ActionNoOp();
+			return new NoOpAction();
 
 		  }
 		  case ("MOUSE_MOVED"):
 		  {
 
-			return new ActionNoOp();
+			return new NoOpAction();
 		  }
 		  case ("MOUSE_EXITED"):
 		  {
 
-			return new ActionNoOp();
+			return new NoOpAction();
 		  }
 
 		  }
 	    }
 
-	    return new ActionNoOp();
+	    return new NoOpAction();
 
       }
 
@@ -164,7 +164,7 @@ public class DrawActionFactory implements IActionFactory
 
 	    Coord coord = eventCoord((MouseEvent) event);
 
-	    return new ActionDeleteCell(image, (PixLayer) layer, coord);
+	    return new DeleteCellAction(image, (PixLayer) layer, coord);
 
       }
 
@@ -178,7 +178,7 @@ public class DrawActionFactory implements IActionFactory
 
 	    Coord eventCoord = eventCoord((MouseEvent) event);
 
-	    return new ActionChangeCellColor(image, (PixLayer) layer, eventCoord, color);
+	    return new ChangeCellColorAction(image, (PixLayer) layer, eventCoord, color);
 
       }
 

@@ -36,7 +36,7 @@ public class RefreshTabAction implements IAction
 	    log.debug(image.toString());
 	    canvas.getGraphicsContext2D().clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
-	    Executor.getInstance().executeAction(new ActionUpdateSelection(image));
+	    Executor.getInstance().executeAction(new UpdateSelectionAction(image));
 	    DrawImageFactory.getDrawImage(image).draw(canvas);
 
       }

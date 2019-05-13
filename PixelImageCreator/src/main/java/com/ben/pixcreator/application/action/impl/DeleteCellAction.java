@@ -9,7 +9,7 @@ import com.ben.pixcreator.application.image.coords.Coord;
 import com.ben.pixcreator.application.image.layer.impl.alayer.impl.PixLayer;
 import com.ben.pixcreator.gui.facade.GuiFacade;
 
-public class ActionDeleteCell implements IAction, ICancelable
+public class DeleteCellAction implements IAction, ICancelable
 {
 
       private final PixImage image;
@@ -18,7 +18,7 @@ public class ActionDeleteCell implements IAction, ICancelable
       private final ColorRGB color;
 
 
-      public ActionDeleteCell(PixImage image, PixLayer layer, Coord coord)
+      public DeleteCellAction(PixImage image, PixLayer layer, Coord coord)
       {
 
 	    super();
