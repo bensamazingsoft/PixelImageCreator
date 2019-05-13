@@ -1,5 +1,8 @@
 package com.ben.pixcreator.application.action.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.ben.pixcreator.application.action.IAction;
 import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.application.image.PixImage;
@@ -11,6 +14,8 @@ import com.ben.pixcreator.application.image.layer.impl.alayer.ALayer;
 import com.ben.pixcreator.gui.facade.GuiFacade;
 
 public class AddEffectToLayerAction implements IAction {
+
+	private static final Logger log = LoggerFactory.getLogger(AddEffectToLayerAction.class);
 
 	private final EffectDesign	fxDesign;
 	private EffectParams		fxParams;
@@ -24,6 +29,8 @@ public class AddEffectToLayerAction implements IAction {
 
 	@Override
 	public void execute() throws Exception {
+
+		log.debug("adding " + fxDesign + " to " + layer);
 
 		PixImage activeImage = GuiFacade.getInstance().getActiveImage();
 		EffectManager effectManager = AppContext.getInstance().getEffectManager();
