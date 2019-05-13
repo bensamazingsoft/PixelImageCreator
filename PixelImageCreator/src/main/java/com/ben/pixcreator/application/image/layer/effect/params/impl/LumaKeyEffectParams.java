@@ -3,11 +3,14 @@ package com.ben.pixcreator.application.image.layer.effect.params.impl;
 import com.ben.pixcreator.application.image.layer.effect.params.EffectParams;
 import com.ben.pixcreator.application.image.layer.effect.params.param.value.ParamValue;
 
+/**
+ * Encapsulates the Luma Keying paraleters. Factor ranges from 0 to 1.
+ * 
+ * @author bmo
+ *
+ */
 public class LumaKeyEffectParams extends EffectParams {
 
-	/**
-	* 
-	*/
 	private static final long serialVersionUID = 1L;
 
 	ParamValue<Double>	factorParam	= new ParamValue<Double>(0.0, 1.0, 1.0);

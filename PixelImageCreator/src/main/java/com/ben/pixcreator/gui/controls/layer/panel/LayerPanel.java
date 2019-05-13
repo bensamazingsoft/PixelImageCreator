@@ -334,6 +334,8 @@ public class LayerPanel extends BorderPane implements Initializable {
 
 			LayerBox box = imageLayerBox.computeIfAbsent(layer, key -> new LayerBox(getImage(), layer));
 
+			box.loadEffectsPane();
+
 			layersBox.getChildren().add(0, box);
 			box.setToggleGroup(togglegroup);
 

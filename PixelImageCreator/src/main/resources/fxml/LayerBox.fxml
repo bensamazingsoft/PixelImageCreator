@@ -5,6 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.VBox?>
 
 <fx:root type="javafx.scene.layout.VBox"
 	xmlns:fx="http://javafx.com/fxml">
@@ -28,5 +29,7 @@
 				onMouseClicked="#toggleLock" />
 		</StackPane>
 	</HBox>
+	
+	<VBox fx:id="effectBox" />
 
 </fx:root>

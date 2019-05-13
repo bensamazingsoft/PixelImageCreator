@@ -3,6 +3,8 @@ package com.ben.pixcreator.application.image.layer.modifier.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.math3.analysis.function.Logistic;
+
 import com.ben.pixcreator.application.color.rgb.ColorRGB;
 import com.ben.pixcreator.application.image.coords.Coord;
 import com.ben.pixcreator.application.image.effect.Effect;
@@ -17,7 +19,8 @@ import javafx.scene.paint.Color;
 
 public class LumaKeyModifier implements IModifier {
 
-	private Effect fx;
+	private Effect			fx;
+	private final Logistic	logistic	= new Logistic(1.0, 0.695, 4.107, 0.07, 0.0, 1.139);
 
 	public LumaKeyModifier(Effect effect) {
 		super();
@@ -38,7 +41,7 @@ public class LumaKeyModifier implements IModifier {
 
 				PixLayer pxLayer = ((PixLayer) layer).duplicate();
 
-				double factor = param.getFactor();
+				double factor = param.getFactor() * 2 - 1;
 
 				Map<Coord, ColorRGB> newGrid = new HashMap<>();
 
@@ -46,10 +49,12 @@ public class LumaKeyModifier implements IModifier {
 
 					Color color = pxLayer.getGrid().get(coord).getFxColor();
 
-					double key = Math.max(0d, (Math.min(1, factor / color.getBrightness())));
+					double logFactor = logistic.value(factor);
+
+					double key = Math.max(0d, (Math.min(1, logFactor / color.getBrightness())));
 
 					if (param.isInvert()) {
-						key = Math.max(0d, (Math.min(1, factor * color.getBrightness())));
+						key = 1 - key;
 					}
 
 					ColorRGB newColor = new ColorRGB(
