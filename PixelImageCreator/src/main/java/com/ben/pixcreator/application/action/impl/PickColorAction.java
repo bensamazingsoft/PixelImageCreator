@@ -4,6 +4,9 @@ package com.ben.pixcreator.application.action.impl;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.ben.pixcreator.application.action.IAction;
 import com.ben.pixcreator.gui.controls.tab.PixTab;
 import com.ben.pixcreator.gui.facade.GuiFacade;
@@ -16,6 +19,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 
 public class PickColorAction implements IAction {
+
+	private static final Logger log = LoggerFactory.getLogger(PickColorAction.class);
 
 	private static WritableImage snapshot;
 
@@ -45,6 +50,8 @@ public class PickColorAction implements IAction {
 		}
 
 		gui.getColorRoster().selectColor(color);
+
+		log.debug(color.toString());
 
 	}
 

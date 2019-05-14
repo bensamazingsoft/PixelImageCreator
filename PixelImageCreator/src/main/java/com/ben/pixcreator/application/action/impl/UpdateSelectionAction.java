@@ -12,44 +12,36 @@ import com.ben.pixcreator.application.image.coords.Coord;
 import com.ben.pixcreator.application.selection.Selection;
 import com.ben.pixcreator.gui.facade.GuiFacade;
 
-public class UpdateSelectionAction implements IAction
-{
+public class UpdateSelectionAction implements IAction {
 
-      private static final Logger log = LoggerFactory.getLogger(UpdateSelectionAction.class);
+	private static final Logger log = LoggerFactory.getLogger(UpdateSelectionAction.class);
 
-      private PixImage		  image;
-      private ColorRGB		  color;
+	private PixImage	image;
+	private ColorRGB	color;
 
+	public UpdateSelectionAction(PixImage image) {
 
-      public UpdateSelectionAction(PixImage image)
-      {
+		this.image = image;
 
-	    this.image = image;
+		color = new ColorRGB(AppContext.getInstance().propertyContext().getSelectionColor());
+	}
 
-	    color = new ColorRGB(AppContext.getInstance().propertyContext().getSelectionColor());
-      }
+	@Override
+	public void execute() throws Exception {
 
+		Selection selection = GuiFacade.getInstance().getSelections().get(image);
+		image.getSelect().getGrid().clear();
 
-      @Override
-      public void execute() throws Exception
-      {
+		if (null != selection) {
+			log.debug("selected " + selection.getCoords().size() + " cells");
+			for (Coord coord : selection.getCoords()) {
 
-	    log.debug("execute");
-	    Selection selection = GuiFacade.getInstance().getSelections().get(image);
-	    image.getSelect().getGrid().clear();
+				image.getSelect().getGrid().put(coord, color);
 
-	    if (null != selection)
-	    {
-		  log.debug("selected " + selection.getCoords().size() + " cells");
-		  for (Coord coord : selection.getCoords())
-		  {
+			}
 
-			image.getSelect().getGrid().put(coord, color);
+		}
 
-		  }
-
-	    }
-
-      }
+	}
 
 }

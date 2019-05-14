@@ -13,6 +13,9 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.ben.pixcreator.application.action.IAction;
 import com.ben.pixcreator.application.color.rgb.ColorRGB;
 import com.ben.pixcreator.application.context.AppContext;
@@ -28,6 +31,8 @@ import com.ben.pixcreator.gui.facade.GuiFacade;
 import javafx.scene.paint.Color;
 
 public class SaveAction implements IAction {
+
+	private static final Logger log = LoggerFactory.getLogger(SaveAction.class);
 
 	private final PixImage image;
 
@@ -57,6 +62,8 @@ public class SaveAction implements IAction {
 			}
 			recentFiles.add(file.toString());
 			gui.getPixMenuBar().loadRecentFiles();
+
+			log.debug(file.toString());
 
 		} catch (IOException e) {
 			new ExceptionPopUp(e);

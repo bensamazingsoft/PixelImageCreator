@@ -6,6 +6,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.ben.pixcreator.application.action.IAction;
 import com.ben.pixcreator.application.action.ICancelable;
 import com.ben.pixcreator.application.color.rgb.ColorRGB;
@@ -16,6 +19,8 @@ import com.ben.pixcreator.application.image.layer.impl.alayer.impl.PixLayer;
 import com.ben.pixcreator.application.selection.Selection;
 
 public class TranslateLayerAction implements IAction, ICancelable {
+
+	private static final Logger log = LoggerFactory.getLogger(TranslateLayerAction.class);
 
 	private final int				translateX;
 	private final int				translateY;
@@ -78,7 +83,7 @@ public class TranslateLayerAction implements IAction, ICancelable {
 			pic.setPosition(new Coord(pic.getPosition().getX() + translateX, pic.getPosition().getY() + translateY));
 
 		}
-
+		log.debug("layer : " + layer + " translateX : " + translateX + " translateY : " + translateY);
 	}
 
 	@Override
@@ -94,6 +99,8 @@ public class TranslateLayerAction implements IAction, ICancelable {
 			PicLayer pic = (PicLayer) layer;
 			pic.setPosition(new Coord(pic.getPosition().getX() - translateX, pic.getPosition().getY() - translateY));
 		}
+
+		log.debug("cancelling -> layer : " + layer + " translateX : " + translateX + " translateY : " + translateY);
 	}
 
 }

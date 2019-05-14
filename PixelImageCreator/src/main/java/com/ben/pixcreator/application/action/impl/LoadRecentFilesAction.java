@@ -6,12 +6,17 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.ben.pixcreator.application.action.IAction;
 import com.ben.pixcreator.application.pile.Pile;
 import com.ben.pixcreator.gui.exception.popup.ExceptionPopUp;
 import com.ben.pixcreator.gui.facade.GuiFacade;
 
 public class LoadRecentFilesAction implements IAction {
+
+	private static final Logger log = LoggerFactory.getLogger(LoadRecentFilesAction.class);
 
 	@Override
 	public void execute() throws Exception {
@@ -35,6 +40,8 @@ public class LoadRecentFilesAction implements IAction {
 			Pile<String> recentFiles = (Pile<String>) in.readObject();
 
 			GuiFacade.getInstance().setRecentFiles(recentFiles);
+
+			log.debug(recentFiles.getAllItems().size() + "recent files loaded");
 
 		} catch (FileNotFoundException e) {
 			new ExceptionPopUp(e);

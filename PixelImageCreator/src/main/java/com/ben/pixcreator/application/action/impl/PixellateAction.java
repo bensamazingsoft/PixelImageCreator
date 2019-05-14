@@ -6,6 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.ben.pixcreator.application.action.IAction;
 import com.ben.pixcreator.application.color.ColorUtils;
 import com.ben.pixcreator.application.color.rgb.ColorRGB;
@@ -23,6 +26,8 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 
 public class PixellateAction implements IAction {
+
+	private static final Logger log = LoggerFactory.getLogger(PixellateAction.class);
 
 	final GuiFacade gui = GuiFacade.getInstance();
 
@@ -75,6 +80,8 @@ public class PixellateAction implements IAction {
 		}
 
 		image.getLayerList().add(new PixLayer(grid));
+
+		log.debug(actiontype.name());
 
 	}
 
