@@ -41,8 +41,8 @@ public class ExceptionPopUp extends Alert
       {
 
 	    this();
-	    log.error(e.getMessage(), e);
-	    setContentText(e.getMessage());
+	    log.error(e.toString(), e);
+	    setContentText(e.toString());
 
 	    StringWriter sw = new StringWriter();
 	    PrintWriter pw = new PrintWriter(sw);

@@ -41,7 +41,7 @@ public class LoadRecentFilesAction implements IAction {
 
 			GuiFacade.getInstance().setRecentFiles(recentFiles);
 
-			log.debug(recentFiles.getAllItems().size() + "recent files loaded");
+			log.debug(recentFiles.getAllItems().size() + " recent files loaded");
 
 		} catch (FileNotFoundException e) {
 			new ExceptionPopUp(e);
