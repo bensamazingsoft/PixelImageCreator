@@ -7,6 +7,7 @@ import com.ben.pixcreator.application.pile.Pile;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.Label;
+import javafx.scene.control.Separator;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -51,7 +52,7 @@ public class PileView extends VBox {
 
 		getChildren().add(titleBox);
 
-		// getChildren().add(new Separator());
+		getChildren().add(new Separator());
 
 		getChildren().add(content);
 
@@ -67,6 +68,7 @@ public class PileView extends VBox {
 		if (isExpand()) {
 			for (int i = 0; i < pile.getAllItems().size(); i++) {
 				content.getChildren().add(factory.getItem(pile.getItem(i)));
+				content.getChildren().add(new Separator());
 			}
 		} else {
 			content.getChildren().clear();
