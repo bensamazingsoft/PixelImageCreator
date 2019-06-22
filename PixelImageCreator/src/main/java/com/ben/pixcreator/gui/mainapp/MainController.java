@@ -45,8 +45,10 @@ public class MainController implements Initializable
 
 	    Tab layerTab = new Tab(AppContext.getInstance().getBundle().getString("layers"));
 	    layerTab.setContent(new LayerPanel());
+	    layerTab.setClosable(false);
 	    Tab webTab = new Tab(AppContext.getInstance().getBundle().getString("web"));
 	    webTab.setContent(new WebPanel());
+	    webTab.setClosable(false);
 
 	    webAndLayerPanel.getTabs().add(layerTab);
 	    webAndLayerPanel.getTabs().add(webTab);

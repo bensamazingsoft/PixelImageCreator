@@ -3,6 +3,7 @@ package com.ben.pixcreator.gui.pane.web;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -48,6 +49,11 @@ public class PixelGrid
       @OneToMany
       private Set<SearchFilters>   filters;
 
+      @Column(name = "NAME")
+      private String		   name;
+
+      @Column(name = "OWNER")
+      private String		   owner;
       @Column(name = "DESCR", nullable = true)
       private String		   description;
 
@@ -94,14 +100,16 @@ public class PixelGrid
       }
 
 
-      public PixelGrid(int id, Map<Coord, ColorRGB> grid, Set<SearchFilters> filters, String description)
+      public PixelGrid(Map<Coord, ColorRGB> grid, Set<SearchFilters> filters, String name, String description, Image miniature, byte[] miniatureBytes)
       {
 
 	    super();
-	    this.id = id;
 	    this.grid = grid;
 	    this.filters = filters;
+	    this.name = name;
 	    this.description = description;
+	    this.miniature = miniature;
+	    this.miniatureBytes = miniatureBytes;
       }
 
 
@@ -151,7 +159,8 @@ public class PixelGrid
       public String toString()
       {
 
-	    return "PixelGrid [id=" + id + ", grid=" + grid + ", filters=" + filters + ", description=" + description + "]";
+	    return "PixelGrid [id=" + id + ", grid=" + grid + ", filters=" + filters + ", name=" + name + ", description=" + description + ", miniature=" + miniature + ", miniatureBytes="
+			+ Arrays.toString(miniatureBytes) + "]";
       }
 
 
@@ -199,6 +208,34 @@ public class PixelGrid
       {
 
 	    this.miniatureBytes = miniatureBytes;
+      }
+
+
+      public String getName()
+      {
+
+	    return name;
+      }
+
+
+      public void setName(String name)
+      {
+
+	    this.name = name;
+      }
+
+
+      public String getOwner()
+      {
+
+	    return owner;
+      }
+
+
+      public void setOwner(String owner)
+      {
+
+	    this.owner = owner;
       }
 
 }

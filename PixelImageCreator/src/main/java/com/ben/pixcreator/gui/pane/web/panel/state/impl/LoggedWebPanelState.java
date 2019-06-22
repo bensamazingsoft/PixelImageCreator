@@ -54,7 +54,7 @@ public class LoggedWebPanelState implements WebPanelState
 
 	    queryDb();
 
-	    gridPreviewPane = new RegularGridView(gridsManager);
+	    gridPreviewPane = new RegularGridView(webPanel, gridsManager);
 
 	    updateCenterPane();
       }
