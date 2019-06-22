@@ -25,8 +25,12 @@
 
 	<center>
 		<SplitPane fx:id="splitPane">
+		
 			<PixTabPane fx:id="tabPane" />
-			<LayerPanel fx:id="layerPanel"/>
+		<TabPane fx:id="webAndLayerPanel"/>
+		
+		
+<!-- 			<LayerPanel fx:id="layerPanel"/> -->
 		</SplitPane>
 	</center>
 	
