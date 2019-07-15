@@ -23,7 +23,7 @@ public class RestGridManager implements IGridsManager
 
 
       @Override
-      public Set<PixelGrid> getGrids(boolean isUserGridsOnly, Set<SearchFilters> filters)
+      public Set<PixelGrid> getGrids(LogInfo logInfo, boolean isUserGridsOnly, Set<SearchFilters> filters)
       {
 
 	    Set<PixelGrid> res = new HashSet<>();
@@ -48,7 +48,7 @@ public class RestGridManager implements IGridsManager
 
 
       @Override
-      public Set<PixelGrid> getAllGrids()
+      public Set<PixelGrid> getAllGrids(LogInfo logInfo)
       {
 
 	    // TODO Auto-generated method stub
@@ -66,7 +66,7 @@ public class RestGridManager implements IGridsManager
 
 
       @Override
-      public boolean deleteGrid(PixelGrid grid)
+      public boolean deleteGrid(LogInfo logInfo, PixelGrid grid)
       {
 
 	    // TODO Auto-generated method stub
@@ -75,7 +75,7 @@ public class RestGridManager implements IGridsManager
 
 
       @Override
-      public void updateGrid(PixelGrid grid)
+      public void updateGrid(LogInfo logInfo, PixelGrid grid)
       {
 
 	    // TODO Auto-generated method stub

@@ -101,7 +101,7 @@ public class LoggedWebPanelState implements WebPanelState
 			.map(Entry::getKey)
 			.collect(Collectors.toSet());
 
-	    webPanel.getPixelGridBean().setData(gridsManager.getGrids(isUserGridsOnly(), filterSet));
+	    webPanel.getPixelGridBean().setData(gridsManager.getGrids(webPanel.getLogBean().getData(), isUserGridsOnly(), filterSet));
 
 	    updateCenterPane();
       }

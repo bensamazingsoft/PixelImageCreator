@@ -126,7 +126,7 @@ public class GridViewBuilder implements IGridViewer
 		  deleteStickerBut.setGraphic(new ImageView(deleteLayerButImg));
 		  deleteStickerBut.setTooltip(toolTipProvider.get("deleteWebRegularGridSticker"));
 		  deleteStickerBut.setOnAction(event -> {
-			gridsManager.deleteGrid(grid);
+			gridsManager.deleteGrid(webPanel.getLogBean().getData(), grid);
 			webPanel.reload();
 		  });
 		  buttonsPane.getChildren().add(deleteStickerBut);
@@ -139,7 +139,7 @@ public class GridViewBuilder implements IGridViewer
 			updateStickerBut.setGraphic(new ImageView(updateLayerButImg));
 			updateStickerBut.setTooltip(toolTipProvider.get("updateWebRegularGridSticker"));
 			updateStickerBut.setOnAction(event -> {
-			      gridsManager.updateGrid(grid);
+			      gridsManager.updateGrid(webPanel.getLogBean().getData(), grid);
 			      webPanel.reload();
 			});
 			buttonsPane.getChildren().add(deleteStickerBut);

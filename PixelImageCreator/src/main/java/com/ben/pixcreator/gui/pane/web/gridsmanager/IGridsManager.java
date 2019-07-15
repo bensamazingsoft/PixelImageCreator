@@ -10,18 +10,18 @@ import com.ben.pixcreator.gui.pane.web.SearchFilters;
 public interface IGridsManager
 {
 
-      public Set<PixelGrid> getGrids(boolean isUserGridsOnly, Set<SearchFilters> filters);
+      public Set<PixelGrid> getGrids(LogInfo logInfo, boolean isUserGridsOnly, Set<SearchFilters> filters);
 
 
-      public Set<PixelGrid> getAllGrids();
+      public Set<PixelGrid> getAllGrids(LogInfo logInfo);
 
 
       public boolean saveGrid(LogInfo logInfo, PixelGrid grid);
 
 
-      public boolean deleteGrid(PixelGrid grid);
+      public boolean deleteGrid(LogInfo logInfo, PixelGrid grid);
 
 
-      public void updateGrid(PixelGrid grid);
+      public void updateGrid(LogInfo logInfo, PixelGrid grid);
 
 }
