@@ -1,10 +1,21 @@
 
 package com.ben.pixcreator.gui.pane.web;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+@Entity
+@Table(name = "LOGINFO")
 public class LogInfo
 {
 
-      private String  email, password;
+      @Column(name = "EMAIL")
+      private String  email;
+      @Column(name = "PASSWORD")
+      private String  password;
+      @Transient
       private boolean connected;
 
 

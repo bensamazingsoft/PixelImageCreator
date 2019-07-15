@@ -9,12 +9,14 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.ben.pixcreator.application.context.AppContext;
-import com.ben.pixcreator.gui.pane.web.IGridsManager;
-import com.ben.pixcreator.gui.pane.web.MockGridRetriever;
 import com.ben.pixcreator.gui.pane.web.PixelGrid;
 import com.ben.pixcreator.gui.pane.web.SearchFilters;
+import com.ben.pixcreator.gui.pane.web.gridsmanager.IGridsManager;
+import com.ben.pixcreator.gui.pane.web.gridsmanager.impl.MockGridManager;
 import com.ben.pixcreator.gui.pane.web.panel.WebPanel;
 import com.ben.pixcreator.gui.pane.web.panel.state.WebPanelState;
+import com.ben.pixcreator.gui.pane.web.panel.state.gridviewer.IGridViewer;
+import com.ben.pixcreator.gui.pane.web.panel.state.gridviewer.impl.GridViewBuilder;
 
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
@@ -39,24 +41,20 @@ public class LoggedWebPanelState implements WebPanelState
       {
 
 	    this.webPanel = webPanel;
-
-	    // TODO inject REST impl
-	    gridsManager = new MockGridRetriever();
-
 	    userGridsOnly = true;
 
+	    // TODO inject REST impl
+	    gridsManager = new MockGridManager();
+	    gridPreviewPane = new GridViewBuilder(webPanel, gridsManager);
+	    pane = new BorderPane();
 	    filters = new HashMap<>();
 
 	    Arrays.asList(SearchFilters.values()).stream().forEach(filter -> filters.put(filter, false));
 
-	    pane = new BorderPane();
 	    buildTopPane();
 
 	    queryDb();
 
-	    gridPreviewPane = new RegularGridView(webPanel, gridsManager);
-
-	    updateCenterPane();
       }
 
 
@@ -65,7 +63,7 @@ public class LoggedWebPanelState implements WebPanelState
 
 	    Set<PixelGrid> grids = webPanel.getPixelGridBean().getData();
 
-	    pane.setCenter(gridPreviewPane.build(grids));
+	    pane.setCenter(gridPreviewPane.build(grids, GridViewBuilder.view.REGULAR));
 
       }
 
@@ -77,7 +75,10 @@ public class LoggedWebPanelState implements WebPanelState
 
 	    CheckBox userGridsCb = new CheckBox(AppContext.getInstance().getBundle().getString("my_designs"));
 	    userGridsCb.setSelected(true);
-	    userGridsCb.selectedProperty().addListener((obs, oldVal, newVal) -> queryDb());
+	    userGridsCb.selectedProperty().addListener((obs, oldVal, newVal) -> {
+		  setUserGridsOnly(newVal);
+		  queryDb();
+	    });
 	    top.getChildren().add(userGridsCb);
 
 	    filters.forEach((filter, selected) -> {
@@ -101,6 +102,8 @@ public class LoggedWebPanelState implements WebPanelState
 			.collect(Collectors.toSet());
 
 	    webPanel.getPixelGridBean().setData(gridsManager.getGrids(isUserGridsOnly(), filterSet));
+
+	    updateCenterPane();
       }
 
 

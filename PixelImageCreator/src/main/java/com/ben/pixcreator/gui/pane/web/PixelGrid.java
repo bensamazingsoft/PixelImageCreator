@@ -3,6 +3,7 @@ package com.ben.pixcreator.gui.pane.web;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
@@ -30,8 +31,13 @@ import javafx.scene.image.Image;
 
 @Entity
 @Table(name = "PIXELGRID")
-public class PixelGrid
+public class PixelGrid implements Serializable
 {
+
+      /**
+       * 
+       */
+      private static final long	   serialVersionUID = 1L;
 
       @Id
       @Column(name = "ID")
@@ -67,16 +73,18 @@ public class PixelGrid
       public PixelGrid()
       {
 
-	    super();
 	    filters = new HashSet<>();
-	    description = "";
+	    name = "new PixelGrid";
+	    owner = "admin@pxl.com";
+	    description = "new Pixel grid description";
+	    miniatureBytes = new byte[8];
       }
 
 
       public PixelGrid(Map<Coord, ColorRGB> grid)
       {
 
-	    super();
+	    this();
 	    this.grid = grid;
       }
 

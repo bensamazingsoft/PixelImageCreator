@@ -12,18 +12,24 @@ import org.slf4j.LoggerFactory;
 import com.ben.pixcreator.application.action.IAction;
 import com.ben.pixcreator.application.action.factory.ActionFactoryProducer;
 import com.ben.pixcreator.application.action.factory.IActionFactory;
-import com.ben.pixcreator.application.action.impl.NoOpAction;
+import com.ben.pixcreator.application.action.impl.LayerAction;
 import com.ben.pixcreator.application.action.impl.MiniaturesUpdateAction;
+import com.ben.pixcreator.application.action.impl.NoOpAction;
 import com.ben.pixcreator.application.action.impl.RefreshTabAction;
 import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.application.executor.Executor;
 import com.ben.pixcreator.application.image.PixImage;
+import com.ben.pixcreator.application.image.coords.Coord;
 import com.ben.pixcreator.application.image.layer.impl.alayer.ALayer;
 import com.ben.pixcreator.application.image.layer.impl.alayer.impl.PicLayer;
+import com.ben.pixcreator.application.image.layer.impl.alayer.impl.PixLayer;
 import com.ben.pixcreator.gui.controls.layer.panel.LayerPanel;
+import com.ben.pixcreator.gui.controls.layer.panel.actions.LayerActions;
 import com.ben.pixcreator.gui.cursor.factory.ControlCursorFactory;
 import com.ben.pixcreator.gui.exception.popup.ExceptionPopUp;
 import com.ben.pixcreator.gui.facade.GuiFacade;
+import com.ben.pixcreator.gui.pane.web.PixelGrid;
+import com.ben.pixcreator.gui.pane.web.panel.state.gridviewer.impl.GridViewBuilder;
 
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -39,8 +45,10 @@ import javafx.geometry.Bounds;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
+import javafx.scene.input.DragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.StackPane;
 
 /**
@@ -53,6 +61,110 @@ import javafx.scene.layout.StackPane;
  */
 public class PixTab extends Tab implements Initializable
 {
+
+      public class DragExitedControls implements EventHandler<DragEvent>
+      {
+
+	    @Override
+	    public void handle(DragEvent arg0)
+	    {
+
+		  image.get().setGhost(new PixLayer());
+
+	    }
+
+      }
+
+      public class DragDroppedControls implements EventHandler<DragEvent>
+      {
+
+	    private PixTab pxTab;
+
+
+	    @Override
+	    public void handle(DragEvent evt)
+	    {
+
+		  if (evt.getGestureSource() != this && evt.getDragboard().hasContent(GridViewBuilder.dataFormat))
+		  {
+			evt.acceptTransferModes(TransferMode.ANY);
+
+			PixelGrid grid = (PixelGrid) evt.getDragboard().getContent(GridViewBuilder.dataFormat);
+			// offset grid
+			int offX = (int) (evt.getX() / image.get().getxGridResolution());
+			int offY = (int) (evt.getY() / image.get().getyGridResolution());
+
+			final PixLayer pixLyr = (PixLayer) new PixLayer(grid.getGrid()).offset(new Coord(offX, offY));
+
+			try
+			{
+			      Executor.getInstance().executeAction(new LayerAction(image.get(), pixLyr, LayerActions.ADDNEW));
+			      Executor.getInstance().executeAction(new RefreshTabAction(pxTab));
+			}
+			catch (Exception e)
+			{
+			      new ExceptionPopUp(e);
+			}
+
+		  }
+
+	    }
+
+
+	    public DragDroppedControls(PixTab pxTab)
+	    {
+
+		  super();
+		  this.pxTab = pxTab;
+	    }
+
+      }
+
+      public class DragOverControls implements EventHandler<DragEvent>
+      {
+
+	    private PixTab pxTab;
+
+
+	    public DragOverControls(PixTab pxTab)
+	    {
+
+		  super();
+		  this.pxTab = pxTab;
+	    }
+
+
+	    @Override
+	    public void handle(DragEvent evt)
+	    {
+
+		  if (evt.getGestureSource() != this && evt.getDragboard().hasContent(GridViewBuilder.dataFormat))
+		  {
+			evt.acceptTransferModes(TransferMode.ANY);
+
+			PixelGrid grid = (PixelGrid) evt.getDragboard().getContent(GridViewBuilder.dataFormat);
+
+			// offset grid
+			int offX = (int) (evt.getX() / image.get().getxGridResolution());
+			int offY = (int) (evt.getY() / image.get().getyGridResolution());
+
+			final PixLayer pixLyr = (PixLayer) new PixLayer(grid.getGrid()).offset(new Coord(offX, offY));
+			image.get().setGhost(pixLyr);
+
+			try
+			{
+			      Executor.getInstance().executeAction(new RefreshTabAction(pxTab));
+			}
+			catch (Exception e)
+			{
+			      new ExceptionPopUp(e);
+			}
+
+			evt.consume();
+		  }
+	    }
+
+      }
 
       @SuppressWarnings("unused")
       private static final Logger	     log		= LoggerFactory.getLogger(PixTab.class);
@@ -141,6 +253,9 @@ public class PixTab extends Tab implements Initializable
 	    this.setUserData(canvas);
 
 	    canvas = new Canvas(getImage().getxSize(), getImage().getySize());
+	    canvas.setOnDragOver(new DragOverControls(this));
+	    canvas.setOnDragDropped(new DragDroppedControls(this));
+	    canvas.setOnDragExited(new DragExitedControls());
 	    canvas.addEventHandler(MouseEvent.ANY, new MouseManager(this));
 
 	    StackPane stackpane = new StackPane(canvas);

@@ -5,8 +5,8 @@ import java.util.Map;
 
 import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.gui.pane.web.LogInfo;
-import com.ben.pixcreator.gui.pane.web.LoginValidator;
-import com.ben.pixcreator.gui.pane.web.MockLoginValidator;
+import com.ben.pixcreator.gui.pane.web.logvalidator.ILogInfoManager;
+import com.ben.pixcreator.gui.pane.web.logvalidator.impl.MockLoginValidator;
 import com.ben.pixcreator.gui.pane.web.panel.WebPanel;
 import com.ben.pixcreator.gui.pane.web.panel.state.WebPanelState;
 import com.ben.pixcreator.web.bean.Bean;
@@ -22,15 +22,15 @@ import javafx.scene.layout.VBox;
 public class unLoggedState implements WebPanelState
 {
 
-      private AppContext     ctx   = AppContext.getInstance();
+      private AppContext      ctx   = AppContext.getInstance();
 
-      private WebPanel	     webPanel;
+      private WebPanel	      webPanel;
 
-      private LoginValidator loginValidator;
+      private ILogInfoManager iLogInfoManager;
 
-      private StackPane	     pane;
+      private StackPane	      pane;
 
-      private String	     regex = "^(.+)@(.+)$";
+      private String	      regex = "^(.+)@(.+)$";
 
 
       public unLoggedState(WebPanel webPanel)
@@ -39,7 +39,7 @@ public class unLoggedState implements WebPanelState
 	    this.webPanel = webPanel;
 
 	    // TODO inject REST impl
-	    loginValidator = new MockLoginValidator();
+	    iLogInfoManager = new MockLoginValidator();
 
 	    buildPane();
 
@@ -104,7 +104,7 @@ public class unLoggedState implements WebPanelState
       private void suscribe()
       {
 
-	    changeState(new SubscribeWebPanelState(webPanel));
+	    changeState(new SubscribeWebPanelState(webPanel, iLogInfoManager));
       }
 
 
@@ -138,7 +138,7 @@ public class unLoggedState implements WebPanelState
 	    if (valid1 && valid2)
 	    {
 
-		  webPanel.setLogBean(loginValidator.validate(logBean));
+		  webPanel.setLogBean(iLogInfoManager.validate(logBean));
 
 		  if (logBean.getData().isConnected())
 		  {
