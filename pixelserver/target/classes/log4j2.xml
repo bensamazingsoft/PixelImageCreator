@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+	<Appenders>
+<!-- 		<RollingFile name="A1" -->
+<!-- 		filepattern="C:\Users\ben\git\bookgle\bookgle\logs/bookgle-${date:MM-dd-yyyy}.log" -->
+<!-- 			filename="C:\Users\ben\git\bookgle\bookgle\logs/bookgle-${date:MM-dd-yyyy}.log"> -->
+<!-- 			<PatternLayout -->
+<!-- 				pattern="%d %-5p [%t] (%F:%L) %3x - %m%n" /> -->
+<!-- 		<Policies> -->
+<!-- 			<SizeBasedTriggeringPolicy size="250 MB" /> -->
+<!-- 		</Policies> -->
+<!-- 		</RollingFile> -->
+		<Console name="STDOUT" target="SYSTEM_OUT">
+			<PatternLayout pattern="%level [%t] (%F:%L) %3x - %m%n" />
+		</Console>
+	</Appenders>
+	<Loggers>
+		<Root level="debug">
+			<AppenderRef ref="STDOUT" />
+<!-- 			<AppenderRef ref="A1" /> -->
+		</Root>
+	</Loggers>
+</Configuration>

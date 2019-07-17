@@ -14,7 +14,7 @@ import com.ben.pixcreator.gui.pane.web.LogInfo;
 import com.ben.pixcreator.gui.pane.web.PixelGrid;
 import com.ben.pixcreator.gui.pane.web.SearchFilters;
 import com.ben.pixcreator.gui.pane.web.gridsmanager.IGridsManager;
-import com.ben.pixcreator.gui.pane.web.rest.target.provider.RestTargetProvider;
+import com.ben.pixcreator.web.target.provider.RestTargetProvider;
 
 public class RestGridManager implements IGridsManager
 {

@@ -4,10 +4,11 @@ package com.ben.pixcreator.gui.pane.web.panel;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.ben.pixcreator.gui.facade.GuiFacade;
 import com.ben.pixcreator.gui.pane.web.LogInfo;
 import com.ben.pixcreator.gui.pane.web.PixelGrid;
 import com.ben.pixcreator.gui.pane.web.panel.state.WebPanelState;
-import com.ben.pixcreator.gui.pane.web.panel.state.impl.unLoggedState;
+import com.ben.pixcreator.gui.pane.web.panel.state.impl.UnLoggedState;
 import com.ben.pixcreator.web.bean.Bean;
 
 import javafx.scene.layout.BorderPane;
@@ -23,13 +24,15 @@ public class WebPanel extends BorderPane
       public WebPanel()
       {
 
+	    GuiFacade.getInstance().setWebPanel(this);
+
 	    logBean = new Bean<LogInfo>();
 	    logBean.setData(new LogInfo());
 
 	    pixelGridBean = new Bean<>();
 	    pixelGridBean.setData(new HashSet<>());
 
-	    state = new unLoggedState(this);
+	    state = new UnLoggedState(this);
 
 	    setCenter(state.load());
       }

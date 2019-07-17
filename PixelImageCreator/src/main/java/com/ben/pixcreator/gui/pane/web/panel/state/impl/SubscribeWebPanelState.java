@@ -5,7 +5,7 @@ import java.util.Map;
 
 import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.gui.pane.web.LogInfo;
-import com.ben.pixcreator.gui.pane.web.logvalidator.ILogInfoManager;
+import com.ben.pixcreator.gui.pane.web.loginfoservice.ILogInfoService;
 import com.ben.pixcreator.gui.pane.web.panel.WebPanel;
 import com.ben.pixcreator.gui.pane.web.panel.state.WebPanelState;
 import com.ben.pixcreator.web.bean.Bean;
@@ -23,7 +23,7 @@ public class SubscribeWebPanelState implements WebPanelState
 
       private WebPanel	      webPanel;
       private Bean<LogInfo>   logInfoBean;
-      private ILogInfoManager logValidator;
+      private ILogInfoService logValidator;
 
       private String	      regex = "^(.+)@(.+)$";
 
@@ -31,14 +31,12 @@ public class SubscribeWebPanelState implements WebPanelState
       private AppContext      ctx   = AppContext.getInstance();
 
 
-      public SubscribeWebPanelState(WebPanel webPanel, ILogInfoManager iLogInfoManager)
+      public SubscribeWebPanelState(WebPanel webPanel, ILogInfoService iLogInfoManager)
       {
 
 	    this.webPanel = webPanel;
 	    this.logInfoBean = webPanel.getLogBean();
 	    this.logValidator = iLogInfoManager;
-
-	    pane = build();
 
       }
 
@@ -48,7 +46,6 @@ public class SubscribeWebPanelState implements WebPanelState
 
 	    BorderPane bp = new BorderPane();
 
-	    pane = new BorderPane();
 	    VBox box = new VBox();
 
 	    Bean<LogInfo> logBean = webPanel.getLogBean();
@@ -58,7 +55,7 @@ public class SubscribeWebPanelState implements WebPanelState
 	    {
 		  Label messageLbl = new Label(message);
 		  messageLbl.setStyle("-fx-font-color : green");
-		  pane.setTop(messageLbl);
+		  bp.setTop(messageLbl);
 	    }
 
 	    Label emailLbl = new Label(ctx.getBundle().getString("email"));
@@ -88,7 +85,7 @@ public class SubscribeWebPanelState implements WebPanelState
 	    Button subscribeBtn = new Button(ctx.getBundle().getString("subscribe"));
 	    subscribeBtn.setOnAction(event -> validate(logBean, confPasswordTf.getText()));
 	    Button backBtn = new Button(ctx.getBundle().getString("back"));
-	    backBtn.setOnAction(event -> changeState(new unLoggedState(webPanel)));
+	    backBtn.setOnAction(event -> changeState(new UnLoggedState(webPanel)));
 	    HBox btnBox = new HBox();
 	    btnBox.getChildren().addAll(subscribeBtn, backBtn);
 	    box.getChildren().add(btnBox);
@@ -104,7 +101,7 @@ public class SubscribeWebPanelState implements WebPanelState
 		  }
 	    }
 
-	    pane.setCenter(box);
+	    bp.setCenter(box);
 
 	    return bp;
       }
@@ -122,13 +119,14 @@ public class SubscribeWebPanelState implements WebPanelState
 	    if (valid1 && valid2)
 	    {
 
-		  webPanel.setLogBean(logValidator.addLogInfo(logBean));
+		  webPanel.setLogBean(logValidator.registerLogInfo(logBean));
 
 		  if (logBean.getData().isConnected())
 		  {
 
 			logBean.setMessage("Registered successfully");
-			changeState(new unLoggedState(webPanel));
+			logBean.getData().setConnected(false);
+			changeState(new UnLoggedState(webPanel));
 
 		  }
 	    }
@@ -179,7 +177,7 @@ public class SubscribeWebPanelState implements WebPanelState
       public Node load()
       {
 
-	    return pane;
+	    return build();
       }
 
 
