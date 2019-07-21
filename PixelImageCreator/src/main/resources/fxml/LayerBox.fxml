@@ -17,7 +17,7 @@
 
 		<StackPane fx:id="miniaturePane"
 			onMouseClicked="#handleMiniatureClicked" alignment="CENTER">
-			<Canvas fx:id="canvas" />
+			<ImageView fx:id="imageView" />
 		</StackPane>
 
 		<StackPane fx:id="titlePane">

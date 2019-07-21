@@ -18,29 +18,30 @@ import com.ben.pixcreator.application.image.layer.impl.alayer.impl.TextLayer;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 
 public class MiniatureManager
 {
 
       @SuppressWarnings("unused")
-      private static final Logger      log	  = LoggerFactory.getLogger(MiniatureManager.class);
+      private static final Logger    log	= LoggerFactory.getLogger(MiniatureManager.class);
 
-      private static double	       MINIATUREHEIGHT;
+      private static double	     MINIATUREHEIGHT;
 
-      private static double	       MINIATUREWIDTH;
+      private static double	     MINIATUREWIDTH;
 
-      private Map<ALayer, Canvas>      miniatures = new HashMap<>();
-      public static Map<ALayer, Image> backup	  = new HashMap<>();
+      private Map<ALayer, ImageView> miniatures	= new HashMap<>();
+      // public static Map<ALayer, Image> backup = new HashMap<>();
 
 
-      public void addMiniature(ALayer layer, Canvas canvas)
+      public void addMiniature(ALayer layer, ImageView imageView)
       {
 
 	    MINIATUREHEIGHT = Integer.valueOf(AppContext.getInstance().propertyContext().get("miniatureWH"));
 	    MINIATUREWIDTH = Integer.valueOf(AppContext.getInstance().propertyContext().get("miniatureWH"));
 
-	    miniatures.put(layer, canvas);
+	    miniatures.put(layer, imageView);
 
       }
 
@@ -50,12 +51,17 @@ public class MiniatureManager
 
 	    if (miniatures.containsKey(layer))
 	    {
-		  Canvas canvas = miniatures.get(layer);
+		  ImageView view = miniatures.get(layer);
+		  Canvas canvas = new Canvas();
+
+		  view.setPreserveRatio(true);
+		  view.setFitWidth(MINIATUREWIDTH);
+		  view.setFitHeight(MINIATUREHEIGHT);
 
 		  canvas.setHeight(MINIATUREHEIGHT);
 		  canvas.setWidth(MINIATUREWIDTH);
 
-		  canvas.getGraphicsContext2D().setFill(Color.RED);
+		  canvas.getGraphicsContext2D().setFill(Color.WHITE);
 		  canvas.getGraphicsContext2D().fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
 		  int xGridResolution = 0;
@@ -95,9 +101,8 @@ public class MiniatureManager
 			// adaptPixCanvasRatio(canvas, xGridResolution, yGridResolution);
 			// }
 
-			int max = Math.max(xGridResolution * 2, yGridResolution * 2);
-			canvas.setWidth(max);
-			canvas.setHeight(max);
+			canvas.setWidth(xGridResolution * 4);
+			canvas.setHeight(yGridResolution * 4);
 
 		  }
 		  else if (layer instanceof PicLayer)
@@ -130,28 +135,29 @@ public class MiniatureManager
 
 		  layer.draw(canvas, xGridResolution, yGridResolution);
 
-		  if (layer instanceof PixLayer)
-		  {
-			backup(layer, canvas.getWidth(), canvas.getHeight(), xGridResolution, yGridResolution);
-		  }
+		  view.setImage(canvas.snapshot(null, null));
+
+		  // if (layer instanceof PixLayer)
+		  // {
+		  // backup(layer, canvas.getWidth(), canvas.getHeight(), xGridResolution, yGridResolution);
+		  // }
 	    }
 
       }
 
 
-      private void backup(ALayer layer, double scaleX, double scaleY, int xGridResolution, int yGridResolution)
-      {
-
-	    Canvas backupCanvas = new Canvas(scaleX, scaleY);
-
-	    layer.draw(backupCanvas, xGridResolution, yGridResolution);
-
-	    Image image = backupCanvas.snapshot(null, null);
-
-	    backup.put(layer, image);
-
-      }
-
+      // private void backup(ALayer layer, double scaleX, double scaleY, int xGridResolution, int yGridResolution)
+      // {
+      //
+      // Canvas backupCanvas = new Canvas(scaleX, scaleY);
+      //
+      // layer.draw(backupCanvas, xGridResolution, yGridResolution);
+      //
+      // Image image = backupCanvas.snapshot(null, null);
+      //
+      // backup.put(layer, image);
+      //
+      // }
 
       private PicLayer makeDrawPicLayer(PicLayer duplicate, Canvas canvas)
       {
@@ -189,6 +195,13 @@ public class MiniatureManager
 	    }
 
 	    return duplicate;
+      }
+
+
+      public Image getImage(ALayer layer)
+      {
+
+	    return miniatures.get(layer).getImage();
       }
 
 

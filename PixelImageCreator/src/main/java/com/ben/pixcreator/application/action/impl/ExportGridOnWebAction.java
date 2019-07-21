@@ -16,7 +16,7 @@ import com.ben.pixcreator.application.color.rgb.ColorRGB;
 import com.ben.pixcreator.application.image.coords.Coord;
 import com.ben.pixcreator.application.image.layer.impl.alayer.ALayer;
 import com.ben.pixcreator.application.image.layer.impl.alayer.impl.PixLayer;
-import com.ben.pixcreator.gui.miniature.manager.MiniatureManager;
+import com.ben.pixcreator.gui.facade.GuiFacade;
 import com.ben.pixcreator.gui.pane.web.LogInfo;
 import com.ben.pixcreator.web.PixelGridDto;
 import com.ben.pixcreator.web.exception.WebException;
@@ -51,7 +51,7 @@ public class ExportGridOnWebAction implements IAction
 	    RestTargetProvider restTargetProvider = new RestTargetProvider();
 	    WebTarget target = restTargetProvider.getBaseTarget().path("add");
 
-	    PixelGridDto pixelGridDto = new PixelGridDto(logInfo.getEmail(), grid, MiniatureManager.backup.get(layer));
+	    PixelGridDto pixelGridDto = new PixelGridDto(logInfo.getEmail(), grid, GuiFacade.getInstance().getMiniatureManager().getImage(layer));
 	    Response response = target.request(MediaType.APPLICATION_XML).put(Entity.entity(pixelGridDto, MediaType.APPLICATION_XML));
 
 	    int status = response.getStatus();
