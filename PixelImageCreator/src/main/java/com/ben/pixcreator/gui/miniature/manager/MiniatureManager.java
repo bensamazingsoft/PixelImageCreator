@@ -17,19 +17,21 @@ import com.ben.pixcreator.application.image.layer.impl.alayer.impl.PixLayer;
 import com.ben.pixcreator.application.image.layer.impl.alayer.impl.TextLayer;
 
 import javafx.scene.canvas.Canvas;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 public class MiniatureManager
 {
 
       @SuppressWarnings("unused")
-      private static final Logger log	     = LoggerFactory.getLogger(MiniatureManager.class);
+      private static final Logger      log	  = LoggerFactory.getLogger(MiniatureManager.class);
 
-      private static double	  MINIATUREHEIGHT;
+      private static double	       MINIATUREHEIGHT;
 
-      private static double	  MINIATUREWIDTH;
+      private static double	       MINIATUREWIDTH;
 
-      private Map<ALayer, Canvas> miniatures = new HashMap<>();
+      private Map<ALayer, Canvas>      miniatures = new HashMap<>();
+      public static Map<ALayer, Image> backup	  = new HashMap<>();
 
 
       public void addMiniature(ALayer layer, Canvas canvas)
@@ -53,7 +55,7 @@ public class MiniatureManager
 		  canvas.setHeight(MINIATUREHEIGHT);
 		  canvas.setWidth(MINIATUREWIDTH);
 
-		  canvas.getGraphicsContext2D().setFill(Color.WHITE);
+		  canvas.getGraphicsContext2D().setFill(Color.RED);
 		  canvas.getGraphicsContext2D().fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
 		  int xGridResolution = 0;
@@ -88,10 +90,14 @@ public class MiniatureManager
 
 			layer = ((PixLayer) layer).duplicate().offset(new Coord(minX, minY));
 
-			if (xGridResolution != yGridResolution)
-			{
-			      adaptPixCanvasRatio(canvas, xGridResolution, yGridResolution);
-			}
+			// if (xGridResolution != yGridResolution)
+			// {
+			// adaptPixCanvasRatio(canvas, xGridResolution, yGridResolution);
+			// }
+
+			int max = Math.max(xGridResolution * 2, yGridResolution * 2);
+			canvas.setWidth(max);
+			canvas.setHeight(max);
 
 		  }
 		  else if (layer instanceof PicLayer)
@@ -124,7 +130,25 @@ public class MiniatureManager
 
 		  layer.draw(canvas, xGridResolution, yGridResolution);
 
+		  if (layer instanceof PixLayer)
+		  {
+			backup(layer, canvas.getWidth(), canvas.getHeight(), xGridResolution, yGridResolution);
+		  }
 	    }
+
+      }
+
+
+      private void backup(ALayer layer, double scaleX, double scaleY, int xGridResolution, int yGridResolution)
+      {
+
+	    Canvas backupCanvas = new Canvas(scaleX, scaleY);
+
+	    layer.draw(backupCanvas, xGridResolution, yGridResolution);
+
+	    Image image = backupCanvas.snapshot(null, null);
+
+	    backup.put(layer, image);
 
       }
 

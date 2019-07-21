@@ -11,8 +11,8 @@ import java.util.stream.Collectors;
 import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.gui.pane.web.PixelGrid;
 import com.ben.pixcreator.gui.pane.web.SearchFilters;
-import com.ben.pixcreator.gui.pane.web.gridsmanager.IGridsManager;
-import com.ben.pixcreator.gui.pane.web.gridsmanager.impl.MockGridManager;
+import com.ben.pixcreator.gui.pane.web.gridsmanager.IGridsService;
+import com.ben.pixcreator.gui.pane.web.gridsmanager.impl.RestGridManager;
 import com.ben.pixcreator.gui.pane.web.panel.WebPanel;
 import com.ben.pixcreator.gui.pane.web.panel.state.WebPanelState;
 import com.ben.pixcreator.gui.pane.web.panel.state.gridviewer.IGridViewer;
@@ -20,8 +20,10 @@ import com.ben.pixcreator.gui.pane.web.panel.state.gridviewer.impl.GridViewBuild
 
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.TilePane;
+import javafx.scene.layout.VBox;
 
 public class LoggedWebPanelState implements WebPanelState
 {
@@ -30,10 +32,12 @@ public class LoggedWebPanelState implements WebPanelState
 
       private BorderPane		  pane;
 
+      private VBox			  errorBox = new VBox();
+
       private boolean			  userGridsOnly;
       private Map<SearchFilters, Boolean> filters;
 
-      private IGridsManager		  gridsManager;
+      private IGridsService		  gridsService;
       private IGridViewer		  gridPreviewPane;
 
 
@@ -44,8 +48,8 @@ public class LoggedWebPanelState implements WebPanelState
 	    userGridsOnly = true;
 
 	    // TODO inject REST impl
-	    gridsManager = new MockGridManager();
-	    gridPreviewPane = new GridViewBuilder(webPanel, gridsManager);
+	    gridsService = new RestGridManager();
+	    gridPreviewPane = new GridViewBuilder(webPanel, gridsService);
 	    pane = new BorderPane();
 	    filters = new HashMap<>();
 
@@ -88,6 +92,7 @@ public class LoggedWebPanelState implements WebPanelState
 		  top.getChildren().add(filterCb);
 	    });
 
+	    top.getChildren().add(errorBox);
 	    pane.setTop(top);
 
       }
@@ -96,12 +101,31 @@ public class LoggedWebPanelState implements WebPanelState
       private void queryDb()
       {
 
+	    webPanel.getPixelGridBean().getErrors().clear();
+	    webPanel.getPixelGridBean().setMessage("");
+	    errorBox.getChildren().clear();
+
 	    Set<SearchFilters> filterSet = filters.entrySet().stream()
 			.filter(e -> e.getValue().equals(Boolean.TRUE))
 			.map(Entry::getKey)
 			.collect(Collectors.toSet());
 
-	    webPanel.getPixelGridBean().setData(gridsManager.getGrids(webPanel.getLogBean().getData(), isUserGridsOnly(), filterSet));
+	    try
+	    {
+		  webPanel.getPixelGridBean().setData(gridsService.getGrids(webPanel.getLogBean().getData(), isUserGridsOnly(), filterSet));
+	    }
+	    catch (Exception e)
+	    {
+
+		  webPanel.getPixelGridBean().getErrors().put("server", e.getMessage());
+	    }
+
+	    errorBox.getChildren().add(new Label(webPanel.getPixelGridBean().getMessage()));
+
+	    webPanel.getPixelGridBean().getErrors().forEach((key, val) -> {
+		  errorBox.getChildren().add(new Label(key + " : " + val));
+
+	    });
 
 	    updateCenterPane();
       }

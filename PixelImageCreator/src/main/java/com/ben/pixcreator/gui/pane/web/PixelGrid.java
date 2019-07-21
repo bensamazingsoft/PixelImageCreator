@@ -1,36 +1,22 @@
 
 package com.ben.pixcreator.gui.pane.web;
 
-import java.io.ByteArrayOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import javax.imageio.ImageIO;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.MapKeyJoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import com.ben.pixcreator.application.color.rgb.ColorRGB;
 import com.ben.pixcreator.application.image.coords.Coord;
 
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
+import javafx.scene.image.WritableImage;
 
-@Entity
-@Table(name = "PIXELGRID")
 public class PixelGrid implements Serializable
 {
 
@@ -39,35 +25,20 @@ public class PixelGrid implements Serializable
        */
       private static final long	   serialVersionUID = 1L;
 
-      @Id
-      @Column(name = "ID")
-      @GeneratedValue(strategy = GenerationType.AUTO)
       private int		   id;
 
-      @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-      @JoinTable(
-		  name = "GRID",
-		  joinColumns = @JoinColumn(name = "PIXELGRID_id"),
-		  inverseJoinColumns = @JoinColumn(name = "COLORRGB_id"))
-      @MapKeyJoinColumn(name = "COORD_id")
       private Map<Coord, ColorRGB> grid;
 
-      @OneToMany
       private Set<SearchFilters>   filters;
 
-      @Column(name = "NAME")
       private String		   name;
 
-      @Column(name = "OWNER")
       private String		   owner;
-      @Column(name = "DESCR", nullable = true)
+
       private String		   description;
 
-      @Transient
-      private Image		   miniature;
-
-      @Column(name = "MINI_BYTES")
-      byte[]			   miniatureBytes;
+      private final String	   IMAGEPATH	    = "images/gui/web/";
+      private transient Image	   miniature	    = new Image(getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "dummyMiniature.png"));
 
 
       public PixelGrid()
@@ -77,47 +48,27 @@ public class PixelGrid implements Serializable
 	    name = "new PixelGrid";
 	    owner = "admin@pxl.com";
 	    description = "new Pixel grid description";
-	    miniatureBytes = new byte[8];
+
       }
 
 
-      public PixelGrid(Map<Coord, ColorRGB> grid)
+      public static WritableImage fxImage(byte[] miniatureBytes) throws IOException
       {
 
-	    this();
-	    this.grid = grid;
+	    return SwingFXUtils.toFXImage(ImageIO.read(new ByteArrayInputStream(miniatureBytes)), null);
       }
 
 
-      public PixelGrid(Map<Coord, ColorRGB> grid, Set<SearchFilters> filters)
-      {
-
-	    super();
-	    this.grid = grid;
-	    this.filters = filters;
-      }
-
-
-      public PixelGrid(Map<Coord, ColorRGB> grid, Set<SearchFilters> filters, String description)
-      {
-
-	    super();
-	    this.grid = grid;
-	    this.filters = filters;
-	    this.description = description;
-      }
-
-
-      public PixelGrid(Map<Coord, ColorRGB> grid, Set<SearchFilters> filters, String name, String description, Image miniature, byte[] miniatureBytes)
+      public PixelGrid(Map<Coord, ColorRGB> grid, Set<SearchFilters> filters, String name, String owner, String description, Image miniature)
       {
 
 	    super();
 	    this.grid = grid;
 	    this.filters = filters;
 	    this.name = name;
+	    this.owner = owner;
 	    this.description = description;
 	    this.miniature = miniature;
-	    this.miniatureBytes = miniatureBytes;
       }
 
 
@@ -167,8 +118,7 @@ public class PixelGrid implements Serializable
       public String toString()
       {
 
-	    return "PixelGrid [id=" + id + ", grid=" + grid + ", filters=" + filters + ", name=" + name + ", description=" + description + ", miniature=" + miniature + ", miniatureBytes="
-			+ Arrays.toString(miniatureBytes) + "]";
+	    return "PixelGrid [id=" + id + ", grid=" + grid + ", filters=" + filters + ", name=" + name + ", description=" + description + "]";
       }
 
 
@@ -198,24 +148,6 @@ public class PixelGrid implements Serializable
 
 	    this.miniature = miniature;
 
-	    ByteArrayOutputStream out = new ByteArrayOutputStream();
-	    ImageIO.write(SwingFXUtils.fromFXImage(miniature, null), "PNG", out);
-
-	    setMiniatureBytes(out.toByteArray());
-      }
-
-
-      public byte[] getMiniatureBytes()
-      {
-
-	    return miniatureBytes;
-      }
-
-
-      public void setMiniatureBytes(byte[] miniatureBytes)
-      {
-
-	    this.miniatureBytes = miniatureBytes;
       }
 
 

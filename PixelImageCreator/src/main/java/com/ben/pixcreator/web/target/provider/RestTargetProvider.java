@@ -63,14 +63,4 @@ public class RestTargetProvider
 	    return target;
       }
 
-
-      public static RestTargetProvider getInstance()
-      {
-
-	    if (null == instance)
-	    {
-		  instance = new RestTargetProvider();
-	    }
-	    return instance;
-      }
 }

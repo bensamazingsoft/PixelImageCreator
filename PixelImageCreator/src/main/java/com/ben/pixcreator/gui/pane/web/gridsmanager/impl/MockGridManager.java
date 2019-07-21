@@ -10,11 +10,11 @@ import com.ben.pixcreator.application.image.coords.Coord;
 import com.ben.pixcreator.gui.pane.web.LogInfo;
 import com.ben.pixcreator.gui.pane.web.PixelGrid;
 import com.ben.pixcreator.gui.pane.web.SearchFilters;
-import com.ben.pixcreator.gui.pane.web.gridsmanager.IGridsManager;
+import com.ben.pixcreator.gui.pane.web.gridsmanager.IGridsService;
 
 import javafx.scene.paint.Color;
 
-public class MockGridManager implements IGridsManager
+public class MockGridManager implements IGridsService
 {
 
       @Override
@@ -24,7 +24,7 @@ public class MockGridManager implements IGridsManager
 	    final HashMap<Coord, ColorRGB> grid = new HashMap<>();
 	    grid.put(new Coord(1, 1), new ColorRGB(Color.BLUE));
 	    Set<PixelGrid> set = new HashSet<>();
-	    set.add(new PixelGrid(grid));
+	    // set.add(new PixelGrid(grid));
 
 	    return set;
 

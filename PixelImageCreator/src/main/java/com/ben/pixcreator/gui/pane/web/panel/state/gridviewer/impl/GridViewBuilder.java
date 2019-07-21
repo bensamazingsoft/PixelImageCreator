@@ -10,7 +10,7 @@ import com.ben.pixcreator.gui.pane.web.SearchFilters;
 import com.ben.pixcreator.gui.pane.web.controls.EditableLabel;
 import com.ben.pixcreator.gui.pane.web.controls.EditableTextArea;
 import com.ben.pixcreator.gui.pane.web.controls.SelectableSearchFilters;
-import com.ben.pixcreator.gui.pane.web.gridsmanager.IGridsManager;
+import com.ben.pixcreator.gui.pane.web.gridsmanager.IGridsService;
 import com.ben.pixcreator.gui.pane.web.panel.WebPanel;
 import com.ben.pixcreator.gui.pane.web.panel.state.gridviewer.IGridViewer;
 import com.ben.pixcreator.gui.tooltip.provider.ToolTipProvider;
@@ -38,7 +38,7 @@ public class GridViewBuilder implements IGridViewer
 
       public static DataFormat dataFormat      = new DataFormat("pixcreator.PixelGrid");
 
-      private IGridsManager    gridsManager;
+      private IGridsService    gridsService;
 
       private final String     IMAGEPATH       = "images/gui/buttons/tools/";
       private final AppContext ctx	       = AppContext.getInstance();
@@ -50,11 +50,11 @@ public class GridViewBuilder implements IGridViewer
       }
 
 
-      public GridViewBuilder(WebPanel webPanel, IGridsManager gridsManager)
+      public GridViewBuilder(WebPanel webPanel, IGridsService gridsService)
       {
 
 	    this.webPanel = webPanel;
-	    this.gridsManager = gridsManager;
+	    this.gridsService = gridsService;
       }
 
 
@@ -73,7 +73,7 @@ public class GridViewBuilder implements IGridViewer
 		  {
 
 			final boolean owned = webPanel.getLogBean().getData().getEmail().equals(grid.getOwner());
-			box.getChildren().add(new RegularGridSticker(grid, gridsManager, owned));
+			box.getChildren().add(new RegularGridSticker(grid, gridsService, owned));
 		  }
 
 		  return box;
@@ -93,7 +93,7 @@ public class GridViewBuilder implements IGridViewer
 	    private Integer    MINIATUREWIDTH;
 
 
-	    public RegularGridSticker(PixelGrid grid, IGridsManager gridsManager, boolean owned)
+	    public RegularGridSticker(PixelGrid grid, IGridsService gridsService, boolean owned)
 	    {
 
 		  super();
@@ -115,34 +115,34 @@ public class GridViewBuilder implements IGridViewer
 		  descrPanel.setTop(owned ? new EditableLabel(grid.getName()) : new Label(grid.getName()));
 		  descrPanel.setCenter(owned ? new EditableTextArea(grid.getDescription()) : new TextArea(grid.getDescription()));
 		  descrPanel.setBottom(
-			      owned ? new SelectableSearchFilters(grid.getFilters()) : new Label(String.join(",", grid.getFilters().stream().map(SearchFilters::name).collect(Collectors.toSet()))));
+			      owned ? new SelectableSearchFilters(grid.getFilters())
+					  : new Label("filters:\n" + String.join(",", grid.getFilters().stream().map(SearchFilters::name).collect(Collectors.toSet()))));
 		  setCenter(descrPanel);
 		  // delete button setup
 		  buttonsPane = new HBox();
 
-		  final Image deleteLayerButImg = new Image(
-			      getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "deleteLayerButImg.png"));
-		  Button deleteStickerBut = new Button();
-		  deleteStickerBut.setGraphic(new ImageView(deleteLayerButImg));
-		  deleteStickerBut.setTooltip(toolTipProvider.get("deleteWebRegularGridSticker"));
-		  deleteStickerBut.setOnAction(event -> {
-			gridsManager.deleteGrid(webPanel.getLogBean().getData(), grid);
-			webPanel.reload();
-		  });
-		  buttonsPane.getChildren().add(deleteStickerBut);
-
 		  if (owned)
 		  {
+			final Image deleteLayerButImg = new Image(
+				    getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "deleteLayerButImg.png"));
+			Button deleteStickerBut = new Button();
+			deleteStickerBut.setGraphic(new ImageView(deleteLayerButImg));
+			deleteStickerBut.setTooltip(toolTipProvider.get("deleteWebRegularGridSticker"));
+			deleteStickerBut.setOnAction(event -> {
+			      gridsService.deleteGrid(webPanel.getLogBean().getData(), grid);
+			      webPanel.reload();
+			});
+			buttonsPane.getChildren().add(deleteStickerBut);
 			final Image updateLayerButImg = new Image(
 				    getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "updateLayerButImg.png"));
 			Button updateStickerBut = new Button();
 			updateStickerBut.setGraphic(new ImageView(updateLayerButImg));
 			updateStickerBut.setTooltip(toolTipProvider.get("updateWebRegularGridSticker"));
 			updateStickerBut.setOnAction(event -> {
-			      gridsManager.updateGrid(webPanel.getLogBean().getData(), grid);
+			      gridsService.updateGrid(webPanel.getLogBean().getData(), grid);
 			      webPanel.reload();
 			});
-			buttonsPane.getChildren().add(deleteStickerBut);
+			buttonsPane.getChildren().add(updateStickerBut);
 		  }
 
 		  setRight(buttonsPane);

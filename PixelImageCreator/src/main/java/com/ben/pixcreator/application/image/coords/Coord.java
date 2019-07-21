@@ -4,107 +4,160 @@ package com.ben.pixcreator.application.image.coords;
 import java.io.Serializable;
 import java.util.Comparator;
 
-public class Coord implements Serializable, Comparable<Coord> {
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
-	/**
-	 * 
-	 */
-	private static final long						serialVersionUID	= 1L;
-	private int										x, y;
-	public static final transient Comparator<Coord>	COMPARATOR			= Comparator.comparingInt(Coord::getY)
-			.thenComparingInt(Coord::getX);
+@XmlRootElement(name = "coord")
+@XmlAccessorType(XmlAccessType.FIELD)
+public class Coord implements Serializable, Comparable<Coord>
+{
 
-	public Coord(int x, int y) {
+      /**
+       * 
+       */
+      @XmlTransient
+      private static final long			      serialVersionUID = 1L;
 
-		super();
-		this.x = x;
-		this.y = y;
-	}
+      @XmlAttribute
+      private Integer				      id;
 
-	public Coord() {
+      private int				      x, y;
 
-		super();
-		this.x = this.y = 0;
+      public static final transient Comparator<Coord> COMPARATOR       = Comparator.comparingInt(Coord::getY)
+		  .thenComparingInt(Coord::getX);
 
-	}
 
-	@Override
-	public String toString() {
+      public Coord(int x, int y)
+      {
 
-		return "Coord [x=" + x + ", y=" + y + "]";
-	}
+	    super();
+	    this.x = x;
+	    this.y = y;
+      }
 
-	@Override
-	public int hashCode() {
 
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + x;
-		result = prime * result + y;
-		return result;
-	}
+      public Coord()
+      {
 
-	@Override
-	public boolean equals(Object obj) {
+	    super();
+	    this.x = this.y = 0;
 
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Coord other = (Coord) obj;
-		if (x != other.x)
-			return false;
-		if (y != other.y)
-			return false;
-		return true;
-	}
+      }
 
-	public int getX() {
 
-		return x;
-	}
+      @Override
+      public String toString()
+      {
 
-	public void setX(int x) {
+	    return "Coord [x=" + x + ", y=" + y + "]";
+      }
 
-		this.x = x;
-	}
 
-	public int getY() {
+      @Override
+      public int hashCode()
+      {
 
-		return y;
-	}
+	    final int prime = 31;
+	    int result = 1;
+	    result = prime * result + x;
+	    result = prime * result + y;
+	    return result;
+      }
 
-	public void setY(int y) {
 
-		this.y = y;
-	}
+      @Override
+      public boolean equals(Object obj)
+      {
 
-	/**
-	 * @param factor
-	 * @return new Coord(getX() * factor, getY() * factor)
-	 */
-	public Coord mult(int factor) {
+	    if (this == obj)
+		  return true;
+	    if (obj == null)
+		  return false;
+	    if (getClass() != obj.getClass())
+		  return false;
+	    Coord other = (Coord) obj;
+	    if (x != other.x)
+		  return false;
+	    if (y != other.y)
+		  return false;
+	    return true;
+      }
 
-		return new Coord(getX() * factor, getY() * factor);
 
-	}
+      public int getX()
+      {
 
-	@Override
-	public int compareTo(Coord oth) {
+	    return x;
+      }
 
-		return COMPARATOR.compare(this, oth);
-	}
 
-	/**
-	 * 
-	 * @param min
-	 * @return a new Coord whose coordinates are sums of this and the min coord
-	 */
-	public Coord add(Coord min) {
+      public void setX(int x)
+      {
 
-		return new Coord(getX() + min.getX(), getY() + min.getY());
-	}
+	    this.x = x;
+      }
+
+
+      public int getY()
+      {
+
+	    return y;
+      }
+
+
+      public void setY(int y)
+      {
+
+	    this.y = y;
+      }
+
+
+      /**
+       * @param factor
+       * @return new Coord(getX() * factor, getY() * factor)
+       */
+      public Coord mult(int factor)
+      {
+
+	    return new Coord(getX() * factor, getY() * factor);
+
+      }
+
+
+      @Override
+      public int compareTo(Coord oth)
+      {
+
+	    return COMPARATOR.compare(this, oth);
+      }
+
+
+      /**
+       * 
+       * @param min
+       * @return a new Coord whose coordinates are sums of this and the min coord
+       */
+      public Coord add(Coord min)
+      {
+
+	    return new Coord(getX() + min.getX(), getY() + min.getY());
+      }
+
+
+      public int getId()
+      {
+
+	    return id;
+      }
+
+
+      public void setId(int id)
+      {
+
+	    this.id = id;
+      }
 
 }

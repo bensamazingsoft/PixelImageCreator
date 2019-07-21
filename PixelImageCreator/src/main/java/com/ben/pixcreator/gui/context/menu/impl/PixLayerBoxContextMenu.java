@@ -1,7 +1,10 @@
 
 package com.ben.pixcreator.gui.context.menu.impl;
 
+import java.util.ResourceBundle;
+
 import com.ben.pixcreator.application.action.impl.AddEffectToLayerAction;
+import com.ben.pixcreator.application.action.impl.ExportGridOnWebAction;
 import com.ben.pixcreator.application.action.impl.RefreshTabAction;
 import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.application.executor.Executor;
@@ -16,46 +19,86 @@ import com.ben.pixcreator.application.image.layer.effect.params.impl.SaturationE
 import com.ben.pixcreator.application.image.layer.impl.alayer.ALayer;
 import com.ben.pixcreator.gui.exception.popup.ExceptionPopUp;
 import com.ben.pixcreator.gui.facade.GuiFacade;
+import com.ben.pixcreator.gui.pane.web.LogInfo;
 
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 
-public class PixLayerBoxContextMenu extends ContextMenu {
+public class PixLayerBoxContextMenu extends ContextMenu
+{
 
-	public PixLayerBoxContextMenu(ALayer layer) {
+      private final ResourceBundle bundle = AppContext.getInstance().getBundle();
 
-		addMenuItem(layer, "pixLayerBoxContextMenuAddOpacity", EffectDesign.OPACITY, new OpacityEffectParams());
-		addMenuItem(layer, "pixLayerBoxContextMenuAddHue", EffectDesign.HUE, new HueEffectParams());
-		addMenuItem(layer, "pixLayerBoxContextMenuAddSaturation", EffectDesign.SATURATION,
-				new SaturationEffectParams());
-		addMenuItem(layer, "pixLayerBoxContextMenuAddBrightness", EffectDesign.BRIGHTNESS,
-				new BrightnessEffectParams());
-		addMenuItem(layer, "pixLayerBoxContextMenuAddResample", EffectDesign.RESAMPLE,
-				new ResampleEffectParams());
-		addMenuItem(layer, "pixLayerBoxContextMenuAddLumaKey", EffectDesign.LUMAKEY,
-				new LumaKeyEffectParams());
-	}
 
-	public void addMenuItem(ALayer layer, String i18String, EffectDesign effectDesign, EffectParams effectParam) {
-		MenuItem menuItem = new MenuItem();
+      public PixLayerBoxContextMenu(ALayer layer)
+      {
 
-		menuItem.setText(AppContext.getInstance().getBundle().getString(i18String));
+	    addEffectMenuItem(layer, "pixLayerBoxContextMenuAddOpacity", EffectDesign.OPACITY, new OpacityEffectParams());
+	    addEffectMenuItem(layer, "pixLayerBoxContextMenuAddHue", EffectDesign.HUE, new HueEffectParams());
+	    addEffectMenuItem(layer, "pixLayerBoxContextMenuAddSaturation", EffectDesign.SATURATION,
+			new SaturationEffectParams());
+	    addEffectMenuItem(layer, "pixLayerBoxContextMenuAddBrightness", EffectDesign.BRIGHTNESS,
+			new BrightnessEffectParams());
+	    addEffectMenuItem(layer, "pixLayerBoxContextMenuAddResample", EffectDesign.RESAMPLE,
+			new ResampleEffectParams());
+	    addEffectMenuItem(layer, "pixLayerBoxContextMenuAddLumaKey", EffectDesign.LUMAKEY,
+			new LumaKeyEffectParams());
+	    getItems().add(new SeparatorMenuItem());
+	    getItems().add(webExportMenuItem(layer));
+      }
 
-		menuItem.setOnAction(event -> {
 
-			try {
+      private MenuItem webExportMenuItem(ALayer layer)
+      {
 
-				Executor.getInstance().executeAction(
-						new AddEffectToLayerAction(effectDesign, effectParam, layer));
+	    MenuItem item = new MenuItem(bundle.getString("pixLayerBoxContextWebExportMenuItemTitle"));
+	    LogInfo logInfo = GuiFacade.getInstance().getWebPanel().getLogBean().getData();
 
-				Executor.getInstance().executeAction(new RefreshTabAction(GuiFacade.getInstance().getActiveTab()));
+	    item.setOnAction(event -> {
 
-			} catch (Exception e) {
-				new ExceptionPopUp(e);
-			}
-		});
+		  try
+		  {
+			Executor.getInstance().executeAction(new ExportGridOnWebAction(logInfo, layer));
+		  }
+		  catch (Exception e)
+		  {
+			new ExceptionPopUp(e);
+		  }
 
-		this.getItems().add(menuItem);
-	}
+	    });
+
+	    item.setDisable(!logInfo.isConnected());
+
+	    return item;
+      }
+
+
+      public void addEffectMenuItem(ALayer layer, String i18String, EffectDesign effectDesign, EffectParams effectParam)
+      {
+
+	    MenuItem menuItem = new MenuItem();
+
+	    menuItem.setText(bundle.getString(i18String));
+
+	    menuItem.setOnAction(event -> {
+
+		  try
+		  {
+
+			Executor.getInstance().executeAction(
+				    new AddEffectToLayerAction(effectDesign, effectParam, layer));
+
+			Executor.getInstance().executeAction(new RefreshTabAction(GuiFacade.getInstance().getActiveTab()));
+
+		  }
+		  catch (Exception e)
+		  {
+			new ExceptionPopUp(e);
+		  }
+	    });
+
+	    this.getItems().add(menuItem);
+      }
 
 }

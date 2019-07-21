@@ -19,7 +19,8 @@ public class LogInfoHibService implements ILogInfoService
       public Bean<LogInfo> validate(Bean<LogInfo> logInfoBean)
       {
 
-	    WebTarget target = RestTargetProvider.getInstance().getBaseTarget().path("checkin");
+	    RestTargetProvider restTargetProvider = new RestTargetProvider();
+	    WebTarget target = restTargetProvider.getBaseTarget().path("checkin");
 
 	    Response response = target.request().get();
 
@@ -52,7 +53,8 @@ public class LogInfoHibService implements ILogInfoService
       public Bean<LogInfo> registerLogInfo(Bean<LogInfo> logInfoBean)
       {
 
-	    WebTarget target = RestTargetProvider.getInstance().getBaseTarget().path("subscribe");
+	    RestTargetProvider restTargetProvider = new RestTargetProvider();
+	    WebTarget target = restTargetProvider.getBaseTarget().path("subscribe");
 
 	    Form form = new Form()
 			.param("email", logInfoBean.getData().getEmail())

@@ -321,7 +321,7 @@ public class PixTab extends Tab implements Initializable
 		  {
 			new ExceptionPopUp(e);
 		  }
-		  event.consume();
+		  // event.consume();
 	    }
 
       }

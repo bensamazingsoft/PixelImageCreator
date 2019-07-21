@@ -7,10 +7,10 @@ import com.ben.pixcreator.gui.pane.web.LogInfo;
 import com.ben.pixcreator.gui.pane.web.PixelGrid;
 import com.ben.pixcreator.gui.pane.web.SearchFilters;
 
-public interface IGridsManager
+public interface IGridsService
 {
 
-      public Set<PixelGrid> getGrids(LogInfo logInfo, boolean isUserGridsOnly, Set<SearchFilters> filters);
+      public Set<PixelGrid> getGrids(LogInfo logInfo, boolean isUserGridsOnly, Set<SearchFilters> filters) throws Exception;
 
 
       public Set<PixelGrid> getAllGrids(LogInfo logInfo);

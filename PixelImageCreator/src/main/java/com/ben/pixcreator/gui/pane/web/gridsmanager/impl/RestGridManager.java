@@ -3,46 +3,63 @@ package com.ben.pixcreator.gui.pane.web.gridsmanager.impl;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
-import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import com.ben.pixcreator.gui.pane.web.LogInfo;
 import com.ben.pixcreator.gui.pane.web.PixelGrid;
 import com.ben.pixcreator.gui.pane.web.SearchFilters;
-import com.ben.pixcreator.gui.pane.web.gridsmanager.IGridsManager;
+import com.ben.pixcreator.gui.pane.web.gridsmanager.IGridsService;
+import com.ben.pixcreator.web.PixelGridDto;
+import com.ben.pixcreator.web.exception.WebException;
 import com.ben.pixcreator.web.target.provider.RestTargetProvider;
 
-public class RestGridManager implements IGridsManager
+public class RestGridManager implements IGridsService
 {
 
-      private WebTarget baseTarget = RestTargetProvider.getInstance().getBaseTarget().path("grids");
+      private RestTargetProvider restTargetProvider = new RestTargetProvider();
+      private WebTarget		 baseTarget	    = restTargetProvider.getBaseTarget();
 
 
       @Override
-      public Set<PixelGrid> getGrids(LogInfo logInfo, boolean isUserGridsOnly, Set<SearchFilters> filters)
+      public Set<PixelGrid> getGrids(LogInfo logInfo, boolean isUserGridsOnly, Set<SearchFilters> filters) throws Exception
       {
 
 	    Set<PixelGrid> res = new HashSet<>();
 
-	    String filtPhrase = String.join(",", filters.stream().map(Enum::name).collect(Collectors.toSet()));
+	    WebTarget target = baseTarget.path("filteredgrids").queryParam("isuseronly", isUserGridsOnly);
 
-	    WebTarget target = baseTarget.path("get")
-			.queryParam("isuseronly", isUserGridsOnly)
-			.queryParam("filters", filtPhrase);
-
-	    Builder request = target.request(MediaType.APPLICATION_JSON);
-
-	    Set<PixelGrid> result = request.get(new GenericType<Set<PixelGrid>>()
+	    for (SearchFilters filter : filters)
 	    {
-	    });
+		  target.queryParam("filters", filter.name());
+	    }
 
-	    res.addAll(result);
+	    Response response = target.request(MediaType.APPLICATION_XML).get();
 
-	    return res;
+	    if (response.getStatus() == 200)
+	    {
+
+		  Set<PixelGridDto> resultGrids = response.readEntity(new GenericType<Set<PixelGridDto>>() {});
+		  for (PixelGridDto gridDto : resultGrids)
+		  {
+			res.add(new PixelGrid(
+				    gridDto.getGrid(),
+				    gridDto.getFilters(),
+				    gridDto.getName(),
+				    gridDto.getOwner(),
+				    gridDto.getDescription(),
+				    PixelGrid.fxImage(gridDto.getMiniatureBytes())));
+		  }
+
+		  return res;
+	    }
+	    else
+	    {
+		  throw new WebException(response.readEntity(String.class));
+	    }
 
       }
 
