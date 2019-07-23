@@ -70,31 +70,37 @@ public class MiniatureManager
 		  if (layer instanceof PixLayer)
 		  {
 
-			int minX = ((PixLayer) layer).getGrid().keySet().stream()
-				    .mapToInt(Coord::getX)
-				    .min()
-				    .orElse(0);
-			// log.debug("minX : " + minX);
-			int maxX = ((PixLayer) layer).getGrid().keySet().stream()
-				    .mapToInt(Coord::getX)
-				    .max()
-				    .orElse(0);
-			// log.debug("maxX : " + maxX);
-			int minY = ((PixLayer) layer).getGrid().keySet().stream()
-				    .mapToInt(Coord::getY)
-				    .min()
-				    .orElse(0);
-			// log.debug("minY : " + minY);
-			int maxY = ((PixLayer) layer).getGrid().keySet().stream()
-				    .mapToInt(Coord::getY)
-				    .max()
-				    .orElse(0);
-			// log.debug("maxY : " + maxY);
+			// int minX = ((PixLayer) layer).getGrid().keySet().stream()
+			// .mapToInt(Coord::getX)
+			// .min()
+			// .orElse(0);
+			// // log.debug("minX : " + minX);
+			// int maxX = ((PixLayer) layer).getGrid().keySet().stream()
+			// .mapToInt(Coord::getX)
+			// .max()
+			// .orElse(0);
+			// // log.debug("maxX : " + maxX);
+			// int minY = ((PixLayer) layer).getGrid().keySet().stream()
+			// .mapToInt(Coord::getY)
+			// .min()
+			// .orElse(0);
+			// // log.debug("minY : " + minY);
+			// int maxY = ((PixLayer) layer).getGrid().keySet().stream()
+			// .mapToInt(Coord::getY)
+			// .max()
+			// .orElse(0);
+			// // log.debug("maxY : " + maxY);
 
-			xGridResolution = maxX - minX + 1;
-			yGridResolution = maxY - minY + 1;
+			// xGridResolution = maxX - minX + 1;
+			// yGridResolution = maxY - minY + 1;
 
-			layer = ((PixLayer) layer).duplicate().offset(new Coord(minX, minY));
+			xGridResolution = ((PixLayer) layer).maxCell().getX() - ((PixLayer) layer).minCell().getX();
+			yGridResolution = ((PixLayer) layer).maxCell().getY() - ((PixLayer) layer).minCell().getY();
+
+			xGridResolution++;
+			yGridResolution++;
+
+			layer = ((PixLayer) layer).duplicate().origin(((PixLayer) layer).minCell());
 
 			// if (xGridResolution != yGridResolution)
 			// {
@@ -198,36 +204,41 @@ public class MiniatureManager
       }
 
 
+      /**
+       * Returns the miniature Image currently stored for the layer.
+       * 
+       * @param layer
+       * @return
+       */
       public Image getImage(ALayer layer)
       {
 
 	    return miniatures.get(layer).getImage();
       }
 
-
-      private void adaptPixCanvasRatio(Canvas canvas, int xGridResolution, int yGridResolution)
-      {
-
-	    if (xGridResolution > yGridResolution)
-	    {
-
-		  double factorX = (double) yGridResolution / (double) xGridResolution;
-		  // log.debug("factorX : " + factorX);
-		  canvas.setHeight(canvas.getHeight() * factorX);
-		  // log.debug("new canvas size : " + canvas.getWidth() + "X" +
-		  // canvas.getHeight());
-
-	    }
-
-	    if (xGridResolution < yGridResolution)
-	    {
-
-		  double factorY = (double) xGridResolution / (double) yGridResolution;
-		  // log.debug("factorY : " + factorY);
-		  canvas.setWidth(canvas.getWidth() * factorY);
-		  // log.debug("new canvas size : " + canvas.getWidth() + "X" +
-		  // canvas.getHeight());
-	    }
-      }
+      // private void adaptPixCanvasRatio(Canvas canvas, int xGridResolution, int yGridResolution)
+      // {
+      //
+      // if (xGridResolution > yGridResolution)
+      // {
+      //
+      // double factorX = (double) yGridResolution / (double) xGridResolution;
+      // // log.debug("factorX : " + factorX);
+      // canvas.setHeight(canvas.getHeight() * factorX);
+      // // log.debug("new canvas size : " + canvas.getWidth() + "X" +
+      // // canvas.getHeight());
+      //
+      // }
+      //
+      // if (xGridResolution < yGridResolution)
+      // {
+      //
+      // double factorY = (double) xGridResolution / (double) yGridResolution;
+      // // log.debug("factorY : " + factorY);
+      // canvas.setWidth(canvas.getWidth() * factorY);
+      // // log.debug("new canvas size : " + canvas.getWidth() + "X" +
+      // // canvas.getHeight());
+      // }
+      // }
 
 }

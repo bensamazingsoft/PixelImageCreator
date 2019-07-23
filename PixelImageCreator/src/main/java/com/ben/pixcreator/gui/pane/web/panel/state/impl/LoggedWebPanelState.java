@@ -12,7 +12,7 @@ import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.gui.pane.web.PixelGrid;
 import com.ben.pixcreator.gui.pane.web.SearchFilters;
 import com.ben.pixcreator.gui.pane.web.gridsmanager.IGridsService;
-import com.ben.pixcreator.gui.pane.web.gridsmanager.impl.RestGridManager;
+import com.ben.pixcreator.gui.pane.web.gridsmanager.impl.RestGridService;
 import com.ben.pixcreator.gui.pane.web.panel.WebPanel;
 import com.ben.pixcreator.gui.pane.web.panel.state.WebPanelState;
 import com.ben.pixcreator.gui.pane.web.panel.state.gridviewer.IGridViewer;
@@ -21,6 +21,7 @@ import com.ben.pixcreator.gui.pane.web.panel.state.gridviewer.impl.GridViewBuild
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
@@ -48,7 +49,7 @@ public class LoggedWebPanelState implements WebPanelState
 	    userGridsOnly = true;
 
 	    // TODO inject REST impl
-	    gridsService = new RestGridManager();
+	    gridsService = new RestGridService();
 	    gridPreviewPane = new GridViewBuilder(webPanel, gridsService);
 	    pane = new BorderPane();
 	    filters = new HashMap<>();
@@ -67,7 +68,7 @@ public class LoggedWebPanelState implements WebPanelState
 
 	    Set<PixelGrid> grids = webPanel.getPixelGridBean().getData();
 
-	    pane.setCenter(gridPreviewPane.build(grids, GridViewBuilder.view.REGULAR));
+	    pane.setCenter(new ScrollPane(gridPreviewPane.build(grids, GridViewBuilder.view.REGULAR)));
 
       }
 
@@ -88,7 +89,12 @@ public class LoggedWebPanelState implements WebPanelState
 	    filters.forEach((filter, selected) -> {
 		  CheckBox filterCb = new CheckBox(filter.name());
 		  filterCb.setSelected(filters.get(filter));
-		  filterCb.selectedProperty().addListener((obs, oldVal, newVal) -> queryDb());
+		  filterCb.selectedProperty().addListener((obs, oldVal, newVal) -> {
+
+			filters.put(filter, newVal);
+			queryDb();
+
+		  });
 		  top.getChildren().add(filterCb);
 	    });
 
@@ -101,6 +107,8 @@ public class LoggedWebPanelState implements WebPanelState
       private void queryDb()
       {
 
+	    System.out.println("DB QUERYED");
+
 	    webPanel.getPixelGridBean().getErrors().clear();
 	    webPanel.getPixelGridBean().setMessage("");
 	    errorBox.getChildren().clear();
@@ -112,7 +120,7 @@ public class LoggedWebPanelState implements WebPanelState
 
 	    try
 	    {
-		  webPanel.getPixelGridBean().setData(gridsService.getGrids(webPanel.getLogBean().getData(), isUserGridsOnly(), filterSet));
+		  webPanel.getPixelGridBean().setData(gridsService.getGrids(isUserGridsOnly(), filterSet));
 	    }
 	    catch (Exception e)
 	    {
@@ -135,6 +143,7 @@ public class LoggedWebPanelState implements WebPanelState
       public Node load()
       {
 
+	    queryDb();
 	    return pane;
       }
 

@@ -216,7 +216,7 @@ public class LayerPanel extends BorderPane implements Initializable
       {
 
 	    // handleNewLayer
-	    newLayer();
+	    newPixLayer();
       }
 
 
@@ -271,7 +271,7 @@ public class LayerPanel extends BorderPane implements Initializable
       }
 
 
-      private void newLayer()
+      private void newPixLayer()
       {
 
 	    executeLayerAction(LayerActions.ADDNEW);
@@ -283,8 +283,8 @@ public class LayerPanel extends BorderPane implements Initializable
       private void handleDeleteLayer(ActionEvent event)
       {
 
-	    // handleDeleteLayer
 	    deleteLayer();
+
       }
 
 
@@ -292,6 +292,12 @@ public class LayerPanel extends BorderPane implements Initializable
       {
 
 	    executeLayerAction(LayerActions.DELETE);
+
+	    if (image.get().getLayerList().isEmpty())
+	    {
+		  newPixLayer();
+
+	    }
 
       }
 

@@ -21,8 +21,45 @@
 .effectView{
 	
 	-fx-background-color:whitesmoke;
+	-fx-border-color:black;
 	
 }
+.RegularGridSticker {
+	
+	-fx-border-color:gray;
+	-fx-background-color:powderblue;
+}
+
+.RegularGridStickerVBox{
+	-fx-background-color:darkgray;
+	
+}
+
+.RegularGridStickerSelectableSearchFilters{
+	-fx-background-color:lavender;
+	-fx-padding:10,10,10,10;
+	
+}
+.RegularGridStickerMiniaturePane{
+	-fx-background-color:white;
+		-fx-border-color:black;
+		-fx-border-width:2px;
+		-fx-margin:10,5,10,10;
+
+}
+.RegularGridStickerDescrPanel{
+	-fx-padding:10,10,10,5;
+}
+.RegularGridStickerDescrPanelLabel{
+	
+		-fx-text-fill:darkslategray;
+	-fx-font-size:1.3em;
+	
+	
+	
+}
+
+
 
 .effectView .pileViewTitle{
 	-fx-text-fill:darkslategray;

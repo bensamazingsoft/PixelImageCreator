@@ -218,7 +218,7 @@ public class PicLayer extends ALayer implements Serializable
 
 
       @Override
-      public ALayer offset(Coord min)
+      public ALayer origin(Coord min)
       {
 
 	    setPosition(getPosition().add(min));

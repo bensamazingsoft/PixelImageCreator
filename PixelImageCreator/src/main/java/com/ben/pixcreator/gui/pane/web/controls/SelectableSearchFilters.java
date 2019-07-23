@@ -24,8 +24,7 @@ public class SelectableSearchFilters extends VBox
       private Label		 label;
 
 
-      public SelectableSearchFilters(
-		  Set<SearchFilters> filters)
+      public SelectableSearchFilters(Set<SearchFilters> filters)
       {
 
 	    this.filters = filters;
@@ -38,7 +37,7 @@ public class SelectableSearchFilters extends VBox
       {
 
 	    getChildren().clear();
-
+	    setSpacing(5);
 	    TilePane selectPane = new TilePane();
 	    HashMap<SearchFilters, Boolean> AllFilters = new HashMap<>();
 
@@ -81,7 +80,7 @@ public class SelectableSearchFilters extends VBox
 
 	    getChildren().clear();
 
-	    label = new Label("filters:\n" + String.join(",", filters.stream().map(SearchFilters::name).collect(Collectors.toSet())));
+	    label = new Label(String.join(",", filters.stream().map(SearchFilters::name).collect(Collectors.toSet())));
 
 	    label.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
 		  if (event.getEventType().getName().equals("MOUSE_CLICKED") && event.getClickCount() > 1)

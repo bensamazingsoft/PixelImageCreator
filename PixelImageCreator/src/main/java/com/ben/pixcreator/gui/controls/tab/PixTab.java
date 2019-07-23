@@ -62,110 +62,6 @@ import javafx.scene.layout.StackPane;
 public class PixTab extends Tab implements Initializable
 {
 
-      public class DragExitedControls implements EventHandler<DragEvent>
-      {
-
-	    @Override
-	    public void handle(DragEvent arg0)
-	    {
-
-		  image.get().setGhost(new PixLayer());
-
-	    }
-
-      }
-
-      public class DragDroppedControls implements EventHandler<DragEvent>
-      {
-
-	    private PixTab pxTab;
-
-
-	    @Override
-	    public void handle(DragEvent evt)
-	    {
-
-		  if (evt.getGestureSource() != this && evt.getDragboard().hasContent(GridViewBuilder.dataFormat))
-		  {
-			evt.acceptTransferModes(TransferMode.ANY);
-
-			PixelGrid grid = (PixelGrid) evt.getDragboard().getContent(GridViewBuilder.dataFormat);
-			// offset grid
-			int offX = (int) (evt.getX() / image.get().getxGridResolution());
-			int offY = (int) (evt.getY() / image.get().getyGridResolution());
-
-			final PixLayer pixLyr = (PixLayer) new PixLayer(grid.getGrid()).offset(new Coord(offX, offY));
-
-			try
-			{
-			      Executor.getInstance().executeAction(new LayerAction(image.get(), pixLyr, LayerActions.ADDNEW));
-			      Executor.getInstance().executeAction(new RefreshTabAction(pxTab));
-			}
-			catch (Exception e)
-			{
-			      new ExceptionPopUp(e);
-			}
-
-		  }
-
-	    }
-
-
-	    public DragDroppedControls(PixTab pxTab)
-	    {
-
-		  super();
-		  this.pxTab = pxTab;
-	    }
-
-      }
-
-      public class DragOverControls implements EventHandler<DragEvent>
-      {
-
-	    private PixTab pxTab;
-
-
-	    public DragOverControls(PixTab pxTab)
-	    {
-
-		  super();
-		  this.pxTab = pxTab;
-	    }
-
-
-	    @Override
-	    public void handle(DragEvent evt)
-	    {
-
-		  if (evt.getGestureSource() != this && evt.getDragboard().hasContent(GridViewBuilder.dataFormat))
-		  {
-			evt.acceptTransferModes(TransferMode.ANY);
-
-			PixelGrid grid = (PixelGrid) evt.getDragboard().getContent(GridViewBuilder.dataFormat);
-
-			// offset grid
-			int offX = (int) (evt.getX() / image.get().getxGridResolution());
-			int offY = (int) (evt.getY() / image.get().getyGridResolution());
-
-			final PixLayer pixLyr = (PixLayer) new PixLayer(grid.getGrid()).offset(new Coord(offX, offY));
-			image.get().setGhost(pixLyr);
-
-			try
-			{
-			      Executor.getInstance().executeAction(new RefreshTabAction(pxTab));
-			}
-			catch (Exception e)
-			{
-			      new ExceptionPopUp(e);
-			}
-
-			evt.consume();
-		  }
-	    }
-
-      }
-
       @SuppressWarnings("unused")
       private static final Logger	     log		= LoggerFactory.getLogger(PixTab.class);
 
@@ -419,6 +315,127 @@ public class PixTab extends Tab implements Initializable
 
 	    }
 
+      }
+
+      public class DragExitedControls implements EventHandler<DragEvent>
+      {
+
+	    @Override
+	    public void handle(DragEvent arg0)
+	    {
+
+		  image.get().setGhost(new PixLayer());
+
+	    }
+
+      }
+
+      public class DragDroppedControls implements EventHandler<DragEvent>
+      {
+
+	    private PixTab pxTab;
+
+
+	    @Override
+	    public void handle(DragEvent evt)
+	    {
+
+		  if (evt.getGestureSource() != this && evt.getDragboard().hasContent(GridViewBuilder.dataFormat))
+		  {
+			evt.acceptTransferModes(TransferMode.ANY);
+
+			PixelGrid grid = (PixelGrid) evt.getDragboard().getContent(GridViewBuilder.dataFormat);
+
+			final PixLayer pixLyr = (PixLayer) new PixLayer(grid.getGrid()).offset(eventCoord(evt));
+
+			try
+			{
+			      Executor.getInstance().executeAction(new LayerAction(image.get(), pixLyr, LayerActions.ADD));
+			      GuiFacade.getInstance().getLayerPanel().populate();
+			      Executor.getInstance().executeAction(new RefreshTabAction(pxTab));
+			}
+			catch (Exception e)
+			{
+			      new ExceptionPopUp(e);
+			}
+
+		  }
+
+	    }
+
+
+	    public DragDroppedControls(PixTab pxTab)
+	    {
+
+		  super();
+		  this.pxTab = pxTab;
+	    }
+
+      }
+
+      public class DragOverControls implements EventHandler<DragEvent>
+      {
+
+	    private PixTab pxTab;
+
+
+	    public DragOverControls(PixTab pxTab)
+	    {
+
+		  super();
+		  this.pxTab = pxTab;
+	    }
+
+
+	    @Override
+	    public void handle(DragEvent evt)
+	    {
+
+		  if (evt.getGestureSource() != this && evt.getDragboard().hasContent(GridViewBuilder.dataFormat))
+		  {
+			evt.acceptTransferModes(TransferMode.ANY);
+
+			PixelGrid grid = (PixelGrid) evt.getDragboard().getContent(GridViewBuilder.dataFormat);
+
+			// offset grid
+			int offX = (int) (evt.getX() / image.get().getxGridResolution());
+			int offY = (int) (evt.getY() / image.get().getyGridResolution());
+
+			Coord eventCoord = eventCoord(evt);
+			log.debug("eventCoord : " + eventCoord);
+			final PixLayer pixLyr = (PixLayer) new PixLayer(grid.getGrid()).offset(eventCoord);
+			image.get().setGhost(pixLyr);
+
+			try
+			{
+			      Executor.getInstance().executeAction(new RefreshTabAction(pxTab));
+			}
+			catch (Exception e)
+			{
+			      new ExceptionPopUp(e);
+			}
+
+			evt.consume();
+		  }
+	    }
+
+      }
+
+
+      private Coord eventCoord(DragEvent event)
+      {
+
+	    PixImage image = GuiFacade.getInstance().getActiveimage();
+
+	    double width = GuiFacade.getInstance().getActiveTab().getCanvas().getWidth();
+	    double height = GuiFacade.getInstance().getActiveTab().getCanvas().getHeight();
+
+	    int x = new Double(((DragEvent) event).getX()).intValue();
+	    int y = new Double(((DragEvent) event).getY()).intValue();
+	    int cellX = (int) Math.floor(x / (width / image.getxGridResolution()));
+	    int cellY = (int) Math.floor(y / (height / image.getyGridResolution()));
+
+	    return new Coord(cellX, cellY);
       }
 
 

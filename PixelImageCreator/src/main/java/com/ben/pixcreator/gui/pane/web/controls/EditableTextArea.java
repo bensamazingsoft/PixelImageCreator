@@ -24,7 +24,11 @@ public class EditableTextArea extends VBox
       public EditableTextArea()
       {
 
+	    // setMaxWidth(150);
+	    // setMinWidth(150);
+
 	    textArea = new TextArea();
+
 	    text = new SimpleStringProperty();
 	    editable = new SimpleBooleanProperty();
 	    okBut = new Button("OK");
@@ -45,13 +49,13 @@ public class EditableTextArea extends VBox
 
 		  }
 	    });
-	    getChildren().add(okBut);
+	    // getChildren().add(okBut);
 
 	    addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
 		  if (event.getEventType().getName().equals("MOUSE_CLICKED") && event.getClickCount() > 1 && !editable.get())
 		  {
 
-			editable.set(true);
+			setEditable(true);
 
 		  }
 	    });
@@ -108,6 +112,25 @@ public class EditableTextArea extends VBox
       {
 
 	    this.editableProperty().set(editable);
+
+	    if (editable)
+
+	    {
+		  getChildren().clear();
+		  setMinHeight(80);
+		  setMaxHeight(80);
+		  getChildren().add(textArea);
+		  getChildren().add(okBut);
+	    }
+	    else
+	    {
+		  getChildren().clear();
+		  setMinHeight(40);
+		  setMaxHeight(40);
+		  getChildren().add(textArea);
+
+	    }
+
       }
 
 }

@@ -11,128 +11,174 @@ import com.ben.pixcreator.application.image.layer.ILayer;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.canvas.Canvas;
 
-public abstract class ALayer implements ILayer, Serializable {
+public abstract class ALayer implements ILayer, Serializable
+{
 
-	/**
-	   * 
-	   */
-	private static final long serialVersionUID = 1L;
+      /**
+         * 
+         */
+      private static final long			serialVersionUID = 1L;
 
-	protected transient SimpleBooleanProperty	visible	= new SimpleBooleanProperty();
-	protected UUID								uuid;
-	protected double							opacity	= 1d;
-	protected double							sizeFactorX;
-	protected double							sizeFactorY;
+      protected transient SimpleBooleanProperty	visible		 = new SimpleBooleanProperty();
+      protected UUID				uuid;
+      protected double				opacity		 = 1d;
+      protected double				sizeFactorX;
+      protected double				sizeFactorY;
 
-	public ALayer() {
 
-		super();
-		this.uuid = UUID.randomUUID();
-		setVisible(true);
-	}
+      public ALayer()
+      {
 
-	@Override
-	public void draw(Canvas canvas, int xGridResolution, int yGridResolution) {
+	    super();
+	    this.uuid = UUID.randomUUID();
+	    setVisible(true);
+      }
 
-	}
 
-	public abstract class Memento {
+      @Override
+      public void draw(Canvas canvas, int xGridResolution, int yGridResolution)
+      {
 
-		protected ALayer layer;
+      }
 
-		protected Memento(ALayer layer) {
+      public abstract class Memento
+      {
 
-			this.layer = layer;
+	    protected ALayer layer;
 
-			init(layer);
-		}
 
-		protected abstract void init(ALayer layer);
+	    protected Memento(ALayer layer)
+	    {
 
-		public abstract void restore();
+		  this.layer = layer;
 
-	}
+		  init(layer);
+	    }
 
-	public abstract Memento getMemento();
 
-	public final SimpleBooleanProperty visibleProperty() {
+	    protected abstract void init(ALayer layer);
 
-		return this.visible;
-	}
 
-	public final boolean isVisible() {
+	    public abstract void restore();
 
-		return this.visibleProperty().get();
-	}
+      }
 
-	public final void setVisible(final boolean visible) {
 
-		this.visibleProperty().set(visible);
-	}
+      public abstract Memento getMemento();
 
-	@Override
-	public boolean equals(Object obj) {
 
-		if (obj instanceof ALayer) {
-			return this.getUUID().equals(((ALayer) obj).getUUID());
-		}
-		return false;
-	}
+      public final SimpleBooleanProperty visibleProperty()
+      {
 
-	@Override
-	public int hashCode() {
+	    return this.visible;
+      }
 
-		return getUUID().hashCode();
-	}
 
-	public abstract ALayer duplicate();
+      public final boolean isVisible()
+      {
 
-	public abstract ALayer offset(Coord min);
+	    return this.visibleProperty().get();
+      }
 
-	public UUID getUUID() {
 
-		return uuid;
-	}
+      public final void setVisible(final boolean visible)
+      {
 
-	private void readObject(java.io.ObjectInputStream in)
-			throws IOException, ClassNotFoundException {
+	    this.visibleProperty().set(visible);
+      }
 
-		in.defaultReadObject();
-		visible = new SimpleBooleanProperty();
-	}
 
-	public double getOpacity() {
+      @Override
+      public boolean equals(Object obj)
+      {
 
-		return opacity;
-	}
+	    if (obj instanceof ALayer)
+	    {
+		  return this.getUUID().equals(((ALayer) obj).getUUID());
+	    }
+	    return false;
+      }
 
-	public void setOpacity(double opacity) {
 
-		this.opacity = opacity;
-	}
+      @Override
+      public int hashCode()
+      {
 
-	public double getSizeFactorX() {
+	    return getUUID().hashCode();
+      }
 
-		return sizeFactorX;
-	}
 
-	public void setSizeFactorX(double sizeFactorX) {
+      public abstract ALayer duplicate();
 
-		this.sizeFactorX = sizeFactorX;
-	}
 
-	public double getSizeFactorY() {
+      /*
+       * Builder that returns a new PixLayer which grid is offsetted by the param coord values. returns the offseted layer.
+       */
+      public abstract ALayer origin(Coord min);
 
-		return sizeFactorY;
-	}
 
-	public void setSizeFactorY(double sizeFactorY) {
+      public UUID getUUID()
+      {
 
-		this.sizeFactorY = sizeFactorY;
-	}
+	    return uuid;
+      }
 
-	public void setUuid(UUID uuid) {
-		this.uuid = uuid;
-	}
+
+      private void readObject(java.io.ObjectInputStream in)
+		  throws IOException, ClassNotFoundException
+      {
+
+	    in.defaultReadObject();
+	    visible = new SimpleBooleanProperty();
+      }
+
+
+      public double getOpacity()
+      {
+
+	    return opacity;
+      }
+
+
+      public void setOpacity(double opacity)
+      {
+
+	    this.opacity = opacity;
+      }
+
+
+      public double getSizeFactorX()
+      {
+
+	    return sizeFactorX;
+      }
+
+
+      public void setSizeFactorX(double sizeFactorX)
+      {
+
+	    this.sizeFactorX = sizeFactorX;
+      }
+
+
+      public double getSizeFactorY()
+      {
+
+	    return sizeFactorY;
+      }
+
+
+      public void setSizeFactorY(double sizeFactorY)
+      {
+
+	    this.sizeFactorY = sizeFactorY;
+      }
+
+
+      public void setUuid(UUID uuid)
+      {
+
+	    this.uuid = uuid;
+      }
 
 }

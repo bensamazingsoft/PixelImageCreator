@@ -179,7 +179,7 @@ public class PixLayer extends ALayer
        * Builder that returns a new PixLayer which grid is offsetted by the param coord values.
        */
       @Override
-      public ALayer offset(Coord min)
+      public PixLayer origin(Coord min)
       {
 
 	    Map<Coord, ColorRGB> offset = new HashMap<>();
@@ -193,13 +193,27 @@ public class PixLayer extends ALayer
       }
 
 
+      public ALayer offset(Coord min)
+      {
+
+	    Map<Coord, ColorRGB> offset = new HashMap<>();
+
+	    this.getGrid().forEach((coord, color) -> {
+		  offset.put(new Coord(coord.getX() + min.getX(), coord.getY() + min.getY()), color);
+	    });
+	    this.setGrid(offset);
+
+	    return this;
+      }
+
+
       public Coord minCell()
       {
 
 	    // get the min X and Y coord
-	    int minX = getGrid().keySet().stream().map(Coord::getX).min((a, b) -> Integer.compare(a, b)).get();
+	    int minX = getGrid().keySet().stream().mapToInt(Coord::getX).min().orElse(0);
 
-	    int minY = getGrid().keySet().stream().map(Coord::getY).min((a, b) -> Integer.compare(a, b)).get();
+	    int minY = getGrid().keySet().stream().mapToInt(Coord::getY).min().orElse(0);
 
 	    return new Coord(minX, minY);
       }
@@ -209,9 +223,9 @@ public class PixLayer extends ALayer
       {
 
 	    // get the max X and Y coord
-	    int maxX = getGrid().keySet().stream().map(Coord::getX).max((a, b) -> Integer.compare(a, b)).get();
+	    int maxX = getGrid().keySet().stream().mapToInt(Coord::getX).max().orElse(0);
 
-	    int maxY = getGrid().keySet().stream().map(Coord::getY).max((a, b) -> Integer.compare(a, b)).get();
+	    int maxY = getGrid().keySet().stream().mapToInt(Coord::getY).max().orElse(0);
 
 	    return new Coord(maxX, maxY);
       }

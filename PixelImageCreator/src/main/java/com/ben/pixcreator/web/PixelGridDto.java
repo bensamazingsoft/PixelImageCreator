@@ -77,7 +77,7 @@ public class PixelGridDto implements Serializable
       }
 
 
-      private byte[] getBytes(Image image) throws IOException
+      public static byte[] getBytes(Image image) throws IOException
       {
 
 	    BufferedImage bImage = SwingFXUtils.fromFXImage(image, null);

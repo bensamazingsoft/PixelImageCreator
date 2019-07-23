@@ -59,10 +59,11 @@ public class PixelGrid implements Serializable
       }
 
 
-      public PixelGrid(Map<Coord, ColorRGB> grid, Set<SearchFilters> filters, String name, String owner, String description, Image miniature)
+      public PixelGrid(int id, Map<Coord, ColorRGB> grid, Set<SearchFilters> filters, String name, String owner, String description, Image miniature)
       {
 
 	    super();
+	    this.id = id;
 	    this.grid = grid;
 	    this.filters = filters;
 	    this.name = name;

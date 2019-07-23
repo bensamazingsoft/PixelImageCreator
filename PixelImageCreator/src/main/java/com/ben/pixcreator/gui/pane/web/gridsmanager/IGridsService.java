@@ -3,25 +3,26 @@ package com.ben.pixcreator.gui.pane.web.gridsmanager;
 
 import java.util.Set;
 
-import com.ben.pixcreator.gui.pane.web.LogInfo;
 import com.ben.pixcreator.gui.pane.web.PixelGrid;
 import com.ben.pixcreator.gui.pane.web.SearchFilters;
+import com.ben.pixcreator.web.PixelGridDto;
+import com.ben.pixcreator.web.exception.WebException;
 
 public interface IGridsService
 {
 
-      public Set<PixelGrid> getGrids(LogInfo logInfo, boolean isUserGridsOnly, Set<SearchFilters> filters) throws Exception;
+      public Set<PixelGrid> getGrids(boolean isUserGridsOnly, Set<SearchFilters> filters) throws Exception;
 
 
-      public Set<PixelGrid> getAllGrids(LogInfo logInfo);
+      public Set<PixelGrid> getAllGrids();
 
 
-      public boolean saveGrid(LogInfo logInfo, PixelGrid grid);
+      public void deleteGrid(PixelGrid grid) throws WebException;
 
 
-      public boolean deleteGrid(LogInfo logInfo, PixelGrid grid);
+      public void updateGrid(PixelGrid grid) throws WebException;
 
 
-      public void updateGrid(LogInfo logInfo, PixelGrid grid);
+      public void saveGrid(PixelGridDto pixelGridDto) throws WebException;
 
 }

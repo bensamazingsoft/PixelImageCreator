@@ -77,7 +77,7 @@ public class PixelGridDto implements Serializable
 
 	    filters = new HashSet<>();
 	    name = "new PixelGrid";
-	    owner = "admin@pxl.com";
+	    owner = "";
 	    description = "new Pixel grid description";
 	    miniatureBytes = new byte[8];
       }

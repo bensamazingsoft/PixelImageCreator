@@ -10,6 +10,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import com.ben.pixcreator.server.EntityManagerProvider;
@@ -25,8 +26,19 @@ public class GridHibService implements GridService
       public PixelGridDto find(int id) throws DataServiceException
       {
 
-	    // TODO Auto-generated method stub
-	    return null;
+	    EntityManager em = EntityManagerProvider.getInstance().getManager();
+	    PixelGridDto gridDto = new PixelGridDto();
+	    try
+	    {
+		  gridDto = em.find(PixelGridDto.class, id);
+	    }
+	    catch (IllegalArgumentException e)
+	    {
+		  throw new DataServiceException("Illegal argument");
+	    }
+
+	    return gridDto;
+
       }
 
 
@@ -64,11 +76,36 @@ public class GridHibService implements GridService
 
 
       @Override
-      public Boolean delete(PixelGridDto grid) throws DataServiceException
+      public void delete(int id) throws DataServiceException
       {
 
-	    // TODO Auto-generated method stub
-	    return null;
+	    EntityManager em = EntityManagerProvider.getInstance().getManager();
+	    PixelGridDto gridDto = new PixelGridDto();
+
+	    EntityTransaction tr = em.getTransaction();
+	    tr.begin();
+
+	    try
+	    {
+		  PixelGridDto grid = em.find(PixelGridDto.class, id);
+		  if (null != grid)
+		  {
+			em.remove(grid);
+		  }
+		  else
+		  {
+			tr.rollback();
+			return;
+		  }
+	    }
+	    catch (IllegalArgumentException e)
+	    {
+		  tr.rollback();
+		  throw new DataServiceException("Illegal argument");
+	    }
+
+	    tr.commit();
+
       }
 
 
@@ -76,8 +113,26 @@ public class GridHibService implements GridService
       public PixelGridDto update(PixelGridDto grid) throws DataServiceException
       {
 
-	    // TODO Auto-generated method stub
-	    return null;
+	    EntityManager em = EntityManagerProvider.getInstance().getManager();
+	    EntityTransaction tr = em.getTransaction();
+
+	    tr.begin();
+
+	    try
+	    {
+		  em.merge(grid);
+
+	    }
+	    catch (IllegalArgumentException e)
+	    {
+		  tr.rollback();
+		  throw new DataServiceException("Illegal argument");
+
+	    }
+
+	    tr.commit();
+
+	    return grid;
       }
 
 
@@ -93,19 +148,30 @@ public class GridHibService implements GridService
 	    CriteriaQuery<PixelGridDto> criteria = criteriaBuilder.createQuery(PixelGridDto.class);
 	    Root<PixelGridDto> root = criteria.from(PixelGridDto.class);
 
+	    Set<Predicate> predicates = new HashSet<>();
+
+	    if (!filters.isEmpty())
+	    {
+		  Set<Predicate> filterPredicates = new HashSet<>();
+		  for (String filter : filters)
+		  {
+
+			filterPredicates.add(criteriaBuilder.isMember(filter, root.get(PixelGridDto_.filters)));
+
+		  }
+
+		  predicates.add(criteriaBuilder.or(filterPredicates.toArray(new Predicate[filterPredicates.size()])));
+	    }
+
 	    if (userOnly)
 	    {
+		  Predicate userPredicate = criteriaBuilder.equal(root.get(PixelGridDto_.owner), email);
 
-		  criteria.where(criteriaBuilder.equal(root.get(PixelGridDto_.owner), email));
-
-	    }
-
-	    for (String filter : filters)
-	    {
-
-		  criteria.where(criteriaBuilder.isMember(filter, root.get(PixelGridDto_.filters)));
+		  predicates.add(userPredicate);
 
 	    }
+
+	    criteria.where(predicates.toArray(new Predicate[predicates.size()]));
 
 	    List<PixelGridDto> queryResult;
 	    try

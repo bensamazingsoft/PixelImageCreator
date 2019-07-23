@@ -12,13 +12,13 @@ public interface GridService
       public PixelGridDto find(int id) throws DataServiceException;
 
 
+      public void delete(int id) throws DataServiceException;
+
+
       public Set<PixelGridDto> findFiltered(String email, Boolean userOnly, Set<String> filters) throws DataServiceException;;
 
 
       public Boolean persist(PixelGridDto grid) throws DataServiceException;
-
-
-      public Boolean delete(PixelGridDto grid) throws DataServiceException;
 
 
       public PixelGridDto update(PixelGridDto grid) throws DataServiceException;

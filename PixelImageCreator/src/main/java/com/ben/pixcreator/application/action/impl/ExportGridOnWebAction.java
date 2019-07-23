@@ -3,11 +3,6 @@ package com.ben.pixcreator.application.action.impl;
 
 import java.util.Map;
 
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,9 +13,8 @@ import com.ben.pixcreator.application.image.layer.impl.alayer.ALayer;
 import com.ben.pixcreator.application.image.layer.impl.alayer.impl.PixLayer;
 import com.ben.pixcreator.gui.facade.GuiFacade;
 import com.ben.pixcreator.gui.pane.web.LogInfo;
+import com.ben.pixcreator.gui.pane.web.gridsmanager.impl.RestGridService;
 import com.ben.pixcreator.web.PixelGridDto;
-import com.ben.pixcreator.web.exception.WebException;
-import com.ben.pixcreator.web.target.provider.RestTargetProvider;
 
 public class ExportGridOnWebAction implements IAction
 {
@@ -48,24 +42,13 @@ public class ExportGridOnWebAction implements IAction
 
 	    log.debug("");
 
-	    RestTargetProvider restTargetProvider = new RestTargetProvider();
-	    WebTarget target = restTargetProvider.getBaseTarget().path("add");
+	    grid = layer.origin(layer.minCell()).getGrid();
+
+	    RestGridService restGridService = new RestGridService();
 
 	    PixelGridDto pixelGridDto = new PixelGridDto(logInfo.getEmail(), grid, GuiFacade.getInstance().getMiniatureManager().getImage(layer));
-	    Response response = target.request(MediaType.APPLICATION_XML).put(Entity.entity(pixelGridDto, MediaType.APPLICATION_XML));
 
-	    int status = response.getStatus();
-	    log.debug("Server replied : " + status);
-
-	    if (status == 200)
-	    {
-		  PixelGridDto resp = response.readEntity(PixelGridDto.class);
-		  log.debug(resp.toString());
-	    }
-	    else
-	    {
-		  throw new WebException("Unable to upload data\n" + response.readEntity(String.class));
-	    }
+	    restGridService.saveGrid(pixelGridDto);
 
       }
 
