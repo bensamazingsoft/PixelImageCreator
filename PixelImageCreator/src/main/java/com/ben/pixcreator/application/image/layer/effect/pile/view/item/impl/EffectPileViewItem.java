@@ -46,8 +46,6 @@ public class EffectPileViewItem extends VBox {
 
 	public EffectPileViewItem(Effect fx) {
 
-		getStyleClass().add("pileViewItem");
-
 		IEffectPileViewItemControl control = EffectPileViewItemControlFactory.getControl(fx);
 
 		title.setText(EffectPileViewItemControlFactory.getTitle(fx));

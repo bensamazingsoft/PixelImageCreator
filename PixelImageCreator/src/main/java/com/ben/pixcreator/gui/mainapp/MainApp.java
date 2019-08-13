@@ -43,6 +43,15 @@ public class MainApp extends Application {
 
 		ResourceBundle bundle = ResourceBundle.getBundle("i18n/trad");
 
+		try {
+
+			String nul = null;
+			nul.toString();
+
+		} catch (Exception e) {
+			new ExceptionPopUp(e);
+		}
+
 		String fxmlFile = "/fxml/main.fxml";
 		// log.debug("Loading FXML for main view from: {}", fxmlFile);
 		FXMLLoader loader = new FXMLLoader();

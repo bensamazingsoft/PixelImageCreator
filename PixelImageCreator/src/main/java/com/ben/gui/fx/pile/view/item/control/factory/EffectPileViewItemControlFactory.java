@@ -56,16 +56,6 @@ public class EffectPileViewItemControlFactory {
 			return AppContext.getInstance().getBundle().getString("shrink");
 		case HUE:
 			return AppContext.getInstance().getBundle().getString("hue");
-		case SATURATION:
-			return AppContext.getInstance().getBundle().getString("saturation");
-		case BRIGHTNESS:
-			return AppContext.getInstance().getBundle().getString("brightness");
-		case TEXT:
-			return AppContext.getInstance().getBundle().getString("text");
-		case RESAMPLE:
-			return AppContext.getInstance().getBundle().getString("resample");
-		case LUMAKEY:
-			return AppContext.getInstance().getBundle().getString("lumaKey");
 		default:
 			break;
 
