@@ -71,6 +71,7 @@ public class BakeLayer extends PicLayer
       public void draw(Canvas canvas, int xGridResolution, int yGridResolution)
       {
 
+	    // No op intended
       }
 
 
@@ -82,51 +83,98 @@ public class BakeLayer extends PicLayer
       {
 
 	    PixImage image = GuiFacade.getInstance().getActiveimage();
-	    Pile<ALayer> layerList = image.getLayerList();
 
-	    if (layerList.getAllItems().contains(this))
+	    if (!image.getLayerPile().getAllItems().contains(this))
 	    {
 
-		  int layerIdx = layerList.getIdx(this);
-		  Map<ALayer, Boolean> visibility = new HashMap<>();
-		  Map<ALayer, Double> zoomFactors = new HashMap<>();
-
-		  for (ALayer layer : layerList.getAllItems())
-		  {
-			visibility.put(layer, layer.isVisible());
-			if (layerList.getIdx(layer) > layerIdx)
-			{
-			      layer.setVisible(false);
-			}
-
-			if (layer instanceof PicLayer)
-			{
-			      zoomFactors.put(layer, ((PicLayer) layer).getZoomFactor());
-			      ((PicLayer) layer).setZoomFactor(1.0d);
-			}
-		  }
-
-		  Canvas canvas = new Canvas(image.getxSize(), image.getySize());
-		  DrawImageFactory.getDrawImage(image).draw(canvas);
-
-		  Image snap = canvas.snapshot(null, null);
-
-		  visibility.keySet().forEach(layer -> {
-			layer.setVisible(visibility.get(layer));
-		  });
-
-		  zoomFactors.keySet().forEach(layer -> {
-			if (layer instanceof PicLayer)
-			{
-			      ((PicLayer) layer).setZoomFactor(zoomFactors.get(layer));
-			}
-		  });
-
-		  return snap;
+		  return getImage();
 
 	    }
-	    return getImage();
 
+	    Map<ALayer, Boolean> savedLayersVisibilityState = new HashMap<>();
+	    Map<ALayer, Double> savedLayersZoomFactors = new HashMap<>();
+
+	    saveImageLayersState(image.getLayerPile(), savedLayersVisibilityState, savedLayersZoomFactors);
+	    resetImageLayersState(image.getLayerPile(), savedLayersVisibilityState, savedLayersZoomFactors);
+
+	    Canvas canvas = new Canvas(image.getxSize(), image.getySize());
+	    DrawImageFactory.getDrawImage(image).draw(canvas);
+	    Image snap = canvas.snapshot(null, null);
+
+	    restoreImageLayersState(savedLayersVisibilityState, savedLayersZoomFactors);
+
+	    return snap;
+
+      }
+
+
+      /**
+       * @param imageLayers
+       * @param layerIdx
+       * @param savedLayersVisibilityState
+       * @param savedLayersZoomFactors
+       */
+      private void saveImageLayersState(Pile<ALayer> imageLayers, Map<ALayer, Boolean> savedLayersVisibilityState, Map<ALayer, Double> savedLayersZoomFactors)
+      {
+
+	    for (ALayer imageLayer : imageLayers.getAllItems())
+	    {
+		  savedLayersVisibilityState.put(imageLayer, imageLayer.isVisible());
+
+		  if (imageLayer instanceof PicLayer)
+		  {
+			savedLayersZoomFactors.put(imageLayer, ((PicLayer) imageLayer).getZoomFactor());
+
+		  }
+	    }
+      }
+
+
+      /**
+       * @param imageLayers
+       * @param layerIdx
+       * @param savedLayersVisibilityState
+       * @param savedLayersZoomFactors
+       */
+      private void resetImageLayersState(Pile<ALayer> imageLayers, Map<ALayer, Boolean> savedLayersVisibilityState, Map<ALayer, Double> savedLayersZoomFactors)
+      {
+
+	    int layerIdx = imageLayers.getIdx(this);
+
+	    for (ALayer imageLayer : imageLayers.getAllItems())
+	    {
+
+		  if (imageLayers.getIdx(imageLayer) > layerIdx)
+		  {
+			imageLayer.setVisible(false);
+		  }
+
+		  if (imageLayer instanceof PicLayer)
+		  {
+
+			((PicLayer) imageLayer).setZoomFactor(1.0d);
+		  }
+	    }
+      }
+
+
+      /**
+       * @param savedLayersVisibilityState
+       * @param savedLayersZoomFactors
+       */
+      private void restoreImageLayersState(Map<ALayer, Boolean> savedLayersVisibilityState, Map<ALayer, Double> savedLayersZoomFactors)
+      {
+
+	    savedLayersVisibilityState.keySet().forEach(layer -> {
+		  layer.setVisible(savedLayersVisibilityState.get(layer));
+	    });
+
+	    savedLayersZoomFactors.keySet().forEach(layer -> {
+		  if (layer instanceof PicLayer)
+		  {
+			((PicLayer) layer).setZoomFactor(savedLayersZoomFactors.get(layer));
+		  }
+	    });
       }
 
 }

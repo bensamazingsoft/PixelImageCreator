@@ -58,7 +58,7 @@ public class LoggedWebPanelState implements WebPanelState
 
 	    buildTopPane();
 
-	    queryDb();
+	    // queryDb();
 
       }
 
@@ -106,8 +106,6 @@ public class LoggedWebPanelState implements WebPanelState
 
       private void queryDb()
       {
-
-	    System.out.println("DB QUERYED");
 
 	    webPanel.getPixelGridBean().getErrors().clear();
 	    webPanel.getPixelGridBean().setMessage("");

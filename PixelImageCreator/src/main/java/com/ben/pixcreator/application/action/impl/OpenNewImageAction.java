@@ -22,7 +22,7 @@ public class OpenNewImageAction implements IAction {
 
 		try {
 			PixImageCreator creator = new PixImageCreator();
-			PixImage newImage = creator.get();
+			PixImage newImage = creator.getNewImage();
 
 			Set<SimpleObjectProperty<Color>> colorProps = AppContext.getInstance().propertyContext()
 					.getStartRosterColors().stream()

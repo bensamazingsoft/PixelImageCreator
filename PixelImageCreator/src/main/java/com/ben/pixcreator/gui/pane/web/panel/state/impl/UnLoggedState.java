@@ -3,10 +3,12 @@ package com.ben.pixcreator.gui.pane.web.panel.state.impl;
 
 import java.util.Map;
 
+import com.ben.pixcreator.application.action.impl.LoginTask;
+import com.ben.pixcreator.application.action.impl.MonitoredAction;
 import com.ben.pixcreator.application.context.AppContext;
+import com.ben.pixcreator.application.executor.Executor;
+import com.ben.pixcreator.gui.exception.popup.ExceptionPopUp;
 import com.ben.pixcreator.gui.pane.web.LogInfo;
-import com.ben.pixcreator.gui.pane.web.loginfoservice.ILogInfoService;
-import com.ben.pixcreator.gui.pane.web.loginfoservice.impl.LogInfoHibService;
 import com.ben.pixcreator.gui.pane.web.panel.WebPanel;
 import com.ben.pixcreator.gui.pane.web.panel.state.WebPanelState;
 import com.ben.pixcreator.web.bean.Bean;
@@ -22,24 +24,17 @@ import javafx.scene.layout.VBox;
 public class UnLoggedState implements WebPanelState
 {
 
-      private AppContext      ctx   = AppContext.getInstance();
+      private AppContext ctx = AppContext.getInstance();
 
-      private WebPanel	      webPanel;
+      private WebPanel	 webPanel;
 
-      private ILogInfoService logInfoService;
-
-      private StackPane	      pane;
-
-      private String	      regex = "^(.+)@(.+)$";
+      private StackPane	 pane;
 
 
       public UnLoggedState(WebPanel webPanel)
       {
 
 	    this.webPanel = webPanel;
-
-	    // TODO inject REST impl
-	    logInfoService = new LogInfoHibService();
 
 	    buildPane();
 
@@ -104,7 +99,7 @@ public class UnLoggedState implements WebPanelState
       private void subscribe()
       {
 
-	    changeState(new SubscribeWebPanelState(webPanel, logInfoService));
+	    changeState(new SubscribeWebPanelState());
       }
 
 
@@ -129,57 +124,33 @@ public class UnLoggedState implements WebPanelState
       private void validateLogInfo(Bean<LogInfo> logBean)
       {
 
-	    logBean.getErrors().clear();
-	    logBean.setMessage("");
+	    LoginTask task = new LoginTask(logBean);
 
-	    boolean valid1 = validEmail(logBean.getData().getEmail(), logBean);
-	    boolean valid2 = validPassword(logBean.getData().getPassword(), logBean);
-
-	    if (valid1 && valid2)
+	    try
 	    {
+		  Executor.getInstance().executeAction(new MonitoredAction(task)
+			      .success(evt -> {
 
-		  webPanel.setLogBean(logInfoService.validate(logBean));
+				    if (webPanel.getLogBean().getData().isConnected())
+				    {
+					  changeState(new LoggedWebPanelState(webPanel));
+					  return;
+				    }
+				    webPanel.reload();
+			      })
+			      .fail(evt -> {
 
-		  if (logBean.getData().isConnected())
-		  {
+				    new ExceptionPopUp((Exception) task.getException());
 
-			changeState(new LoggedWebPanelState(webPanel));
-
-		  }
-	    }
-
-	    webPanel.reload();
-      }
-
-
-      private boolean validPassword(String pass, Bean<LogInfo> logBean)
-      {
-
-	    if (null == pass || pass.length() == 0)
-	    {
-		  logBean.getErrors().put("Password", "must not be blank");
-		  return false;
-	    }
-	    return true;
-      }
-
-
-      private boolean validEmail(String email, Bean<LogInfo> logBean)
-      {
-
-	    if (null == email || email.length() == 0)
-	    {
-		  logBean.getErrors().put("email", "must not be blank");
-		  return false;
-	    }
-	    if (!email.matches(regex))
-	    {
-		  logBean.getErrors().put("email", "must be of format abc@xyz.org");
-		  return false;
+				    webPanel.reload();
+			      }));
 
 	    }
+	    catch (Exception e)
+	    {
+		  new ExceptionPopUp(e);
+	    }
 
-	    return true;
       }
 
 }

@@ -292,7 +292,7 @@ public class PixMenuBar extends MenuBar implements Initializable {
 			Executor.getInstance()
 					.executeAction(new PixellateAction(PixellateAction.actionType.CENTERPICK, tab, activeImage));
 
-			final Pile<ALayer> layerList = activeImage.getLayerList();
+			final Pile<ALayer> layerList = activeImage.getLayerPile();
 			ALayer newLayer = layerList.getItem(layerList.getAllItems().size() - 1);
 
 			if (null != newLayer && newLayer instanceof PixLayer && !selection.getCoords().isEmpty()) {

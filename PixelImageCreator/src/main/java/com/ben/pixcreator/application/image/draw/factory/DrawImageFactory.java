@@ -16,89 +16,151 @@ import com.ben.pixcreator.application.image.layer.impl.alayer.impl.BakeLayer;
 import com.ben.pixcreator.application.pile.Pile;
 
 /**
- * Static factory that process effects of a PixImage. The draw() method of the
- * result image can then be called on a canvas for display.
+ * Static factory that process effects of a PixImage. The draw() method of the result image can then be called on a canvas for display.
  * 
  * @author ben
  *
  */
-public class DrawImageFactory {
+public class DrawImageFactory
+{
 
-	/**
-	 * Static factory method that process effects of a PixImage. The draw()
-	 * method of the result image can then be called on a canvas for display.
-	 * 
-	 * @param image
-	 * @return
-	 * @throws EffectException
-	 */
-	public static PixImage getDrawImage(PixImage image) throws EffectException {
+      /**
+       * Static factory method that process effects of a PixImage. The draw() method of the result image can then be called on a canvas for display.
+       * 
+       * @param image
+       * @return
+       * @throws EffectException
+       */
+      public static PixImage getDrawImage(PixImage image) throws EffectException
+      {
 
-		PixImage drawImage = image.duplicate();
+	    PixImage drawImage = image.duplicate();
 
-		boolean hasBakeLayer = !image.getLayerList().getAllItems()
-				.stream()
-				.filter(layer -> layer instanceof BakeLayer)
-				.collect(Collectors.toSet())
-				.isEmpty();
+	    for (int currIndex = 0; currIndex < drawImage.getLayerPile().getItems().size(); currIndex++)
+	    {
 
-		// loop through all layers
-		for (int i = 0; i < drawImage.getLayerList().getItems().size(); i++) {
+		  ALayer layer = drawImage.getLayerPile().getItem(currIndex);
 
-			ALayer layer = drawImage.getLayerList().getItem(i);
+		  if (!(layer instanceof BakeLayer) && layer.isVisible())
+		  {
 
-			// process non BakeLayer
-			if (!(layer instanceof BakeLayer)) {
+			processLayerEffects(image, drawImage, currIndex);
+		  }
+	    }
+	    return drawImage;
+      }
 
-				// retrieve layer effects
-				Pile<Effect> effectPile = new Pile<Effect>(
-						AppContext.getInstance().getEffectManager().getImageLayerEffects(image,
-								layer));
 
-				if (hasBakeLayer) {
+      /**
+       * @param image
+       * @param drawImage
+       * @param currIndex
+       * @param layer
+       * @throws EffectException
+       */
+      private static void processLayerEffects(PixImage image, PixImage drawImage, int currIndex) throws EffectException
+      {
 
-					final Map<ALayer, Set<ALayer>> groupLock = AppContext.getInstance().getGroupLocks().get(image)
-							.getGroup();
+	    ALayer layer = drawImage.getLayerPile().getItem(currIndex);
+	    Pile<Effect> effectPile = new Pile<Effect>(AppContext.getInstance().getEffectManager().getImageLayerEffects(image, layer));
 
-					// iterate all layer to preserve ordering (apply bake 1
-					// before
-					// bake2 etc...)
-					for (int a = i; a < drawImage.getLayerList().getItems().size(); a++) {
+	    if (imageHasBakeLayers(image))
+	    {
 
-						ALayer layer2 = drawImage.getLayerList().getItem(a);
+		  addBakeLayersEffectToLayerEffectPile(image, drawImage, currIndex, layer, effectPile);
+	    }
 
-						// is layer locked to this layer2 ?
-						boolean lock = groupLock.computeIfAbsent(layer2, lay -> new HashSet<ALayer>()).contains(layer);
+	    if (!effectPile.isEmpty())
+	    {
 
-						if (layer2 instanceof BakeLayer && lock) {
+		  drawImage.getLayerPile().replace(currIndex, DrawLayerFactory.getDrawLayer(effectPile, layer));
 
-							Pile<Effect> bakeEffectPile = AppContext.getInstance().getEffectManager()
-									.getImageLayerEffects(
-											image,
-											layer2);
+	    }
+      }
 
-							if (!bakeEffectPile.isEmpty()) {
-								for (int x = 0; x < bakeEffectPile.getAllItems().size(); x++) {
 
-									effectPile.add(bakeEffectPile.getItem(x));
+      /**
+       * @param image
+       * @return
+       */
+      private static boolean imageHasBakeLayers(PixImage image)
+      {
 
-								}
-							}
+	    boolean hasBakeLayer = !image.getLayerPile().getAllItems()
+			.stream()
+			.filter(layer -> layer instanceof BakeLayer)
+			.collect(Collectors.toSet())
+			.isEmpty();
+	    return hasBakeLayer;
+      }
 
-						}
 
-					}
-				}
-				// check visibility here : no effect = no need to compute a non
-				// visible effect layer
-				if (!effectPile.isEmpty() && layer.isVisible()) {
+      /**
+       * @param image
+       * @param drawImage
+       * @param currIndex
+       * @param layer
+       * @param effectPile
+       */
+      private static void addBakeLayersEffectToLayerEffectPile(PixImage image, PixImage drawImage, int currIndex, ALayer layer, Pile<Effect> effectPile)
+      {
 
-					drawImage.getLayerList().replace(i, DrawLayerFactory.getDrawLayer(effectPile, layer));
+	    for (int a = currIndex; a < drawImage.getLayerPile().getItems().size(); a++)
+	    {
 
-				}
-			}
-		}
-		return drawImage;
-	}
+		  ALayer iterationLayer = drawImage.getLayerPile().getItem(a);
+
+		  if (iterationLayer instanceof BakeLayer && layerLockedToIterationLayer(image, layer, iterationLayer))
+		  {
+
+			addBakeLayerEffectToEffectPile(image, effectPile, iterationLayer);
+
+		  }
+
+	    }
+      }
+
+
+      /**
+       * @param image
+       * @param layer
+       * @param iterationLayer
+       * @param groupLock
+       * @param iterationLayer
+       * @return
+       */
+      private static boolean layerLockedToIterationLayer(PixImage image, ALayer layer, ALayer iterationLayer)
+      {
+
+	    final Map<ALayer, Set<ALayer>> groupLock = AppContext.getInstance().getGroupLocks().get(image).getGroup();
+
+	    boolean lock = groupLock.computeIfAbsent(iterationLayer, lay -> new HashSet<ALayer>()).contains(layer);
+	    return lock;
+      }
+
+
+      /**
+       * @param image
+       * @param effectPile
+       * @param bakeLayer
+       */
+      private static void addBakeLayerEffectToEffectPile(PixImage image, Pile<Effect> effectPile, ALayer bakeLayer)
+      {
+
+	    Pile<Effect> bakeEffectPile = AppContext.getInstance().getEffectManager()
+			.getImageLayerEffects(
+				    image,
+				    bakeLayer);
+
+	    if (!bakeEffectPile.isEmpty())
+	    {
+		  for (int x = 0; x < bakeEffectPile.getAllItems().size(); x++)
+		  {
+
+			effectPile.add(bakeEffectPile.getItem(x));
+
+		  }
+	    }
+      }
 
 }

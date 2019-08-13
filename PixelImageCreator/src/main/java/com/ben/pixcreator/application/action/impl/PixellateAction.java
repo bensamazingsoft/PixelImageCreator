@@ -74,7 +74,7 @@ public class PixellateAction implements IAction {
 			}
 		}
 
-		image.getLayerList().add(new PixLayer(grid));
+		image.getLayerPile().add(new PixLayer(grid));
 
 	}
 

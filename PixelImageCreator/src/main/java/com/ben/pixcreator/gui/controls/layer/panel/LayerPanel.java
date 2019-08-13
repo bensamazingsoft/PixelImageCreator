@@ -293,7 +293,7 @@ public class LayerPanel extends BorderPane implements Initializable
 
 	    executeLayerAction(LayerActions.DELETE);
 
-	    if (image.get().getLayerList().isEmpty())
+	    if (image.get().getLayerPile().isEmpty())
 	    {
 		  newPixLayer();
 
@@ -315,7 +315,7 @@ public class LayerPanel extends BorderPane implements Initializable
 
 			populate();
 
-			if (gui.getActiveimage().getLayerList().getIdx(layer) > -1)
+			if (gui.getActiveimage().getLayerPile().getIdx(layer) > -1)
 			{
 			      gui.selectLayer(gui.getFocusLayer());
 			}
@@ -384,10 +384,10 @@ public class LayerPanel extends BorderPane implements Initializable
 			getImage(),
 			key -> new HashMap<ALayer, LayerBox>());
 
-	    for (int i = 0; i < getImage().getLayerList().getItems().size(); i++)
+	    for (int i = 0; i < getImage().getLayerPile().getItems().size(); i++)
 	    {
 
-		  ALayer layer = getImage().getLayerList().getItem(i);
+		  ALayer layer = getImage().getLayerPile().getItem(i);
 
 		  LayerBox box = imageLayerBox.computeIfAbsent(layer, key -> new LayerBox(getImage(), layer));
 

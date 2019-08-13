@@ -33,7 +33,7 @@ public class DeleteCellAction implements IAction, ICancelable {
 	public void cancel() throws Exception {
 
 		if (GuiFacade.getInstance().getActiveimage() == image) {
-			if (image.getLayerList().getIdx(layer) > -1) {
+			if (image.getLayerPile().getIdx(layer) > -1) {
 				log.debug("layer : " + layer + "coord : " + coord);
 				layer.getGrid().put(coord, color);
 			}
@@ -44,7 +44,7 @@ public class DeleteCellAction implements IAction, ICancelable {
 	public void execute() throws Exception {
 
 		if (GuiFacade.getInstance().getActiveimage() == image) {
-			if (image.getLayerList().getIdx(layer) > -1) {
+			if (image.getLayerPile().getIdx(layer) > -1) {
 				log.debug("cancelling -> layer : " + layer + "coord : " + coord);
 				layer.getGrid().remove(coord);
 			}

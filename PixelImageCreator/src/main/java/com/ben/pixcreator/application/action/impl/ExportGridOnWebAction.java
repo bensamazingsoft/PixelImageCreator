@@ -42,13 +42,15 @@ public class ExportGridOnWebAction implements IAction
 
 	    log.debug("");
 
-	    grid = layer.origin(layer.minCell()).getGrid();
+	    grid = layer.withNewOrigin(layer.minCell()).getGrid();
 
 	    RestGridService restGridService = new RestGridService();
 
 	    PixelGridDto pixelGridDto = new PixelGridDto(logInfo.getEmail(), grid, GuiFacade.getInstance().getMiniatureManager().getImage(layer));
 
 	    restGridService.saveGrid(pixelGridDto);
+
+	    GuiFacade.getInstance().getWebPanel().reload();
 
       }
 

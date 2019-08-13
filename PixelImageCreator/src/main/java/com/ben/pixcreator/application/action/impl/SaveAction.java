@@ -77,7 +77,7 @@ public class SaveAction implements IAction {
 		colors = gui.getImagesColors().get(image).stream()
 				.map(prop -> new ColorRGB((Color) prop.get())).collect(toSet());
 
-		locks = image.getLayerList().getAllItems().stream()
+		locks = image.getLayerPile().getAllItems().stream()
 				.collect(toMap(
 						ALayer::getUUID,
 						layer -> (Set<UUID>) groupLock.getLockedLayers(layer).stream()
@@ -89,7 +89,7 @@ public class SaveAction implements IAction {
 						entry -> entry.getKey().getUUID(),
 						Entry<ALayer, Pile<Effect>>::getValue));
 
-		visibility = image.getLayerList().getAllItems().stream()
+		visibility = image.getLayerPile().getAllItems().stream()
 				.collect(toMap(
 						ALayer::getUUID,
 						ALayer::isVisible));

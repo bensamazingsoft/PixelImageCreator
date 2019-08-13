@@ -42,7 +42,7 @@ public class ChangeCellCoordAction implements IAction {
 	public void execute() throws Exception {
 
 		if (GuiFacade.getInstance().getActiveimage() == image) {
-			if (image.getLayerList().getAllItems().contains(layer)) {
+			if (image.getLayerPile().getAllItems().contains(layer)) {
 				log.debug("old : " + oldCoord + " new : " + newCoord);
 				layer.getGrid().remove(oldCoord);
 				layer.getGrid().put(newCoord, color);
@@ -53,7 +53,7 @@ public class ChangeCellCoordAction implements IAction {
 	public void cancel() throws Exception {
 
 		if (GuiFacade.getInstance().getActiveimage() == image) {
-			if (image.getLayerList().getAllItems().contains(layer)) {
+			if (image.getLayerPile().getAllItems().contains(layer)) {
 				log.debug("cancelling -> old : " + oldCoord + " new : " + newCoord);
 				layer.getGrid().remove(newCoord);
 				layer.getGrid().put(oldCoord, color);

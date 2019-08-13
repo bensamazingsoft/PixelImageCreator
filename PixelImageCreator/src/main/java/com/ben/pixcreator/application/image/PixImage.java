@@ -43,7 +43,7 @@ public class PixImage implements Serializable
       private PixLayer		  ghost, select;
       // layer and its visibility
 
-      private Pile<ALayer>	  layerList;
+      private Pile<ALayer>	  layerPile;
 
 
       public PixImage()
@@ -54,9 +54,9 @@ public class PixImage implements Serializable
 	    ghost = new PixLayer();
 	    select = new PixLayer();
 
-	    layerList = new Pile<>();
+	    layerPile = new Pile<>();
 
-	    layerList.add(new PixLayer());
+	    layerPile.add(new PixLayer());
 
 	    xSize = ySize = DEFAULTSIZE;
 
@@ -101,10 +101,10 @@ public class PixImage implements Serializable
 	    graphic.setFill(GuiFacade.getInstance().getBackgroundColor());
 	    graphic.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
-	    for (int i = 0; i < layerList.getItems().size(); i++)
+	    for (int i = 0; i < layerPile.getItems().size(); i++)
 	    {
 
-		  ALayer layer = layerList.getItem(i);
+		  ALayer layer = layerPile.getItem(i);
 
 		  if (layer.isVisible())
 		  {
@@ -174,12 +174,12 @@ public class PixImage implements Serializable
 	    clone.ghost = this.ghost.duplicate();
 	    clone.select = this.select.duplicate();
 
-	    clone.layerList = new Pile<ALayer>();
+	    clone.layerPile = new Pile<ALayer>();
 
-	    for (int i = 0; i < this.layerList.getItems().size(); i++)
+	    for (int i = 0; i < this.layerPile.getItems().size(); i++)
 	    {
-		  ALayer layer = this.layerList.getItem(i);
-		  clone.layerList.add(layer.duplicate());
+		  ALayer layer = this.layerPile.getItem(i);
+		  clone.layerPile.add(layer.duplicate());
 	    }
 
 	    clone.xSize = this.xSize;
@@ -293,17 +293,17 @@ public class PixImage implements Serializable
       }
 
 
-      public Pile<ALayer> getLayerList()
+      public Pile<ALayer> getLayerPile()
       {
 
-	    return layerList;
+	    return layerPile;
       }
 
 
-      public void setLayerList(Pile<ALayer> layers)
+      public void setLayerPile(Pile<ALayer> layers)
       {
 
-	    this.layerList = layers;
+	    this.layerPile = layers;
       }
 
 }

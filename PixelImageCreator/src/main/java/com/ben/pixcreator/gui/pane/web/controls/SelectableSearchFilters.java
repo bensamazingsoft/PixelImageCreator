@@ -80,7 +80,9 @@ public class SelectableSearchFilters extends VBox
 
 	    getChildren().clear();
 
-	    label = new Label(String.join(",", filters.stream().map(SearchFilters::name).collect(Collectors.toSet())));
+	    String join = String.join(",", filters.stream().map(SearchFilters::name).collect(Collectors.toSet()));
+
+	    label = new Label(join.length() > 0 ? join : "Add Filters");
 
 	    label.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
 		  if (event.getEventType().getName().equals("MOUSE_CLICKED") && event.getClickCount() > 1)

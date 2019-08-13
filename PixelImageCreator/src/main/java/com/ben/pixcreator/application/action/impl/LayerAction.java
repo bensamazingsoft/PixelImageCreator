@@ -41,7 +41,7 @@ public class LayerAction implements IAction, ICancelable
       {
 
 	    super();
-	    this.layerList = image.getLayerList();
+	    this.layerList = image.getLayerPile();
 	    this.layer = layer;
 	    this.action = action;
       }

@@ -21,6 +21,13 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 
+/**
+ * 
+ * Provides and updates the miniatures of the layers.
+ * 
+ * @author ben
+ *
+ */
 public class MiniatureManager
 {
 
@@ -32,14 +39,10 @@ public class MiniatureManager
       private static double	     MINIATUREWIDTH;
 
       private Map<ALayer, ImageView> miniatures	= new HashMap<>();
-      // public static Map<ALayer, Image> backup = new HashMap<>();
 
 
       public void addMiniature(ALayer layer, ImageView imageView)
       {
-
-	    MINIATUREHEIGHT = Integer.valueOf(AppContext.getInstance().propertyContext().get("miniatureWH"));
-	    MINIATUREWIDTH = Integer.valueOf(AppContext.getInstance().propertyContext().get("miniatureWH"));
 
 	    miniatures.put(layer, imageView);
 
@@ -49,50 +52,22 @@ public class MiniatureManager
       public void update(ALayer layer) throws EffectException
       {
 
+	    resetMiniaturesWidthAndHeight();
+
 	    if (miniatures.containsKey(layer))
 	    {
-		  ImageView view = miniatures.get(layer);
+		  ImageView imageView = miniatures.get(layer);
 		  Canvas canvas = new Canvas();
 
-		  view.setPreserveRatio(true);
-		  view.setFitWidth(MINIATUREWIDTH);
-		  view.setFitHeight(MINIATUREHEIGHT);
-
-		  canvas.setHeight(MINIATUREHEIGHT);
-		  canvas.setWidth(MINIATUREWIDTH);
-
-		  canvas.getGraphicsContext2D().setFill(Color.WHITE);
-		  canvas.getGraphicsContext2D().fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+		  resetImageViewAndCanvasDimensions(imageView, canvas);
 
 		  int xGridResolution = 0;
 		  int yGridResolution = 0;
 
+		  blankCanvas(canvas);
+
 		  if (layer instanceof PixLayer)
 		  {
-
-			// int minX = ((PixLayer) layer).getGrid().keySet().stream()
-			// .mapToInt(Coord::getX)
-			// .min()
-			// .orElse(0);
-			// // log.debug("minX : " + minX);
-			// int maxX = ((PixLayer) layer).getGrid().keySet().stream()
-			// .mapToInt(Coord::getX)
-			// .max()
-			// .orElse(0);
-			// // log.debug("maxX : " + maxX);
-			// int minY = ((PixLayer) layer).getGrid().keySet().stream()
-			// .mapToInt(Coord::getY)
-			// .min()
-			// .orElse(0);
-			// // log.debug("minY : " + minY);
-			// int maxY = ((PixLayer) layer).getGrid().keySet().stream()
-			// .mapToInt(Coord::getY)
-			// .max()
-			// .orElse(0);
-			// // log.debug("maxY : " + maxY);
-
-			// xGridResolution = maxX - minX + 1;
-			// yGridResolution = maxY - minY + 1;
 
 			xGridResolution = ((PixLayer) layer).maxCell().getX() - ((PixLayer) layer).minCell().getX();
 			yGridResolution = ((PixLayer) layer).maxCell().getY() - ((PixLayer) layer).minCell().getY();
@@ -100,12 +75,7 @@ public class MiniatureManager
 			xGridResolution++;
 			yGridResolution++;
 
-			layer = ((PixLayer) layer).duplicate().origin(((PixLayer) layer).minCell());
-
-			// if (xGridResolution != yGridResolution)
-			// {
-			// adaptPixCanvasRatio(canvas, xGridResolution, yGridResolution);
-			// }
+			layer = ((PixLayer) layer).duplicate().withNewOrigin(((PixLayer) layer).minCell());
 
 			canvas.setWidth(xGridResolution * 4);
 			canvas.setHeight(yGridResolution * 4);
@@ -113,59 +83,76 @@ public class MiniatureManager
 		  }
 		  else if (layer instanceof PicLayer)
 		  {
+			PicLayer drawlayer = new PicLayer();
 
-			if (!(layer instanceof TextLayer))
-			{
-			      final PicLayer picLayer = (PicLayer) layer;
-			      layer = makeDrawPicLayer((PicLayer) picLayer.duplicate(), canvas);
-			}
+			final PicLayer picLayer = (PicLayer) layer;
+			drawlayer = (PicLayer) picLayer.duplicate();
 
 			if (layer instanceof TextLayer)
 			{
-
 			      PicLayer drawLayer = new PicLayer();
 			      drawLayer.setImage(((TextLayer) layer).getImage());
-			      layer = makeDrawPicLayer((PicLayer) drawLayer, canvas);
+
 			}
 
 			if (layer instanceof BakeLayer)
 			{
-
 			      PicLayer drawLayer = new PicLayer();
 			      drawLayer.setImage(((BakeLayer) layer).getBakedSnapshot());
-			      layer = makeDrawPicLayer((PicLayer) drawLayer, canvas);
 
 			}
 
+			layer = setSizeFactorToFitInCanvas(drawlayer, canvas);
 		  }
 
 		  layer.draw(canvas, xGridResolution, yGridResolution);
 
-		  view.setImage(canvas.snapshot(null, null));
+		  imageView.setImage(canvas.snapshot(null, null));
 
-		  // if (layer instanceof PixLayer)
-		  // {
-		  // backup(layer, canvas.getWidth(), canvas.getHeight(), xGridResolution, yGridResolution);
-		  // }
 	    }
 
       }
 
 
-      // private void backup(ALayer layer, double scaleX, double scaleY, int xGridResolution, int yGridResolution)
-      // {
-      //
-      // Canvas backupCanvas = new Canvas(scaleX, scaleY);
-      //
-      // layer.draw(backupCanvas, xGridResolution, yGridResolution);
-      //
-      // Image image = backupCanvas.snapshot(null, null);
-      //
-      // backup.put(layer, image);
-      //
-      // }
+      /**
+       * @param canvas
+       */
+      private void blankCanvas(Canvas canvas)
+      {
 
-      private PicLayer makeDrawPicLayer(PicLayer duplicate, Canvas canvas)
+	    canvas.getGraphicsContext2D().setFill(Color.WHITE);
+	    canvas.getGraphicsContext2D().fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+      }
+
+
+      /**
+       * @param imageView
+       * @param canvas
+       */
+      private void resetImageViewAndCanvasDimensions(ImageView imageView, Canvas canvas)
+      {
+
+	    imageView.setPreserveRatio(true);
+	    imageView.setFitWidth(MINIATUREWIDTH);
+	    imageView.setFitHeight(MINIATUREHEIGHT);
+
+	    canvas.setHeight(MINIATUREHEIGHT);
+	    canvas.setWidth(MINIATUREWIDTH);
+      }
+
+
+      /**
+       * 
+       */
+      private void resetMiniaturesWidthAndHeight()
+      {
+
+	    MINIATUREHEIGHT = Integer.valueOf(AppContext.getInstance().propertyContext().get("miniatureWH"));
+	    MINIATUREWIDTH = Integer.valueOf(AppContext.getInstance().propertyContext().get("miniatureWH"));
+      }
+
+
+      private PicLayer setSizeFactorToFitInCanvas(PicLayer duplicate, Canvas canvas)
       {
 
 	    duplicate.setPosition(new Coord(0, 0));
@@ -215,30 +202,5 @@ public class MiniatureManager
 
 	    return miniatures.get(layer).getImage();
       }
-
-      // private void adaptPixCanvasRatio(Canvas canvas, int xGridResolution, int yGridResolution)
-      // {
-      //
-      // if (xGridResolution > yGridResolution)
-      // {
-      //
-      // double factorX = (double) yGridResolution / (double) xGridResolution;
-      // // log.debug("factorX : " + factorX);
-      // canvas.setHeight(canvas.getHeight() * factorX);
-      // // log.debug("new canvas size : " + canvas.getWidth() + "X" +
-      // // canvas.getHeight());
-      //
-      // }
-      //
-      // if (xGridResolution < yGridResolution)
-      // {
-      //
-      // double factorY = (double) xGridResolution / (double) yGridResolution;
-      // // log.debug("factorY : " + factorY);
-      // canvas.setWidth(canvas.getWidth() * factorY);
-      // // log.debug("new canvas size : " + canvas.getWidth() + "X" +
-      // // canvas.getHeight());
-      // }
-      // }
 
 }

@@ -30,7 +30,7 @@ public class MiniaturesUpdateAction implements IAction
       {
 
 	    log.debug("update");
-	    for (ALayer layer : image.getLayerList().getAllItems())
+	    for (ALayer layer : image.getLayerPile().getAllItems())
 	    {
 
 		  GuiFacade.getInstance().getMiniatureManager().update(layer);

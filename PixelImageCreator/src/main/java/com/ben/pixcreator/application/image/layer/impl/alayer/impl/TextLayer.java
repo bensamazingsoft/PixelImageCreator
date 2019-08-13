@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import com.ben.pixcreator.application.color.rgb.ColorRGB;
 import com.ben.pixcreator.application.context.AppContext;
+import com.ben.pixcreator.application.image.PixImage;
 import com.ben.pixcreator.application.image.layer.impl.alayer.ALayer;
 import com.ben.pixcreator.gui.facade.GuiFacade;
 
@@ -17,6 +18,7 @@ import javafx.geometry.VPos;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
@@ -24,259 +26,300 @@ import javafx.scene.text.FontSmoothingType;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 
-public class TextLayer extends PicLayer {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
-	@SuppressWarnings("unused")
-	private static final Logger log = LoggerFactory.getLogger(TextLayer.class);
-
-	private FontSmoothingType smoothingType = FontSmoothingType.GRAY;
-
-	private String text = AppContext.getInstance().getBundle()
-			.getString("TextLayerDefaultText");
-
-	// private transient Font font = Font.getDefault();
-	// font parameters
-	private String			fontFamily	= Font.getDefault().getFamily();
-	private ColorRGB		color		= new ColorRGB();
-	private int				fontSize	= 48;
-	private TextAlignment	align		= TextAlignment.LEFT;
-	private VPos			baseline	= VPos.TOP;
-	private RenderType		renderType	= RenderType.FILL;
-	/**
-	 * 
-	 */
-	private FontPosture		posture		= FontPosture.REGULAR;
-	private FontWeight		weight		= FontWeight.NORMAL;
+public class TextLayer extends PicLayer
+{
 
-	public static List<Integer> fontSizes = Arrays.asList(8, 16, 32, 48, 64, 128);
-
-	private enum RenderType {
-		FILL, STROKE;
-	}
-
-	public TextLayer(File imageFile, String text) {
-
-		super(imageFile);
-		this.text = text;
-		// font = Font.font(fontSize);
-		renderImage();
-	}
-
-	public TextLayer() {
-
-		super();
-		// font = Font.font(fontSize);
-		renderImage();
-	}
-
-	@Override
-	public void draw(Canvas canvas, int xGridResolution, int yGridResolution) {
+      /**
+       * 
+       */
+      private static final long	  serialVersionUID = 1L;
 
-		// renderImage();
-		// super.draw(canvas, xGridResolution, yGridResolution);
-		int xCellSize = (int) (Math.floor(canvas.getWidth()) / xGridResolution);
-		int yCellSize = (int) (Math.floor(canvas.getHeight()) / yGridResolution);
+      @SuppressWarnings("unused")
+      private static final Logger log		   = LoggerFactory.getLogger(TextLayer.class);
 
-		GraphicsContext graph = canvas.getGraphicsContext2D();
-		graph.setFont(Font.font(getFontFamily(), weight, posture, fontSize * getZoomFactor()));
+      private FontSmoothingType	  smoothingType	   = FontSmoothingType.GRAY;
 
-		graph.setTextAlign(getAlign());
-		graph.setTextBaseline(getBaseline());
-		graph.setFontSmoothingType(getSmoothingType());
+      private String		  text		   = AppContext.getInstance().getBundle()
+		  .getString("TextLayerDefaultText");
 
-		switch (renderType) {
-		case FILL:
-			graph.setFill(color.getFxColor());
-			graph.fillText(text, getPosition().getX() * xCellSize, getPosition().getY() * yCellSize, Double.MAX_VALUE);
-			break;
-		case STROKE:
-			graph.setStroke(color.getFxColor());
-			graph.strokeText(text, getPosition().getX() * xCellSize, getPosition().getY() * yCellSize,
-					Double.MAX_VALUE);
-			break;
-		}
+      // font parameters
+      private String		  fontFamily	   = Font.getDefault().getFamily();
+      private ColorRGB		  color		   = new ColorRGB();
+      private int		  fontSize	   = 48;
+      private TextAlignment	  align		   = TextAlignment.LEFT;
+      private VPos		  baseline	   = VPos.TOP;
+      private RenderType	  renderType	   = RenderType.FILL;
+      /**
+       * 
+       */
+      private FontPosture	  posture	   = FontPosture.REGULAR;
+      private FontWeight	  weight	   = FontWeight.NORMAL;
 
-	}
+      public static List<Integer> fontSizes	   = Arrays.asList(8, 16, 32, 48, 64, 128);
 
-	private void renderImage() {
+      private enum RenderType {
+	    FILL, STROKE;
+      }
 
-		Canvas renderCanvas = new Canvas();
 
-		renderCanvas.setWidth(GuiFacade.getInstance().getActiveImage().getxSize());
-		renderCanvas.setHeight(GuiFacade.getInstance().getActiveImage().getySize());
+      public TextLayer(File imageFile, String text)
+      {
 
-		// Scene scene = new Scene(new StackPane(renderCanvas));
-		GraphicsContext graph = renderCanvas.getGraphicsContext2D();
+	    super(imageFile);
+	    this.text = text;
+	    renderImage();
+      }
 
-		graph.setFont(getFont());
 
-		graph.setTextAlign(getAlign());
-		graph.setTextBaseline(getBaseline());
-		graph.setFontSmoothingType(getSmoothingType());
+      public TextLayer()
+      {
 
-		switch (renderType) {
-		case FILL:
-			graph.setFill(color.getFxColor());
-			graph.fillText(text, 0, 0, Double.MAX_VALUE);
-			break;
-		case STROKE:
-			graph.setStroke(color.getFxColor());
-			graph.strokeText(text, 0, 0, Double.MAX_VALUE);
-			break;
-		}
+	    super();
+	    renderImage();
+      }
 
-		SnapshotParameters snapshotParameters = new SnapshotParameters();
-		snapshotParameters.setFill(Color.rgb(0, 0, 0, 0));
-		setImage(renderCanvas.snapshot(snapshotParameters, null));
-		// log.debug("getImage().getWidth()" + renderCanvas.getWidth());
 
-	}
+      @Override
+      public void draw(Canvas canvas, int xGridResolution, int yGridResolution)
+      {
 
-	@Override
-	public String toString() {
+	    int xCellSize = (int) (Math.floor(canvas.getWidth()) / xGridResolution);
+	    int yCellSize = (int) (Math.floor(canvas.getHeight()) / yGridResolution);
 
-		return "TextLayer [" + text + "]";
-	}
+	    GraphicsContext graph = canvas.getGraphicsContext2D();
+	    graph.setFont(Font.font(getFontFamily(), weight, posture, fontSize * getZoomFactor()));
+	    graph.setTextAlign(getAlign());
+	    graph.setTextBaseline(getBaseline());
+	    graph.setFontSmoothingType(getSmoothingType());
 
-	@Override
-	public ALayer duplicate() {
+	    switch (renderType)
+	    {
+	    case FILL:
+		  graph.setFill(color.getFxColor());
+		  graph.fillText(text, getPosition().getX() * xCellSize, getPosition().getY() * yCellSize, Double.MAX_VALUE);
+		  break;
+	    case STROKE:
+		  graph.setStroke(color.getFxColor());
+		  graph.strokeText(text, getPosition().getX() * xCellSize, getPosition().getY() * yCellSize,
+			      Double.MAX_VALUE);
+		  break;
+	    }
 
-		TextLayer dup = new TextLayer();
+      }
 
-		dup.setUuid(getUUID());
 
-		dup.setVisible(isVisible());
-		dup.setPosition(getPosition());
-		dup.setSizeFactorX(getSizeFactorX());
-		dup.setSizeFactorY(getSizeFactorY());
-		dup.setZoomFactor(getZoomFactor());
-		dup.setImage(getImage());
-		dup.setImageFile(getImageFile());
-		dup.setOpacity(getOpacity());
+      private void renderImage()
+      {
 
-		// dup.setFont(getFont());
-		dup.setText(getText());
-		dup.setAlign(getAlign());
-		dup.setBaseline(getBaseline());
-		dup.setRenderType(getRenderType());
-		dup.setSmoothingType(getSmoothingType());
+	    Canvas renderCanvas = new Canvas();
+	    PixImage activeImage = GuiFacade.getInstance().getActiveImage();
 
-		return dup;
-	}
+	    renderCanvas.setWidth(activeImage.getxSize());
+	    renderCanvas.setHeight(activeImage.getySize());
 
-	public Font getFont() {
+	    draw(renderCanvas, activeImage.getxGridResolution(), activeImage.getyGridResolution());
 
-		return Font.font(getFontFamily(), getWeight(), getPosture(), getFontSize());
-	}
+	    SnapshotParameters snapshotParameters = new SnapshotParameters();
+	    snapshotParameters.setFill(Color.rgb(0, 0, 0, 0));
+	    setImage(renderCanvas.snapshot(snapshotParameters, null));
 
-	public String getText() {
+      }
 
-		return text;
-	}
 
-	public void setText(String text) {
+      @Override
+      public Image getImage()
+      {
 
-		this.text = text;
+	    renderImage();
+	    return super.getImage();
+      }
 
-	}
 
-	public TextAlignment getAlign() {
+      @Override
+      public String toString()
+      {
 
-		return align;
-	}
+	    return "TextLayer [" + text + "]";
+      }
 
-	public void setAlign(TextAlignment align) {
 
-		this.align = align;
+      @Override
+      public ALayer duplicate()
+      {
 
-	}
+	    TextLayer dup = new TextLayer();
 
-	public VPos getBaseline() {
+	    dup.setUuid(getUUID());
 
-		return baseline;
-	}
+	    dup.setVisible(isVisible());
+	    dup.setPosition(getPosition());
+	    dup.setSizeFactorX(getSizeFactorX());
+	    dup.setSizeFactorY(getSizeFactorY());
+	    dup.setZoomFactor(getZoomFactor());
+	    dup.setImage(getImage());
+	    dup.setImageFile(getImageFile());
+	    dup.setOpacity(getOpacity());
 
-	public void setBaseline(VPos baseline) {
+	    // dup.setFont(getFont());
+	    dup.setText(getText());
+	    dup.setAlign(getAlign());
+	    dup.setBaseline(getBaseline());
+	    dup.setRenderType(getRenderType());
+	    dup.setSmoothingType(getSmoothingType());
 
-		this.baseline = baseline;
+	    return dup;
+      }
 
-	}
 
-	public FontSmoothingType getSmoothingType() {
+      public Font getFont()
+      {
 
-		return smoothingType;
-	}
+	    return Font.font(getFontFamily(), getWeight(), getPosture(), getFontSize());
+      }
 
-	public void setSmoothingType(FontSmoothingType smoothingType) {
 
-		this.smoothingType = smoothingType;
+      public String getText()
+      {
 
-	}
+	    return text;
+      }
 
-	public RenderType getRenderType() {
 
-		return renderType;
-	}
+      public void setText(String text)
+      {
 
-	public void setRenderType(RenderType renderType) {
+	    this.text = text;
 
-		this.renderType = renderType;
+      }
 
-	}
 
-	public int getFontSize() {
+      public TextAlignment getAlign()
+      {
 
-		return fontSize;
-	}
+	    return align;
+      }
 
-	public void setFontSize(int fontSize) {
 
-		this.fontSize = fontSize;
-	}
+      public void setAlign(TextAlignment align)
+      {
 
-	public ColorRGB getColor() {
+	    this.align = align;
 
-		return color;
-	}
+      }
 
-	public void setColor(ColorRGB color) {
 
-		this.color = color;
-	}
+      public VPos getBaseline()
+      {
 
-	public FontPosture getPosture() {
+	    return baseline;
+      }
 
-		return posture;
-	}
 
-	public void setPosture(FontPosture posture) {
+      public void setBaseline(VPos baseline)
+      {
 
-		this.posture = posture;
-	}
+	    this.baseline = baseline;
 
-	public FontWeight getWeight() {
+      }
 
-		return weight;
-	}
 
-	public void setWeight(FontWeight weight) {
+      public FontSmoothingType getSmoothingType()
+      {
 
-		this.weight = weight;
-	}
+	    return smoothingType;
+      }
 
-	public String getFontFamily() {
 
-		return fontFamily;
-	}
+      public void setSmoothingType(FontSmoothingType smoothingType)
+      {
 
-	public void setFontFamily(String fontFamily) {
+	    this.smoothingType = smoothingType;
 
-		this.fontFamily = fontFamily;
-	}
+      }
+
+
+      public RenderType getRenderType()
+      {
+
+	    return renderType;
+      }
+
+
+      public void setRenderType(RenderType renderType)
+      {
+
+	    this.renderType = renderType;
+
+      }
+
+
+      public int getFontSize()
+      {
+
+	    return fontSize;
+      }
+
+
+      public void setFontSize(int fontSize)
+      {
+
+	    this.fontSize = fontSize;
+      }
+
+
+      public ColorRGB getColor()
+      {
+
+	    return color;
+      }
+
+
+      public void setColor(ColorRGB color)
+      {
+
+	    this.color = color;
+      }
+
+
+      public FontPosture getPosture()
+      {
+
+	    return posture;
+      }
+
+
+      public void setPosture(FontPosture posture)
+      {
+
+	    this.posture = posture;
+      }
+
+
+      public FontWeight getWeight()
+      {
+
+	    return weight;
+      }
+
+
+      public void setWeight(FontWeight weight)
+      {
+
+	    this.weight = weight;
+      }
+
+
+      public String getFontFamily()
+      {
+
+	    return fontFamily;
+      }
+
+
+      public void setFontFamily(String fontFamily)
+      {
+
+	    this.fontFamily = fontFamily;
+      }
 
 }

@@ -46,7 +46,7 @@ public class ChangeCellColorAction implements IAction, ICancelable {
 	public void execute() throws Exception {
 
 		if (GuiFacade.getInstance().getActiveimage() == image) {
-			if (image.getLayerList().getIdx(layer) > -1) {
+			if (image.getLayerPile().getIdx(layer) > -1) {
 
 				layer.getGrid().put(coord, new ColorRGB(color));
 				log.debug("layer : " + layer + "coord : " + coord);
@@ -58,7 +58,7 @@ public class ChangeCellColorAction implements IAction, ICancelable {
 	public void cancel() throws Exception {
 
 		if (GuiFacade.getInstance().getActiveimage() == image) {
-			if (image.getLayerList().getIdx(layer) > -1) {
+			if (image.getLayerPile().getIdx(layer) > -1) {
 				if (newCell) {
 					layer.getGrid().remove(coord);
 				} else {

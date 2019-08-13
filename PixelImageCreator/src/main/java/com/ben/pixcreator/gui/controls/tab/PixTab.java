@@ -442,7 +442,7 @@ public class PixTab extends Tab implements Initializable
       private void bindPicLayersZoomFactor()
       {
 
-	    for (ALayer layer : image.get().getLayerList().getAllItems())
+	    for (ALayer layer : image.get().getLayerPile().getAllItems())
 
 	    {
 		  if (layer instanceof PicLayer)

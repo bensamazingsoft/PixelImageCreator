@@ -3,9 +3,13 @@ package com.ben.pixcreator.gui.pane.web.panel.state.impl;
 
 import java.util.Map;
 
+import com.ben.pixcreator.application.action.impl.MonitoredAction;
+import com.ben.pixcreator.application.action.impl.SubscribeTask;
 import com.ben.pixcreator.application.context.AppContext;
+import com.ben.pixcreator.application.executor.Executor;
+import com.ben.pixcreator.gui.exception.popup.ExceptionPopUp;
+import com.ben.pixcreator.gui.facade.GuiFacade;
 import com.ben.pixcreator.gui.pane.web.LogInfo;
-import com.ben.pixcreator.gui.pane.web.loginfoservice.ILogInfoService;
 import com.ben.pixcreator.gui.pane.web.panel.WebPanel;
 import com.ben.pixcreator.gui.pane.web.panel.state.WebPanelState;
 import com.ben.pixcreator.web.bean.Bean;
@@ -21,22 +25,15 @@ import javafx.scene.layout.VBox;
 public class SubscribeWebPanelState implements WebPanelState
 {
 
-      private WebPanel	      webPanel;
-      private Bean<LogInfo>   logInfoBean;
-      private ILogInfoService logValidator;
+      private WebPanel	 webPanel;
 
-      private String	      regex = "^(.+)@(.+)$";
-
-      private BorderPane      pane;
-      private AppContext      ctx   = AppContext.getInstance();
+      private AppContext ctx = AppContext.getInstance();
 
 
-      public SubscribeWebPanelState(WebPanel webPanel, ILogInfoService iLogInfoManager)
+      public SubscribeWebPanelState()
       {
 
-	    this.webPanel = webPanel;
-	    this.logInfoBean = webPanel.getLogBean();
-	    this.logValidator = iLogInfoManager;
+	    this.webPanel = GuiFacade.getInstance().getWebPanel();
 
       }
 
@@ -110,66 +107,34 @@ public class SubscribeWebPanelState implements WebPanelState
       private void validate(Bean<LogInfo> logBean, String confPassword)
       {
 
-	    logBean.getErrors().clear();
-	    logBean.setMessage("");
+	    SubscribeTask task = new SubscribeTask(confPassword);
 
-	    boolean valid1 = validEmail(logBean.getData().getEmail(), logBean);
-	    boolean valid2 = validPassword(logBean.getData().getPassword(), logBean, confPassword);
-
-	    if (valid1 && valid2)
+	    try
 	    {
+		  Executor.getInstance().executeAction(
+			      new MonitoredAction(task)
+					  .success(evt -> {
 
-		  webPanel.setLogBean(logValidator.registerLogInfo(logBean));
+						if (webPanel.getLogBean().getData().isConnected())
+						{
+						      changeState(new UnLoggedState(webPanel));
+						      return;
+						}
+						webPanel.reload();
+					  })
+					  .fail(evt -> {
 
-		  if (logBean.getData().isConnected())
-		  {
+						new ExceptionPopUp((Exception) task.getException());
 
-			logBean.setMessage("Registered successfully");
-			logBean.getData().setConnected(false);
-			changeState(new UnLoggedState(webPanel));
-
-		  }
-	    }
-
-	    webPanel.reload();
-      }
-
-
-      private boolean validPassword(String pass, Bean<LogInfo> logBean, String confPass)
-      {
-
-	    if (null == pass || pass.length() == 0)
-	    {
-		  logBean.getErrors().put("Password", "must not be blank");
-		  return false;
-	    }
-
-	    if (!pass.equals(confPass))
-	    {
-		  logBean.getErrors().put("Password", "confirmation must match password");
-		  return false;
+						webPanel.reload();
+					  }));
 
 	    }
-	    return true;
-      }
-
-
-      private boolean validEmail(String email, Bean<LogInfo> logBean)
-      {
-
-	    if (null == email || email.length() == 0)
+	    catch (Exception e)
 	    {
-		  logBean.getErrors().put("email", "must not be blank");
-		  return false;
-	    }
-	    if (!email.matches(regex))
-	    {
-		  logBean.getErrors().put("email", "must be of format abc@xyz.org");
-		  return false;
-
+		  new ExceptionPopUp(e);
 	    }
 
-	    return true;
       }
 
 

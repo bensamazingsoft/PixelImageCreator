@@ -83,7 +83,7 @@ public class LoadFileAction implements IAction
 	    Map<UUID, Boolean> visibility = pixFile.getVisibility();
 	    Map<UUID, Pile<Effect>> effects = pixFile.getEffects();
 
-	    Set<ALayer> imageLayers = image.getLayerList().getAllItems();
+	    Set<ALayer> imageLayers = image.getLayerPile().getAllItems();
 	    for (ALayer layer : imageLayers)
 	    {
 
