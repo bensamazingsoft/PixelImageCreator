@@ -17,6 +17,7 @@ import com.ben.pixcreator.application.executor.Executor;
 import com.ben.pixcreator.application.image.PixImage;
 import com.ben.pixcreator.application.image.coords.Coord;
 import com.ben.pixcreator.application.image.layer.impl.alayer.ALayer;
+import com.ben.pixcreator.application.pile.BasicPile;
 import com.ben.pixcreator.application.pile.Pile;
 import com.ben.pixcreator.application.selection.Selection;
 import com.ben.pixcreator.application.tools.PixTool;
@@ -85,7 +86,7 @@ public class GuiFacade
 	    miniatureManager = new MiniatureManager();
 	    showGrid.set(false);
 	    backgroundColor.set(ctxProp.getBackgroundColor());
-	    recentFiles = new Pile<String>(Integer.valueOf(ctxProp.get("maxRecentFiles")));
+	    recentFiles = new BasicPile<String>(Integer.valueOf(ctxProp.get("maxRecentFiles")));
 
 	    activeColor.addListener((obs, oldVal, newVal) -> {
 		  try

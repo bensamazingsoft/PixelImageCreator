@@ -13,7 +13,7 @@ import javafx.scene.layout.VBox;
 
 /**
  * 
- * Represents a Pile<T>. Has a title element and is expandable to reveal
+ * Represents a BasicPile<T>. Has a title element and is expandable to reveal
  * PileViewItems. Elements are provided by a PileViewItemFactory, wich you can
  * extend and then provide.
  * 

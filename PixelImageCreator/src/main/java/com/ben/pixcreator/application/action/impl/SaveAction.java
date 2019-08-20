@@ -21,6 +21,7 @@ import com.ben.pixcreator.application.grouplock.GroupLock;
 import com.ben.pixcreator.application.image.PixImage;
 import com.ben.pixcreator.application.image.effect.Effect;
 import com.ben.pixcreator.application.image.layer.impl.alayer.ALayer;
+import com.ben.pixcreator.application.pile.BasicPile;
 import com.ben.pixcreator.application.pile.Pile;
 import com.ben.pixcreator.gui.exception.popup.ExceptionPopUp;
 import com.ben.pixcreator.gui.facade.GuiFacade;
@@ -68,7 +69,7 @@ public class SaveAction implements IAction {
 
 		Set<ColorRGB> colors;
 		Map<UUID, Set<UUID>> locks;
-		Map<UUID, Pile<Effect>> effects;
+		Map<UUID, BasicPile<Effect>> effects;
 		Map<UUID, Boolean> visibility;
 
 		GuiFacade gui = GuiFacade.getInstance();
@@ -87,7 +88,7 @@ public class SaveAction implements IAction {
 		effects = AppContext.getInstance().getEffectManager().getImageEffects(image).entrySet().stream()
 				.collect(toMap(
 						entry -> entry.getKey().getUUID(),
-						Entry<ALayer, Pile<Effect>>::getValue));
+						Entry<ALayer, BasicPile<Effect>>::getValue));
 
 		visibility = image.getLayerPile().getAllItems().stream()
 				.collect(toMap(

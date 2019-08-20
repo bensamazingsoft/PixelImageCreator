@@ -12,6 +12,7 @@ import com.ben.pixcreator.application.image.layer.ILayer;
 import com.ben.pixcreator.application.image.layer.impl.alayer.ALayer;
 import com.ben.pixcreator.application.image.layer.impl.alayer.impl.PicLayer;
 import com.ben.pixcreator.application.image.layer.impl.alayer.impl.PixLayer;
+import com.ben.pixcreator.application.pile.BasicPile;
 import com.ben.pixcreator.application.pile.Pile;
 import com.ben.pixcreator.gui.facade.GuiFacade;
 
@@ -54,7 +55,7 @@ public class PixImage implements Serializable
 	    ghost = new PixLayer();
 	    select = new PixLayer();
 
-	    layerPile = new Pile<>();
+	    layerPile = new BasicPile<>();
 
 	    layerPile.add(new PixLayer());
 
@@ -174,7 +175,7 @@ public class PixImage implements Serializable
 	    clone.ghost = this.ghost.duplicate();
 	    clone.select = this.select.duplicate();
 
-	    clone.layerPile = new Pile<ALayer>();
+	    clone.layerPile = new BasicPile<ALayer>();
 
 	    for (int i = 0; i < this.layerPile.getItems().size(); i++)
 	    {
