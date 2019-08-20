@@ -102,7 +102,7 @@ public interface Pile<T> {
 	boolean isEmpty();
 
 	/**
-	 * Convienience method, return a java.util.List holding the effects of the
+	 * Convenience method, return a java.util.List holding the effects of the
 	 * layer
 	 * 
 	 * @return java.util.List<T>
