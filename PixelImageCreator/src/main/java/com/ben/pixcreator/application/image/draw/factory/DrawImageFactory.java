@@ -13,6 +13,7 @@ import com.ben.pixcreator.application.image.layer.draw.factory.DrawLayerFactory;
 import com.ben.pixcreator.application.image.layer.effect.exception.EffectException;
 import com.ben.pixcreator.application.image.layer.impl.alayer.ALayer;
 import com.ben.pixcreator.application.image.layer.impl.alayer.impl.BakeLayer;
+import com.ben.pixcreator.application.pile.BasicPile;
 import com.ben.pixcreator.application.pile.Pile;
 
 /**
@@ -62,7 +63,7 @@ public class DrawImageFactory
       {
 
 	    ALayer layer = drawImage.getLayerPile().getItem(currIndex);
-	    Pile<Effect> effectPile = new Pile<Effect>(AppContext.getInstance().getEffectManager().getImageLayerEffects(image, layer));
+	    Pile<Effect> effectPile = new BasicPile<Effect>(AppContext.getInstance().getEffectManager().getImageLayerEffects(image, layer));
 
 	    if (imageHasBakeLayers(image))
 	    {

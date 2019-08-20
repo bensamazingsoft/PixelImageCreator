@@ -11,7 +11,7 @@ import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.application.executor.Executor;
 import com.ben.pixcreator.application.image.effect.Effect;
 import com.ben.pixcreator.application.image.layer.effect.pile.view.item.control.IEffectPileViewItemControl;
-import com.ben.pixcreator.application.pile.Pile;
+import com.ben.pixcreator.application.pile.BasicPile;
 import com.ben.pixcreator.gui.exception.popup.ExceptionPopUp;
 import com.ben.pixcreator.gui.facade.GuiFacade;
 
@@ -68,12 +68,12 @@ public class EffectPileViewItem extends VBox {
 
 			control.reset();
 
-			Set<Pile<Effect>> pool = AppContext.getInstance().getEffectManager().getManager().values().stream()
+			Set<BasicPile<Effect>> pool = AppContext.getInstance().getEffectManager().getManager().values().stream()
 					.map(Map::values)
 					.flatMap(set -> set.stream())
 					.collect(Collectors.toSet());
 
-			for (Pile<Effect> pile : pool) {
+			for (BasicPile<Effect> pile : pool) {
 				pile.removeOfItem(fx);
 			}
 

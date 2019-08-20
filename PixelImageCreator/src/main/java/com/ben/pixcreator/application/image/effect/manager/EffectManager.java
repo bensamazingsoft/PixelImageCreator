@@ -7,6 +7,7 @@ import java.util.Map;
 import com.ben.pixcreator.application.image.PixImage;
 import com.ben.pixcreator.application.image.effect.Effect;
 import com.ben.pixcreator.application.image.layer.impl.alayer.ALayer;
+import com.ben.pixcreator.application.pile.BasicPile;
 import com.ben.pixcreator.application.pile.Pile;
 
 /**
@@ -18,20 +19,20 @@ import com.ben.pixcreator.application.pile.Pile;
  */
 public class EffectManager {
 
-	private final Map<PixImage, Map<ALayer, Pile<Effect>>> manager;
+	private final Map<PixImage, Map<ALayer, BasicPile<Effect>>> manager;
 
 	public EffectManager() {
 
 		manager = new HashMap<>();
 	}
 
-	public EffectManager(Map<PixImage, Map<ALayer, Pile<Effect>>> manager) {
+	public EffectManager(Map<PixImage, Map<ALayer, BasicPile<Effect>>> manager) {
 
 		super();
 		this.manager = manager;
 	}
 
-	public Map<PixImage, Map<ALayer, Pile<Effect>>> getManager() {
+	public Map<PixImage, Map<ALayer, BasicPile<Effect>>> getManager() {
 
 		return manager;
 	}
@@ -40,26 +41,26 @@ public class EffectManager {
 	 * Convenience method, returns the image effects piles (compute if absent)
 	 * 
 	 * @param image
-	 * @return com.ben.pixcreator.application.pile.Pile<com.ben.pixcreator.application.image.effect.Effect>
+	 * @return com.ben.pixcreator.application.pile.BasicPile<com.ben.pixcreator.application.image.effect.Effect>
 	 */
-	public Map<ALayer, Pile<Effect>> getImageEffects(PixImage image) {
+	public Map<ALayer, BasicPile<Effect>> getImageEffects(PixImage image) {
 
-		return manager.computeIfAbsent(image, k -> new HashMap<ALayer, Pile<Effect>>());
+		return manager.computeIfAbsent(image, k -> new HashMap<ALayer, BasicPile<Effect>>());
 	}
 
 	/**
-	 * Convenience method, returns the layer effects piles (compute empty Pile
+	 * Convenience method, returns the layer effects piles (compute empty BasicPile
 	 * if absent)
 	 * 
 	 * @param image
 	 * @param layer
-	 * @return com.ben.pixcreator.application.pile.Pile<com.ben.pixcreator.application.image.effect.Effect>
+	 * @return com.ben.pixcreator.application.pile.BasicPile<com.ben.pixcreator.application.image.effect.Effect>
 	 */
 	public Pile<Effect> getImageLayerEffects(PixImage image, ALayer layer) {
 
-		Map<ALayer, Pile<Effect>> imageEffects = getImageEffects(image);
+		Map<ALayer, BasicPile<Effect>> imageEffects = getImageEffects(image);
 
-		return imageEffects.computeIfAbsent(layer, k -> new Pile<Effect>());
+		return imageEffects.computeIfAbsent(layer, k -> new BasicPile<Effect>());
 
 	}
 

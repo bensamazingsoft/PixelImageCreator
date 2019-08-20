@@ -22,6 +22,7 @@ import com.ben.pixcreator.application.grouplock.GroupLock;
 import com.ben.pixcreator.application.image.PixImage;
 import com.ben.pixcreator.application.image.effect.Effect;
 import com.ben.pixcreator.application.image.layer.impl.alayer.ALayer;
+import com.ben.pixcreator.application.pile.BasicPile;
 import com.ben.pixcreator.application.pile.Pile;
 import com.ben.pixcreator.gui.facade.GuiFacade;
 
@@ -81,7 +82,7 @@ public class LoadFileAction implements IAction
 
 	    Map<UUID, Set<UUID>> locks = pixFile.getLocks();
 	    Map<UUID, Boolean> visibility = pixFile.getVisibility();
-	    Map<UUID, Pile<Effect>> effects = pixFile.getEffects();
+	    Map<UUID, BasicPile<Effect>> effects = pixFile.getEffects();
 
 	    Set<ALayer> imageLayers = image.getLayerPile().getAllItems();
 	    for (ALayer layer : imageLayers)
@@ -110,7 +111,7 @@ public class LoadFileAction implements IAction
 			effects.entrySet().stream()
 				    .collect(Collectors.toMap(
 						entry -> getLayerByUUID(entry.getKey(), imageLayers),
-						Entry<UUID, Pile<Effect>>::getValue)));
+						Entry<UUID, BasicPile<Effect>>::getValue)));
 
 	    // set image colors in the gui facade map (checked when a tab is opened)
 	    Set<ColorRGB> colors = pixFile.getColors();
