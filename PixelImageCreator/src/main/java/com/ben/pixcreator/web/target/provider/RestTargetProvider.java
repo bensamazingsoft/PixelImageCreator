@@ -15,52 +15,44 @@ import com.ben.pixcreator.gui.exception.popup.ExceptionPopUp;
 import com.ben.pixcreator.gui.facade.GuiFacade;
 import com.ben.pixcreator.web.RequestFilter;
 
-public class RestTargetProvider
-{
+public class RestTargetProvider {
 
-      // private static final Logger log = LoggerFactory.getLogger(RestTargetProvider.class);
-      private static RestTargetProvider	instance;
+	// private static final Logger log =
+	// LoggerFactory.getLogger(RestTargetProvider.class);
+	private static RestTargetProvider instance;
 
-      private URI			baseURI;
-      private WebTarget			target;
+	private URI			baseURI;
+	private WebTarget	target;
 
+	public RestTargetProvider() {
 
-      public RestTargetProvider()
-      {
+		try {
+			baseURI = new URI(AppContext.getInstance().propertyContext().get("baseWebTargetURI"));
+		} catch (URISyntaxException e) {
+			new ExceptionPopUp(e);
+		}
 
-	    try
-	    {
-		  baseURI = new URI(AppContext.getInstance().propertyContext().get("baseWebTargetURI"));
-	    }
-	    catch (URISyntaxException e)
-	    {
-		  new ExceptionPopUp(e);
-	    }
+		Client client = ClientBuilder.newClient().register(RequestFilter.class);
 
-	    Client client = ClientBuilder.newClient().register(RequestFilter.class);
+		GuiFacade gui = GuiFacade.getInstance();
+		String email = gui.getLogInfo().getEmail();
+		String password = gui.getWebPanel().getLogBean().getData().getPassword();
 
-	    GuiFacade gui = GuiFacade.getInstance();
-	    String email = gui.getWebPanel().getLogBean().getData().getEmail();
-	    String password = gui.getWebPanel().getLogBean().getData().getPassword();
+		if (email.length() > 0 && password.length() > 0) {
 
-	    if (email.length() > 0 && password.length() > 0)
-	    {
+			HttpAuthenticationFeature auth = HttpAuthenticationFeature.basic(email, password);
 
-		  HttpAuthenticationFeature auth = HttpAuthenticationFeature.basic(email, password);
+			client.register(auth);
 
-		  client.register(auth);
+		}
 
-	    }
+		target = client.target(baseURI);
 
-	    target = client.target(baseURI);
+	}
 
-      }
+	public WebTarget getBaseTarget() {
 
-
-      public WebTarget getBaseTarget()
-      {
-
-	    return target;
-      }
+		return target;
+	}
 
 }

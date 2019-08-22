@@ -28,6 +28,8 @@ import javafx.scene.layout.VBox;
 
 public class EffectPileViewItem extends VBox {
 
+	private final GuiFacade gui = GuiFacade.getInstance();
+
 	private final String IMAGEPATH = "images/gui/buttons/effectItem/";
 
 	final private Image		bypassSelected		= new Image(
@@ -78,7 +80,9 @@ public class EffectPileViewItem extends VBox {
 			}
 
 			try {
-				GuiFacade.getInstance().getLayerPanel().populate();
+
+				gui.populateLayerPanel();
+				;
 				Executor.getInstance().executeAction(new RefreshAllTabsAction());
 			} catch (Exception e) {
 				new ExceptionPopUp(e);

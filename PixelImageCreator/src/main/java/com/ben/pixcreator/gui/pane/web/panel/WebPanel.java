@@ -13,78 +13,69 @@ import com.ben.pixcreator.web.bean.Bean;
 
 import javafx.scene.layout.BorderPane;
 
-public class WebPanel extends BorderPane
-{
+public class WebPanel extends BorderPane {
 
-      private WebPanelState	   state;
-      private Bean<LogInfo>	   logBean;
-      private Bean<Set<PixelGrid>> pixelGridBean;
+	private WebPanelState			state;
+	private Bean<LogInfo>			logBean;
+	private Bean<Set<PixelGrid>>	pixelGridBean;
 
+	public WebPanel() {
 
-      public WebPanel()
-      {
+		GuiFacade.getInstance().setWebPanel(this);
 
-	    GuiFacade.getInstance().setWebPanel(this);
+		logBean = new Bean<LogInfo>();
+		logBean.setData(new LogInfo());
 
-	    logBean = new Bean<LogInfo>();
-	    logBean.setData(new LogInfo());
+		pixelGridBean = new Bean<>();
+		pixelGridBean.setData(new HashSet<>());
 
-	    pixelGridBean = new Bean<>();
-	    pixelGridBean.setData(new HashSet<>());
+		state = new UnLoggedState(this);
 
-	    state = new UnLoggedState(this);
+		setCenter(state.load());
+	}
 
-	    setCenter(state.load());
-      }
+	public void reload() {
 
+		setCenter(state.load());
 
-      public void reload()
-      {
+	}
 
-	    setCenter(state.load());
+	public LogInfo getLogInfo() {
+		return logBean.getData();
+	}
 
-      }
+	public WebPanelState getState() {
 
+		return state;
+	}
 
-      public WebPanelState getState()
-      {
+	public void setState(WebPanelState state) {
 
-	    return state;
-      }
+		this.state = state;
+	}
 
+	public Bean<LogInfo> getLogBean() {
 
-      public void setState(WebPanelState state)
-      {
+		return logBean;
+	}
 
-	    this.state = state;
-      }
+	public Boolean isConnected() {
+		return getLogInfo().isConnected();
+	}
 
+	public void setLogBean(Bean<LogInfo> logBean) {
 
-      public Bean<LogInfo> getLogBean()
-      {
+		this.logBean = logBean;
+	}
 
-	    return logBean;
-      }
+	public Bean<Set<PixelGrid>> getPixelGridBean() {
 
+		return pixelGridBean;
+	}
 
-      public void setLogBean(Bean<LogInfo> logBean)
-      {
+	public void setPixelGridBean(Bean<Set<PixelGrid>> pixelGridBean) {
 
-	    this.logBean = logBean;
-      }
-
-
-      public Bean<Set<PixelGrid>> getPixelGridBean()
-      {
-
-	    return pixelGridBean;
-      }
-
-
-      public void setPixelGridBean(Bean<Set<PixelGrid>> pixelGridBean)
-      {
-
-	    this.pixelGridBean = pixelGridBean;
-      }
+		this.pixelGridBean = pixelGridBean;
+	}
 
 }

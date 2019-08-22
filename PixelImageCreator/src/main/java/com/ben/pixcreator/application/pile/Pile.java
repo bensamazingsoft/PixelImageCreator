@@ -47,6 +47,12 @@ public interface Pile<T> {
 	boolean removeOfItem(T item);
 
 	/**
+	 * @param item
+	 * 
+	 */
+	void removeIfPresent(T item);
+
+	/**
 	 * moves the item one slot up in this item list.
 	 * 
 	 * @param item

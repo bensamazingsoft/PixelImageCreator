@@ -17,6 +17,8 @@ public class AddEffectToLayerAction implements IAction {
 
 	private static final Logger log = LoggerFactory.getLogger(AddEffectToLayerAction.class);
 
+	private final GuiFacade gui = GuiFacade.getInstance();
+
 	private final EffectDesign	fxDesign;
 	private EffectParams		fxParams;
 	private ALayer				layer;
@@ -32,13 +34,13 @@ public class AddEffectToLayerAction implements IAction {
 
 		log.debug("adding " + fxDesign + " to " + layer);
 
-		PixImage activeImage = GuiFacade.getInstance().getActiveImage();
+		PixImage activeImage = gui.getActiveImage();
 		EffectManager effectManager = AppContext.getInstance().getEffectManager();
 		Effect effect = new Effect(fxDesign, fxParams);
 
 		effectManager.getImageLayerEffects(activeImage, layer).add(effect);
 
-		GuiFacade.getInstance().getLayerPanel().populate();
+		gui.populateLayerPanel();
 
 	}
 

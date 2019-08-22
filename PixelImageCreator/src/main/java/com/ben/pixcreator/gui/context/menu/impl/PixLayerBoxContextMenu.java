@@ -25,80 +25,67 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 
-public class PixLayerBoxContextMenu extends ContextMenu
-{
+public class PixLayerBoxContextMenu extends ContextMenu {
 
-      private final ResourceBundle bundle = AppContext.getInstance().getBundle();
+	private final ResourceBundle bundle = AppContext.getInstance().getBundle();
 
+	public PixLayerBoxContextMenu(ALayer layer) {
 
-      public PixLayerBoxContextMenu(ALayer layer)
-      {
+		addEffectMenuItem(layer, "pixLayerBoxContextMenuAddOpacity", EffectDesign.OPACITY, new OpacityEffectParams());
+		addEffectMenuItem(layer, "pixLayerBoxContextMenuAddHue", EffectDesign.HUE, new HueEffectParams());
+		addEffectMenuItem(layer, "pixLayerBoxContextMenuAddSaturation", EffectDesign.SATURATION,
+				new SaturationEffectParams());
+		addEffectMenuItem(layer, "pixLayerBoxContextMenuAddBrightness", EffectDesign.BRIGHTNESS,
+				new BrightnessEffectParams());
+		addEffectMenuItem(layer, "pixLayerBoxContextMenuAddResample", EffectDesign.RESAMPLE,
+				new ResampleEffectParams());
+		addEffectMenuItem(layer, "pixLayerBoxContextMenuAddLumaKey", EffectDesign.LUMAKEY,
+				new LumaKeyEffectParams());
+		getItems().add(new SeparatorMenuItem());
+		getItems().add(webExportMenuItem(layer));
+	}
 
-	    addEffectMenuItem(layer, "pixLayerBoxContextMenuAddOpacity", EffectDesign.OPACITY, new OpacityEffectParams());
-	    addEffectMenuItem(layer, "pixLayerBoxContextMenuAddHue", EffectDesign.HUE, new HueEffectParams());
-	    addEffectMenuItem(layer, "pixLayerBoxContextMenuAddSaturation", EffectDesign.SATURATION,
-			new SaturationEffectParams());
-	    addEffectMenuItem(layer, "pixLayerBoxContextMenuAddBrightness", EffectDesign.BRIGHTNESS,
-			new BrightnessEffectParams());
-	    addEffectMenuItem(layer, "pixLayerBoxContextMenuAddResample", EffectDesign.RESAMPLE,
-			new ResampleEffectParams());
-	    addEffectMenuItem(layer, "pixLayerBoxContextMenuAddLumaKey", EffectDesign.LUMAKEY,
-			new LumaKeyEffectParams());
-	    getItems().add(new SeparatorMenuItem());
-	    getItems().add(webExportMenuItem(layer));
-      }
+	private MenuItem webExportMenuItem(ALayer layer) {
 
+		MenuItem item = new MenuItem(bundle.getString("pixLayerBoxContextWebExportMenuItemTitle"));
+		LogInfo logInfo = GuiFacade.getInstance().getLogInfo();
 
-      private MenuItem webExportMenuItem(ALayer layer)
-      {
+		item.setOnAction(event -> {
 
-	    MenuItem item = new MenuItem(bundle.getString("pixLayerBoxContextWebExportMenuItemTitle"));
-	    LogInfo logInfo = GuiFacade.getInstance().getWebPanel().getLogBean().getData();
+			try {
+				Executor.getInstance().executeAction(new ExportGridOnWebAction(logInfo, layer));
+			} catch (Exception e) {
+				new ExceptionPopUp(e);
+			}
 
-	    item.setOnAction(event -> {
+		});
 
-		  try
-		  {
-			Executor.getInstance().executeAction(new ExportGridOnWebAction(logInfo, layer));
-		  }
-		  catch (Exception e)
-		  {
-			new ExceptionPopUp(e);
-		  }
+		item.setDisable(!logInfo.isConnected());
 
-	    });
+		return item;
+	}
 
-	    item.setDisable(!logInfo.isConnected());
+	public void addEffectMenuItem(ALayer layer, String i18String, EffectDesign effectDesign, EffectParams effectParam) {
 
-	    return item;
-      }
+		MenuItem menuItem = new MenuItem();
 
+		menuItem.setText(bundle.getString(i18String));
 
-      public void addEffectMenuItem(ALayer layer, String i18String, EffectDesign effectDesign, EffectParams effectParam)
-      {
+		menuItem.setOnAction(event -> {
 
-	    MenuItem menuItem = new MenuItem();
+			try {
 
-	    menuItem.setText(bundle.getString(i18String));
+				Executor.getInstance().executeAction(
+						new AddEffectToLayerAction(effectDesign, effectParam, layer));
 
-	    menuItem.setOnAction(event -> {
+				Executor.getInstance().executeAction(new RefreshTabAction(GuiFacade.getInstance().getActiveTab()));
 
-		  try
-		  {
+			} catch (Exception e) {
+				new ExceptionPopUp(e);
+			}
+		});
 
-			Executor.getInstance().executeAction(
-				    new AddEffectToLayerAction(effectDesign, effectParam, layer));
-
-			Executor.getInstance().executeAction(new RefreshTabAction(GuiFacade.getInstance().getActiveTab()));
-
-		  }
-		  catch (Exception e)
-		  {
-			new ExceptionPopUp(e);
-		  }
-	    });
-
-	    this.getItems().add(menuItem);
-      }
+		this.getItems().add(menuItem);
+	}
 
 }

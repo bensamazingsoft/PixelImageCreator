@@ -30,7 +30,9 @@ import javafx.scene.paint.Color;
 
 public class SaveAction implements IAction {
 
-	private final PixImage image;
+	private final PixImage		image;
+	private final AppContext	ctx	= AppContext.getInstance();
+	private final GuiFacade		gui	= GuiFacade.getInstance();
 
 	public SaveAction(PixImage image) {
 
@@ -40,32 +42,17 @@ public class SaveAction implements IAction {
 	@Override
 	public void execute() throws Exception {
 
-		File file = AppContext.getInstance().getFiles().get(image);
+		File file = ctx.getPixImageFiles().get(image);
 
 		image.setName(file.getName());
 
-		PixFile pixFile = getPixFile(file);
+		PixFile pixFile = makePixFile(file);
 
-		try (FileOutputStream fileOut = new FileOutputStream(file);
-				ObjectOutputStream out = new ObjectOutputStream(fileOut);) {
-
-			out.writeObject(pixFile);
-
-			GuiFacade gui = GuiFacade.getInstance();
-			final Pile<String> recentFiles = gui.getRecentFiles();
-			if (recentFiles.getAllItems().contains(file.toString())) {
-				recentFiles.removeOfItem(file.toString());
-			}
-			recentFiles.add(file.toString());
-			gui.getPixMenuBar().loadRecentFiles();
-
-		} catch (IOException e) {
-			new ExceptionPopUp(e);
-		}
+		serializePixFile(file, pixFile);
 
 	}
 
-	private PixFile getPixFile(File file) {
+	private PixFile makePixFile(File file) {
 
 		Set<ColorRGB> colors;
 		Map<UUID, Set<UUID>> locks;
@@ -98,6 +85,31 @@ public class SaveAction implements IAction {
 		PixFile pixFile = new PixFile(image, colors, locks, effects, visibility);
 
 		return pixFile;
+	}
+
+	private void updateRecentFileOrder(File file) {
+	
+		final Pile<String> recentFiles = gui.getRecentFiles();
+	
+		recentFiles.removeIfPresent(file.toString());
+	
+		recentFiles.add(file.toString());
+	
+	}
+
+	private void serializePixFile(File file, PixFile pixFile) {
+		try (FileOutputStream fileOut = new FileOutputStream(file);
+				ObjectOutputStream out = new ObjectOutputStream(fileOut);) {
+	
+			out.writeObject(pixFile);
+	
+			updateRecentFileOrder(file);
+	
+			gui.updateRecentFilesMenu();
+	
+		} catch (IOException e) {
+			new ExceptionPopUp(e);
+		}
 	}
 
 }

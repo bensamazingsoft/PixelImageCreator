@@ -143,7 +143,7 @@ public class AppContext
       }
 
 
-      public Map<PixImage, File> getFiles()
+      public Map<PixImage, File> getPixImageFiles()
       {
 
 	    return files;

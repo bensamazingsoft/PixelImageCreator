@@ -37,213 +37,193 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
-public class GridViewBuilder implements IGridViewer
-{
+public class GridViewBuilder implements IGridViewer {
 
-      public static DataFormat dataFormat      = new DataFormat("pixcreator.PixelGrid");
+	public static DataFormat dataFormat = new DataFormat("pixcreator.PixelGrid");
 
-      private IGridsService    gridsService;
+	private IGridsService gridsService;
 
-      private final String     IMAGEPATH       = "images/gui/buttons/tools/";
-      private final AppContext ctx	       = AppContext.getInstance();
-      private ToolTipProvider  toolTipProvider = ctx.getToolTipProvider();
-      private WebPanel	       webPanel;
+	private final String		IMAGEPATH		= "images/gui/buttons/tools/";
+	private final AppContext	ctx				= AppContext.getInstance();
+	private ToolTipProvider		toolTipProvider	= ctx.getToolTipProvider();
+	private WebPanel			webPanel;
 
-      public static enum view {
-	    REGULAR;
-      }
+	public static enum view {
+		REGULAR;
+	}
 
+	public GridViewBuilder(WebPanel webPanel, IGridsService gridsService) {
 
-      public GridViewBuilder(WebPanel webPanel, IGridsService gridsService)
-      {
+		this.webPanel = webPanel;
+		this.gridsService = gridsService;
+	}
 
-	    this.webPanel = webPanel;
-	    this.gridsService = gridsService;
-      }
+	@Override
+	public Node build(Set<PixelGrid> grids, GridViewBuilder.view view) {
 
+		switch (view.name()) {
 
-      @Override
-      public Node build(Set<PixelGrid> grids, GridViewBuilder.view view)
-      {
+		case "REGULAR":
 
-	    switch (view.name())
-	    {
+			VBox box = new VBox();
+			box.getStylesheets().add("/styles/styles.css");
+			box.getStyleClass().add("RegularGridStickerVBox");
+			box.setSpacing(4);
 
-	    case "REGULAR":
+			for (PixelGrid grid : grids) {
 
-		  VBox box = new VBox();
-		  box.getStylesheets().add("/styles/styles.css");
-		  box.getStyleClass().add("RegularGridStickerVBox");
-		  box.setSpacing(4);
+				final boolean owned = webPanel.getLogInfo().getEmail().equals(grid.getOwner());
+				box.getChildren().add(new RegularGridSticker(grid, gridsService, owned));
+			}
 
-		  for (PixelGrid grid : grids)
-		  {
+			return box;
 
-			final boolean owned = webPanel.getLogBean().getData().getEmail().equals(grid.getOwner());
-			box.getChildren().add(new RegularGridSticker(grid, gridsService, owned));
-		  }
+		default:
+			return new StackPane();
+		}
+	}
 
-		  return box;
+	public class RegularGridSticker extends HBox {
 
-	    default:
-		  return new StackPane();
-	    }
-      }
+		private StackPane	miniaturePane;
+		private BorderPane	descrPanel;
+		private HBox		buttonsPane;
+		private Integer		MINIATUREHEIGHT;
+		private Integer		MINIATUREWIDTH;
 
-      public class RegularGridSticker extends HBox
-      {
+		public RegularGridSticker(PixelGrid grid, IGridsService gridsService, boolean owned) {
 
-	    private StackPane  miniaturePane;
-	    private BorderPane descrPanel;
-	    private HBox       buttonsPane;
-	    private Integer    MINIATUREHEIGHT;
-	    private Integer    MINIATUREWIDTH;
+			super();
 
+			getStylesheets().add("/styles/styles.css");
+			getStyleClass().add("RegularGridSticker");
 
-	    public RegularGridSticker(PixelGrid grid, IGridsService gridsService, boolean owned)
-	    {
+			setOnDragDetected(new DragControl(grid, this));
 
-		  super();
+			// Miniature setup
+			MINIATUREHEIGHT = Integer.valueOf(ctx.propertyContext().get("miniatureWH"));
+			MINIATUREWIDTH = Integer.valueOf(ctx.propertyContext().get("miniatureWH"));
 
-		  getStylesheets().add("/styles/styles.css");
-		  getStyleClass().add("RegularGridSticker");
+			miniaturePane = new StackPane();
+			miniaturePane.setMinWidth(MINIATUREWIDTH);
+			miniaturePane.setMinHeight(MINIATUREWIDTH);
+			miniaturePane.setMaxWidth(MINIATUREWIDTH);
+			miniaturePane.setMaxHeight(MINIATUREWIDTH);
+			// Canvas cnv = new Canvas(MINIATUREWIDTH, MINIATUREHEIGHT);
+			// cnv.getGraphicsContext2D().drawImage(grid.getMiniature(), 0, 0);
+			ImageView view = new ImageView();
+			view.setPreserveRatio(true);
+			view.setFitWidth(MINIATUREWIDTH);
+			view.setFitHeight(MINIATUREHEIGHT);
+			view.setImage(grid.getMiniature());
 
-		  setOnDragDetected(new DragControl(grid, this));
+			// miniaturePane.getStylesheets().add("/styles/styles.css");
+			miniaturePane.getStyleClass().add("RegularGridStickerMiniaturePane");
+			StackPane.setMargin(view, new Insets(5));
+			miniaturePane.getChildren().add(view);
+			setAlignment(Pos.CENTER);
+			getChildren().add(miniaturePane);
 
-		  // Miniature setup
-		  MINIATUREHEIGHT = Integer.valueOf(ctx.propertyContext().get("miniatureWH"));
-		  MINIATUREWIDTH = Integer.valueOf(ctx.propertyContext().get("miniatureWH"));
+			// description setup
+			descrPanel = new BorderPane();
+			HBox.setHgrow(descrPanel, Priority.ALWAYS);
+			descrPanel.getStyleClass().add("RegularGridStickerDescrPanel");
+			EditableLabel editableLabel = new EditableLabel(grid.getName());
+			editableLabel.getStyleClass().add("RegularGridStickerDescrPanelLabel");
+			Label label = new Label(grid.getName());
+			label.getStyleClass().add("RegularGridStickerDescrPanelLabel");
+			descrPanel.setTop(owned ? editableLabel : new StackPane(label));
 
-		  miniaturePane = new StackPane();
-		  miniaturePane.setMinWidth(MINIATUREWIDTH);
-		  miniaturePane.setMinHeight(MINIATUREWIDTH);
-		  miniaturePane.setMaxWidth(MINIATUREWIDTH);
-		  miniaturePane.setMaxHeight(MINIATUREWIDTH);
-		  // Canvas cnv = new Canvas(MINIATUREWIDTH, MINIATUREHEIGHT);
-		  // cnv.getGraphicsContext2D().drawImage(grid.getMiniature(), 0, 0);
-		  ImageView view = new ImageView();
-		  view.setPreserveRatio(true);
-		  view.setFitWidth(MINIATUREWIDTH);
-		  view.setFitHeight(MINIATUREHEIGHT);
-		  view.setImage(grid.getMiniature());
+			EditableTextArea editableTextArea = new EditableTextArea(grid.getDescription());
+			TextArea textArea = new TextArea(grid.getDescription());
+			textArea.setMaxHeight(40);
+			textArea.setEditable(false);
+			descrPanel.setCenter(owned ? editableTextArea : textArea);
 
-		  // miniaturePane.getStylesheets().add("/styles/styles.css");
-		  miniaturePane.getStyleClass().add("RegularGridStickerMiniaturePane");
-		  StackPane.setMargin(view, new Insets(5));
-		  miniaturePane.getChildren().add(view);
-		  setAlignment(Pos.CENTER);
-		  getChildren().add(miniaturePane);
+			SelectableSearchFilters selectableSearchFilters = new SelectableSearchFilters(grid.getFilters());
+			VBox vBox = new VBox(
+					owned ? selectableSearchFilters
+							: new Label(String.join(",",
+									grid.getFilters().stream().map(SearchFilters::name).collect(Collectors.toSet()))));
+			vBox.getStyleClass().add("RegularGridStickerSelectableSearchFilters");
+			descrPanel.setBottom(vBox);
 
-		  // description setup
-		  descrPanel = new BorderPane();
-		  HBox.setHgrow(descrPanel, Priority.ALWAYS);
-		  descrPanel.getStyleClass().add("RegularGridStickerDescrPanel");
-		  EditableLabel editableLabel = new EditableLabel(grid.getName());
-		  editableLabel.getStyleClass().add("RegularGridStickerDescrPanelLabel");
-		  Label label = new Label(grid.getName());
-		  label.getStyleClass().add("RegularGridStickerDescrPanelLabel");
-		  descrPanel.setTop(owned ? editableLabel : new StackPane(label));
+			getChildren().add(descrPanel);
 
-		  EditableTextArea editableTextArea = new EditableTextArea(grid.getDescription());
-		  TextArea textArea = new TextArea(grid.getDescription());
-		  textArea.setMaxHeight(40);
-		  textArea.setEditable(false);
-		  descrPanel.setCenter(owned ? editableTextArea : textArea);
+			if (owned) {
+				buttonsPane = new HBox();
+				buttonsPane.setAlignment(Pos.CENTER);
 
-		  SelectableSearchFilters selectableSearchFilters = new SelectableSearchFilters(grid.getFilters());
-		  VBox vBox = new VBox(
-			      owned ? selectableSearchFilters : new Label(String.join(",", grid.getFilters().stream().map(SearchFilters::name).collect(Collectors.toSet()))));
-		  vBox.getStyleClass().add("RegularGridStickerSelectableSearchFilters");
-		  descrPanel.setBottom(vBox);
+				final Image updateLayerButImg = new Image(
+						getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "updateLayerButImg.png"));
+				Button updateStickerBut = new Button();
+				updateStickerBut.setMaxHeight(10);
+				updateStickerBut.setMaxWidth(10);
+				updateStickerBut.setGraphic(new ImageView(updateLayerButImg));
+				updateStickerBut.setTooltip(toolTipProvider.get("updateWebRegularGridSticker"));
+				updateStickerBut.setOnAction(event -> {
 
-		  getChildren().add(descrPanel);
+					grid.setName(editableLabel.getText());
+					grid.setDescription(editableTextArea.getText());
+					grid.setFilters(selectableSearchFilters.getFilters());
 
-		  if (owned)
-		  {
-			buttonsPane = new HBox();
-			buttonsPane.setAlignment(Pos.CENTER);
+					try {
+						gridsService.updateGrid(grid);
+					} catch (WebException e) {
+						new ExceptionPopUp(e);
+					}
 
-			final Image updateLayerButImg = new Image(
-				    getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "updateLayerButImg.png"));
-			Button updateStickerBut = new Button();
-			updateStickerBut.setMaxHeight(10);
-			updateStickerBut.setMaxWidth(10);
-			updateStickerBut.setGraphic(new ImageView(updateLayerButImg));
-			updateStickerBut.setTooltip(toolTipProvider.get("updateWebRegularGridSticker"));
-			updateStickerBut.setOnAction(event -> {
+					webPanel.reload();
+				});
+				buttonsPane.getChildren().add(updateStickerBut);
 
-			      grid.setName(editableLabel.getText());
-			      grid.setDescription(editableTextArea.getText());
-			      grid.setFilters(selectableSearchFilters.getFilters());
+				final Image deleteLayerButImg = new Image(
+						getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "deleteLayerButImg.png"));
+				Button deleteStickerBut = new Button();
+				deleteStickerBut.setGraphic(new ImageView(deleteLayerButImg));
+				deleteStickerBut.setTooltip(toolTipProvider.get("deleteWebRegularGridSticker"));
+				deleteStickerBut.setMaxHeight(10);
+				deleteStickerBut.setMaxWidth(10);
+				deleteStickerBut.setOnAction(event -> {
+					try {
+						gridsService.deleteGrid(grid);
+						webPanel.getPixelGridBean().getData().remove(grid);
 
-			      try
-			      {
-				    gridsService.updateGrid(grid);
-			      }
-			      catch (WebException e)
-			      {
-				    new ExceptionPopUp(e);
-			      }
+					} catch (WebException e) {
+						new ExceptionPopUp(e);
+					}
+					webPanel.reload();
+				});
+				buttonsPane.getChildren().add(deleteStickerBut);
 
-			      webPanel.reload();
-			});
-			buttonsPane.getChildren().add(updateStickerBut);
+				getChildren().add(new StackPane(buttonsPane));
+			}
 
-			final Image deleteLayerButImg = new Image(
-				    getClass().getClassLoader().getResourceAsStream(IMAGEPATH + "deleteLayerButImg.png"));
-			Button deleteStickerBut = new Button();
-			deleteStickerBut.setGraphic(new ImageView(deleteLayerButImg));
-			deleteStickerBut.setTooltip(toolTipProvider.get("deleteWebRegularGridSticker"));
-			deleteStickerBut.setMaxHeight(10);
-			deleteStickerBut.setMaxWidth(10);
-			deleteStickerBut.setOnAction(event -> {
-			      try
-			      {
-				    gridsService.deleteGrid(grid);
-				    webPanel.getPixelGridBean().getData().remove(grid);
+		}
 
-			      }
-			      catch (WebException e)
-			      {
-				    new ExceptionPopUp(e);
-			      }
-			      webPanel.reload();
-			});
-			buttonsPane.getChildren().add(deleteStickerBut);
+	}
 
-			getChildren().add(new StackPane(buttonsPane));
-		  }
+	public class DragControl implements EventHandler<MouseEvent> {
 
-	    }
+		private PixelGrid	grid;
+		private Node		sticker;
 
-      }
+		public DragControl(PixelGrid grid, Node sticker) {
 
-      public class DragControl implements EventHandler<MouseEvent>
-      {
+			this.grid = grid;
+			this.sticker = sticker;
+		}
 
-	    private PixelGrid grid;
-	    private Node      sticker;
+		@Override
+		public void handle(MouseEvent evt) {
 
+			Dragboard dragBoard = sticker.startDragAndDrop(TransferMode.ANY);
+			ClipboardContent dragboardContent = new ClipboardContent();
+			dragboardContent.put(dataFormat, grid);
+			dragBoard.setContent(dragboardContent);
 
-	    public DragControl(PixelGrid grid, Node sticker)
-	    {
+			evt.consume();
+		}
 
-		  this.grid = grid;
-		  this.sticker = sticker;
-	    }
-
-
-	    @Override
-	    public void handle(MouseEvent evt)
-	    {
-
-		  Dragboard dragBoard = sticker.startDragAndDrop(TransferMode.ANY);
-		  ClipboardContent dragboardContent = new ClipboardContent();
-		  dragboardContent.put(dataFormat, grid);
-		  dragBoard.setContent(dragboardContent);
-
-		  evt.consume();
-	    }
-
-      }
+	}
 }

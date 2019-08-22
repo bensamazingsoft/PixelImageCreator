@@ -22,137 +22,120 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-public class SubscribeWebPanelState implements WebPanelState
-{
+public class SubscribeWebPanelState implements WebPanelState {
 
-      private WebPanel	 webPanel;
+	private WebPanel webPanel;
 
-      private AppContext ctx = AppContext.getInstance();
+	private AppContext ctx = AppContext.getInstance();
 
+	public SubscribeWebPanelState() {
 
-      public SubscribeWebPanelState()
-      {
+		this.webPanel = GuiFacade.getInstance().getWebPanel();
 
-	    this.webPanel = GuiFacade.getInstance().getWebPanel();
+	}
 
-      }
+	private BorderPane build() {
 
+		BorderPane bp = new BorderPane();
 
-      private BorderPane build()
-      {
+		VBox box = new VBox();
 
-	    BorderPane bp = new BorderPane();
+		Bean<LogInfo> logBean = webPanel.getLogBean();
+		String message = logBean.getMessage();
 
-	    VBox box = new VBox();
+		if (null != message && message.length() > 0) {
+			Label messageLbl = new Label(message);
+			messageLbl.setStyle("-fx-font-color : green");
+			bp.setTop(messageLbl);
+		}
 
-	    Bean<LogInfo> logBean = webPanel.getLogBean();
-	    String message = logBean.getMessage();
+		Label emailLbl = new Label(ctx.getBundle().getString("email"));
+		box.getChildren().add(emailLbl);
 
-	    if (null != message && message.length() > 0)
-	    {
-		  Label messageLbl = new Label(message);
-		  messageLbl.setStyle("-fx-font-color : green");
-		  bp.setTop(messageLbl);
-	    }
+		TextField emailTf = new TextField();
+		emailTf.setText(logBean.getData().getEmail());
+		emailTf.textProperty().addListener((obs, oldVal, newVal) -> logBean.getData().setEmail(newVal));
+		box.getChildren().add(emailTf);
 
-	    Label emailLbl = new Label(ctx.getBundle().getString("email"));
-	    box.getChildren().add(emailLbl);
+		Label passwordLbl = new Label(ctx.getBundle().getString("password"));
+		box.getChildren().add(passwordLbl);
 
-	    TextField emailTf = new TextField();
-	    emailTf.setText(logBean.getData().getEmail());
-	    emailTf.textProperty().addListener((obs, oldVal, newVal) -> logBean.getData().setEmail(newVal));
-	    box.getChildren().add(emailTf);
+		TextField passwordTf = new TextField();
+		passwordTf.setText(logBean.getData().getPassword());
+		passwordTf.textProperty().addListener((obs, oldVal, newVal) -> logBean.getData().setPassword(newVal));
+		box.getChildren().add(passwordTf);
 
-	    Label passwordLbl = new Label(ctx.getBundle().getString("password"));
-	    box.getChildren().add(passwordLbl);
+		Label confPasswordLbl = new Label(ctx.getBundle().getString("conf_password"));
+		box.getChildren().add(confPasswordLbl);
 
-	    TextField passwordTf = new TextField();
-	    passwordTf.setText(logBean.getData().getPassword());
-	    passwordTf.textProperty().addListener((obs, oldVal, newVal) -> logBean.getData().setPassword(newVal));
-	    box.getChildren().add(passwordTf);
+		TextField confPasswordTf = new TextField();
+		confPasswordTf.setText(logBean.getData().getPassword());
+		// confPasswordTf.textProperty().addListener((obs, oldVal, newVal) ->
+		// logBean.getData().setPassword(newVal));
+		box.getChildren().add(confPasswordTf);
 
-	    Label confPasswordLbl = new Label(ctx.getBundle().getString("conf_password"));
-	    box.getChildren().add(confPasswordLbl);
+		Button subscribeBtn = new Button(ctx.getBundle().getString("subscribe"));
+		subscribeBtn.setOnAction(event -> validate(logBean, confPasswordTf.getText()));
+		Button backBtn = new Button(ctx.getBundle().getString("back"));
+		backBtn.setOnAction(event -> changeState(new UnLoggedState(webPanel)));
+		HBox btnBox = new HBox();
+		btnBox.getChildren().addAll(subscribeBtn, backBtn);
+		box.getChildren().add(btnBox);
 
-	    TextField confPasswordTf = new TextField();
-	    confPasswordTf.setText(logBean.getData().getPassword());
-	    // confPasswordTf.textProperty().addListener((obs, oldVal, newVal) -> logBean.getData().setPassword(newVal));
-	    box.getChildren().add(confPasswordTf);
+		Map<String, String> errors = logBean.getErrors();
+		if (errors.size() > 0) {
+			for (String errKey : errors.keySet()) {
+				Label errLbl = new Label(errKey + " : " + errors.get(errKey));
+				errLbl.setStyle("-fx-text-fill : red");
+				box.getChildren().add(errLbl);
+			}
+		}
 
-	    Button subscribeBtn = new Button(ctx.getBundle().getString("subscribe"));
-	    subscribeBtn.setOnAction(event -> validate(logBean, confPasswordTf.getText()));
-	    Button backBtn = new Button(ctx.getBundle().getString("back"));
-	    backBtn.setOnAction(event -> changeState(new UnLoggedState(webPanel)));
-	    HBox btnBox = new HBox();
-	    btnBox.getChildren().addAll(subscribeBtn, backBtn);
-	    box.getChildren().add(btnBox);
+		bp.setCenter(box);
 
-	    Map<String, String> errors = logBean.getErrors();
-	    if (errors.size() > 0)
-	    {
-		  for (String errKey : errors.keySet())
-		  {
-			Label errLbl = new Label(errKey + " : " + errors.get(errKey));
-			errLbl.setStyle("-fx-text-fill : red");
-			box.getChildren().add(errLbl);
-		  }
-	    }
+		return bp;
+	}
 
-	    bp.setCenter(box);
+	private void validate(Bean<LogInfo> logBean, String confPassword) {
 
-	    return bp;
-      }
+		SubscribeTask task = new SubscribeTask(confPassword);
 
+		try {
+			Executor.getInstance().executeAction(
+					new MonitoredAction(task)
+							.success(evt -> {
 
-      private void validate(Bean<LogInfo> logBean, String confPassword)
-      {
+								if (webPanel.isConnected()) {
+									changeState(new UnLoggedState(webPanel));
+									return;
+								}
+								webPanel.reload();
+							})
+							.fail(evt -> {
 
-	    SubscribeTask task = new SubscribeTask(confPassword);
+								new ExceptionPopUp((Exception) task.getException());
 
-	    try
-	    {
-		  Executor.getInstance().executeAction(
-			      new MonitoredAction(task)
-					  .success(evt -> {
+								webPanel.reload();
+							}));
 
-						if (webPanel.getLogBean().getData().isConnected())
-						{
-						      changeState(new UnLoggedState(webPanel));
-						      return;
-						}
-						webPanel.reload();
-					  })
-					  .fail(evt -> {
+		} catch (Exception e) {
+			new ExceptionPopUp(e);
+		}
 
-						new ExceptionPopUp((Exception) task.getException());
+	}
 
-						webPanel.reload();
-					  }));
+	@Override
+	public Node load() {
 
-	    }
-	    catch (Exception e)
-	    {
-		  new ExceptionPopUp(e);
-	    }
+		return build();
+	}
 
-      }
+	@Override
+	public void changeState(WebPanelState newState) {
 
+		webPanel.setState(newState);
+		webPanel.reload();
 
-      @Override
-      public Node load()
-      {
-
-	    return build();
-      }
-
-
-      @Override
-      public void changeState(WebPanelState newState)
-      {
-
-	    webPanel.setState(newState);
-	    webPanel.reload();
-
-      }
+	}
 
 }

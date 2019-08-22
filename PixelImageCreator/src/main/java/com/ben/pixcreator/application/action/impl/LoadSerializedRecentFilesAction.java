@@ -11,18 +11,19 @@ import com.ben.pixcreator.application.pile.Pile;
 import com.ben.pixcreator.gui.exception.popup.ExceptionPopUp;
 import com.ben.pixcreator.gui.facade.GuiFacade;
 
-public class LoadRecentFilesAction implements IAction {
+public class LoadSerializedRecentFilesAction implements IAction {
+
+	private final GuiFacade gui = GuiFacade.getInstance();
 
 	@Override
 	public void execute() throws Exception {
 
-		File recentFiles = new File("data/rctfl.inf");
+		File serializedRecentFiles = new File("data/rctfl.inf");
 
-		if (recentFiles.exists()) {
-			loadfile(recentFiles);
+		if (serializedRecentFiles.exists()) {
+			loadfile(serializedRecentFiles);
+			gui.updateRecentFilesMenu();
 		}
-
-		GuiFacade.getInstance().getPixMenuBar().loadRecentFiles();
 
 	}
 
@@ -34,7 +35,7 @@ public class LoadRecentFilesAction implements IAction {
 			@SuppressWarnings("unchecked")
 			Pile<String> recentFiles = (Pile<String>) in.readObject();
 
-			GuiFacade.getInstance().setRecentFiles(recentFiles);
+			gui.setRecentFiles(recentFiles);
 
 		} catch (FileNotFoundException e) {
 			new ExceptionPopUp(e);

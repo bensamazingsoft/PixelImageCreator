@@ -57,10 +57,11 @@ import javafx.stage.FileChooser.ExtensionFilter;
 
 public class PixMenuBar extends MenuBar implements Initializable {
 
-	private static final Logger log = LoggerFactory.getLogger(PixMenuBar.class);
-
+	private static final Logger	log	= LoggerFactory.getLogger(PixMenuBar.class);
+	private final GuiFacade		gui	= GuiFacade.getInstance();
+	private final Executor		exe	= Executor.getInstance();
 	@FXML
-	Menu fileMenu;
+	Menu						fileMenu;
 
 	@FXML
 	private CustomMenuItem averagePixellateMenuItem;
@@ -142,7 +143,7 @@ public class PixMenuBar extends MenuBar implements Initializable {
 
 		PixImage image = GuiFacade.getInstance().getActiveimage();
 
-		if (!AppContext.getInstance().getFiles().containsKey(image)) {
+		if (!AppContext.getInstance().getPixImageFiles().containsKey(image)) {
 			handleSaveAsAction();
 		} else {
 			try {
@@ -171,7 +172,7 @@ public class PixMenuBar extends MenuBar implements Initializable {
 		if (null != file) {
 			log.debug("saving image to : " + file.toString());
 			if (null != file) {
-				AppContext.getInstance().getFiles().put(image, file);
+				AppContext.getInstance().getPixImageFiles().put(image, file);
 				handleSaveAction();
 				GuiFacade.getInstance().getActiveTab().setText(file.getName());
 			}
@@ -283,13 +284,15 @@ public class PixMenuBar extends MenuBar implements Initializable {
 
 	private void handleExtractAction() {
 
-		PixImage activeImage = GuiFacade.getInstance().getActiveimage();
-		Selection selection = GuiFacade.getInstance().getActiveSelection();
-		PixTab tab = GuiFacade.getInstance().getActiveTab();
+		final GuiFacade gui = GuiFacade.getInstance();
+		PixImage activeImage = gui.getActiveimage();
+		Selection selection = gui.getActiveSelection();
+		PixTab tab = gui.getActiveTab();
 
 		try {
 
-			Executor.getInstance()
+			final Executor exe = Executor.getInstance();
+			exe
 					.executeAction(new PixellateAction(PixellateAction.actionType.CENTERPICK, tab, activeImage));
 
 			final Pile<ALayer> layerList = activeImage.getLayerPile();
@@ -307,8 +310,8 @@ public class PixMenuBar extends MenuBar implements Initializable {
 
 			}
 
-			GuiFacade.getInstance().getLayerPanel().populate();
-			Executor.getInstance().executeAction(new RefreshTabAction(tab));
+			gui.populateLayerPanel();
+			exe.executeAction(new RefreshTabAction(tab));
 
 			handleUnSelect();
 
@@ -366,7 +369,7 @@ public class PixMenuBar extends MenuBar implements Initializable {
 
 		handleCopy();
 
-		if (!gui.getClipboard().isEmpty() && gui.getActiveLayer() instanceof PixLayer) {
+		if (!gui.selectionIsEmpty() && gui.getActiveLayer() instanceof PixLayer) {
 
 			PixImage activeImage = gui.getActiveimage();
 
@@ -412,7 +415,7 @@ public class PixMenuBar extends MenuBar implements Initializable {
 
 		final GuiFacade gui = GuiFacade.getInstance();
 
-		if (!gui.getClipboard().isEmpty() && gui.getActiveLayer() instanceof PixLayer) {
+		if (!gui.selectionIsEmpty() && gui.getActiveLayer() instanceof PixLayer) {
 
 			PixLayer pixLayer = (PixLayer) gui.getActiveLayer();
 
@@ -492,14 +495,15 @@ public class PixMenuBar extends MenuBar implements Initializable {
 
 	private void handlePixellateAction(PixellateAction.actionType type) {
 
-		PixImage activeImage = GuiFacade.getInstance().getActiveimage();
-		// GuiFacade.getInstance().getSelections().remove(activeImage);
-		PixTab tab = GuiFacade.getInstance().getActiveTab();
+		PixImage activeImage = gui.getActiveimage();
+
+		PixTab tab = gui.getActiveTab();
 
 		try {
-			Executor.getInstance().executeAction(new PixellateAction(type, tab, activeImage));
-			GuiFacade.getInstance().getLayerPanel().populate();
-			Executor.getInstance().executeAction(new RefreshTabAction(tab));
+
+			exe.executeAction(new PixellateAction(type, tab, activeImage));
+			gui.populateLayerPanel();
+			exe.executeAction(new RefreshTabAction(tab));
 		} catch (Exception e) {
 			new ExceptionPopUp(e);
 		}

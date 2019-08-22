@@ -6,7 +6,7 @@ import java.util.ResourceBundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ben.pixcreator.application.action.impl.LoadRecentFilesAction;
+import com.ben.pixcreator.application.action.impl.LoadSerializedRecentFilesAction;
 import com.ben.pixcreator.application.action.impl.OpenNewImageAction;
 import com.ben.pixcreator.application.action.impl.SaveRecentFilesAction;
 import com.ben.pixcreator.application.context.AppContext;
@@ -66,7 +66,7 @@ public class MainApp extends Application
 	    stage.setScene(scene);
 	    stage.show();
 
-	    Executor.getInstance().executeAction(new LoadRecentFilesAction());
+	    Executor.getInstance().executeAction(new LoadSerializedRecentFilesAction());
 	    Executor.getInstance().executeAction(new OpenNewImageAction());
 
 	    GuiFacade.getInstance().toggleToolTo(AppContext.getInstance().getCurrTool());

@@ -21,9 +21,9 @@ public class BasicPile<T> implements Serializable, Pile<T> {
 	/**
 	 * 
 	 */
-	private static final long	serialVersionUID	= 1L;
-	private final Set<BasicPair<T>>		items				= new HashSet<>();
-	private int					maxSize				= 0;
+	private static final long		serialVersionUID	= 1L;
+	private final Set<BasicPair<T>>	items				= new HashSet<>();
+	private int						maxSize				= 0;
 
 	public BasicPile() {
 
@@ -47,7 +47,9 @@ public class BasicPile<T> implements Serializable, Pile<T> {
 
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ben.pixcreator.application.pile.Pile#add(T)
 	 */
 	@Override
@@ -63,7 +65,9 @@ public class BasicPile<T> implements Serializable, Pile<T> {
 
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ben.pixcreator.application.pile.Pile#getItem(int)
 	 */
 	@Override
@@ -77,7 +81,9 @@ public class BasicPile<T> implements Serializable, Pile<T> {
 		return null;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ben.pixcreator.application.pile.Pile#getIdx(T)
 	 */
 	@Override
@@ -99,7 +105,9 @@ public class BasicPile<T> implements Serializable, Pile<T> {
 
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ben.pixcreator.application.pile.Pile#removeOfIndex(int)
 	 */
 	@Override
@@ -128,7 +136,9 @@ public class BasicPile<T> implements Serializable, Pile<T> {
 
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ben.pixcreator.application.pile.Pile#removeOfItem(T)
 	 */
 	@Override
@@ -156,7 +166,9 @@ public class BasicPile<T> implements Serializable, Pile<T> {
 		return success;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ben.pixcreator.application.pile.Pile#moveUp(T)
 	 */
 	@Override
@@ -172,7 +184,9 @@ public class BasicPile<T> implements Serializable, Pile<T> {
 		return -1;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ben.pixcreator.application.pile.Pile#moveDown(T)
 	 */
 	@Override
@@ -185,7 +199,9 @@ public class BasicPile<T> implements Serializable, Pile<T> {
 		return -1;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ben.pixcreator.application.pile.Pile#insertOver(T, T)
 	 */
 	@Override
@@ -209,7 +225,9 @@ public class BasicPile<T> implements Serializable, Pile<T> {
 		return -1;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ben.pixcreator.application.pile.Pile#insertUnder(T, T)
 	 */
 	@Override
@@ -231,7 +249,9 @@ public class BasicPile<T> implements Serializable, Pile<T> {
 		return -1;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ben.pixcreator.application.pile.Pile#replace(int, T)
 	 */
 	@Override
@@ -284,7 +304,9 @@ public class BasicPile<T> implements Serializable, Pile<T> {
 		return null;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ben.pixcreator.application.pile.Pile#getItems()
 	 */
 	@Override
@@ -293,7 +315,9 @@ public class BasicPile<T> implements Serializable, Pile<T> {
 		return items;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ben.pixcreator.application.pile.Pile#isEmpty()
 	 */
 	@Override
@@ -303,7 +327,9 @@ public class BasicPile<T> implements Serializable, Pile<T> {
 
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ben.pixcreator.application.pile.Pile#getAllItems()
 	 */
 	@Override
@@ -320,7 +346,9 @@ public class BasicPile<T> implements Serializable, Pile<T> {
 		return "BasicPile [items=" + items + "]";
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ben.pixcreator.application.pile.Pile#getMaxSize()
 	 */
 	@Override
@@ -329,7 +357,9 @@ public class BasicPile<T> implements Serializable, Pile<T> {
 		return maxSize;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ben.pixcreator.application.pile.Pile#setMaxSize(int)
 	 */
 	@Override
@@ -388,6 +418,21 @@ public class BasicPile<T> implements Serializable, Pile<T> {
 			return false;
 		}
 		return true;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ben.pixcreator.application.pile.Pile#removeIfPresent(java.lang.
+	 * Object)
+	 */
+	@Override
+	public void removeIfPresent(T item) {
+
+		if (getAllItems().contains(item)) {
+			getAllItems().remove(item);
+		}
+
 	}
 
 }

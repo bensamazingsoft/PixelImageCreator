@@ -26,116 +26,99 @@ import com.ben.pixcreator.application.pile.BasicPile;
 import com.ben.pixcreator.application.pile.Pile;
 import com.ben.pixcreator.gui.facade.GuiFacade;
 
-public class LoadFileAction implements IAction
-{
+public class LoadFileAction implements IAction {
 
-      private final File file;
+	private final File file;
 
+	public LoadFileAction(File file) {
 
-      public LoadFileAction(File file)
-      {
+		this.file = file;
+	}
 
-	    this.file = file;
-      }
+	@Override
+	public void execute() throws Exception {
 
+		try (FileInputStream fileIn = new FileInputStream(file);
+				ObjectInputStream in = new ObjectInputStream(fileIn);) {
 
-      @Override
-      public void execute() throws Exception
-      {
+			PixFile pixFile = (PixFile) in.readObject();
 
-	    try (FileInputStream fileIn = new FileInputStream(file);
-			ObjectInputStream in = new ObjectInputStream(fileIn);)
-	    {
+			PixImage image = getImage(pixFile);
 
-		  PixFile pixFile = (PixFile) in.readObject();
+			Executor.getInstance().executeAction(new OpenTabAction(image));
 
-		  PixImage image = getImage(pixFile);
-
-		  Executor.getInstance().executeAction(new OpenTabAction(image));
-
-		  final GuiFacade gui = GuiFacade.getInstance();
-		  final Pile<String> recentFiles = gui.getRecentFiles();
-		  if (recentFiles.getAllItems().contains(file.toString()))
-		  {
-			recentFiles.removeOfItem(file.toString());
-		  }
-		  recentFiles.add(file.toString());
-		  gui.getPixMenuBar().loadRecentFiles();
-
-	    }
-	    catch (IOException e)
-	    {
-		  throw new Exception(e);
-	    }
-
-      }
-
-
-      private PixImage getImage(PixFile pixFile)
-      {
-
-	    GuiFacade gui = GuiFacade.getInstance();
-
-	    PixImage image = pixFile.getImage();
-	    GroupLock groupLock = new GroupLock();
-	    AppContext.getInstance().getGroupLocks().put(image, groupLock);
-
-	    Map<UUID, Set<UUID>> locks = pixFile.getLocks();
-	    Map<UUID, Boolean> visibility = pixFile.getVisibility();
-	    Map<UUID, BasicPile<Effect>> effects = pixFile.getEffects();
-
-	    Set<ALayer> imageLayers = image.getLayerPile().getAllItems();
-	    for (ALayer layer : imageLayers)
-	    {
-
-		  // set each layers visibility
-		  layer.setVisible(visibility.get(layer.getUUID()));
-
-		  // set the lock relations between each "active" layers and the
-		  // others
-		  if (locks.containsKey(layer.getUUID()))
-		  {
-			if (!locks.get(layer.getUUID()).isEmpty())
-			{
-			      Set<ALayer> locked = locks.get(layer.getUUID()).stream()
-					  .map(uuid -> getLayerByUUID(uuid, imageLayers))
-					  .collect(toSet());
-			      groupLock.getGroup().put(layer, locked);
+			final GuiFacade gui = GuiFacade.getInstance();
+			final Pile<String> recentFiles = gui.getRecentFiles();
+			if (recentFiles.getAllItems().contains(file.toString())) {
+				recentFiles.removeOfItem(file.toString());
 			}
-		  }
-	    }
+			recentFiles.add(file.toString());
 
-	    // set image effects in app context
-	    AppContext.getInstance().getEffectManager().getManager().put(
-			image,
-			effects.entrySet().stream()
-				    .collect(Collectors.toMap(
-						entry -> getLayerByUUID(entry.getKey(), imageLayers),
-						Entry<UUID, BasicPile<Effect>>::getValue)));
+			gui.updateRecentFilesMenu();
 
-	    // set image colors in the gui facade map (checked when a tab is opened)
-	    Set<ColorRGB> colors = pixFile.getColors();
-	    gui.getImagesColors().put(image, colors.stream().map(ColorRGB::getFxColorProperty).collect(toSet()));
+		} catch (IOException e) {
+			throw new Exception(e);
+		}
 
-	    // set file path in files context map
-	    AppContext.getInstance().getFiles().put(image, file);
+	}
 
-	    return image;
-      }
+	private PixImage getImage(PixFile pixFile) {
 
+		GuiFacade gui = GuiFacade.getInstance();
 
-      private ALayer getLayerByUUID(UUID uuid, Set<ALayer> imageLayers)
-      {
+		PixImage image = pixFile.getImage();
+		GroupLock groupLock = new GroupLock();
+		AppContext.getInstance().getGroupLocks().put(image, groupLock);
 
-	    for (ALayer layer : imageLayers)
-	    {
-		  if (layer.getUUID().equals(uuid))
-		  {
-			return layer;
-		  }
-	    }
+		Map<UUID, Set<UUID>> locks = pixFile.getLocks();
+		Map<UUID, Boolean> visibility = pixFile.getVisibility();
+		Map<UUID, BasicPile<Effect>> effects = pixFile.getEffects();
 
-	    return null;
-      }
+		Set<ALayer> imageLayers = image.getLayerPile().getAllItems();
+		for (ALayer layer : imageLayers) {
+
+			// set each layers visibility
+			layer.setVisible(visibility.get(layer.getUUID()));
+
+			// set the lock relations between each "active" layers and the
+			// others
+			if (locks.containsKey(layer.getUUID())) {
+				if (!locks.get(layer.getUUID()).isEmpty()) {
+					Set<ALayer> locked = locks.get(layer.getUUID()).stream()
+							.map(uuid -> getLayerByUUID(uuid, imageLayers))
+							.collect(toSet());
+					groupLock.getGroup().put(layer, locked);
+				}
+			}
+		}
+
+		// set image effects in app context
+		AppContext.getInstance().getEffectManager().getManager().put(
+				image,
+				effects.entrySet().stream()
+						.collect(Collectors.toMap(
+								entry -> getLayerByUUID(entry.getKey(), imageLayers),
+								Entry<UUID, BasicPile<Effect>>::getValue)));
+
+		// set image colors in the gui facade map (checked when a tab is opened)
+		Set<ColorRGB> colors = pixFile.getColors();
+		gui.getImagesColors().put(image, colors.stream().map(ColorRGB::getFxColorProperty).collect(toSet()));
+
+		// set file path in files context map
+		AppContext.getInstance().getPixImageFiles().put(image, file);
+
+		return image;
+	}
+
+	private ALayer getLayerByUUID(UUID uuid, Set<ALayer> imageLayers) {
+
+		for (ALayer layer : imageLayers) {
+			if (layer.getUUID().equals(uuid)) {
+				return layer;
+			}
+		}
+
+		return null;
+	}
 
 }

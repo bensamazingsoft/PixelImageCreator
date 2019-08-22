@@ -16,42 +16,38 @@ import com.ben.pixcreator.gui.pane.web.LogInfo;
 import com.ben.pixcreator.gui.pane.web.gridsmanager.impl.RestGridService;
 import com.ben.pixcreator.web.PixelGridDto;
 
-public class ExportGridOnWebAction implements IAction
-{
+public class ExportGridOnWebAction implements IAction {
 
-      private static final Logger  log = LoggerFactory.getLogger(ExportGridOnWebAction.class);
+	private static final Logger log = LoggerFactory.getLogger(ExportGridOnWebAction.class);
 
-      private LogInfo		   logInfo;
-      private Map<Coord, ColorRGB> grid;
-      private PixLayer		   layer;
+	private LogInfo					logInfo;
+	private Map<Coord, ColorRGB>	grid;
+	private PixLayer				layer;
 
+	public ExportGridOnWebAction(LogInfo logInfo, ALayer layer) {
 
-      public ExportGridOnWebAction(LogInfo logInfo, ALayer layer)
-      {
+		this.layer = (PixLayer) layer;
+		this.logInfo = logInfo;
+		this.grid = this.layer.getGrid();
 
-	    this.layer = (PixLayer) layer;
-	    this.logInfo = logInfo;
-	    this.grid = this.layer.getGrid();
+	}
 
-      }
+	@Override
+	public void execute() throws Exception {
 
+		log.debug("");
 
-      @Override
-      public void execute() throws Exception
-      {
+		grid = layer.withNewOrigin(layer.minCell()).getGrid();
 
-	    log.debug("");
+		RestGridService restGridService = new RestGridService();
 
-	    grid = layer.withNewOrigin(layer.minCell()).getGrid();
+		PixelGridDto pixelGridDto = new PixelGridDto(logInfo.getEmail(), grid,
+				GuiFacade.getInstance().getMiniatureManager().getImage(layer));
 
-	    RestGridService restGridService = new RestGridService();
+		restGridService.saveGrid(pixelGridDto);
 
-	    PixelGridDto pixelGridDto = new PixelGridDto(logInfo.getEmail(), grid, GuiFacade.getInstance().getMiniatureManager().getImage(layer));
+		GuiFacade.getInstance().reloadWebPanel();
 
-	    restGridService.saveGrid(pixelGridDto);
-
-	    GuiFacade.getInstance().getWebPanel().reload();
-
-      }
+	}
 
 }

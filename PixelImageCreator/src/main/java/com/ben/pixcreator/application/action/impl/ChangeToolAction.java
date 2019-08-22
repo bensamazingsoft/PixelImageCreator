@@ -34,7 +34,7 @@ public class ChangeToolAction implements IAction {
 		AppContext.getInstance().setCurrTool(pixTool);
 
 		PixToolBar pixToolBar = gui.getPixToolBar();
-		List<Toggle> list = pixToolBar.getToggleGroup().getToggles().stream()
+		List<Toggle> list = pixToolBar.getToggles().stream()
 				.filter(togBut -> ((PixTool) togBut.getUserData()).name().equals(pixTool.name()))
 				.collect(Collectors.toList());
 

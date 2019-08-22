@@ -40,22 +40,21 @@ public class PickColorAction implements IAction {
 
 		if (!colors.contains(color)) {
 
-			addColorToImageColorsAndReloadRoster(color, gui);
+			addColorToImageColors(color, gui);
+			gui.reloadColorsInRoster(gui.getActiveImage());
 
 		}
 
-		gui.getColorRoster().selectColor(color);
+		gui.selectColor(color);
 
 	}
 
-	private void addColorToImageColorsAndReloadRoster(Color color, final GuiFacade gui) {
+	private void addColorToImageColors(Color color, final GuiFacade gui) {
 
 		SimpleObjectProperty<Color> prop = new SimpleObjectProperty<>();
 		prop.set(color);
 
 		gui.getImagesColors().get(gui.getActiveImage()).add(prop);
-
-		gui.getColorRoster().reload(gui.getActiveImage());
 
 	}
 

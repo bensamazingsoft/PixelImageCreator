@@ -3,6 +3,7 @@ package com.ben.pixcreator.gui.controls.tool.toolbar;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Collection;
 import java.util.ResourceBundle;
 
 import com.ben.pixcreator.application.action.impl.RefreshAllTabsAction;
@@ -19,6 +20,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.ToolBar;
@@ -250,6 +252,10 @@ public class PixToolBar extends ToolBar implements Initializable {
 
 	}
 
+	public PixTool getSelectedToggleData() {
+		return (PixTool) getToggleGroup().getSelectedToggle().getUserData();
+	}
+
 	public ToggleGroup getToggleGroup() {
 
 		return toggleGroup;
@@ -273,6 +279,11 @@ public class PixToolBar extends ToolBar implements Initializable {
 	public final void setPanMode(final boolean panMode) {
 
 		this.panModeProperty().set(panMode);
+	}
+
+	public Collection<Toggle> getToggles() {
+
+		return getToggleGroup().getToggles();
 	}
 
 }

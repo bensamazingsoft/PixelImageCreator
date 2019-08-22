@@ -35,7 +35,7 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 				gui.setPanMode(true);
 
 			} else {
-				gui.toggleToolTo((PixTool) gui.getPixToolBar().getToggleGroup().getSelectedToggle().getUserData());
+				gui.toggleToolTo(gui.getSelectedToolInToolbar());
 				gui.setPanMode(false);
 
 			}
@@ -51,11 +51,11 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 
 			case LEFT:
 				log.debug("selectPrevColorBox()");
-				gui.getColorRoster().selectPrevColorBox();
+				gui.selectPrevColorBox();
 				break;
 			case RIGHT:
 				log.debug("selectNextColorBox()");
-				gui.getColorRoster().selectNextColorBox();
+				gui.selectNextColorBox();
 				break;
 			default:
 				break;
