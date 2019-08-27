@@ -12,6 +12,7 @@ import com.ben.pixcreator.application.executor.Executor;
 import com.ben.pixcreator.application.tools.PixTool;
 import com.ben.pixcreator.gui.exception.popup.ExceptionPopUp;
 import com.ben.pixcreator.gui.facade.GuiFacade;
+import com.ben.pixcreator.gui.facade.ToolGuiFacade;
 import com.ben.pixcreator.gui.tooltip.provider.ToolTipProvider;
 
 import javafx.beans.binding.Bindings;
@@ -161,7 +162,7 @@ public class PixToolBar extends ToolBar implements Initializable {
 	private void handleToggle() {
 
 		// handle tool toggle action with gui facade
-		GuiFacade guiFacade = GuiFacade.getInstance();
+		ToolGuiFacade guiFacade = GuiFacade.getInstance();
 
 		guiFacade.toggleToolTo((PixTool) toggleGroup.getSelectedToggle().getUserData());
 

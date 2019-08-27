@@ -8,7 +8,7 @@ import org.apache.commons.math3.analysis.function.Logistic;
 import com.ben.pixcreator.application.color.rgb.ColorRGB;
 import com.ben.pixcreator.application.image.coords.Coord;
 import com.ben.pixcreator.application.image.effect.Effect;
-import com.ben.pixcreator.application.image.layer.effect.EffectDesign;
+import com.ben.pixcreator.application.image.layer.effect.EffectType;
 import com.ben.pixcreator.application.image.layer.effect.exception.EffectException;
 import com.ben.pixcreator.application.image.layer.effect.params.impl.LumaKeyEffectParams;
 import com.ben.pixcreator.application.image.layer.impl.alayer.ALayer;
@@ -29,7 +29,7 @@ public class LumaKeyModifier implements IModifier {
 
 	@Override
 	public ALayer modify(ALayer layer) throws EffectException {
-		if (fx.getEffect() != EffectDesign.LUMAKEY) {
+		if (fx.getEffect() != EffectType.LUMAKEY) {
 			throw new EffectException("Effect design is not LUMAKEY");
 		}
 

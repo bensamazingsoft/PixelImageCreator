@@ -6,7 +6,7 @@ import java.util.Map;
 import com.ben.pixcreator.application.color.rgb.ColorRGB;
 import com.ben.pixcreator.application.image.coords.Coord;
 import com.ben.pixcreator.application.image.effect.Effect;
-import com.ben.pixcreator.application.image.layer.effect.EffectDesign;
+import com.ben.pixcreator.application.image.layer.effect.EffectType;
 import com.ben.pixcreator.application.image.layer.effect.exception.EffectException;
 import com.ben.pixcreator.application.image.layer.effect.params.impl.SaturationEffectParams;
 import com.ben.pixcreator.application.image.layer.impl.alayer.ALayer;
@@ -29,7 +29,7 @@ public class SaturationModifier implements IModifier {
 	@Override
 	public ALayer modify(ALayer layer) throws EffectException {
 
-		if (fx.getEffect() != EffectDesign.SATURATION) {
+		if (fx.getEffect() != EffectType.SATURATION) {
 			throw new EffectException("Effect design is not SATURATION");
 		}
 

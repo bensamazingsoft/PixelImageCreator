@@ -3,7 +3,7 @@ package com.ben.pixcreator.application.image.effect;
 
 import java.io.Serializable;
 
-import com.ben.pixcreator.application.image.layer.effect.EffectDesign;
+import com.ben.pixcreator.application.image.layer.effect.EffectType;
 import com.ben.pixcreator.application.image.layer.effect.params.EffectParams;
 
 /**
@@ -18,10 +18,10 @@ public class Effect implements Serializable {
 	* 
 	*/
 	private static final long	serialVersionUID	= 1L;
-	private final EffectDesign	effect;
+	private final EffectType	effect;
 	private final EffectParams	params;
 
-	public Effect(EffectDesign effect, EffectParams params) {
+	public Effect(EffectType effect, EffectParams params) {
 
 		super();
 		this.effect = effect;
@@ -33,7 +33,7 @@ public class Effect implements Serializable {
 		return params;
 	}
 
-	public EffectDesign getEffect() {
+	public EffectType getEffect() {
 
 		return effect;
 	}

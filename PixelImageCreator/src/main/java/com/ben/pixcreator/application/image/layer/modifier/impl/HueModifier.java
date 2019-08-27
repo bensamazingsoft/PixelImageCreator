@@ -7,7 +7,7 @@ import java.util.Map;
 import com.ben.pixcreator.application.color.rgb.ColorRGB;
 import com.ben.pixcreator.application.image.coords.Coord;
 import com.ben.pixcreator.application.image.effect.Effect;
-import com.ben.pixcreator.application.image.layer.effect.EffectDesign;
+import com.ben.pixcreator.application.image.layer.effect.EffectType;
 import com.ben.pixcreator.application.image.layer.effect.exception.EffectException;
 import com.ben.pixcreator.application.image.layer.effect.params.impl.HueEffectParams;
 import com.ben.pixcreator.application.image.layer.impl.alayer.ALayer;
@@ -36,7 +36,7 @@ public class HueModifier implements IModifier
       public ALayer modify(ALayer layer) throws EffectException
       {
 
-	    if (fx.getEffect() != EffectDesign.HUE)
+	    if (fx.getEffect() != EffectType.HUE)
 	    {
 		  throw new EffectException("Effect design is not HUE");
 	    }

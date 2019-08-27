@@ -8,7 +8,7 @@ import com.ben.pixcreator.application.action.impl.ExportGridOnWebAction;
 import com.ben.pixcreator.application.action.impl.RefreshTabAction;
 import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.application.executor.Executor;
-import com.ben.pixcreator.application.image.layer.effect.EffectDesign;
+import com.ben.pixcreator.application.image.layer.effect.EffectType;
 import com.ben.pixcreator.application.image.layer.effect.params.EffectParams;
 import com.ben.pixcreator.application.image.layer.effect.params.impl.BrightnessEffectParams;
 import com.ben.pixcreator.application.image.layer.effect.params.impl.HueEffectParams;
@@ -31,15 +31,15 @@ public class PixLayerBoxContextMenu extends ContextMenu {
 
 	public PixLayerBoxContextMenu(ALayer layer) {
 
-		addEffectMenuItem(layer, "pixLayerBoxContextMenuAddOpacity", EffectDesign.OPACITY, new OpacityEffectParams());
-		addEffectMenuItem(layer, "pixLayerBoxContextMenuAddHue", EffectDesign.HUE, new HueEffectParams());
-		addEffectMenuItem(layer, "pixLayerBoxContextMenuAddSaturation", EffectDesign.SATURATION,
+		addEffectMenuItem(layer, "pixLayerBoxContextMenuAddOpacity", EffectType.OPACITY, new OpacityEffectParams());
+		addEffectMenuItem(layer, "pixLayerBoxContextMenuAddHue", EffectType.HUE, new HueEffectParams());
+		addEffectMenuItem(layer, "pixLayerBoxContextMenuAddSaturation", EffectType.SATURATION,
 				new SaturationEffectParams());
-		addEffectMenuItem(layer, "pixLayerBoxContextMenuAddBrightness", EffectDesign.BRIGHTNESS,
+		addEffectMenuItem(layer, "pixLayerBoxContextMenuAddBrightness", EffectType.BRIGHTNESS,
 				new BrightnessEffectParams());
-		addEffectMenuItem(layer, "pixLayerBoxContextMenuAddResample", EffectDesign.RESAMPLE,
+		addEffectMenuItem(layer, "pixLayerBoxContextMenuAddResample", EffectType.RESAMPLE,
 				new ResampleEffectParams());
-		addEffectMenuItem(layer, "pixLayerBoxContextMenuAddLumaKey", EffectDesign.LUMAKEY,
+		addEffectMenuItem(layer, "pixLayerBoxContextMenuAddLumaKey", EffectType.LUMAKEY,
 				new LumaKeyEffectParams());
 		getItems().add(new SeparatorMenuItem());
 		getItems().add(webExportMenuItem(layer));
@@ -65,7 +65,7 @@ public class PixLayerBoxContextMenu extends ContextMenu {
 		return item;
 	}
 
-	public void addEffectMenuItem(ALayer layer, String i18String, EffectDesign effectDesign, EffectParams effectParam) {
+	public void addEffectMenuItem(ALayer layer, String i18String, EffectType effectType, EffectParams effectParam) {
 
 		MenuItem menuItem = new MenuItem();
 
@@ -76,7 +76,7 @@ public class PixLayerBoxContextMenu extends ContextMenu {
 			try {
 
 				Executor.getInstance().executeAction(
-						new AddEffectToLayerAction(effectDesign, effectParam, layer));
+						new AddEffectToLayerAction(effectType, effectParam, layer));
 
 				Executor.getInstance().executeAction(new RefreshTabAction(GuiFacade.getInstance().getActiveTab()));
 

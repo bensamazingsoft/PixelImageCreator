@@ -12,6 +12,7 @@ import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.application.tools.PixTool;
 import com.ben.pixcreator.gui.controls.tool.toolbar.PixToolBar;
 import com.ben.pixcreator.gui.facade.GuiFacade;
+import com.ben.pixcreator.gui.facade.ToolGuiFacade;
 
 import javafx.scene.control.Toggle;
 
@@ -29,7 +30,7 @@ public class ChangeToolAction implements IAction {
 
 		log.debug("change to " + pixTool.name());
 
-		final GuiFacade gui = GuiFacade.getInstance();
+		final ToolGuiFacade gui = GuiFacade.getInstance();
 
 		AppContext.getInstance().setCurrTool(pixTool);
 

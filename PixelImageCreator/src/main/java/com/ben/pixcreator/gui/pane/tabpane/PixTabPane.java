@@ -19,7 +19,7 @@ import javafx.scene.control.TabPane;
 
 public class PixTabPane extends TabPane implements Initializable {
 
-	// private final String IMAGEPATH = "images/gui/buttons/tabpane/";
+	private final GuiFacade gui = GuiFacade.getInstance();
 
 	public PixTabPane() {
 
@@ -36,14 +36,14 @@ public class PixTabPane extends TabPane implements Initializable {
 			throw new RuntimeException(e);
 		}
 
-		GuiFacade.getInstance().setPixTabPane(this);
+		gui.setPixTabPane(this);
 
 		getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
 
 			if (newVal instanceof Tab) {
 				PixTab tab = (PixTab) newVal;
 				PixImage image = tab.getImage();
-				GuiFacade.getInstance().setActiveImage(image);
+				gui.setActiveImage(image);
 			}
 
 			else if (null == newVal) {

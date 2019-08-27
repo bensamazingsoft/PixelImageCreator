@@ -4,7 +4,7 @@ import com.ben.pixcreator.application.action.impl.AddEffectToLayerAction;
 import com.ben.pixcreator.application.action.impl.RefreshTabAction;
 import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.application.executor.Executor;
-import com.ben.pixcreator.application.image.layer.effect.EffectDesign;
+import com.ben.pixcreator.application.image.layer.effect.EffectType;
 import com.ben.pixcreator.application.image.layer.effect.params.EffectParams;
 import com.ben.pixcreator.application.image.layer.effect.params.impl.BrightnessEffectParams;
 import com.ben.pixcreator.application.image.layer.effect.params.impl.HueEffectParams;
@@ -23,26 +23,26 @@ public class PicLayerBoxContextMenu extends ContextMenu {
 	public PicLayerBoxContextMenu(ALayer layer) {
 
 		this.getItems().add(
-				menuItem(layer, "pixLayerBoxContextMenuAddOpacity", EffectDesign.OPACITY, new OpacityEffectParams()));
+				menuItem(layer, "pixLayerBoxContextMenuAddOpacity", EffectType.OPACITY, new OpacityEffectParams()));
 		this.getItems()
-				.add(menuItem(layer, "layerBoxContextMenuAddEnlarge", EffectDesign.ENLARGE,
+				.add(menuItem(layer, "layerBoxContextMenuAddEnlarge", EffectType.ENLARGE,
 						new SizeEffectParams(100, 300, 100)));
 		this.getItems()
-				.add(menuItem(layer, "layerBoxContextMenuAddShrink", EffectDesign.SHRINK,
+				.add(menuItem(layer, "layerBoxContextMenuAddShrink", EffectType.SHRINK,
 						new SizeEffectParams(0, 100, 100)));
 
-		this.getItems().add(menuItem(layer, "pixLayerBoxContextMenuAddHue", EffectDesign.HUE, new HueEffectParams()));
-		this.getItems().add(menuItem(layer, "pixLayerBoxContextMenuAddSaturation", EffectDesign.SATURATION,
+		this.getItems().add(menuItem(layer, "pixLayerBoxContextMenuAddHue", EffectType.HUE, new HueEffectParams()));
+		this.getItems().add(menuItem(layer, "pixLayerBoxContextMenuAddSaturation", EffectType.SATURATION,
 				new SaturationEffectParams()));
 
 		final BrightnessEffectParams brightnessParam = new BrightnessEffectParams();
 		brightnessParam.setBrightness(0.5);
-		this.getItems().add(menuItem(layer, "pixLayerBoxContextMenuAddBrightness", EffectDesign.BRIGHTNESS,
+		this.getItems().add(menuItem(layer, "pixLayerBoxContextMenuAddBrightness", EffectType.BRIGHTNESS,
 				brightnessParam));
 
 	}
 
-	public static MenuItem menuItem(ALayer layer, String i18nParam, EffectDesign fxDesign, EffectParams params) {
+	public static MenuItem menuItem(ALayer layer, String i18nParam, EffectType fxDesign, EffectParams params) {
 
 		MenuItem fxMenuItem = new MenuItem();
 

@@ -8,7 +8,7 @@ import com.ben.pixcreator.application.context.AppContext;
 import com.ben.pixcreator.application.image.PixImage;
 import com.ben.pixcreator.application.image.effect.Effect;
 import com.ben.pixcreator.application.image.effect.manager.EffectManager;
-import com.ben.pixcreator.application.image.layer.effect.EffectDesign;
+import com.ben.pixcreator.application.image.layer.effect.EffectType;
 import com.ben.pixcreator.application.image.layer.effect.params.EffectParams;
 import com.ben.pixcreator.application.image.layer.impl.alayer.ALayer;
 import com.ben.pixcreator.gui.facade.GuiFacade;
@@ -19,12 +19,12 @@ public class AddEffectToLayerAction implements IAction {
 
 	private final GuiFacade gui = GuiFacade.getInstance();
 
-	private final EffectDesign	fxDesign;
+	private final EffectType	fxType;
 	private EffectParams		fxParams;
 	private ALayer				layer;
 
-	public AddEffectToLayerAction(EffectDesign fxDesign, EffectParams fxParams, ALayer layer) {
-		this.fxDesign = fxDesign;
+	public AddEffectToLayerAction(EffectType fxDesign, EffectParams fxParams, ALayer layer) {
+		this.fxType = fxDesign;
 		this.fxParams = fxParams;
 		this.layer = layer;
 	}
@@ -32,11 +32,11 @@ public class AddEffectToLayerAction implements IAction {
 	@Override
 	public void execute() throws Exception {
 
-		log.debug("adding " + fxDesign + " to " + layer);
+		log.debug("adding " + fxType + " to " + layer);
 
 		PixImage activeImage = gui.getActiveImage();
 		EffectManager effectManager = AppContext.getInstance().getEffectManager();
-		Effect effect = new Effect(fxDesign, fxParams);
+		Effect effect = new Effect(fxType, fxParams);
 
 		effectManager.getImageLayerEffects(activeImage, layer).add(effect);
 

@@ -8,7 +8,6 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ben.pixcreator.application.action.impl.ChangeToolAction;
 import com.ben.pixcreator.application.action.impl.SetCursorsAction;
 import com.ben.pixcreator.application.color.rgb.ColorRGB;
 import com.ben.pixcreator.application.context.AppContext;
@@ -42,7 +41,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.Toggle;
 import javafx.scene.paint.Color;
 
-public class GuiFacade {
+public class GuiFacade implements ToolGuiFacade, TabGuiFacade {
 
 	@SuppressWarnings("unused")
 	private static final Logger log = LoggerFactory.getLogger(GuiFacade.class);
@@ -51,9 +50,10 @@ public class GuiFacade {
 
 	private Scene scene;
 
+	private final ToolGuiFacade	toolGuiFacade	= new BasicToolGuiFacade();
+	private final TabGuiFacade	tabGuiFacade	= new BasicTabGuiFacade();
+
 	private PixMenuBar	pixMenuBar;
-	private PixToolBar	pixToolBar;
-	private PixTabPane	pixTabPane;
 	private LayerPanel	layerPanel;
 	private ColorRoster	colorRoster;
 	private WebPanel	webPanel;
@@ -67,9 +67,7 @@ public class GuiFacade {
 	private SimpleObjectProperty<Color>						hoverColor		= new SimpleObjectProperty<>();
 	private Map<Coord, ColorRGB>							clipboard		= new HashMap<>();
 
-	private SimpleObjectProperty<PixImage>	activeImage	= new SimpleObjectProperty<>();
-	private SimpleBooleanProperty			showGrid	= new SimpleBooleanProperty();
-	private SimpleBooleanProperty			panMode		= new SimpleBooleanProperty();
+	private SimpleObjectProperty<PixImage> activeImage = new SimpleObjectProperty<>();
 
 	private MiniatureManager miniatureManager;
 
@@ -82,7 +80,7 @@ public class GuiFacade {
 		imagesColors = new HashMap<>();
 		selections = new HashMap<>();
 		miniatureManager = new MiniatureManager();
-		showGrid.set(false);
+		toolGuiFacade.setShowGrid(false);
 		backgroundColor.set(ctxProp.getBackgroundColor());
 		recentFiles = new BasicPile<String>(Integer.valueOf(ctxProp.get("maxRecentFiles")));
 
@@ -106,93 +104,188 @@ public class GuiFacade {
 		return instance;
 	}
 
+	// TOOL FACADE
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ben.pixcreator.gui.facade.ToolGuiFacade#toggleToolTo(com.ben.
+	 * pixcreator.application.tools.PixTool)
+	 */
+	@Override
 	public void toggleToolTo(PixTool pixTool) {
-
-		try {
-			Executor.getInstance().executeAction(new ChangeToolAction(pixTool));
-			Executor.getInstance().executeAction(new SetCursorsAction());
-
-		} catch (Exception e) {
-			new ExceptionPopUp(e);
-		}
+		toolGuiFacade.toggleToolTo(pixTool);
 
 	}
 
-	public void addTab(Tab tab) {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ben.pixcreator.gui.facade.ToolGuiFacade#setPixToolBar(com.ben.
+	 * pixcreator.gui.controls.tool.toolbar.PixToolBar)
+	 */
+	@Override
+	public void setPixToolBar(PixToolBar pixToolBar) {
 
-		pixTabPane.getTabs().add(tab);
-		pixTabPane.getSelectionModel().select(tab);
+		toolGuiFacade.setPixToolBar(pixToolBar);
 
 	}
 
-	public ObservableList<Tab> getTabs() {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ben.pixcreator.gui.facade.ToolGuiFacade#getPixToolBar()
+	 */
+	@Override
+	public PixToolBar getPixToolBar() {
+		return toolGuiFacade.getPixToolBar();
 
-		return pixTabPane.getTabs();
 	}
 
-	public PixImage getActiveImage() {
-
-		PixTab tab = (PixTab) pixTabPane.getSelectionModel().getSelectedItem();
-		PixImage activeImage = tab.getImage();
-
-		return activeImage;
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.ben.pixcreator.gui.facade.ToolGuiFacade#getSelectedToolInToolbar()
+	 */
+	@Override
+	public PixTool getSelectedToolInToolbar() {
+		return toolGuiFacade.getSelectedToolInToolbar();
 	}
 
-	public ALayer getActiveLayer() {
-
-		return layerPanel.getActiveLayer();
-	}
-
-	public Scene getScene() {
-
-		return scene;
-	}
-
-	public void setScene(Scene scene) {
-
-		this.scene = scene;
-	}
-
-	public Map<PixImage, Set<SimpleObjectProperty<Color>>> getImagesColors() {
-
-		return imagesColors;
-	}
-
-	public void setImagesColors(Map<PixImage, Set<SimpleObjectProperty<Color>>> imagesColors) {
-
-		this.imagesColors = imagesColors;
-	}
-
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ben.pixcreator.gui.facade.ToolGuiFacade#showGridProperty()
+	 */
+	@Override
 	public final SimpleBooleanProperty showGridProperty() {
+		return toolGuiFacade.showGridProperty();
 
-		return this.showGrid;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ben.pixcreator.gui.facade.ToolGuiFacade#isShowGrid()
+	 */
+	@Override
 	public final boolean isShowGrid() {
 
-		return this.showGridProperty().get();
+		return toolGuiFacade.isShowGrid();
+
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ben.pixcreator.gui.facade.ToolGuiFacade#setShowGrid(boolean)
+	 */
+	@Override
 	public final void setShowGrid(final boolean showGrid) {
+		toolGuiFacade.setShowGrid(showGrid);
 
-		this.showGridProperty().set(showGrid);
 	}
 
-	public final SimpleObjectProperty<PixImage> activeImageProperty() {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ben.pixcreator.gui.facade.ToolGuiFacade#panModeProperty()
+	 */
+	@Override
+	public final SimpleBooleanProperty panModeProperty() {
 
-		return this.activeImage;
+		return toolGuiFacade.panModeProperty();
 	}
 
-	public PixImage getActiveimage() {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ben.pixcreator.gui.facade.ToolGuiFacade#isPanMode()
+	 */
+	@Override
+	public final boolean isPanMode() {
+		return toolGuiFacade.isPanMode();
 
-		return this.activeImage.get();
 	}
 
-	public void setActiveImage(PixImage image) {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ben.pixcreator.gui.facade.ToolGuiFacade#setPanMode(boolean)
+	 */
+	@Override
+	public final void setPanMode(final boolean panMode) {
+		toolGuiFacade.setPanMode(panMode);
 
-		this.activeImage.set(image);
 	}
 
+	// TAB FACADE
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.ben.pixcreator.gui.facade.TabGuiFacade#addTab(javafx.scene.control.
+	 * Tab)
+	 */
+	@Override
+	public void addTab(Tab tab) {
+
+		tabGuiFacade.addTab(tab);
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ben.pixcreator.gui.facade.TabGuiFacade#getTabs()
+	 */
+	@Override
+	public ObservableList<Tab> getTabs() {
+		return tabGuiFacade.getTabs();
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ben.pixcreator.gui.facade.TabGuiFacade#setPixTabPane(com.ben.
+	 * pixcreator.gui.pane.tabpane.PixTabPane)
+	 */
+	@Override
+	public void setPixTabPane(PixTabPane tabPane) {
+		tabGuiFacade.setPixTabPane(tabPane);
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ben.pixcreator.gui.facade.TabGuiFacade#getActiveTab()
+	 */
+	@Override
+	public PixTab getActiveTab() {
+
+		return tabGuiFacade.getActiveTab();
+	}
+
+	public ColorRoster getColorRoster() {
+
+		return colorRoster;
+	}
+
+	public void setColorRoster(ColorRoster colorRoster) {
+
+		this.colorRoster = colorRoster;
+
+		colorRoster.imageProperty().bindBidirectional(activeImage);
+
+		activeColor.set(((ColorBox) colorRoster.getToggleGroup().getSelectedToggle()).getColor());
+
+	}
+
+	// COLOR ROSTER FACADE
 	public final SimpleObjectProperty<Color> activeColorProperty() {
 
 		return this.activeColor;
@@ -208,9 +301,71 @@ public class GuiFacade {
 		this.activeColorProperty().set(activeColor);
 	}
 
-	public void setPixTabPane(PixTabPane tabPane) {
+	public void selectPrevColorBox() {
+		getColorRoster().selectPrevColorBox();
 
-		this.pixTabPane = tabPane;
+	}
+
+	public void selectNextColorBox() {
+		getColorRoster().selectNextColorBox();
+
+	}
+
+	public void selectColor(Color color) {
+		getColorRoster().selectColor(color);
+
+	}
+
+	public void reloadColorsInRoster(PixImage activeImage2) {
+		getColorRoster().reload(getActiveImage());
+
+	}
+
+	public Map<PixImage, Set<SimpleObjectProperty<Color>>> getImagesColors() {
+
+		return imagesColors;
+	}
+
+	public void setImagesColors(Map<PixImage, Set<SimpleObjectProperty<Color>>> imagesColors) {
+
+		this.imagesColors = imagesColors;
+	}
+
+	public final SimpleObjectProperty<Color> backgroundColorProperty() {
+
+		return this.backgroundColor;
+	}
+
+	public final Color getBackgroundColor() {
+
+		return this.backgroundColorProperty().get();
+	}
+
+	public final void setBackgroundColor(final Color backgroundColor) {
+
+		this.backgroundColorProperty().set(backgroundColor);
+	}
+
+	public final SimpleObjectProperty<Color> hoverColorProperty() {
+
+		return this.hoverColor;
+	}
+
+	public final Color getHoverColor() {
+
+		return this.hoverColorProperty().get();
+	}
+
+	public final void setHoverColor(final Color hoverColor) {
+
+		this.hoverColorProperty().set(hoverColor);
+	}
+
+	// LAYER FACADE
+
+	public ALayer getActiveLayer() {
+
+		return layerPanel.getActiveLayer();
 	}
 
 	public void setLayerPanel(LayerPanel layerPanel) {
@@ -221,24 +376,74 @@ public class GuiFacade {
 
 	}
 
-	public void setColorRoster(ColorRoster colorRoster) {
+	public LayerPanel getLayerPanel() {
 
-		this.colorRoster = colorRoster;
+		return layerPanel;
+	}
 
-		colorRoster.imageProperty().bindBidirectional(activeImage);
+	/**
+	 * selects the layer in the layer panel if it exists in the panel.
+	 * 
+	 * @param layer
+	 */
+	public void selectLayer(ALayer layer) {
 
-		activeColor.set(((ColorBox) colorRoster.getToggleGroup().getSelectedToggle()).getColor());
+		for (Toggle tog : layerPanel.getTogglegroup().getToggles()) {
+			LayerBox box = (LayerBox) tog;
+
+			if (box.getLayer().equals(layer)) {
+				layerPanel.getTogglegroup().selectToggle(box);
+			}
+		}
+	}
+
+	public ALayer getFocusLayer() {
+
+		return focusLayer;
+	}
+
+	public void setFocusLayer(ALayer focusLayer) {
+
+		this.focusLayer = focusLayer;
+	}
+
+	public void populateLayerPanel() {
+
+		getLayerPanel().populate();
 
 	}
 
-	public void setPixToolBar(PixToolBar pixToolBar) {
+	public PixImage getActiveImage() {
 
-		this.pixToolBar = pixToolBar;
+		PixTab tab = getActiveTab();
+		PixImage activeImage = tab.getImage();
+
+		return activeImage;
 	}
 
-	public PixTab getActiveTab() {
+	public Scene getScene() {
 
-		return (PixTab) pixTabPane.getSelectionModel().getSelectedItem();
+		return scene;
+	}
+
+	public void setScene(Scene scene) {
+
+		this.scene = scene;
+	}
+
+	public final SimpleObjectProperty<PixImage> activeImageProperty() {
+
+		return this.activeImage;
+	}
+
+	public PixImage getActiveimage() {
+
+		return this.activeImage.get();
+	}
+
+	public void setActiveImage(PixImage image) {
+
+		this.activeImage.set(image);
 	}
 
 	public Map<PixImage, Selection> getSelections() {
@@ -263,42 +468,6 @@ public class GuiFacade {
 		return miniatureManager;
 	}
 
-	public LayerPanel getLayerPanel() {
-
-		return layerPanel;
-	}
-
-	public final SimpleObjectProperty<Color> backgroundColorProperty() {
-
-		return this.backgroundColor;
-	}
-
-	public final Color getBackgroundColor() {
-
-		return this.backgroundColorProperty().get();
-	}
-
-	public final void setBackgroundColor(final Color backgroundColor) {
-
-		this.backgroundColorProperty().set(backgroundColor);
-	}
-
-	/**
-	 * selects the layer in the layer panel if it exists in the panel.
-	 * 
-	 * @param layer
-	 */
-	public void selectLayer(ALayer layer) {
-
-		for (Toggle tog : layerPanel.getTogglegroup().getToggles()) {
-			LayerBox box = (LayerBox) tog;
-
-			if (box.getLayer().equals(layer)) {
-				layerPanel.getTogglegroup().selectToggle(box);
-			}
-		}
-	}
-
 	public Map<Coord, ColorRGB> getClipboard() {
 
 		return clipboard;
@@ -307,11 +476,6 @@ public class GuiFacade {
 	public void setClipboard(Map<Coord, ColorRGB> clipboard) {
 
 		this.clipboard = clipboard;
-	}
-
-	public ColorRoster getColorRoster() {
-
-		return colorRoster;
 	}
 
 	public Pile<String> getRecentFiles() {
@@ -332,55 +496,6 @@ public class GuiFacade {
 	public void setPixMenuBar(PixMenuBar pixMenuBar) {
 
 		this.pixMenuBar = pixMenuBar;
-	}
-
-	public PixToolBar getPixToolBar() {
-
-		return pixToolBar;
-	}
-
-	public PixTool getSelectedToolInToolbar() {
-		return getPixToolBar().getSelectedToggleData();
-	}
-
-	public final SimpleBooleanProperty panModeProperty() {
-
-		return this.panMode;
-	}
-
-	public final boolean isPanMode() {
-
-		return this.panModeProperty().get();
-	}
-
-	public final void setPanMode(final boolean panMode) {
-
-		this.panModeProperty().set(panMode);
-	}
-
-	public final SimpleObjectProperty<Color> hoverColorProperty() {
-
-		return this.hoverColor;
-	}
-
-	public final Color getHoverColor() {
-
-		return this.hoverColorProperty().get();
-	}
-
-	public final void setHoverColor(final Color hoverColor) {
-
-		this.hoverColorProperty().set(hoverColor);
-	}
-
-	public ALayer getFocusLayer() {
-
-		return focusLayer;
-	}
-
-	public void setFocusLayer(ALayer focusLayer) {
-
-		this.focusLayer = focusLayer;
 	}
 
 	public WebPanel getWebPanel() {
@@ -408,35 +523,9 @@ public class GuiFacade {
 
 	}
 
-	public void selectPrevColorBox() {
-		getColorRoster().selectPrevColorBox();
-
-	}
-
-	public void selectNextColorBox() {
-		getColorRoster().selectNextColorBox();
-
-	}
-
-	public void selectColor(Color color) {
-		getColorRoster().selectColor(color);
-
-	}
-
-	public void reloadColorsInRoster(PixImage activeImage2) {
-		getColorRoster().reload(getActiveImage());
-
-	}
-
 	public boolean selectionIsEmpty() {
 
 		return getClipboard().isEmpty();
-
-	}
-
-	public void populateLayerPanel() {
-
-		getLayerPanel().populate();
 
 	}
 

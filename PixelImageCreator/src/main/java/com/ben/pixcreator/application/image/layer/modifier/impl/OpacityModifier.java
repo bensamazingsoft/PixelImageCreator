@@ -1,7 +1,7 @@
 package com.ben.pixcreator.application.image.layer.modifier.impl;
 
 import com.ben.pixcreator.application.image.effect.Effect;
-import com.ben.pixcreator.application.image.layer.effect.EffectDesign;
+import com.ben.pixcreator.application.image.layer.effect.EffectType;
 import com.ben.pixcreator.application.image.layer.effect.exception.EffectException;
 import com.ben.pixcreator.application.image.layer.effect.params.impl.OpacityEffectParams;
 import com.ben.pixcreator.application.image.layer.impl.alayer.ALayer;
@@ -20,7 +20,7 @@ public class OpacityModifier implements IModifier {
 	@Override
 	public ALayer modify(ALayer layer) throws EffectException {
 
-		if (fx.getEffect() != EffectDesign.OPACITY) {
+		if (fx.getEffect() != EffectType.OPACITY) {
 			throw new EffectException("Effect design is not OPACITY");
 		}
 
