@@ -26,8 +26,7 @@ import javafx.stage.Stage;
 public class MainApp extends Application {
 
 	@SuppressWarnings("unused")
-	private static final Logger	log	= LoggerFactory.getLogger(MainApp.class);
-	private final GuiFacade		gui	= GuiFacade.getInstance();
+	private static final Logger log = LoggerFactory.getLogger(MainApp.class);
 
 	public static void main(String[] args) throws Exception {
 
@@ -61,7 +60,7 @@ public class MainApp extends Application {
 
 		Executor.getInstance().executeAction(new LoadSerializedRecentFilesAction());
 		Executor.getInstance().executeAction(new OpenNewImageAction());
-
+		final GuiFacade gui = GuiFacade.getInstance();
 		gui.toggleToolTo(AppContext.getInstance().getCurrTool());
 		gui.setPanMode(AppContext.getInstance().getCurrTool() == PixTool.PAN);
 
