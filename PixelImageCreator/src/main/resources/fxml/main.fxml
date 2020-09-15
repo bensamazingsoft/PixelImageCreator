@@ -10,6 +10,7 @@
 <?import com.ben.pixcreator.gui.pane.tabpane.*?>
 <?import com.ben.pixcreator.gui.controls.layer.panel.*?>
 <?import com.ben.pixcreator.gui.controls.color.roster.*?>
+<?import com.ben.pixcreator.gui.controls.infoline.*?>
 
 <BorderPane id="rootPane"
 	fx:controller="com.ben.pixcreator.gui.mainapp.MainController"
@@ -17,7 +18,7 @@
 
 	<top>
 		<VBox>
-			<PixMenuBar fx:id="menuBar"/>
+			<PixMenuBar fx:id="menuBar" />
 
 			<PixToolBar fx:id="toolBar" />
 		</VBox>
@@ -25,20 +26,23 @@
 
 	<center>
 		<SplitPane fx:id="splitPane">
-		
+
 			<PixTabPane fx:id="tabPane" />
-		<TabPane fx:id="webAndLayerPanel"/>
-		
-		
-<!-- 			<LayerPanel fx:id="layerPanel"/> -->
+			<TabPane fx:id="webAndLayerPanel" />
+
+
+			<!-- <LayerPanel fx:id="layerPanel"/> -->
 		</SplitPane>
 	</center>
-	
 
-	
-	
+
+
+
 	<bottom>
-		<ColorRoster fx:id="colorRoster" />
+		<VBox>
+			<ColorRoster fx:id="colorRoster" />
+			<Infoline fx:id="infoLine"/>
+		</VBox>
 	</bottom>
-	
+
 </BorderPane>

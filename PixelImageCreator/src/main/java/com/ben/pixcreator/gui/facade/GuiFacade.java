@@ -35,6 +35,7 @@ import com.ben.pixcreator.gui.pane.web.panel.WebPanel;
 
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.control.Tab;
@@ -62,10 +63,11 @@ public class GuiFacade implements ToolGuiFacade, TabGuiFacade {
 
 	private Map<PixImage, Set<SimpleObjectProperty<Color>>>	imagesColors;
 	private Map<PixImage, Selection>						selections;
-	private SimpleObjectProperty<Color>						activeColor		= new SimpleObjectProperty<>();
-	private SimpleObjectProperty<Color>						backgroundColor	= new SimpleObjectProperty<>();
-	private SimpleObjectProperty<Color>						hoverColor		= new SimpleObjectProperty<>();
-	private Map<Coord, ColorRGB>							clipboard		= new HashMap<>();
+	private SimpleObjectProperty<Color>						activeColor			= new SimpleObjectProperty<>();
+	private SimpleObjectProperty<Color>						backgroundColor		= new SimpleObjectProperty<>();
+	private SimpleObjectProperty<Color>						hoverColor			= new SimpleObjectProperty<>();
+	private Map<Coord, ColorRGB>							clipboard			= new HashMap<>();
+	private SimpleStringProperty							infolineTxtProperty	= new SimpleStringProperty();
 
 	private SimpleObjectProperty<PixImage> activeImage = new SimpleObjectProperty<>();
 
@@ -527,6 +529,10 @@ public class GuiFacade implements ToolGuiFacade, TabGuiFacade {
 
 		return getClipboard().isEmpty();
 
+	}
+
+	public final SimpleStringProperty getInfolineTxtProperty() {
+		return this.infolineTxtProperty;
 	}
 
 }

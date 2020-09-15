@@ -59,7 +59,11 @@
 	
 }
 
+.Infoline{
 
+	-fx-padding:30px;
+
+}
 
 .effectView .pileViewTitle{
 	-fx-text-fill:darkslategray;

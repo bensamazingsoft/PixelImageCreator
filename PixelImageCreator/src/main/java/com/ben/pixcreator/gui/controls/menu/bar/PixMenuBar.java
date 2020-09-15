@@ -212,6 +212,7 @@ public class PixMenuBar extends MenuBar implements Initializable {
 			}
 
 			img.getSelect().getGrid().clear();
+			GuiFacade.getInstance().setShowGrid(false);
 			img.draw(canvas);
 
 		} catch (EffectException e) {
