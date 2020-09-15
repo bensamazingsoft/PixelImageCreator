@@ -114,7 +114,7 @@ public abstract class ALayer implements ILayer, Serializable
       /*
        * Builder that returns a new PixLayer which grid is offsetted by the param coord values. returns the offseted layer.
        */
-      public abstract ALayer withNewOrigin(Coord min);
+      public abstract ALayer shiftOrigin(Coord min);
 
 
       public UUID getUUID()

@@ -75,7 +75,7 @@ public class MiniatureManager
 			xGridResolution++;
 			yGridResolution++;
 
-			layer = ((PixLayer) layer).duplicate().withNewOrigin(((PixLayer) layer).minCell());
+			layer = ((PixLayer) layer).duplicate().shiftOrigin(((PixLayer) layer).minCell());
 
 			canvas.setWidth(xGridResolution * 4);
 			canvas.setHeight(yGridResolution * 4);

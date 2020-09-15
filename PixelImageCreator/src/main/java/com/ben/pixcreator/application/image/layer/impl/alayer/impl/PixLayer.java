@@ -179,7 +179,7 @@ public class PixLayer extends ALayer
        * Builder that returns a new PixLayer which grid is offsetted by the param coord values.
        */
       @Override
-      public PixLayer withNewOrigin(Coord min)
+      public PixLayer shiftOrigin(Coord min)
       {
 
 	    Map<Coord, ColorRGB> offset = new HashMap<>();

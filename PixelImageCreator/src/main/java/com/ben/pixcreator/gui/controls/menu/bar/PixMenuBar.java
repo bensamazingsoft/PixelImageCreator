@@ -191,7 +191,29 @@ public class PixMenuBar extends MenuBar implements Initializable {
 		final Canvas canvas = new Canvas(activeImage.getxSize(), activeImage.getySize());
 
 		try {
-			DrawImageFactory.getDrawImage(activeImage).draw(canvas);
+			PixImage img = DrawImageFactory.getDrawImage(activeImage);
+
+			// if selection is present crop the export
+			if (!img.getSelect().getGrid().isEmpty()) {
+
+				PixLayer drawLayer = (PixLayer) img.getLayerPile().getItem(0);
+
+				drawLayer.shiftOrigin(img.getSelect().minCell());
+
+				Coord max = img.getSelect().maxCell().add(new Coord(1, 1)).min(img.getSelect().minCell());
+
+				canvas.setWidth((max.getX()) * (img.getxSize() / img.getxGridResolution()));
+				canvas.setHeight((max.getY()) * (img.getySize() / img.getyGridResolution()));
+
+				img.setxSize((int) canvas.getWidth());
+				img.setySize((int) canvas.getHeight());
+				img.setxGridResolution(max.getX());
+				img.setyGridResolution(max.getY());
+			}
+
+			img.getSelect().getGrid().clear();
+			img.draw(canvas);
+
 		} catch (EffectException e) {
 			new ExceptionPopUp(e);
 		}
@@ -202,12 +224,13 @@ public class PixMenuBar extends MenuBar implements Initializable {
 		fileChooser.getExtensionFilters().add(new ExtensionFilter("PNG", "*.png"));
 		File file = fileChooser.showSaveDialog(null);
 
-		BufferedImage bi = SwingFXUtils.fromFXImage(wi, null);
-
-		try {
-			ImageIO.write(bi, "png", file);
-		} catch (IOException e) {
-			new ExceptionPopUp(e);
+		if (null != file) {
+			BufferedImage bi = SwingFXUtils.fromFXImage(wi, null);
+			try {
+				ImageIO.write(bi, "png", file);
+			} catch (IOException e) {
+				new ExceptionPopUp(e);
+			}
 		}
 
 	}

@@ -37,7 +37,7 @@ public class ExportGridOnWebAction implements IAction {
 
 		log.debug("");
 
-		grid = layer.withNewOrigin(layer.minCell()).getGrid();
+		grid = layer.shiftOrigin(layer.minCell()).getGrid();
 
 		RestGridService restGridService = new RestGridService();
 

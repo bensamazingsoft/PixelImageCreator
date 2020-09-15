@@ -59,7 +59,7 @@ public class LayerSampler {
 
 		}
 
-		return (PixLayer) resultLayer.withNewOrigin(
+		return (PixLayer) resultLayer.shiftOrigin(
 				new Coord(-1 * (min.getX() - resultLayer.minCell().getX()),
 						-1 * (min.getY() - resultLayer.minCell().getY())));
 	}
@@ -75,7 +75,7 @@ public class LayerSampler {
 
 		}
 
-		return (PixLayer) resultLayer.withNewOrigin(min.mult(xMultFactor - 1));
+		return (PixLayer) resultLayer.shiftOrigin(min.mult(xMultFactor - 1));
 	}
 
 	private Map<Coord, ColorRGB> multCell(Coord coord, Color color, int xMultFactor, int yMultFactor) {
