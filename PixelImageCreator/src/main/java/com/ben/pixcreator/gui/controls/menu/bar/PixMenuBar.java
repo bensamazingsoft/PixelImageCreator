@@ -196,9 +196,14 @@ public class PixMenuBar extends MenuBar implements Initializable {
 			// if selection is present crop the export
 			if (!img.getSelect().getGrid().isEmpty()) {
 
-				PixLayer drawLayer = (PixLayer) img.getLayerPile().getItem(0);
-
-				drawLayer.shiftOrigin(img.getSelect().minCell());
+				// PixLayer drawLayer = (PixLayer)
+				// img.getLayerPile().getItem(0);
+				//
+				// drawLayer.shiftOrigin(img.getSelect().minCell());
+				//
+				img.getLayerPile().getAllItems().forEach(layer -> {
+					layer.shiftOrigin(img.getSelect().minCell());
+				});
 
 				Coord max = img.getSelect().maxCell().add(new Coord(1, 1)).min(img.getSelect().minCell());
 
