@@ -1,4 +1,6 @@
 
+//if Eclipse build fails, use command 'mvn jfx:jar'
+
 package com.ben.pixcreator.gui.mainapp;
 
 import java.util.ResourceBundle;
